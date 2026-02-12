@@ -1,0 +1,3551 @@
+<!-- Interactive Scheduler v3.3 — Rainbow Enhancements & Event Focus Mode -->
+<!--  
+Bug Fixes                                                                                                                                                                                                                                                                                                         
+  
+  - Rainbow view vertical clipping
+  - Conflict tooltip duplication                                                                                                                                                                                                                                                                                      - Picker conflict hover (no details on hover)                                                                                                                                                                                                                                                                     
+  - View switch resets picker/scroll state
+
+  Rainbow Enhancements
+
+  - Click event bars for detail popup (modal with personnel, times, flight window)
+  - Timeline handles: click for marker, drag for range (15-min snap)
+  - Sticky date headers + sticky name column on scroll
+  - Personnel filter modal (group toggles, search, individual checkboxes)
+
+  New Features
+
+  - Event Focus Mode — click event to highlight, dims others, greys out unavailable picker pucks with conflict tooltip (checks all events incl. readonly); Focus ON/OFF toggle in header
+  - Picker multi-select — select multiple roster categories simultaneously
+  - Local cache — working state survives page refresh; "Refresh from Whiteboard" button to reload from API
+  -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TPS Interactive Scheduler</title>
+    <meta name="theme-color" content="#1a1a2e">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+        * { font-family: 'JetBrains Mono', monospace; box-sizing: border-box; }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            height: 100vh;
+            overflow: hidden;
+            margin: 0; padding: 0;
+            color: #e2e8f0;
+        }
+
+        #root { height: 100vh; }
+
+        /* ===== APP LAYOUT ===== */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+        }
+
+        .app-header {
+            grid-column: 1 / -1;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            z-index: 60;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .timeline-area {
+            grid-column: 1;
+            grid-row: 2;
+            overflow: auto;
+            position: relative;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .change-summary-panel {
+            grid-column: 2;
+            grid-row: 2 / 4;
+            background: rgba(20, 20, 40, 0.95);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .picker-panel {
+            grid-column: 1;
+            grid-row: 3;
+            background: rgba(20, 20, 40, 0.98);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            max-height: 160px;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        /* ===== DAY COLUMNS ===== */
+        .days-container { display: flex; min-height: 100%; }
+
+        .day-column {
+            min-width: 750px;
+            width: 750px;
+            border-right: 2px solid rgba(255,255,255,0.06);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background: rgba(30, 30, 60, 1);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding: 6px 10px 0 10px;
+            height: 52px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .timeline-ruler {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.4);
+            padding: 0 2px;
+            position: relative;
+            height: 14px;
+        }
+
+        .timeline-ruler span {
+            position: absolute;
+            transform: translateX(-50%);
+        }
+
+        .day-body { flex: 1; padding: 4px 0; }
+
+        /* ===== SECTION HEADERS ===== */
+        .section-divider {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 3px 10px 2px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            user-select: none;
+        }
+
+        .section-divider-flying { color: #6ee7b7; background: rgba(16, 185, 129, 0.06); }
+        .section-divider-ground { color: #fde68a; background: rgba(245, 158, 11, 0.06); }
+        .section-divider-na { color: #fca5a5; background: rgba(239, 68, 68, 0.06); }
+
+        .section-lanes { position: relative; margin: 2px 0; overflow: hidden; }
+
+        /* ===== EVENT CARDS ===== */
+        .event-card {
+            position: absolute;
+            border-radius: 4px;
+            cursor: default;
+            transition: box-shadow 0.15s, filter 0.15s;
+            display: flex;
+            flex-direction: column;
+            z-index: 5;
+            overflow: hidden;
+            min-width: 140px;
+        }
+
+        .event-card:hover {
+            z-index: 20;
+            filter: brightness(1.15);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+            overflow: visible;
+        }
+
+        .event-card.drag-over {
+            box-shadow: 0 0 0 2px #3b82f6, 0 0 16px rgba(59,130,246,0.5) !important;
+            z-index: 25;
+        }
+
+        .event-card-flying {
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.45);
+        }
+        .event-card-ground {
+            background: rgba(245, 158, 11, 0.18);
+            border: 1px solid rgba(245, 158, 11, 0.45);
+        }
+        .event-card-na {
+            background: rgba(239, 68, 68, 0.18);
+            border: 1px solid rgba(239, 68, 68, 0.45);
+        }
+
+        /* Event card title bar */
+        .event-title-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 6px;
+            font-size: 0.58rem;
+            line-height: 1.2;
+            min-height: 16px;
+            background: rgba(0,0,0,0.15);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .event-type-label {
+            font-weight: 700;
+            font-size: 0.58rem;
+            padding: 0 4px;
+            border-radius: 2px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .label-flying { background: rgba(16,185,129,0.35); color: #a7f3d0; }
+        .label-ground { background: rgba(245,158,11,0.35); color: #fef3c7; }
+        .label-na { background: rgba(239,68,68,0.35); color: #fecaca; }
+
+        .event-name-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .event-time-text {
+            margin-left: auto;
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.35);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Flight bar (ETD-ETA) */
+        .flight-bar-row {
+            position: relative;
+            height: 12px;
+            margin: 1px 6px;
+        }
+
+        .flight-bar-track {
+            position: absolute;
+            top: 2px;
+            left: 0; right: 0;
+            height: 8px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 2px;
+        }
+
+        .flight-bar-fill {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            background: rgba(16, 185, 129, 0.5);
+            border-radius: 2px;
+            border-left: 2px solid rgba(16, 185, 129, 0.9);
+            border-right: 2px solid rgba(16, 185, 129, 0.9);
+        }
+
+        .flight-time-marker {
+            position: absolute;
+            top: -1px;
+            font-size: 0.45rem;
+            color: rgba(16,185,129,0.7);
+            line-height: 1;
+        }
+
+        .flight-time-marker.etd { transform: translateX(-100%); padding-right: 2px; }
+        .flight-time-marker.eta { transform: translateX(0%); padding-left: 2px; }
+
+        /* Crew area */
+        .event-crew-area {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px;
+            padding: 2px 5px 3px;
+            align-items: center;
+        }
+
+        /* ===== PERSONNEL CHIPS ===== */
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.58rem;
+            font-weight: 500;
+            cursor: grab;
+            user-select: none;
+            white-space: nowrap;
+            line-height: 1.3;
+            position: relative;
+            transition: transform 0.1s, box-shadow 0.1s;
+            z-index: 10;
+        }
+
+        .chip:hover { filter: brightness(1.25); box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+        .chip:active { cursor: grabbing; }
+
+        .chip-remove {
+            cursor: pointer;
+            font-size: 0.5rem;
+            opacity: 0.4;
+            margin-left: 1px;
+        }
+        .chip-remove:hover { opacity: 1; color: #ef4444; }
+
+        .chip-conflict {
+            outline: 2px solid #fbbf24;
+            outline-offset: -1px;
+            box-shadow: 0 0 6px rgba(251,191,36,0.5);
+            animation: conflict-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes conflict-pulse {
+            0%, 100% { outline-color: rgba(251,191,36,0.9); box-shadow: 0 0 6px rgba(251,191,36,0.5); }
+            50% { outline-color: rgba(251,191,36,0.4); box-shadow: 0 0 3px rgba(251,191,36,0.2); }
+        }
+
+        .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
+
+        .add-chip {
+            padding: 1px 4px;
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 3px;
+            color: rgba(255,255,255,0.25);
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .add-chip:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+            background: rgba(59,130,246,0.1);
+        }
+
+        /* Conflict badge on event card */
+        .conflict-badge {
+            position: absolute;
+            top: -3px; right: -3px;
+            min-width: 14px; height: 14px;
+            background: #ef4444;
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.45rem; font-weight: 700;
+            color: white; z-index: 20;
+            box-shadow: 0 0 6px rgba(239,68,68,0.6);
+            padding: 0 3px;
+        }
+
+        /* Conflict tooltip (portal - rendered at app root with position:fixed) */
+        .conflict-tooltip-portal {
+            position: fixed;
+            background: #1e1e3a;
+            border: 1px solid #ef4444;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.5rem;
+            color: #fca5a5;
+            white-space: pre-line;
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            max-width: 320px;
+        }
+
+        /* ===== EVENT FOCUS MODE ===== */
+        .event-card.focused {
+            z-index: 25;
+            filter: brightness(1.2);
+            box-shadow: 0 0 0 2px #3b82f6, 0 4px 16px rgba(59,130,246,0.4);
+        }
+        .event-card.dimmed {
+            opacity: 0.35;
+            filter: brightness(0.7);
+        }
+        .picker-chip.unavailable {
+            opacity: 0.3;
+            filter: grayscale(0.8);
+        }
+        .focus-toggle-btn {
+            padding: 3px 8px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .focus-toggle-btn.on {
+            background: rgba(59,130,246,0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+        .focus-toggle-btn.off {
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.35);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ===== RAINBOW MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== PICKER ===== */
+        .picker-tabs {
+            display: flex;
+            gap: 1px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+
+        .picker-tab {
+            padding: 4px 8px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+        }
+        .picker-tab:hover { color: rgba(255,255,255,0.6); }
+        .picker-tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+
+        .picker-body {
+            padding: 6px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            overflow-y: auto;
+        }
+
+        .picker-chip { cursor: grab; }
+        .picker-chip.busy::after {
+            content: '';
+            position: absolute;
+            top: -1px; right: -1px;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: #f59e0b;
+        }
+
+        .picker-search {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 3px 8px;
+            font-size: 0.6rem;
+            color: white;
+            outline: none;
+            width: 140px;
+        }
+        .picker-search:focus { border-color: #3b82f6; }
+        .picker-search::placeholder { color: rgba(255,255,255,0.2); }
+
+        /* ===== CHANGE SUMMARY ===== */
+        .change-summary-header {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .change-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .change-date-group {
+            padding: 4px 14px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            position: sticky;
+            top: 0;
+            background: rgba(20, 20, 40, 0.98);
+            z-index: 5;
+        }
+
+        .change-entry {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 4px 14px;
+            font-size: 0.58rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .change-entry:hover { background: rgba(255,255,255,0.03); }
+
+        .change-icon-add { color: #10b981; font-weight: 700; font-size: 0.7rem; }
+        .change-icon-remove { color: #ef4444; font-weight: 700; font-size: 0.7rem; }
+
+        .change-detail { flex: 1; color: #cbd5e1; line-height: 1.4; }
+
+        .change-undo {
+            color: rgba(255,255,255,0.25);
+            cursor: pointer;
+            font-size: 0.5rem;
+            flex-shrink: 0;
+        }
+        .change-undo:hover { color: #f59e0b; }
+
+        .change-summary-footer {
+            padding: 8px 14px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .change-summary-footer button {
+            flex: 1;
+            padding: 5px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        /* ===== SELECTION SCREEN v2 ===== */
+        .selection-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .selection-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+
+        .selection-day-group {
+            margin-bottom: 24px;
+        }
+
+        .selection-day-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+            padding: 6px 0;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .selection-section {
+            margin-bottom: 12px;
+        }
+
+        .selection-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        .selection-section-title:hover { filter: brightness(1.15); }
+
+        .sel-event-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px 4px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: background 0.1s;
+        }
+        .sel-event-row:hover { background: rgba(255,255,255,0.04); }
+
+        .sel-cb {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            font-size: 9px;
+        }
+        .sel-cb.checked { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+        .sel-crew-preview {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 300px;
+        }
+
+        .na-category-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 4px 20px;
+        }
+
+        .na-cat-chip {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.5);
+            transition: all 0.15s;
+        }
+        .na-cat-chip.selected {
+            border-color: #ef4444;
+            color: #fca5a5;
+            background: rgba(239,68,68,0.15);
+        }
+
+        /* ===== QUICK SELECT BUTTONS ===== */
+        .quick-select-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .quick-select-btn {
+            padding: 5px 14px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.6);
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .quick-select-btn:hover { filter: brightness(1.2); }
+
+        .quick-select-btn.active-a {
+            border-color: #a855f7;
+            color: #d8b4fe;
+            background: rgba(168,85,247,0.15);
+        }
+        .quick-select-btn.active-b {
+            border-color: #f97316;
+            color: #fed7aa;
+            background: rgba(249,115,22,0.15);
+        }
+        .quick-select-btn.active-staff {
+            border-color: #22c55e;
+            color: #bbf7d0;
+            background: rgba(34,197,94,0.15);
+        }
+
+        .selection-separator {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.25);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 12px 0 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .selection-separator::before,
+        .selection-separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+        }
+
+        /* Class-group sub-section colors */
+        .class-group-a { border-left-color: #a855f7 !important; }
+        .class-group-b { border-left-color: #f97316 !important; }
+        .class-group-staff { border-left-color: #22c55e !important; }
+        .class-group-other { border-left-color: #64748b !important; }
+
+        /* ===== MISC ===== */
+        .hour-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.05);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            gap: 16px;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .filter-btn {
+            padding: 4px 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.6);
+            background: transparent;
+        }
+        .filter-btn:hover { border-color: rgba(255,255,255,0.3); color: white; }
+
+        .day-tabs {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+        }
+
+        .day-tab {
+            padding: 3px 8px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            color: rgba(255,255,255,0.35);
+            white-space: nowrap;
+            transition: all 0.15s;
+        }
+        .day-tab:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
+        .day-tab.today { color: #3b82f6; background: rgba(59,130,246,0.08); }
+
+        .empty-day {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.12);
+            font-size: 0.7rem;
+            padding: 40px;
+        }
+
+        .saved-indicator {
+            font-size: 0.5rem;
+            color: #10b981;
+            margin-left: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .saved-indicator.show { opacity: 1; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+        ::-webkit-scrollbar-corner { background: #1a1a2e; }
+
+        /* ===== VIEW TOGGLE TABS ===== */
+        .view-tabs {
+            display: flex;
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .view-tab {
+            padding: 3px 12px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .view-tab:hover { color: rgba(255,255,255,0.6); }
+        .view-tab.active { color: #3b82f6; background: rgba(59,130,246,0.12); }
+
+        /* ===== RAINBOW VIEW ===== */
+        .rainbow-area {
+            grid-column: 1;
+            grid-row: 2 / 4;
+            overflow: auto;
+            position: relative;
+            background: rgba(0,0,0,0.15);
+        }
+
+        .rainbow-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 45;
+            background: rgba(26, 26, 46, 0.98);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rainbow-filter-btn {
+            padding: 2px 8px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.35);
+            background: transparent;
+        }
+        .rainbow-filter-btn:hover { filter: brightness(1.2); }
+        .rainbow-filter-btn.active {
+            color: var(--filter-color);
+            border-color: var(--filter-color);
+            background: var(--filter-bg);
+        }
+
+        .rainbow-grid {
+            display: grid;
+            gap: 1px;
+            min-width: max-content;
+        }
+
+        .rainbow-corner {
+            position: sticky;
+            left: 0;
+            top: 0;
+            z-index: 35;
+            background: rgba(26, 26, 46, 1);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .rainbow-date-header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            background: rgba(30, 30, 60, 1);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 4px 6px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .rainbow-date-label {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .rainbow-time-ruler {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.45rem;
+            color: rgba(255,255,255,0.3);
+            position: relative;
+            height: 12px;
+        }
+
+        .rainbow-time-ruler span {
+            position: absolute;
+            transform: translateX(-50%);
+        }
+
+        .rainbow-name-cell {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background: rgba(20, 20, 40, 0.98);
+            border-right: 1px solid rgba(255,255,255,0.08);
+            padding: 2px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 28px;
+        }
+
+        .rainbow-name-text {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .rainbow-cat-text {
+            font-size: 0.45rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .rainbow-cat-separator {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            grid-column: 1 / -1;
+            background: rgba(255,255,255,0.03);
+            padding: 2px 10px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.3);
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .rainbow-cell {
+            position: relative;
+            background: rgba(15, 15, 35, 0.6);
+            min-height: 28px;
+            overflow: hidden;
+        }
+
+        .rainbow-cell:hover { background: rgba(15, 15, 35, 0.8); }
+
+        .rb-event-bar {
+            position: absolute;
+            height: 20px;
+            border-radius: 2px;
+            font-size: 0.5rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.9);
+            display: flex;
+            align-items: center;
+            padding: 0 3px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            z-index: 5;
+            cursor: default;
+            transition: filter 0.1s;
+        }
+
+        .rb-event-bar:hover {
+            z-index: 50;
+            filter: brightness(1.3);
+        }
+
+        .rb-bar-flying { background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.7); }
+        .rb-bar-ground { background: rgba(245, 158, 11, 0.5); border: 1px solid rgba(245, 158, 11, 0.7); }
+        .rb-bar-na { background: rgba(239, 68, 68, 0.5); border: 1px solid rgba(239, 68, 68, 0.7); }
+        .rb-bar-supervision { background: rgba(139, 92, 246, 0.5); border: 1px solid rgba(139, 92, 246, 0.7); }
+        .rb-bar-academics { background: rgba(59, 130, 246, 0.5); border: 1px solid rgba(59, 130, 246, 0.7); }
+
+        .rb-flight-inner {
+            position: absolute;
+            top: 20%;
+            height: 60%;
+            background: rgba(16, 185, 129, 0.6);
+            border-radius: 1px;
+            border-left: 2px solid rgba(16, 185, 129, 0.9);
+            border-right: 2px solid rgba(16, 185, 129, 0.9);
+        }
+
+        .rb-bar-label {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* ===== RAINBOW STICKY ENHANCEMENTS ===== */
+        .rainbow-corner {
+            z-index: 35;
+        }
+        .rainbow-name-cell {
+            background: rgba(15, 15, 35, 1);
+        }
+        .rainbow-cat-separator {
+            z-index: 20;
+        }
+
+        /* ===== RAINBOW TIMELINE MARKERS ===== */
+        .rb-timeline-marker {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ef4444;
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+            pointer-events: none;
+            z-index: 15;
+        }
+        .rb-timeline-range {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 1px solid rgba(59, 130, 246, 0.5);
+            border-right: 1px solid rgba(59, 130, 246, 0.5);
+            pointer-events: none;
+            z-index: 15;
+        }
+        .rb-handle-label {
+            position: absolute;
+            top: -16px;
+            transform: translateX(-50%);
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #3b82f6;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 16;
+        }
+        .rb-ruler-interactive {
+            position: absolute;
+            inset: 0;
+            cursor: crosshair;
+            z-index: 5;
+        }
+
+        /* ===== RAINBOW FILTER MODAL ===== */
+        .rb-filter-modal-body {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 12px 0;
+        }
+        .rb-filter-group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.1s;
+        }
+        .rb-filter-group-header:hover { background: rgba(255,255,255,0.04); }
+        .rb-filter-person-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 12px 3px 28px;
+            cursor: pointer;
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.6);
+            transition: background 0.1s;
+        }
+        .rb-filter-person-row:hover { background: rgba(255,255,255,0.04); }
+        .rb-filter-cb {
+            width: 13px; height: 13px;
+            border: 2px solid rgba(255,255,255,0.25);
+            border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            font-size: 8px;
+            transition: all 0.15s;
+        }
+        .rb-filter-cb.checked { background: #3b82f6; border-color: #3b82f6; color: white; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+        // ==========================================
+        // CONSTANTS
+        // ==========================================
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyZNyrLxkW2vjbq8xpii43rWzYkkDvJTQ_KQCGMyErPZKqssL0XiA_UknwxOJ_XGzAt/exec';
+        const STORAGE_KEY = 'tps-scheduler-state';
+
+        const TIMELINE_START = 6 * 60;
+        const TIMELINE_END   = 18 * 60;
+        const TIMELINE_RANGE = TIMELINE_END - TIMELINE_START;
+        const DAY_COL_WIDTH  = 750;
+
+        const SECTION_ORDER = ['Flying', 'Ground', 'NA'];
+
+        // Color scheme matching source spreadsheet
+        const CATEGORY_COLORS = {
+            'FTC-A':            { bg: '#7c3aed', text: '#f3e8ff' },  // purple
+            'FTC-B':            { bg: '#ea580c', text: '#fff7ed' },  // orange
+            'STC-A':            { bg: '#9333ea', text: '#fae8ff' },  // purple variant
+            'STC-B':            { bg: '#f97316', text: '#ffedd5' },  // orange variant
+            'Staff IP':         { bg: '#16a34a', text: '#dcfce7' },  // green
+            'Staff IFTE/ICSO':  { bg: '#4338ca', text: '#e0e7ff' },  // indigo
+            'Staff STC':        { bg: '#2563eb', text: '#dbeafe' },  // blue
+            'Attached/Support': { bg: '#64748b', text: '#f1f5f9' },  // slate
+        };
+
+        const DEFAULT_CHIP = { bg: '#475569', text: '#e2e8f0' };
+
+        // ==========================================
+        // UTILITIES
+        // ==========================================
+
+        const timeToMinutes = (str) => {
+            if (!str) return null;
+            const m = str.match(/(\d{1,2}):(\d{2})/);
+            return m ? parseInt(m[1]) * 60 + parseInt(m[2]) : null;
+        };
+
+        const minutesToTime = (mins) => {
+            const h = Math.floor(mins / 60);
+            const m = Math.floor(mins % 60);
+            return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+        };
+
+        const timePct = (mins) => Math.max(0, Math.min(100, ((mins - TIMELINE_START) / TIMELINE_RANGE) * 100));
+
+        let _eid = 0;
+        const mkId = () => `evt-${++_eid}`;
+
+        const evStart = (ev) => timeToMinutes(ev.startTime);
+        const evEnd = (ev) => {
+            const e = timeToMinutes(ev.endTime);
+            const s = timeToMinutes(ev.startTime);
+            return e || (s ? s + 60 : TIMELINE_END);
+        };
+
+        // Effective visual end accounting for min-width:140px expansion
+        const visualEnd = (ev) => {
+            const s = evStart(ev);
+            const e = evEnd(ev);
+            if (s == null) return e;
+            const dur = e - s;
+            const widthPct = (dur / TIMELINE_RANGE) * 100;
+            const cardPx = (widthPct / 100) * DAY_COL_WIDTH;
+            if (cardPx >= 140) return e;
+            // Card is expanded to 140px — compute what end time that corresponds to
+            const expandedPct = (140 / DAY_COL_WIDTH) * 100;
+            const expandedDur = (expandedPct / 100) * TIMELINE_RANGE;
+            return s + expandedDur;
+        };
+
+        const overlap = (a, b) => {
+            const aS = evStart(a), aE = evEnd(a), bS = evStart(b), bE = evEnd(b);
+            if (aS == null || bS == null) return false;
+            return aS < bE && bS < aE;
+        };
+
+        const fmtDate = (iso) => {
+            const [y,m,d] = iso.split('-').map(Number);
+            const dt = new Date(Date.UTC(y, m-1, d));
+            const wd = dt.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+            const mo = dt.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+            return { weekday: wd, day: d, month: mo, full: `${wd} ${d} ${mo}` };
+        };
+
+        const personCat = (name, roster) => {
+            for (const [cat, members] of Object.entries(roster)) {
+                if (members.includes(name)) return cat;
+            }
+            return null;
+        };
+
+        const chipColor = (name, roster) => {
+            const cat = personCat(name, roster);
+            return (cat && CATEGORY_COLORS[cat]) || DEFAULT_CHIP;
+        };
+
+        // Filter out strings that are notes, not names
+        const isValidName = (str) => {
+            if (!str || typeof str !== 'string') return false;
+            const t = str.trim();
+            if (!t || t.length > 25) return false;
+            if (t === 'FALSE' || t === 'TRUE') return false;
+            if (t.split(/\s+/).length > 4) return false;
+            return true;
+        };
+
+        // ==========================================
+        // DATA TRANSFORMATION
+        // ==========================================
+
+        const transformSheetReturn = (sheet, date) => {
+            const events = [];
+            if (!sheet || !sheet.schedule) return events;
+            sheet.schedule.forEach(item => {
+                const sec = item.section;
+                const personnel = (item.personnel || []).filter(isValidName).map(p => p.trim());
+                if (sec === 'Supervision' || sec === 'Academics') {
+                    events.push({
+                        id: mkId(), section: sec, date,
+                        model: null,
+                        eventName: sec === 'Supervision' ? item.details.duty : item.details.eventName,
+                        startTime: item.details.startTime || item.time,
+                        endTime: item.details.endTime || null,
+                        etd: null, eta: null,
+                        personnel: [...personnel],
+                        originalPersonnel: [...personnel],
+                        notes: null, readonly: true,
+                    });
+                } else if (sec === 'Flying') {
+                    events.push({
+                        id: mkId(), section: 'Flying', date,
+                        model: (item.details.model || '').trim(),
+                        eventName: item.details.eventName || '',
+                        startTime: item.details.briefTime || item.time,
+                        endTime: item.details.debriefEnd || null,
+                        etd: item.details.etd || null,
+                        eta: item.details.eta || null,
+                        personnel: [...personnel],
+                        originalPersonnel: [...personnel],
+                        notes: item.details.notes === 'FALSE' ? null : item.details.notes,
+                        readonly: false,
+                    });
+                } else if (sec === 'Ground') {
+                    events.push({
+                        id: mkId(), section: 'Ground', date,
+                        model: null,
+                        eventName: item.details.eventName || '',
+                        startTime: item.details.startTime || item.time,
+                        endTime: item.details.endTime || null,
+                        etd: null, eta: null,
+                        personnel: [...personnel],
+                        originalPersonnel: [...personnel],
+                        notes: item.details.notes, readonly: false,
+                    });
+                } else if (sec === 'NA') {
+                    events.push({
+                        id: mkId(), section: 'NA', date,
+                        model: null,
+                        eventName: item.details.reason || 'NA',
+                        startTime: item.details.startTime || item.time,
+                        endTime: item.details.endTime || null,
+                        etd: null, eta: null,
+                        personnel: [...personnel],
+                        originalPersonnel: [...personnel],
+                        notes: null, readonly: false,
+                    });
+                }
+            });
+            return events;
+        };
+
+        const transformBatchData = (batchJson, roster) => {
+            const all = [];
+            if (!batchJson || !batchJson.days) return all;
+
+            batchJson.days.forEach(dayData => {
+                const date = dayData.isoDate;
+                const raw = dayData.data;
+
+                if (raw.flying) {
+                    raw.flying.forEach(row => {
+                        const briefTime = row[1];
+                        const eventName = row[5];
+                        if (!briefTime || !eventName || eventName === 'Event') return;
+                        const crew = row.slice(6, 15).filter(isValidName).map(c => c.trim());
+                        all.push({
+                            id: mkId(), section: 'Flying', date,
+                            model: (row[0] || '').trim(),
+                            eventName,
+                            startTime: briefTime,
+                            endTime: row[4],
+                            etd: row[2], eta: row[3],
+                            personnel: crew,
+                            originalPersonnel: [...crew],
+                            notes: (row[15] && row[15] !== 'FALSE') ? row[15] : null,
+                            readonly: false,
+                        });
+                    });
+                }
+
+                if (raw.ground) {
+                    raw.ground.forEach(row => {
+                        const evName = row[0];
+                        const start = row[1];
+                        if (!evName || !start || evName === 'Events') return;
+                        const people = row.slice(3, 10).filter(isValidName).map(p => p.trim());
+                        all.push({
+                            id: mkId(), section: 'Ground', date,
+                            model: null, eventName: evName,
+                            startTime: start, endTime: row[2],
+                            etd: null, eta: null,
+                            personnel: people,
+                            originalPersonnel: [...people],
+                            notes: (row[10] && row[10] !== 'FALSE') ? row[10] : null,
+                            readonly: false,
+                        });
+                    });
+                }
+
+                if (raw.na) {
+                    raw.na.forEach(row => {
+                        const reason = row[0];
+                        const start = row[1];
+                        if (!reason || !start || reason === 'Reason') return;
+                        const people = row.slice(3).filter(isValidName).map(p => p.trim());
+                        all.push({
+                            id: mkId(), section: 'NA', date,
+                            model: null, eventName: reason,
+                            startTime: start, endTime: row[2],
+                            etd: null, eta: null,
+                            personnel: people,
+                            originalPersonnel: [...people],
+                            notes: null, readonly: false,
+                        });
+                    });
+                }
+
+                if (raw.supervision) {
+                    raw.supervision.forEach(row => {
+                        const duty = row[0];
+                        if (!duty || duty === 'Supervision' || !duty.trim()) return;
+                        for (let i = 1; i < row.length - 2; i += 3) {
+                            const poc = row[i];
+                            if (poc && poc.trim() && isValidName(poc)) {
+                                all.push({
+                                    id: mkId(), section: 'Supervision', date,
+                                    model: null, eventName: duty.trim(),
+                                    startTime: row[i+1], endTime: row[i+2],
+                                    etd: null, eta: null,
+                                    personnel: [poc.trim()],
+                                    originalPersonnel: [poc.trim()],
+                                    notes: null, readonly: true,
+                                });
+                            }
+                        }
+                    });
+                }
+
+                if (raw.academics) {
+                    const gm = { 'Alpha FTC':'FTC-A','Alpha STC':'STC-A','Bravo FTC':'FTC-B','Bravo STC':'STC-B','IP':'Staff IP','Staff STC':'Staff STC','IFTE/IWSO':'Staff IFTE/ICSO' };
+                    raw.academics.forEach(row => {
+                        const group = row[0], start = row[1];
+                        if (!group || !start || group === 'Academics') return;
+                        const cat = gm[group.trim()];
+                        const people = (cat && roster[cat]) || [];
+                        all.push({
+                            id: mkId(), section: 'Academics', date,
+                            model: null, eventName: `${group} Academics`,
+                            startTime: start, endTime: row[2],
+                            etd: null, eta: null,
+                            personnel: [...people],
+                            originalPersonnel: [...people],
+                            notes: null, readonly: true,
+                        });
+                    });
+                }
+            });
+
+            return all;
+        };
+
+        // ==========================================
+        // DUPLICATE EVENT MERGING
+        // ==========================================
+
+        // Returns true if name appears in any staff roster category
+        const isStaff = (name, roster) => {
+            if (!name || !roster) return false;
+            const staffCategories = ['Staff IP', 'Staff IFTE/ICSO', 'Staff STC', 'Attached/Support'];
+            return staffCategories.some(cat =>
+                (roster[cat] || []).some(rName => rName.trim() === name.trim())
+            );
+        };
+
+        const mergeDuplicateEvents = (events, roster) => {
+            if (!events || events.length === 0) return events;
+
+            const mergeableEvents = [];
+
+            events.forEach(ev => {
+                if (ev.readonly || ev.section === 'NA' || ev.section === 'Supervision' || ev.section === 'Academics') {
+                    // pass-through: not mergeable
+                } else {
+                    mergeableEvents.push(ev);
+                }
+            });
+
+            // Phase 1: Group by base key WITHOUT personnel[0]
+            const baseGroups = new Map();
+
+            mergeableEvents.forEach(ev => {
+                let key;
+                if (ev.section === 'Flying') {
+                    key = [ev.date, ev.section, (ev.model || '').trim(), (ev.eventName || '').trim(),
+                        (ev.startTime || ''), (ev.endTime || ''), (ev.etd || ''), (ev.eta || '')].join('||');
+                } else {
+                    key = [ev.date, ev.section, (ev.eventName || '').trim(),
+                        (ev.startTime || ''), (ev.endTime || '')].join('||');
+                }
+                if (!baseGroups.has(key)) baseGroups.set(key, []);
+                baseGroups.get(key).push(ev);
+            });
+
+            // Phase 2: Within each base group, check distinct leads to decide merge strategy
+            const mergedById = new Map();
+            const removedIds = new Set();
+
+            // Helper: get the lead (personnel[0]) from an event — used for sub-grouping
+            const getLead = (ev) => {
+                if (!ev.personnel || ev.personnel.length === 0) return null;
+                return ev.personnel[0];
+            };
+
+            // Helper: merge a group of events into one, updating mergedById and removedIds
+            const mergeGroup = (group) => {
+                if (group.length <= 1) return;
+
+                // Pick primary: prefer an event whose personnel[0] is staff (instructor lead)
+                let primaryIdx = 0;
+                for (let i = 0; i < group.length; i++) {
+                    const lead = getLead(group[i]);
+                    if (lead && isStaff(lead, roster)) { primaryIdx = i; break; }
+                }
+                const primary = group[primaryIdx];
+
+                // Build combined personnel with lead first (prefer staff lead for ordering)
+                const lead = getLead(primary);
+                const staffLead = lead && isStaff(lead, roster) ? lead : null;
+                const seen = new Set();
+                const combinedPersonnel = [];
+                if (staffLead) {
+                    combinedPersonnel.push(staffLead);
+                    seen.add(staffLead);
+                }
+                // Add primary's remaining personnel
+                (primary.personnel || []).forEach(person => {
+                    if (!seen.has(person)) { combinedPersonnel.push(person); seen.add(person); }
+                });
+                // Add all other events' personnel
+                group.forEach((ev, i) => {
+                    if (i === primaryIdx) return;
+                    (ev.personnel || []).forEach(person => {
+                        if (!seen.has(person)) { combinedPersonnel.push(person); seen.add(person); }
+                    });
+                });
+
+                // Merge notes
+                const noteSet = new Set();
+                group.forEach(ev => { if (ev.notes && ev.notes.trim()) noteSet.add(ev.notes.trim()); });
+                const mergedNotes = noteSet.size > 0 ? [...noteSet].join('; ') : primary.notes;
+
+                // Merge Flying-specific fields
+                let mergedEtd = primary.etd, mergedEta = primary.eta, mergedEndTime = primary.endTime;
+                if (primary.section === 'Flying') {
+                    group.forEach(ev => {
+                        if (!mergedEtd && ev.etd) mergedEtd = ev.etd;
+                        if (!mergedEta && ev.eta) mergedEta = ev.eta;
+                        if (!mergedEndTime && ev.endTime) mergedEndTime = ev.endTime;
+                    });
+                }
+
+                mergedById.set(primary.id, {
+                    ...primary, etd: mergedEtd, eta: mergedEta, endTime: mergedEndTime,
+                    personnel: combinedPersonnel, originalPersonnel: [...combinedPersonnel], notes: mergedNotes,
+                });
+                group.forEach((ev, i) => { if (i !== primaryIdx) removedIds.add(ev.id); });
+            };
+
+            baseGroups.forEach((group) => {
+                if (group.length <= 1) return;
+
+                // Find distinct leads (personnel[0]) in this base group
+                const leads = new Set();
+                group.forEach(ev => {
+                    const lead = getLead(ev);
+                    if (lead) leads.add(lead);
+                });
+
+                if (leads.size <= 1) {
+                    // 0 or 1 distinct leads: merge everything together (same instructor overflow)
+                    mergeGroup(group);
+                } else {
+                    // 2+ distinct leads: sub-group by personnel[0]
+                    // Events with no personnel attach to the first sub-group
+                    const subGroups = new Map(); // lead -> events
+                    const noLeadEvents = [];
+
+                    group.forEach(ev => {
+                        const lead = getLead(ev);
+                        if (lead) {
+                            if (!subGroups.has(lead)) subGroups.set(lead, []);
+                            subGroups.get(lead).push(ev);
+                        } else {
+                            noLeadEvents.push(ev);
+                        }
+                    });
+
+                    // Distribute no-lead events into existing sub-groups
+                    // Each no-lead event goes to the first sub-group (arbitrary but deterministic)
+                    if (noLeadEvents.length > 0 && subGroups.size > 0) {
+                        const firstKey = subGroups.keys().next().value;
+                        noLeadEvents.forEach(ev => subGroups.get(firstKey).push(ev));
+                    }
+
+                    subGroups.forEach((subGroup) => {
+                        mergeGroup(subGroup);
+                    });
+                }
+            });
+
+            // Rebuild result preserving original order, substituting merged events, dropping removed
+            const result = [];
+            events.forEach(ev => {
+                if (removedIds.has(ev.id)) return;
+                if (mergedById.has(ev.id)) result.push(mergedById.get(ev.id));
+                else result.push(ev);
+            });
+            return result;
+        };
+
+        // ==========================================
+        // CONFLICT DETECTION (with detail info)
+        // ==========================================
+
+        const detectConflicts = (allEvents) => {
+            // Map: person||date -> [events]
+            const pdMap = {};
+            allEvents.forEach(ev => {
+                ev.personnel.forEach(person => {
+                    const k = `${person}||${ev.date}`;
+                    if (!pdMap[k]) pdMap[k] = [];
+                    pdMap[k].push(ev);
+                });
+            });
+
+            // Map<eventId, Map<personName, [{eventName, model, section, startTime, endTime}]>>
+            const conflicts = new Map();
+
+            Object.values(pdMap).forEach(evList => {
+                if (evList.length < 2) return;
+                for (let i = 0; i < evList.length; i++) {
+                    for (let j = i + 1; j < evList.length; j++) {
+                        if (!overlap(evList[i], evList[j])) continue;
+                        const common = evList[i].personnel.filter(p => evList[j].personnel.includes(p));
+                        common.forEach(person => {
+                            // Helper: add conflict entry if not already recorded (dedup by eventName+times)
+                            const addConflict = (evId, entry) => {
+                                if (!conflicts.has(evId)) conflicts.set(evId, new Map());
+                                const cm = conflicts.get(evId);
+                                if (!cm.has(person)) cm.set(person, []);
+                                const arr = cm.get(person);
+                                const dup = arr.some(c => c.eventName === entry.eventName && c.startTime === entry.startTime && c.endTime === entry.endTime);
+                                if (!dup) arr.push(entry);
+                            };
+                            // Record on event i
+                            addConflict(evList[i].id, {
+                                eventName: evList[j].eventName, model: evList[j].model,
+                                section: evList[j].section,
+                                startTime: evList[j].startTime, endTime: evList[j].endTime,
+                            });
+                            // Record on event j
+                            addConflict(evList[j].id, {
+                                eventName: evList[i].eventName, model: evList[i].model,
+                                section: evList[i].section,
+                                startTime: evList[i].startTime, endTime: evList[i].endTime,
+                            });
+                        });
+                    }
+                }
+            });
+
+            return conflicts;
+        };
+
+        const getConflictText = (eventId, person, conflicts) => {
+            const ec = conflicts.get(eventId);
+            if (!ec) return null;
+            const pc = ec.get(person);
+            if (!pc || pc.length === 0) return null;
+            return pc.map(c => {
+                const m = c.model ? `${c.model} ` : '';
+                return `${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`;
+            }).join('; ');
+        };
+
+        const hasConflict = (eventId, person, conflicts) => {
+            const ec = conflicts.get(eventId);
+            return ec && ec.has(person);
+        };
+
+        const eventConflictCount = (eventId, conflicts) => {
+            const ec = conflicts.get(eventId);
+            return ec ? ec.size : 0;
+        };
+
+        // ==========================================
+        // NET CHANGE COMPUTATION
+        // ==========================================
+
+        function computeNetChanges(changes) {
+            if (!changes || changes.length === 0) return [];
+
+            const netMap = new Map();
+            changes.forEach((ch, idx) => {
+                const key = `${ch.person}||${ch.eventId}`;
+                if (!netMap.has(key)) {
+                    netMap.set(key, {
+                        net: 0, indices: [], person: ch.person, eventId: ch.eventId,
+                        eventMeta: { eventId: ch.eventId, eventName: ch.eventName, eventModel: ch.eventModel,
+                            eventTime: ch.eventTime, eventSection: ch.eventSection, date: ch.date },
+                    });
+                }
+                const entry = netMap.get(key);
+                entry.net += (ch.type === 'add' ? 1 : -1);
+                entry.indices.push(idx);
+            });
+
+            const personEffects = new Map();
+            for (const [, entry] of netMap) {
+                if (!personEffects.has(entry.person)) {
+                    personEffects.set(entry.person, { adds: [], removes: [], zeroIndices: [] });
+                }
+                const pe = personEffects.get(entry.person);
+                if (entry.net > 0) pe.adds.push(entry);
+                else if (entry.net < 0) pe.removes.push(entry);
+                else pe.zeroIndices.push(...entry.indices);
+            }
+
+            const rawInstructions = [];
+            for (const [person, pe] of personEffects) {
+                pe.adds.sort((a, b) => Math.min(...a.indices) - Math.min(...b.indices));
+                pe.removes.sort((a, b) => Math.min(...a.indices) - Math.min(...b.indices));
+                const numMoves = Math.min(pe.adds.length, pe.removes.length);
+
+                for (let i = 0; i < numMoves; i++) {
+                    const rem = pe.removes[i], add = pe.adds[i];
+                    const allIndices = [...rem.indices, ...add.indices];
+                    if (numMoves === 1 && pe.adds.length === 1 && pe.removes.length === 1) {
+                        allIndices.push(...pe.zeroIndices);
+                    }
+                    rawInstructions.push({ type: 'move', person, date: rem.eventMeta.date,
+                        source: rem.eventMeta, target: add.eventMeta,
+                        rawIndices: allIndices, firstIndex: Math.min(...allIndices) });
+                }
+                if (numMoves > 1 && pe.zeroIndices.length > 0) {
+                    rawInstructions[rawInstructions.length - numMoves].rawIndices.push(...pe.zeroIndices);
+                }
+                for (let i = numMoves; i < pe.adds.length; i++) {
+                    const add = pe.adds[i];
+                    rawInstructions.push({ type: 'add', person, date: add.eventMeta.date,
+                        source: null, target: add.eventMeta,
+                        rawIndices: [...add.indices], firstIndex: Math.min(...add.indices) });
+                }
+                for (let i = numMoves; i < pe.removes.length; i++) {
+                    const rem = pe.removes[i];
+                    rawInstructions.push({ type: 'remove', person, date: rem.eventMeta.date,
+                        source: rem.eventMeta, target: null,
+                        rawIndices: [...rem.indices], firstIndex: Math.min(...rem.indices) });
+                }
+            }
+
+            const groupMap = new Map();
+            rawInstructions.forEach(inst => {
+                let groupKey;
+                if (inst.type === 'move') groupKey = `move||${inst.source.eventId}||${inst.target.eventId}`;
+                else if (inst.type === 'add') groupKey = `add||${inst.target.eventId}`;
+                else groupKey = `remove||${inst.source.eventId}`;
+
+                if (!groupMap.has(groupKey)) {
+                    groupMap.set(groupKey, { type: inst.type, persons: [], date: inst.date,
+                        source: inst.source, target: inst.target, rawIndices: [], firstIndex: inst.firstIndex });
+                }
+                const group = groupMap.get(groupKey);
+                group.persons.push(inst.person);
+                group.rawIndices.push(...inst.rawIndices);
+                group.firstIndex = Math.min(group.firstIndex, inst.firstIndex);
+            });
+
+            const result = Array.from(groupMap.values());
+            result.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.firstIndex - b.firstIndex);
+            return result;
+        }
+
+        // ==========================================
+        // LANE ASSIGNMENT (dynamic heights)
+        // ==========================================
+
+        const estimateHeight = (ev) => {
+            let h = 18; // title bar
+            if (ev.section === 'Flying' && ev.etd && ev.eta) h += 14;
+            const crewCount = Math.max(1, ev.personnel.length + 1); // +1 for add chip
+
+            // Width-aware: compute card pixel width from time span
+            const sMin = evStart(ev);
+            const eMin = evEnd(ev);
+            const dur = (eMin - sMin) || 60;
+            const widthPct = (dur / TIMELINE_RANGE) * 100;
+            const cardPxWidth = Math.max(140, (widthPct / 100) * DAY_COL_WIDTH);
+
+            // Estimate chips per row based on actual card width
+            const chipAreaWidth = cardPxWidth - 14; // padding
+            const avgChipWidth = 78;
+            const chipsPerRow = Math.max(1, Math.floor(chipAreaWidth / avgChipWidth));
+
+            const rows = Math.ceil(crewCount / chipsPerRow);
+            h += rows * 20 + 6;
+            return Math.max(h, 40);
+        };
+
+        const buildLayout = (events) => {
+            if (events.length === 0) return { evMap: {}, total: 0 };
+
+            const sorted = [...events].sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0));
+            const lanes = [];
+            const laneOf = {};
+
+            sorted.forEach(ev => {
+                let placed = false;
+                for (let i = 0; i < lanes.length; i++) {
+                    const last = lanes[i][lanes[i].length - 1];
+                    if ((evStart(ev) || 0) >= (visualEnd(last) || 0)) {
+                        lanes[i].push(ev);
+                        laneOf[ev.id] = i;
+                        placed = true;
+                        break;
+                    }
+                }
+                if (!placed) {
+                    lanes.push([ev]);
+                    laneOf[ev.id] = lanes.length - 1;
+                }
+            });
+
+            // Lane heights
+            const laneH = lanes.map(lane => Math.max(...lane.map(estimateHeight)));
+            const laneTop = [];
+            let cum = 0;
+            laneH.forEach((h, i) => { laneTop[i] = cum; cum += h + 3; });
+
+            const evMap = {};
+            events.forEach(ev => {
+                const li = laneOf[ev.id] ?? 0;
+                evMap[ev.id] = { top: laneTop[li] || 0, height: estimateHeight(ev) };
+            });
+
+            return { evMap, total: cum };
+        };
+
+        // ==========================================
+        // SAMPLE DATA
+        // ==========================================
+
+        const SAMPLE_ROSTER = {"FTC-B":["Arnold, C","Baum, J","Bean, P","Cagliano, C","Dockum, T","Ehler, A","Ferrer, J","Harms, J *","Heater, M","Juedeman, D","Kalampoukis","Larsen, R","Marshall, R","Olvera, J","Pilling, H","Reed, C","Roberts, J","Rogers, J","Slaughter, J","Stiscia, I","Toth, E","Williams, J","Wilson, R","Wooden, J"],"STC-B":["Baxter, C","Beck, S","Coolican, H","McIlhenny, M","Newland, A","Rocker, C"],"FTC-A":["Bertke, F","Bradley, J","Clements, J *","Dobbs, D","Ghesquiere, L","Graham, J","Knoerr, S","Leaf, A","Martinez, P","Morrison, J","Novack, R","Nyang, B","Olson, C","Oren, E","Orfitelli, N","Oshea, P","Pessolano, C","Peterson, R","Pope, D","Rogers, H","Root, S","Ryan, J","Sternat, N","Umland, M"],"STC-A":["Barbosa, T","Barone, R","Bartkowiak, R","Butcher, M","Doyle, D","Holmes, C","Konnath, M","Pitre, S","Quick, L","Sargent, R"],"Staff IP":["Adair, T","Ames","Borek","Coleman","Duede","Fields","Fitzgerald","Gotwald","Gray, W","Heary","Hebmann","Hickernell","Hutcheson","Karlen","Lovell","Major, K","Montes","Patel","Payne","Sick","Siddiqui","Smith, K","Strafaccia","Vantiger","White, C"],"Staff IFTE/ICSO":["Agbeyibor, R","Aronoff, R","Baltunis","Baxley, C","Bernstein","Dawson, D","Echegaray","Erb, R","Gahan","Hamidani","Hinojos","Kemper","Kinard","McCafferty","Miller, E","Peterson, W","Ricci","Sanders","Sisneroz, M","Tegtmeier","Vanhoy","Wenner, A"],"Staff STC":["Dauk, K","Farmer, M","Heinz, D","Lowry, W","Neff, B","Palski, M","Post, T","Reis, C","Ross, J","Ruchlin, B","Salerno, C","Sands, T","Saunders, M","Walter, S"],"Attached/Support":["Adams, D","Alora","Brooks","Buckwalter","Digiacomo","Downing","Elledge","Flynn","Forystek","Freeborn","Giffen","Gilliland","Graham","Hammond","Hayes","Janjua","Kern, S","Killingsworth","Lee, C","Marcus","Peter, D","Peterson, J","Pinedo","Praiswater","Russell","Shick","Steigerwald","Suhr","Tanner, R","Valentini","Vorgert, S","Webb","Williford","Wright"]};
+
+        const SAMPLE_DATES = ["2026-02-03","2026-02-04","2026-02-05","2026-02-06","2026-02-09"];
+
+        const SAMPLE_SHEET = {
+            schedule: [
+                { section:"Supervision", time:"07:15", details:{ duty:"SOF", startTime:"07:15", endTime:"12:00" }, personnel:["Coleman"] },
+                { section:"Supervision", time:"06:30", details:{ duty:"OS", startTime:"06:30", endTime:"12:45" }, personnel:["Fitzgerald"] },
+                { section:"Supervision", time:"12:45", details:{ duty:"OS", startTime:"12:45", endTime:"17:00" }, personnel:["Borek"] },
+                { section:"Supervision", time:"06:30", details:{ duty:"ODO", startTime:"06:30", endTime:"16:00" }, personnel:["Bernstein"] },
+                { section:"Flying", time:"08:15", details:{ model:"F-16", eventName:"STRUCTURES EE (FQ7230)", briefTime:"08:15", etd:"10:45", eta:"12:15", debriefEnd:"13:15", notes:"FALSE" }, personnel:["Larsen, R","Buckwalter"] },
+                { section:"Flying", time:"08:45", details:{ model:"F-16", eventName:"SENSORS DEMO (SY6130)", briefTime:"08:45", etd:"10:45", eta:"12:15", debriefEnd:"13:15", notes:"FALSE" }, personnel:["Juedeman, D","Hickernell"] },
+                { section:"Flying", time:"07:00", details:{ model:"C-12", eventName:"MSN QUAL", briefTime:"07:00", etd:"11:00", eta:"13:00", debriefEnd:"14:00", notes:"FALSE" }, personnel:["Ames","Major, K"] },
+                { section:"Flying", time:"09:30", details:{ model:"T-38", eventName:"LOW L/D P/S CHASE", briefTime:"09:30", etd:"11:30", eta:"12:30", debriefEnd:"13:30", notes:"FALSE" }, personnel:["Heary","Reed, C"] },
+                { section:"Flying", time:"09:30", details:{ model:"T-38", eventName:"LOW L/D P/S CHASE", briefTime:"09:30", etd:"11:30", eta:"12:30", debriefEnd:"13:30", notes:"FALSE" }, personnel:["Vantiger","Roberts, J"] },
+                { section:"Flying", time:"13:30", details:{ model:"T-38", eventName:"MSN QUAL FORM UPG", briefTime:"13:30", etd:"15:30", eta:"16:30", debriefEnd:"17:30", notes:"FALSE" }, personnel:["Digiacomo","Payne"] },
+                { section:"Flying", time:"09:00", details:{ model:"X-62A", eventName:"VISTA UPG", briefTime:"09:00", etd:"11:00", eta:"12:30", debriefEnd:"13:30", notes:"FALSE" }, personnel:["Gray, W","Janjua"] },
+                { section:"Flying", time:"07:00", details:{ model:"EXTRA", eventName:"QUAL", briefTime:"07:00", etd:"08:00", eta:"09:00", debriefEnd:"11:00", notes:"FALSE" }, personnel:["Marshall, R"] },
+                { section:"Ground", time:"15:00", details:{ eventName:"Heavy Acft Sim Evals MIB", startTime:"15:00", endTime:"17:00", notes:null }, personnel:["Borek"] },
+                { section:"Ground", time:"10:00", details:{ eventName:"CR TC Primer CR A", startTime:"10:00", endTime:"13:00", notes:null }, personnel:["Peterson, J","Duede"] },
+                { section:"Ground", time:"07:30", details:{ eventName:"NASA Meeting", startTime:"07:30", endTime:"09:00", notes:null }, personnel:["Peterson, J","Kemper","Duede","Ricci"] },
+                { section:"Ground", time:"08:00", details:{ eventName:"PIO SIM (FS Sim A)", startTime:"08:00", endTime:"09:00", notes:null }, personnel:["McCafferty","Toth, E","Arnold, C"] },
+                { section:"Ground", time:"09:00", details:{ eventName:"PIO SIM (FS Sim B)", startTime:"09:00", endTime:"10:00", notes:null }, personnel:["Slaughter, J","Ehler, A"] },
+                { section:"NA", time:"14:00", details:{ reason:"Master Scheduling Mtg", startTime:"14:00", endTime:"15:00" }, personnel:["Vantiger","Montes"] },
+                { section:"NA", time:"09:00", details:{ reason:"TPS Staff Mtg", startTime:"09:00", endTime:"10:30" }, personnel:["Vantiger","Karlen","Vanhoy"] },
+                { section:"NA", time:"09:00", details:{ reason:"IRC", startTime:"09:00", endTime:"12:30" }, personnel:["Gotwald"] },
+                { section:"NA", time:"07:00", details:{ reason:"Water Survival", startTime:"07:00", endTime:"12:00" }, personnel:["Hamidani"] },
+                { section:"NA", time:"13:00", details:{ reason:"MFLC Session", startTime:"13:00", endTime:"14:00" }, personnel:["Newland, A"] },
+            ]
+        };
+
+        const buildSampleEvents = () => {
+            const events = [];
+            events.push(...transformSheetReturn(SAMPLE_SHEET, '2026-02-03'));
+            events.push(...transformSheetReturn(SAMPLE_SHEET, '2026-02-04'));
+            return mergeDuplicateEvents(events, SAMPLE_ROSTER);
+        };
+
+        // ==========================================
+        // LOCAL STORAGE
+        // ==========================================
+
+        const saveState = (changes, selectedIds, naCats) => {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    changes,
+                    selectedIds: [...selectedIds],
+                    naCats: [...naCats],
+                    savedAt: new Date().toISOString(),
+                }));
+            } catch (e) {}
+        };
+
+        const WORKING_STORAGE_KEY = 'tps-scheduler-working';
+
+        const saveWorkingCopy = (workingEvents, changes, allEvents, roster, dates, selectedIds, naCats) => {
+            try {
+                localStorage.setItem(WORKING_STORAGE_KEY, JSON.stringify({
+                    workingEvents,
+                    changes,
+                    allEvents,
+                    roster,
+                    dates,
+                    selectedIds: [...selectedIds],
+                    naCats: [...naCats],
+                    savedAt: new Date().toISOString(),
+                }));
+            } catch (e) {
+                console.warn('Failed to save working copy:', e.message);
+            }
+        };
+
+        const loadWorkingCopy = () => {
+            try {
+                const raw = localStorage.getItem(WORKING_STORAGE_KEY);
+                if (!raw) return null;
+                const data = JSON.parse(raw);
+                if (!data.workingEvents || !data.allEvents) return null;
+                return {
+                    workingEvents: data.workingEvents,
+                    changes: data.changes || [],
+                    allEvents: data.allEvents,
+                    roster: data.roster || {},
+                    dates: data.dates || [],
+                    selectedIds: new Set(data.selectedIds || []),
+                    naCats: new Set(data.naCats || []),
+                    savedAt: data.savedAt,
+                };
+            } catch (e) { return null; }
+        };
+
+        const clearWorkingCopy = () => {
+            try { localStorage.removeItem(WORKING_STORAGE_KEY); } catch (e) {}
+        };
+
+        const loadState = () => {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return null;
+                const data = JSON.parse(raw);
+                return {
+                    changes: data.changes || [],
+                    selectedIds: new Set(data.selectedIds || []),
+                    naCats: new Set(data.naCats || []),
+                    savedAt: data.savedAt,
+                };
+            } catch (e) { return null; }
+        };
+
+        const clearState = () => {
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+            clearWorkingCopy();
+        };
+
+        // ==========================================
+        // COMPONENTS
+        // ==========================================
+
+        const LoadingScreen = ({ progress }) => (
+            <div className="loading-screen">
+                <div className="spinner" style={{ width: 40, height: 40, borderWidth: 4 }}></div>
+                <div className="text-blue-400 font-bold tracking-widest uppercase text-xs">{progress || 'Loading...'}</div>
+            </div>
+        );
+
+        // ─── EVENT CLASSIFICATION ───
+
+        const STAFF_KEYWORDS = [
+            'MSN QUAL', 'NVG QUAL', 'CHECKRIDE', 'CURRENCY', 'FERRY FLIGHT', 'FERRY',
+            'CHASE', 'CADET', 'NAVY', 'HI AOA', 'UPGRADE', 'VISTA UPG', 'FORM UPG', 'UPG'
+        ];
+
+        const classifyEvent = (ev, roster) => {
+            // 1. Check staff keywords against event name
+            const name = (ev.eventName || '').toUpperCase();
+            // "P/S" = Performance/Syllabus (student training events) — exclude from staff keyword match
+            const isStudentSyllabus = name.includes('P/S ');
+            if (!isStudentSyllabus && STAFF_KEYWORDS.some(kw => name.includes(kw))) return 'Staff';
+
+            // 2. Count non-staff personnel by class
+            const staffCats = new Set(['Staff IP', 'Staff IFTE/ICSO', 'Staff STC', 'Attached/Support']);
+            let aCount = 0, bCount = 0;
+            ev.personnel.forEach(p => {
+                const cat = personCat(p, roster);
+                if (!cat || staffCats.has(cat)) return; // skip staff/unknown
+                if (cat === 'FTC-A' || cat === 'STC-A') aCount++;
+                else if (cat === 'FTC-B' || cat === 'STC-B') bCount++;
+            });
+
+            if (aCount > 0 && aCount >= bCount) return 'A-Class';
+            if (bCount > 0 && bCount > aCount) return 'B-Class';
+            return 'Other';
+        };
+
+        const CLASS_COLORS = {
+            'A-Class': { bg: 'rgba(168,85,247,0.08)', border: '#a855f7', text: '#d8b4fe', cssClass: 'class-group-a' },
+            'B-Class': { bg: 'rgba(249,115,22,0.08)', border: '#f97316', text: '#fed7aa', cssClass: 'class-group-b' },
+            'Staff':   { bg: 'rgba(34,197,94,0.08)',   border: '#22c55e', text: '#bbf7d0', cssClass: 'class-group-staff' },
+            'Other':   { bg: 'rgba(100,116,139,0.08)', border: '#64748b', text: '#cbd5e1', cssClass: 'class-group-other' },
+        };
+
+        // ─── SELECTION SCREEN (v3.1: role-based grouping, separate NA, quick-select) ───
+
+        const EventSelectionScreen = ({ allEvents, roster, dates, onContinue, initialSelected, initialNaCats }) => {
+            const [selectedIds, setSelectedIds] = useState(initialSelected || new Set());
+            const [naCats, setNaCats] = useState(initialNaCats || new Set());
+
+            const secColors = {
+                Flying: { bg: 'rgba(16,185,129,0.1)', border: '#10b981', text: '#6ee7b7' },
+                Ground: { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b', text: '#fde68a' },
+                NA:     { bg: 'rgba(239,68,68,0.1)',   border: '#ef4444', text: '#fca5a5' },
+            };
+
+            // Classify all non-readonly, non-NA events and organize by date > class > section
+            const { byDateClassified, classSets } = useMemo(() => {
+                const map = {};
+                const sets = { 'A-Class': new Set(), 'B-Class': new Set(), 'Staff': new Set(), 'Other': new Set() };
+
+                dates.forEach(d => { map[d] = {}; });
+
+                allEvents.forEach(ev => {
+                    if (ev.readonly || ev.section === 'NA') return;
+                    if (!map[ev.date]) return;
+
+                    const cls = classifyEvent(ev, roster);
+                    sets[cls].add(ev.id);
+
+                    const key = `${cls}|${ev.section}`;
+                    if (!map[ev.date][key]) map[ev.date][key] = [];
+                    map[ev.date][key].push(ev);
+                });
+
+                // Sort events within each group by start time
+                Object.values(map).forEach(groups => {
+                    Object.values(groups).forEach(arr => {
+                        arr.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0));
+                    });
+                });
+
+                return { byDateClassified: map, classSets: sets };
+            }, [allEvents, dates, roster]);
+
+            // Categories that have NA events
+            const naCategoriesAvailable = useMemo(() => {
+                const cats = new Set();
+                allEvents.forEach(ev => {
+                    if (ev.section !== 'NA') return;
+                    ev.personnel.forEach(p => {
+                        const c = personCat(p, roster);
+                        if (c) cats.add(c);
+                    });
+                });
+                return [...cats].sort();
+            }, [allEvents, roster]);
+
+            // Toggle individual event
+            const toggleEvent = (id) => {
+                setSelectedIds(prev => {
+                    const next = new Set(prev);
+                    next.has(id) ? next.delete(id) : next.add(id);
+                    return next;
+                });
+            };
+
+            // Toggle all events in a specific group (class+section within a date)
+            const toggleGroup = (evs) => {
+                const ids = evs.map(e => e.id);
+                const allSel = ids.every(id => selectedIds.has(id));
+                setSelectedIds(prev => {
+                    const next = new Set(prev);
+                    ids.forEach(id => allSel ? next.delete(id) : next.add(id));
+                    return next;
+                });
+            };
+
+            // Quick-select: toggle ALL events in a class across ALL dates
+            const toggleClass = (cls) => {
+                const ids = classSets[cls];
+                if (!ids || ids.size === 0) return;
+                const allSel = [...ids].every(id => selectedIds.has(id));
+                setSelectedIds(prev => {
+                    const next = new Set(prev);
+                    ids.forEach(id => allSel ? next.delete(id) : next.add(id));
+                    return next;
+                });
+            };
+
+            const toggleNaCat = (cat) => {
+                setNaCats(prev => {
+                    const next = new Set(prev);
+                    next.has(cat) ? next.delete(cat) : next.add(cat);
+                    return next;
+                });
+            };
+
+            const selectAll = () => {
+                const all = new Set();
+                allEvents.forEach(ev => { if (!ev.readonly && ev.section !== 'NA') all.add(ev.id); });
+                setSelectedIds(all);
+                setNaCats(new Set(naCategoriesAvailable));
+            };
+
+            // Check if all events of a class are selected
+            const isClassFullySelected = (cls) => {
+                const ids = classSets[cls];
+                return ids.size > 0 && [...ids].every(id => selectedIds.has(id));
+            };
+
+            const totalSelected = selectedIds.size + naCats.size;
+
+            const classOrder = ['A-Class', 'B-Class', 'Staff', 'Other'];
+            const sectionOrder = ['Flying', 'Ground'];
+
+            return (
+                <div className="selection-screen">
+                    <div className="app-header">
+                        <div>
+                            <h1 className="text-lg font-bold text-white tracking-tight">TPS INTERACTIVE SCHEDULER</h1>
+                            <p className="text-xs text-gray-500">Select events you are responsible for scheduling</p>
+                        </div>
+                        <div className="flex gap-3 items-center">
+                            <button onClick={selectAll} className="filter-btn">Select All</button>
+                            <button onClick={() => { setSelectedIds(new Set()); setNaCats(new Set()); }} className="filter-btn">Clear</button>
+                            <button
+                                onClick={() => onContinue(selectedIds, naCats)}
+                                disabled={totalSelected === 0}
+                                className="px-5 py-1.5 rounded-lg text-sm font-bold transition-colors"
+                                style={{
+                                    background: totalSelected > 0 ? '#2563eb' : '#374151',
+                                    color: totalSelected > 0 ? 'white' : '#6b7280',
+                                    cursor: totalSelected > 0 ? 'pointer' : 'not-allowed',
+                                }}
+                            >
+                                Continue ({totalSelected})
+                            </button>
+                        </div>
+                    </div>
+                    <div className="selection-body">
+                        <p className="text-xs text-gray-500 mb-2" style={{ lineHeight: 1.6 }}>
+                            Conflict detection checks ALL events regardless of selection.
+                        </p>
+
+                        {/* NON-AVAILABILITY (separate from dates) */}
+                        {naCategoriesAvailable.length > 0 && (
+                            <div style={{ marginBottom: 20 }}>
+                                <div className="selection-separator">NON-AVAILABILITY</div>
+                                <p className="text-xs text-gray-600 mb-2" style={{ paddingLeft: 8 }}>
+                                    Select crew categories to include in conflict tracking
+                                </p>
+                                <div className="na-category-grid">
+                                    {naCategoriesAvailable.map(cat => {
+                                        const catColor = CATEGORY_COLORS[cat];
+                                        const isSelected = naCats.has(cat);
+                                        return (
+                                            <div
+                                                key={cat}
+                                                className={`na-cat-chip ${isSelected ? 'selected' : ''}`}
+                                                onClick={() => toggleNaCat(cat)}
+                                                style={isSelected && catColor ? {
+                                                    borderColor: catColor.bg,
+                                                    color: catColor.text,
+                                                    background: catColor.bg + '30',
+                                                } : undefined}
+                                            >
+                                                {cat}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* QUICK SELECT */}
+                        <div style={{ marginBottom: 20 }}>
+                            <div className="selection-separator">QUICK SELECT</div>
+                            <div className="quick-select-bar" style={{ padding: '4px 8px' }}>
+                                {classOrder.filter(cls => classSets[cls].size > 0).map(cls => {
+                                    const cc = CLASS_COLORS[cls];
+                                    const active = isClassFullySelected(cls);
+                                    const count = classSets[cls].size;
+                                    const selectedCount = [...classSets[cls]].filter(id => selectedIds.has(id)).length;
+                                    return (
+                                        <button
+                                            key={cls}
+                                            className="quick-select-btn"
+                                            onClick={() => toggleClass(cls)}
+                                            style={active ? { borderColor: cc.border, color: cc.text, background: cc.bg } : undefined}
+                                        >
+                                            {cls} ({selectedCount}/{count})
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* DATE SECTIONS with classified groups */}
+                        {dates.map(date => {
+                            const dayGroups = byDateClassified[date];
+                            if (!dayGroups) return null;
+
+                            const hasEvents = Object.values(dayGroups).some(arr => arr.length > 0);
+                            if (!hasEvents) return null;
+
+                            const dh = fmtDate(date);
+
+                            return (
+                                <div key={date} className="selection-day-group">
+                                    <div className="selection-day-header">
+                                        <span>{dh.weekday} {dh.day} {dh.month}</span>
+                                        <span className="text-xs text-gray-600 font-normal">{date}</span>
+                                    </div>
+
+                                    {classOrder.map(cls => {
+                                        const cc = CLASS_COLORS[cls];
+
+                                        return sectionOrder.map(sec => {
+                                            const key = `${cls}|${sec}`;
+                                            const evs = dayGroups[key];
+                                            if (!evs || evs.length === 0) return null;
+
+                                            const sc = secColors[sec];
+                                            const allSel = evs.every(e => selectedIds.has(e.id));
+
+                                            return (
+                                                <div key={key} className="selection-section">
+                                                    <div
+                                                        className={`selection-section-title ${cc.cssClass}`}
+                                                        style={{
+                                                            background: `linear-gradient(90deg, ${cc.bg}, ${sc.bg})`,
+                                                            borderLeft: `3px solid ${cc.border}`,
+                                                        }}
+                                                        onClick={() => toggleGroup(evs)}
+                                                    >
+                                                        <div className={`sel-cb ${allSel ? 'checked' : ''}`}>{allSel ? '\u2713' : ''}</div>
+                                                        <span style={{ fontWeight: 700, fontSize: '0.7rem' }}>
+                                                            <span style={{ color: cc.text }}>{cls.toUpperCase()}</span>
+                                                            <span style={{ color: 'rgba(255,255,255,0.25)', margin: '0 4px' }}>/</span>
+                                                            <span style={{ color: sc.text }}>{sec.toUpperCase()}</span>
+                                                            <span style={{ color: 'rgba(255,255,255,0.3)', fontWeight: 400, marginLeft: 8 }}>({evs.length})</span>
+                                                        </span>
+                                                    </div>
+                                                    {evs.map(ev => {
+                                                        const checked = selectedIds.has(ev.id);
+                                                        return (
+                                                            <div key={ev.id} className="sel-event-row" onClick={() => toggleEvent(ev.id)}>
+                                                                <div className={`sel-cb ${checked ? 'checked' : ''}`}>{checked ? '\u2713' : ''}</div>
+                                                                {ev.model && <span className="font-bold text-gray-400" style={{ fontSize: '0.65rem', width: 45 }}>{ev.model}</span>}
+                                                                <span className="text-gray-200" style={{ minWidth: 120 }}>{ev.eventName}</span>
+                                                                <span className="text-gray-500" style={{ fontSize: '0.6rem', width: 80 }}>{ev.startTime}-{ev.endTime || '??'}</span>
+                                                                <span className="sel-crew-preview">{ev.personnel.join(', ')}</span>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            );
+                                        });
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── PERSONNEL CHIP ───
+
+        const PersonnelChip = ({ name, roster, conflictText, onRemove, eventId, inPicker, isBusy, isUnavailable, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
+            const colors = chipColor(name, roster);
+
+            const handleDragStart = (e) => {
+                e.dataTransfer.setData('text/plain', JSON.stringify({ person: name, sourceEventId: eventId || null }));
+                e.dataTransfer.effectAllowed = 'copyMove';
+                e.currentTarget.style.opacity = '0.4';
+                if (onDS) onDS(name, eventId);
+            };
+
+            const handleDragEnd = (e) => {
+                e.currentTarget.style.opacity = '1';
+                if (onDE) onDE();
+            };
+
+            const hasCon = !!conflictText;
+
+            const handleMouseEnter = (e) => {
+                if ((hasCon || isUnavailable) && onShowTooltip) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    onShowTooltip(isUnavailable ? conflictText : `Also on: ${conflictText}`, rect);
+                }
+            };
+
+            return (
+                <span
+                    className={`chip ${hasCon && !isUnavailable ? 'chip-conflict' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
+                    style={{ background: colors.bg, color: colors.text }}
+                    draggable
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={onHideTooltip}
+                    title={hasCon ? undefined : name}
+                >
+                    {name}
+                    {hasCon && <span className="conflict-icon">!</span>}
+                    {onRemove && <span className="chip-remove" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onRemove(name); }}>✕</span>}
+                </span>
+            );
+        };
+
+        // ─── EVENT CARD ───
+
+        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent }) => {
+            const [dragOver, setDragOver] = useState(false);
+
+            const sMin = evStart(event);
+            const eMin = evEnd(event);
+            const leftPct = timePct(sMin);
+            const widthPct = timePct(eMin) - leftPct;
+
+            const cCount = eventConflictCount(event.id, conflicts);
+            const secClass = `event-card-${event.section.toLowerCase()}`;
+            const labelClass = `label-${event.section.toLowerCase()}`;
+            const typeLabel = event.section === 'Flying' ? (event.model || 'FLT') : event.section === 'Ground' ? 'GND' : 'NA';
+
+            // Flight bar (ETD→ETA within the card)
+            let flightBar = null;
+            if (event.section === 'Flying' && event.etd && event.eta) {
+                const etdMin = timeToMinutes(event.etd);
+                const etaMin = timeToMinutes(event.eta);
+                const dur = eMin - sMin;
+                if (dur > 0 && etdMin != null && etaMin != null) {
+                    const fLeft = Math.max(0, (etdMin - sMin) / dur * 100);
+                    const fWidth = Math.max(0, (etaMin - etdMin) / dur * 100);
+                    flightBar = (
+                        <div className="flight-bar-row">
+                            <div className="flight-bar-track">
+                                <div className="flight-bar-fill" style={{ left: `${fLeft}%`, width: `${fWidth}%` }}>
+                                    <span className="flight-time-marker etd" style={{ left: 0 }}>{event.etd}</span>
+                                    <span className="flight-time-marker eta" style={{ right: 0 }}>{event.eta}</span>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+            }
+
+            const handleDragOver = (e) => {
+                if (event.readonly) return;
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                setDragOver(true);
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                setDragOver(false);
+                if (event.readonly) return;
+                try {
+                    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                    if (data.person && !event.personnel.includes(data.person)) {
+                        onAdd(event.id, data.person, data.sourceEventId);
+                    }
+                } catch (err) {}
+            };
+
+            // Build conflict summary for badge tooltip
+            let badgeTooltip = '';
+            if (cCount > 0) {
+                const ec = conflicts.get(event.id);
+                const lines = [];
+                ec.forEach((confList, person) => {
+                    confList.forEach(c => {
+                        const m = c.model ? `${c.model} ` : '';
+                        lines.push(`${person} → ${m}${c.eventName} ${c.startTime}-${c.endTime || '??'}`);
+                    });
+                });
+                badgeTooltip = lines.join('\n');
+            }
+
+            return (
+                <div
+                    className={`event-card ${secClass} ${dragOver ? 'drag-over' : ''} ${isFocused ? 'focused' : ''} ${isDimmed ? 'dimmed' : ''}`}
+                    style={{ left: `${leftPct}%`, width: `${Math.max(widthPct, 4)}%`, top: `${top}px`, height: `${height}px` }}
+                    onDragOver={handleDragOver}
+                    onDragLeave={() => setDragOver(false)}
+                    onDrop={handleDrop}
+                    onClick={(e) => { if (onFocusEvent && !event.readonly) { e.stopPropagation(); onFocusEvent(isFocused ? null : event.id); } }}
+                >
+                    {cCount > 0 && (
+                        <div className="conflict-badge"
+                            onMouseEnter={(e) => { if (onShowTooltip) { onShowTooltip(badgeTooltip, e.currentTarget.getBoundingClientRect()); } }}
+                            onMouseLeave={onHideTooltip}
+                        >
+                            {cCount}
+                        </div>
+                    )}
+                    <div className="event-title-bar">
+                        <span className={`event-type-label ${labelClass}`}>{typeLabel}</span>
+                        <span className="event-name-text">{event.eventName}</span>
+                        <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
+                    </div>
+                    {flightBar}
+                    <div className="event-crew-area" onDragOver={handleDragOver} onDragLeave={() => setDragOver(false)} onDrop={handleDrop}>
+                        {event.personnel.map(person => (
+                            <PersonnelChip
+                                key={person}
+                                name={person}
+                                roster={roster}
+                                conflictText={getConflictText(event.id, person, conflicts)}
+                                onRemove={event.readonly ? null : (n) => onRemove(event.id, n)}
+                                eventId={event.id}
+                                onDS={onDS}
+                                onDE={onDE}
+                                onShowTooltip={onShowTooltip}
+                                onHideTooltip={onHideTooltip}
+                            />
+                        ))}
+                        {!event.readonly && <span className="add-chip" title="Drop personnel here">+</span>}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── DAY COLUMN ───
+
+        const DayColumn = ({ date, events, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled }) => {
+            const hdr = fmtDate(date);
+            const today = new Date().toISOString().slice(0, 10);
+            const isToday = date === today;
+
+            const sectionData = useMemo(() => {
+                const result = {};
+                SECTION_ORDER.forEach(sec => {
+                    const secEvts = events.filter(ev => ev.section === sec);
+                    result[sec] = { events: secEvts, layout: buildLayout(secEvts) };
+                });
+                return result;
+            }, [events]);
+
+            return (
+                <div className="day-column" style={{ borderColor: isToday ? 'rgba(59,130,246,0.25)' : undefined }}>
+                    <div className="day-header" style={{ borderBottom: isToday ? '2px solid #3b82f6' : undefined }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white' }}>{hdr.weekday}</div>
+                            <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>{hdr.day} {hdr.month}</div>
+                        </div>
+                        <div className="timeline-ruler">
+                            {[6,9,12,15,18].map(h => (
+                                <span key={h} style={{ left: `${timePct(h*60)}%` }}>{h}</span>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="day-body">
+                        {SECTION_ORDER.map(sec => {
+                            const { events: secEvts, layout } = sectionData[sec];
+                            if (secEvts.length === 0) return null;
+                            const divClass = `section-divider section-divider-${sec.toLowerCase()}`;
+                            return (
+                                <div key={sec}>
+                                    <div className={divClass}>{sec === 'NA' ? 'NON-AVAIL' : sec.toUpperCase()}</div>
+                                    <div className="section-lanes" style={{ height: `${layout.total || 50}px` }}>
+                                        {[6,7,8,9,10,11,12,13,14,15,16,17,18].map(h => (
+                                            <div key={h} className="hour-line" style={{ left: `${timePct(h*60)}%` }} />
+                                        ))}
+                                        {secEvts.map(ev => {
+                                            const pos = layout.evMap[ev.id] || { top: 0, height: 40 };
+                                            return (
+                                                <EventCard
+                                                    key={ev.id}
+                                                    event={ev}
+                                                    top={pos.top}
+                                                    height={pos.height}
+                                                    roster={roster}
+                                                    conflicts={conflicts}
+                                                    onRemove={onRemove}
+                                                    onAdd={onAdd}
+                                                    onDS={onDS}
+                                                    onDE={onDE}
+                                                    onShowTooltip={onShowTooltip}
+                                                    onHideTooltip={onHideTooltip}
+                                                    isFocused={focusEnabled && focusedEventId === ev.id}
+                                                    isDimmed={focusEnabled && !!focusedEventId && focusedEventId !== ev.id}
+                                                    onFocusEvent={onFocusEvent}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {events.length === 0 && <div className="empty-day">No selected events</div>}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── PERSONNEL PICKER ───
+
+        const PersonnelPicker = ({ roster, allEvents, conflicts, onDS, onDE, onShowTooltip, onHideTooltip, focusedAvailability }) => {
+            const [activeTabs, setActiveTabs] = useState(new Set(['All']));
+            const [search, setSearch] = useState('');
+
+            const cats = useMemo(() => Object.keys(roster).filter(k => roster[k]?.length > 0), [roster]);
+
+            const toggleTab = useCallback((cat) => {
+                setActiveTabs(prev => {
+                    if (cat === 'All') return new Set(['All']);
+                    const next = new Set(prev);
+                    next.delete('All');
+                    if (next.has(cat)) {
+                        next.delete(cat);
+                        if (next.size === 0) return new Set(['All']);
+                    } else {
+                        next.add(cat);
+                        // If all cats selected, revert to All
+                        if (cats.every(c => next.has(c))) return new Set(['All']);
+                    }
+                    return next;
+                });
+            }, [cats]);
+
+            const busySet = useMemo(() => {
+                const s = new Set();
+                allEvents.forEach(ev => ev.personnel.forEach(p => s.add(p)));
+                return s;
+            }, [allEvents]);
+
+            // Build per-person conflict summary with actual event details
+            const personConflictSummary = useMemo(() => {
+                const summary = new Map();
+                conflicts.forEach((personMap, eventId) => {
+                    personMap.forEach((confList, person) => {
+                        if (!summary.has(person)) summary.set(person, new Set());
+                        const s = summary.get(person);
+                        confList.forEach(c => {
+                            const m = c.model ? `${c.model} ` : '';
+                            s.add(`${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+                        });
+                    });
+                });
+                // Convert sets to strings
+                const result = new Map();
+                summary.forEach((detailSet, person) => {
+                    result.set(person, [...detailSet].join('; '));
+                });
+                return result;
+            }, [conflicts]);
+
+            const people = useMemo(() => {
+                let list;
+                if (activeTabs.has('All')) {
+                    list = Object.entries(roster).flatMap(([cat, members]) => members.map(n => ({ name: n, category: cat })));
+                } else {
+                    list = [];
+                    activeTabs.forEach(cat => {
+                        (roster[cat] || []).forEach(n => list.push({ name: n, category: cat }));
+                    });
+                }
+                if (search.trim()) {
+                    const q = search.trim().toLowerCase();
+                    list = list.filter(p => p.name.toLowerCase().includes(q));
+                }
+                return list;
+            }, [roster, activeTabs, search]);
+
+            return (
+                <div className="picker-panel">
+                    <div className="flex items-center gap-2 px-2 py-1" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                        <span className="text-xs font-bold text-gray-600 uppercase tracking-wider mr-1" style={{ flexShrink: 0 }}>Picker</span>
+                        <div className="picker-tabs flex-1">
+                            <div className={`picker-tab ${activeTabs.has('All') ? 'active' : ''}`} onClick={() => toggleTab('All')}>All</div>
+                            {cats.map(c => (
+                                <div key={c} className={`picker-tab ${activeTabs.has(c) ? 'active' : ''}`} onClick={() => toggleTab(c)}>{c}</div>
+                            ))}
+                        </div>
+                        <span className="text-gray-600" style={{ fontSize: '0.5rem', flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }}></span>
+                            assigned
+                        </span>
+                        <input className="picker-search" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />
+                    </div>
+                    <div className="picker-body">
+                        {people.map(p => {
+                            const isUnavailable = focusedAvailability && focusedAvailability.has(p.name);
+                            const unavailText = isUnavailable
+                                ? 'Busy: ' + focusedAvailability.get(p.name).map(c => `${c.model ? c.model + ' ' : ''}${c.eventName} (${c.startTime}-${c.endTime || '??'})`).join('; ')
+                                : null;
+                            return (
+                                <PersonnelChip
+                                    key={p.name}
+                                    name={p.name}
+                                    roster={roster}
+                                    conflictText={isUnavailable ? unavailText : (personConflictSummary.get(p.name) || null)}
+                                    inPicker
+                                    isBusy={busySet.has(p.name)}
+                                    isUnavailable={isUnavailable}
+                                    onDS={onDS}
+                                    onDE={onDE}
+                                    onShowTooltip={onShowTooltip}
+                                    onHideTooltip={onHideTooltip}
+                                />
+                            );
+                        })}
+                        {people.length === 0 && <span className="text-xs text-gray-600 p-2">No results</span>}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── CHANGE SUMMARY (v3 — net changes with grouping) ───
+
+        const NetChangeEntry = ({ inst, formatEvent, onUndo }) => {
+            if (inst.type === 'move') {
+                return (
+                    <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6, width: '100%' }}>
+                            <span style={{ color: '#3b82f6', fontWeight: 700, fontSize: '0.7rem', flexShrink: 0 }}>&rarr;</span>
+                            <div className="change-detail" style={{ flex: 1 }}>
+                                <span style={{ color: 'rgba(255,255,255,0.5)' }}>{formatEvent(inst.source)}</span>
+                                <span style={{ color: '#3b82f6', margin: '0 4px' }}>&rarr;</span>
+                                <span style={{ color: 'rgba(255,255,255,0.7)' }}>{formatEvent(inst.target)}</span>
+                            </div>
+                            <span className="change-undo" onClick={onUndo} title="Undo all">↩</span>
+                        </div>
+                        <div style={{ paddingLeft: 18, color: '#93c5fd', fontSize: '0.55rem', lineHeight: 1.4 }}>
+                            {inst.persons.join(', ')}
+                        </div>
+                    </div>
+                );
+            }
+            if (inst.type === 'add') {
+                return (
+                    <div className="change-entry">
+                        <span className="change-icon-add">+</span>
+                        <div className="change-detail">
+                            <span style={{ color: 'rgba(255,255,255,0.5)' }}>Add to </span>{formatEvent(inst.target)}
+                            <br/><span style={{ color: '#6ee7b7' }}>{inst.persons.join(', ')}</span>
+                        </div>
+                        <span className="change-undo" onClick={onUndo} title="Undo all">↩</span>
+                    </div>
+                );
+            }
+            return (
+                <div className="change-entry">
+                    <span className="change-icon-remove">&minus;</span>
+                    <div className="change-detail">
+                        <span style={{ color: 'rgba(255,255,255,0.5)' }}>Remove from </span>{formatEvent(inst.source)}
+                        <br/><span style={{ color: '#fca5a5' }}>{inst.persons.join(', ')}</span>
+                    </div>
+                    <span className="change-undo" onClick={onUndo} title="Undo all">↩</span>
+                </div>
+            );
+        };
+
+        const ChangeSummary = ({ changes, onUndoGroup, onClearAll, onCopy }) => {
+            const netInstructions = useMemo(() => computeNetChanges(changes), [changes]);
+
+            const byDate = useMemo(() => {
+                const m = {};
+                netInstructions.forEach(inst => {
+                    if (!m[inst.date]) m[inst.date] = [];
+                    m[inst.date].push(inst);
+                });
+                return m;
+            }, [netInstructions]);
+
+            const sortedDates = Object.keys(byDate).sort();
+            const netCount = netInstructions.length;
+
+            const formatEvent = (meta) => {
+                if (!meta) return '';
+                const model = meta.eventModel ? `${meta.eventModel} | ` : '';
+                return `${model}${meta.eventName} (${meta.eventTime})`;
+            };
+
+            return (
+                <div className="change-summary-panel">
+                    <div className="change-summary-header">
+                        <span>Change Summary</span>
+                        <span className="text-xs font-normal text-gray-500">
+                            {netCount > 0 ? netCount : ''}
+                            {netCount > 0 && netCount !== changes.length && (
+                                <span style={{ color: 'rgba(255,255,255,0.2)', marginLeft: 4 }}>({changes.length} raw)</span>
+                            )}
+                        </span>
+                    </div>
+                    <div className="change-list">
+                        {sortedDates.length === 0 && changes.length === 0 && (
+                            <div className="text-center text-gray-600 text-xs py-8">
+                                No changes yet.<br/>Drag personnel to events<br/>or remove with ✕.
+                            </div>
+                        )}
+                        {sortedDates.length === 0 && changes.length > 0 && (
+                            <div className="text-center text-gray-600 text-xs py-8">
+                                All changes cancel out.<br/>Net effect: no changes.
+                            </div>
+                        )}
+                        {sortedDates.map(date => {
+                            const h = fmtDate(date);
+                            return (
+                                <div key={date}>
+                                    <div className="change-date-group">{h.full}</div>
+                                    {byDate[date].map((inst, i) => (
+                                        <NetChangeEntry
+                                            key={`${date}-${i}`}
+                                            inst={inst}
+                                            formatEvent={formatEvent}
+                                            onUndo={() => onUndoGroup(inst.rawIndices)}
+                                        />
+                                    ))}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    {changes.length > 0 && (
+                        <div className="change-summary-footer">
+                            <button onClick={onCopy} className="bg-blue-600 hover:bg-blue-500 text-white">Copy</button>
+                            <button onClick={onClearAll} className="bg-transparent text-red-400 hover:bg-red-900/30" style={{ border: '1px solid rgba(239,68,68,0.3)' }}>Clear All</button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ─── RAINBOW VIEW ───
+
+        const RAINBOW_COL_WIDTH = 300;
+
+        const RAINBOW_FILTERS = [
+            { key: 'Supervision', label: 'Supv', color: '#8b5cf6' },
+            { key: 'Flying', label: 'Flt', color: '#10b981' },
+            { key: 'Ground', label: 'Gnd', color: '#f59e0b' },
+            { key: 'NA', label: 'NAs', color: '#ef4444' },
+            { key: 'Academics', label: 'Acad', color: '#3b82f6' },
+        ];
+
+        const RB_BAR_CLASS = {
+            Flying: 'rb-bar-flying',
+            Ground: 'rb-bar-ground',
+            NA: 'rb-bar-na',
+            Supervision: 'rb-bar-supervision',
+            Academics: 'rb-bar-academics',
+        };
+
+        const ROSTER_ORDER = ['FTC-A', 'STC-A', 'FTC-B', 'STC-B', 'Staff IP', 'Staff IFTE/ICSO', 'Staff STC', 'Attached/Support'];
+
+        // ─── RAINBOW MODAL (click event popup) ───
+
+        const RainbowModal = ({ event, onClose }) => {
+            if (!event) return null;
+            const secColors = { Flying: ['green', '#10b981'], Ground: ['yellow', '#f59e0b'], NA: ['red', '#ef4444'], Supervision: ['purple', '#8b5cf6'], Academics: ['blue', '#3b82f6'] };
+            const [cName, cHex] = secColors[event.section] || ['blue', '#3b82f6'];
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold px-3 py-1 rounded" style={{ borderLeft: `4px solid ${cHex}`, color: cHex }}>{event.title}</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex gap-4">
+                                <div className="bg-white/5 p-3 rounded-lg flex-1">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Time</div>
+                                    <div className="text-white">{event.start || '?'} – {event.end || '?'}</div>
+                                </div>
+                                <div className="bg-white/5 p-3 rounded-lg flex-1">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Section</div>
+                                    <div className="text-white">{event.section}</div>
+                                </div>
+                            </div>
+                            {event.etd && event.eta && (
+                                <div className="bg-white/5 p-3 rounded-lg">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Flight Window</div>
+                                    <div className="text-white">ETD {event.etd} — ETA {event.eta}</div>
+                                </div>
+                            )}
+                            {event.personnel && event.personnel.length > 0 && (
+                                <div className="bg-white/5 p-3 rounded-lg">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Personnel ({event.personnel.length})</div>
+                                    <div className="text-sm text-gray-300">{event.personnel.join(', ')}</div>
+                                </div>
+                            )}
+                        </div>
+                        <button onClick={onClose} className="mt-6 w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-bold">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── RAINBOW FILTER MODAL ───
+
+        const RainbowFilterModal = ({ isOpen, onClose, roster, currentSelection, onApply }) => {
+            const [search, setSearch] = useState('');
+            const [tempSel, setTempSel] = useState(new Set());
+
+            useEffect(() => {
+                if (isOpen) { setTempSel(new Set(currentSelection || Object.values(roster).flat())); setSearch(''); }
+            }, [isOpen]);
+
+            const filteredRoster = useMemo(() => {
+                if (!search) return roster;
+                const lower = search.toLowerCase();
+                const result = {};
+                Object.entries(roster).forEach(([cat, names]) => {
+                    const f = names.filter(n => n.toLowerCase().includes(lower));
+                    if (f.length > 0) result[cat] = f;
+                });
+                return result;
+            }, [roster, search]);
+
+            const toggle = (name) => { setTempSel(prev => { const n = new Set(prev); if (n.has(name)) n.delete(name); else n.add(name); return n; }); };
+            const toggleGroup = (names) => { setTempSel(prev => { const n = new Set(prev); const allIn = names.every(nm => n.has(nm)); names.forEach(nm => allIn ? n.delete(nm) : n.add(nm)); return n; }); };
+
+            if (!isOpen) return null;
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-3">
+                            <h2 className="text-lg font-bold text-white">Filter Personnel</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        <input type="text" placeholder="Search names..." value={search} onChange={e => setSearch(e.target.value)}
+                            className="w-full bg-gray-800 border border-gray-700 text-white rounded p-2 mb-2 text-sm focus:outline-none focus:border-blue-500" />
+                        <div className="flex gap-2 mb-2">
+                            <button onClick={() => { const all = Object.values(filteredRoster).flat(); setTempSel(prev => { const n = new Set(prev); all.forEach(nm => n.add(nm)); return n; }); }}
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">Select All Visible</button>
+                            <button onClick={() => { const all = Object.values(filteredRoster).flat(); setTempSel(prev => { const n = new Set(prev); all.forEach(nm => n.delete(nm)); return n; }); }}
+                                className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">Deselect All Visible</button>
+                        </div>
+                        <div className="rb-filter-modal-body">
+                            {Object.entries(filteredRoster).map(([cat, names]) => (
+                                <div key={cat}>
+                                    <div className="rb-filter-group-header" onClick={() => toggleGroup(names)}>
+                                        <div className={`rb-filter-cb ${names.every(n => tempSel.has(n)) ? 'checked' : ''}`}>{names.every(n => tempSel.has(n)) ? '✓' : ''}</div>
+                                        <span>{cat} ({names.filter(n => tempSel.has(n)).length}/{names.length})</span>
+                                    </div>
+                                    {names.map(name => (
+                                        <div key={name} className="rb-filter-person-row" onClick={() => toggle(name)}>
+                                            <div className={`rb-filter-cb ${tempSel.has(name) ? 'checked' : ''}`}>{tempSel.has(name) ? '✓' : ''}</div>
+                                            <span>{name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                            {Object.keys(filteredRoster).length === 0 && <div className="text-gray-500 text-center py-4">No matches found</div>}
+                        </div>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button onClick={onClose} className="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
+                            <button onClick={() => { onApply(tempSel); onClose(); }} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── RAINBOW VIEW ───
+
+        const RainbowView = ({ workingEvents, roster, dates }) => {
+            const [visibleTypes, setVisibleTypes] = useState(() => new Set(RAINBOW_FILTERS.map(f => f.key)));
+            const [modalEvent, setModalEvent] = useState(null);
+            const [rbSelection, setRbSelection] = useState(null);
+            const [filterOpen, setFilterOpen] = useState(false);
+            const [visiblePersonnel, setVisiblePersonnel] = useState(null); // null = show all
+            const dragRef = useRef(null);
+
+            const toggleType = useCallback((key) => {
+                setVisibleTypes(prev => {
+                    const next = new Set(prev);
+                    if (next.has(key)) next.delete(key); else next.add(key);
+                    return next;
+                });
+            }, []);
+
+            // Build per-person per-date event entries from workingEvents
+            const personDateEvents = useMemo(() => {
+                const map = new Map();
+                workingEvents.forEach(ev => {
+                    (ev.personnel || []).forEach(person => {
+                        if (!map.has(person)) map.set(person, new Map());
+                        const dateMap = map.get(person);
+                        if (!dateMap.has(ev.date)) dateMap.set(ev.date, []);
+                        dateMap.get(ev.date).push({
+                            section: ev.section,
+                            title: ev.model ? `${ev.model} ${ev.eventName}` : ev.eventName,
+                            shortTitle: ev.model || ev.eventName,
+                            start: ev.startTime,
+                            end: ev.endTime,
+                            etd: ev.etd,
+                            eta: ev.eta,
+                            personnel: ev.personnel,
+                            id: ev.id,
+                        });
+                    });
+                });
+                return map;
+            }, [workingEvents]);
+
+            // Build sorted personnel list from roster (filtered by visiblePersonnel if set)
+            const personnelList = useMemo(() => {
+                const list = [];
+                ROSTER_ORDER.forEach(cat => {
+                    let names = roster[cat] || [];
+                    if (visiblePersonnel) names = names.filter(n => visiblePersonnel.has(n));
+                    if (names.length > 0) {
+                        list.push({ type: 'separator', category: cat });
+                        names.forEach(name => list.push({ type: 'person', name, category: cat }));
+                    }
+                });
+                return list;
+            }, [roster, visiblePersonnel]);
+
+            // Lane layout for a set of events in one cell
+            const layoutEvents = useCallback((events) => {
+                if (!events || events.length === 0) return { events: [], laneCount: 0 };
+                const sorted = events
+                    .map(ev => ({
+                        ...ev,
+                        startMin: timeToMinutes(ev.start) ?? TIMELINE_START,
+                        endMin: timeToMinutes(ev.end) ?? (timeToMinutes(ev.start) ? timeToMinutes(ev.start) + 60 : TIMELINE_END),
+                    }))
+                    .sort((a, b) => a.startMin - b.startMin);
+
+                const lanes = []; // each lane = array of events
+                sorted.forEach(ev => {
+                    let placed = false;
+                    for (let i = 0; i < lanes.length; i++) {
+                        const last = lanes[i][lanes[i].length - 1];
+                        if (ev.startMin >= last.endMin) {
+                            lanes[i].push(ev);
+                            ev.lane = i;
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if (!placed) {
+                        ev.lane = lanes.length;
+                        lanes.push([ev]);
+                    }
+                });
+                return { events: sorted, laneCount: lanes.length };
+            }, []);
+
+            // Time ruler marks (same as day column ruler)
+            const rulerMarks = useMemo(() => {
+                const marks = [];
+                for (let h = 6; h <= 18; h += 2) {
+                    marks.push({ label: `${h.toString().padStart(2,'0')}`, pct: timePct(h * 60) });
+                }
+                return marks;
+            }, []);
+
+            const colCount = dates.length + 1;
+
+            // Timeline handle: pointer events for single-click marker / drag range
+            const pctToMinutes = useCallback((pct) => {
+                const raw = TIMELINE_START + (pct / 100) * TIMELINE_RANGE;
+                return Math.round(raw / 15) * 15; // snap to 15-min
+            }, []);
+
+            const handleRulerPointerDown = useCallback((e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = ((e.clientX - rect.left) / rect.width) * 100;
+                const mins = pctToMinutes(pct);
+                dragRef.current = { startMins: mins, rect, dragging: false };
+                setRbSelection({ type: 'marker', start: mins, end: mins });
+
+                const onMove = (me) => {
+                    if (!dragRef.current) return;
+                    const mPct = ((me.clientX - dragRef.current.rect.left) / dragRef.current.rect.width) * 100;
+                    const mMins = pctToMinutes(Math.max(0, Math.min(100, mPct)));
+                    const s = dragRef.current.startMins;
+                    if (Math.abs(mMins - s) > 5) dragRef.current.dragging = true;
+                    if (dragRef.current.dragging) {
+                        setRbSelection({ type: 'range', start: Math.min(s, mMins), end: Math.max(s, mMins) });
+                    }
+                };
+                const onUp = () => { dragRef.current = null; window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); };
+                window.addEventListener('pointermove', onMove);
+                window.addEventListener('pointerup', onUp);
+            }, [pctToMinutes]);
+
+            // Escape key clears selection
+            useEffect(() => {
+                const onKey = (e) => { if (e.key === 'Escape') setRbSelection(null); };
+                window.addEventListener('keydown', onKey);
+                return () => window.removeEventListener('keydown', onKey);
+            }, []);
+
+            // Render timeline marker/range overlay inside a cell
+            const renderCellOverlay = useCallback((sel) => {
+                if (!sel) return null;
+                if (sel.type === 'marker') {
+                    const pct = timePct(sel.start);
+                    return (
+                        <>
+                            <div className="rb-timeline-marker" style={{ left: pct + '%' }} />
+                            <div className="rb-handle-label" style={{ left: pct + '%' }}>{minutesToTime(sel.start)}</div>
+                        </>
+                    );
+                }
+                if (sel.type === 'range') {
+                    const lPct = timePct(sel.start);
+                    const rPct = timePct(sel.end);
+                    const durMins = sel.end - sel.start;
+                    const durLabel = durMins >= 60 ? `${Math.floor(durMins/60)}:${String(durMins%60).padStart(2,'0')}` : `${durMins}m`;
+                    return (
+                        <>
+                            <div className="rb-timeline-range" style={{ left: lPct + '%', width: (rPct - lPct) + '%' }} />
+                            <div className="rb-handle-label" style={{ left: lPct + '%' }}>{minutesToTime(sel.start)}</div>
+                            <div className="rb-handle-label" style={{ left: rPct + '%' }}>{minutesToTime(sel.end)}</div>
+                            <div className="rb-handle-label" style={{ left: ((lPct + rPct) / 2) + '%', top: '-4px', color: '#93c5fd' }}>{durLabel}</div>
+                        </>
+                    );
+                }
+                return null;
+            }, []);
+
+            return (
+                <>
+                    <div className="rainbow-toolbar">
+                        <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>FILTERS</span>
+                        {RAINBOW_FILTERS.map(f => (
+                            <button
+                                key={f.key}
+                                className={`rainbow-filter-btn ${visibleTypes.has(f.key) ? 'active' : ''}`}
+                                style={{ '--filter-color': f.color, '--filter-bg': f.color + '20' }}
+                                onClick={() => toggleType(f.key)}
+                            >
+                                {f.label}
+                            </button>
+                        ))}
+                        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
+                            {rbSelection && (
+                                <button onClick={() => setRbSelection(null)} style={{ padding: '2px 8px', fontSize: '0.55rem', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 4, cursor: 'pointer' }}>
+                                    Clear Marker
+                                </button>
+                            )}
+                            <button onClick={() => setFilterOpen(true)} style={{ padding: '2px 8px', fontSize: '0.55rem', background: visiblePersonnel ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.05)', color: visiblePersonnel ? '#60a5fa' : 'rgba(255,255,255,0.5)', border: `1px solid ${visiblePersonnel ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 4, cursor: 'pointer' }}>
+                                {visiblePersonnel ? `Personnel (${visiblePersonnel.size})` : 'Filter Personnel'}
+                            </button>
+                            {visiblePersonnel && (
+                                <button onClick={() => setVisiblePersonnel(null)} style={{ padding: '2px 6px', fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', background: 'none', border: 'none' }} title="Show all personnel">✕</button>
+                            )}
+                        </div>
+                    </div>
+
+                    <div
+                        className="rainbow-grid"
+                        style={{ gridTemplateColumns: `160px repeat(${dates.length}, ${RAINBOW_COL_WIDTH}px)` }}
+                    >
+                        {/* Header row: corner + date headers */}
+                        <div className="rainbow-corner" style={{ padding: '4px 8px', display: 'flex', alignItems: 'flex-end' }}>
+                            <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>CREW MEMBER</span>
+                        </div>
+                        {dates.map(d => {
+                            const h = fmtDate(d);
+                            return (
+                                <div key={d} className="rainbow-date-header" style={{ position: 'relative' }}>
+                                    <div className="rainbow-date-label">{h.weekday} {h.day} {h.month}</div>
+                                    <div className="rainbow-time-ruler" style={{ position: 'relative' }}>
+                                        {rulerMarks.map(m => (
+                                            <span key={m.label} style={{ left: m.pct + '%' }}>{m.label}</span>
+                                        ))}
+                                        <div className="rb-ruler-interactive" onPointerDown={handleRulerPointerDown} />
+                                    </div>
+                                </div>
+                            );
+                        })}
+
+                        {/* Personnel rows */}
+                        {personnelList.map((item, idx) => {
+                            if (item.type === 'separator') {
+                                return (
+                                    <div key={`sep-${item.category}`} className="rainbow-cat-separator">
+                                        {item.category}
+                                    </div>
+                                );
+                            }
+
+                            const personDates = personDateEvents.get(item.name);
+
+                            return (
+                                <React.Fragment key={`person-${item.name}-${idx}`}>
+                                    <div className="rainbow-name-cell">
+                                        <div className="rainbow-name-text">{item.name}</div>
+                                        <div className="rainbow-cat-text">{item.category}</div>
+                                    </div>
+                                    {dates.map(date => {
+                                        const allCellEvts = personDates ? personDates.get(date) || [] : [];
+                                        const cellEvts = allCellEvts.filter(e => visibleTypes.has(e.section));
+                                        const { events: laid, laneCount } = layoutEvents(cellEvts);
+                                        const cellH = Math.max(28, laneCount * 24 + 4);
+
+                                        return (
+                                            <div key={date} className="rainbow-cell" style={{ height: cellH }}>
+                                                {renderCellOverlay(rbSelection)}
+                                                {laid.map((ev, i) => {
+                                                    const left = timePct(ev.startMin);
+                                                    const width = Math.max(2, timePct(ev.endMin) - left);
+                                                    const top = ev.lane * 24 + 2;
+                                                    const barClass = RB_BAR_CLASS[ev.section] || 'rb-bar-flying';
+
+                                                    let innerBar = null;
+                                                    if (ev.section === 'Flying' && ev.etd && ev.eta) {
+                                                        const etdMin = timeToMinutes(ev.etd);
+                                                        const etaMin = timeToMinutes(ev.eta);
+                                                        if (etdMin != null && etaMin != null && ev.endMin > ev.startMin) {
+                                                            const innerLeft = ((etdMin - ev.startMin) / (ev.endMin - ev.startMin)) * 100;
+                                                            const innerWidth = ((etaMin - etdMin) / (ev.endMin - ev.startMin)) * 100;
+                                                            innerBar = (
+                                                                <div className="rb-flight-inner" style={{
+                                                                    left: innerLeft + '%',
+                                                                    width: Math.max(1, innerWidth) + '%',
+                                                                }} />
+                                                            );
+                                                        }
+                                                    }
+
+                                                    return (
+                                                        <div
+                                                            key={i}
+                                                            className={`rb-event-bar ${barClass}`}
+                                                            style={{ left: left + '%', width: width + '%', top, cursor: 'pointer' }}
+                                                            title={`${ev.title}\n${ev.start || '?'}–${ev.end || '?'}`}
+                                                            onClick={() => setModalEvent(ev)}
+                                                        >
+                                                            {innerBar}
+                                                            <span className="rb-bar-label">{ev.shortTitle}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    })}
+                                </React.Fragment>
+                            );
+                        })}
+                    </div>
+                    <RainbowModal event={modalEvent} onClose={() => setModalEvent(null)} />
+                    <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={setVisiblePersonnel} />
+                </>
+            );
+        };
+
+        // ─── SCHEDULER VIEW ───
+
+        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard }) => {
+            const [workingEvents, setWorkingEvents] = useState([]);
+            const [changes, setChanges] = useState([]);
+            const [savedShow, setSavedShow] = useState(false);
+            const [tooltip, setTooltip] = useState(null);
+            const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow'
+            const [focusedEventId, setFocusedEventId] = useState(null);
+            const [focusEnabled, setFocusEnabled] = useState(true);
+            const timelineRef = useRef(null);
+            const initialized = useRef(false);
+            const restoredFromCache = useRef(false);
+
+            const showTooltip = useCallback((text, rect) => {
+                setTooltip({ text, x: rect.left + rect.width / 2, y: rect.bottom + 6 });
+            }, []);
+            const hideTooltip = useCallback(() => setTooltip(null), []);
+
+            // Initialize working events — from cache if available, otherwise from allEvents
+            useEffect(() => {
+                initialized.current = false;
+                if (cachedWorkingState && !restoredFromCache.current) {
+                    restoredFromCache.current = true;
+                    setWorkingEvents(cachedWorkingState.workingEvents.map(ev => ({ ...ev, personnel: [...ev.personnel] })));
+                    setChanges(cachedWorkingState.changes || []);
+                } else {
+                    setWorkingEvents(allEvents.map(ev => ({ ...ev, personnel: [...ev.personnel] })));
+                    setChanges([]);
+                }
+                // Use requestAnimationFrame to ensure state is settled before enabling change tracking
+                requestAnimationFrame(() => { initialized.current = true; });
+            }, [allEvents]);
+
+            // Visible events filter
+            const visibleEvents = useMemo(() => {
+                return workingEvents.filter(ev => {
+                    if (ev.readonly) return false;
+                    if (ev.section === 'NA') {
+                        return ev.personnel.some(p => {
+                            const c = personCat(p, roster);
+                            return c && initialNaCats.has(c);
+                        });
+                    }
+                    return initialSelectedIds.has(ev.id);
+                });
+            }, [workingEvents, initialSelectedIds, initialNaCats, roster]);
+
+            // Events by date
+            const eventsByDate = useMemo(() => {
+                const m = {};
+                dates.forEach(d => { m[d] = []; });
+                visibleEvents.forEach(ev => { if (m[ev.date]) m[ev.date].push(ev); });
+                return m;
+            }, [visibleEvents, dates]);
+
+            // Conflict detection on ALL events
+            const conflicts = useMemo(() => detectConflicts(workingEvents), [workingEvents]);
+
+            // Focus mode: compute who is unavailable during the focused event's time window
+            const focusedAvailability = useMemo(() => {
+                if (!focusedEventId || !focusEnabled) return null;
+                const fev = workingEvents.find(e => e.id === focusedEventId);
+                if (!fev) return null;
+                const fStart = evStart(fev);
+                const fEnd = evEnd(fev);
+                const fDate = fev.date;
+                const fPersonnel = new Set(fev.personnel);
+                // Map: person -> [{ eventName, model, startTime, endTime }]
+                const unavailable = new Map();
+                workingEvents.forEach(ev => {
+                    if (ev.id === focusedEventId) return;
+                    if (ev.date !== fDate) return;
+                    const eS = evStart(ev); const eE = evEnd(ev);
+                    if (eS == null || fStart == null) return;
+                    if (eS < fEnd && eE > fStart) {
+                        ev.personnel.forEach(person => {
+                            if (fPersonnel.has(person)) return; // already on focused event
+                            if (!unavailable.has(person)) unavailable.set(person, []);
+                            unavailable.get(person).push({ eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime });
+                        });
+                    }
+                });
+                return unavailable;
+            }, [focusedEventId, focusEnabled, workingEvents]);
+
+            // Clear focus when switching away from timeline
+            useEffect(() => { if (viewMode !== 'timeline') setFocusedEventId(null); }, [viewMode]);
+            // Escape clears focus
+            useEffect(() => {
+                const onKey = (e) => { if (e.key === 'Escape') setFocusedEventId(null); };
+                window.addEventListener('keydown', onKey);
+                return () => window.removeEventListener('keydown', onKey);
+            }, []);
+
+            // Auto-save changes + full working copy
+            useEffect(() => {
+                if (!initialized.current) return;
+                saveState(changes, initialSelectedIds, initialNaCats);
+                saveWorkingCopy(workingEvents, changes, allEvents, roster, dates, initialSelectedIds, initialNaCats);
+                if (changes.length > 0) {
+                    setSavedShow(true);
+                    const t = setTimeout(() => setSavedShow(false), 2000);
+                    return () => clearTimeout(t);
+                }
+            }, [changes]);
+
+            // Add person to event (from picker or another event)
+            const handleAdd = useCallback((targetId, person, sourceId) => {
+                if (!initialized.current) return;
+
+                const newChanges = [];
+
+                setWorkingEvents(prev => {
+                    const next = prev.map(ev => ({ ...ev, personnel: [...ev.personnel] }));
+                    const target = next.find(e => e.id === targetId);
+                    if (!target || target.personnel.includes(person)) return prev;
+
+                    // Remove from source if moving
+                    if (sourceId) {
+                        const source = next.find(e => e.id === sourceId);
+                        if (source) {
+                            source.personnel = source.personnel.filter(p => p !== person);
+                            newChanges.push({
+                                type: 'remove', person, date: source.date,
+                                eventSection: source.section, eventModel: source.model,
+                                eventName: source.eventName, eventTime: source.startTime,
+                                eventId: source.id,
+                            });
+                        }
+                    }
+
+                    target.personnel.push(person);
+                    newChanges.push({
+                        type: 'add', person, date: target.date,
+                        eventSection: target.section, eventModel: target.model,
+                        eventName: target.eventName, eventTime: target.startTime,
+                        eventId: target.id,
+                    });
+
+                    return next;
+                });
+
+                // Record changes after state update (newChanges populated synchronously in updater)
+                if (newChanges.length > 0) {
+                    setChanges(c => [...c, ...newChanges]);
+                }
+            }, []);
+
+            // Remove person from event
+            const handleRemove = useCallback((eventId, person) => {
+                if (!initialized.current) return;
+
+                setWorkingEvents(prev => {
+                    const next = prev.map(ev => ({ ...ev, personnel: [...ev.personnel] }));
+                    const event = next.find(e => e.id === eventId);
+                    if (!event) return prev;
+                    event.personnel = event.personnel.filter(p => p !== person);
+                    // Record change inside updater for React 18 batching atomicity
+                    setChanges(c => [...c, {
+                        type: 'remove', person, date: event.date,
+                        eventSection: event.section, eventModel: event.model,
+                        eventName: event.eventName, eventTime: event.startTime,
+                        eventId: event.id,
+                    }]);
+                    return next;
+                });
+            }, []);
+
+            // Undo a group of changes (reverse chronological order)
+            const handleUndoGroup = useCallback((indices) => {
+                if (!indices || indices.length === 0) return;
+                const sortedDesc = [...indices].sort((a, b) => b - a);
+                setWorkingEvents(prev => {
+                    const next = prev.map(ev => ({ ...ev, personnel: [...ev.personnel] }));
+                    sortedDesc.forEach(idx => {
+                        const ch = changes[idx];
+                        if (!ch) return;
+                        const event = next.find(e => e.id === ch.eventId);
+                        if (!event) return;
+                        if (ch.type === 'add') {
+                            event.personnel = event.personnel.filter(p => p !== ch.person);
+                        } else {
+                            if (!event.personnel.includes(ch.person)) event.personnel.push(ch.person);
+                        }
+                    });
+                    return next;
+                });
+                const indexSet = new Set(indices);
+                setChanges(prev => prev.filter((_, i) => !indexSet.has(i)));
+            }, [changes]);
+
+            // Clear all
+            const handleClearAll = useCallback(() => {
+                setWorkingEvents(allEvents.map(ev => ({ ...ev, personnel: [...ev.originalPersonnel] })));
+                setChanges([]);
+                clearState();
+            }, [allEvents]);
+
+            // Copy (net-change format — human-readable instructions)
+            const handleCopy = useCallback(() => {
+                const netInstructions = computeNetChanges(changes);
+                if (netInstructions.length === 0) return;
+                const lines = [];
+                const byDate = {};
+                netInstructions.forEach(inst => {
+                    if (!byDate[inst.date]) byDate[inst.date] = [];
+                    byDate[inst.date].push(inst);
+                });
+                Object.keys(byDate).sort().forEach(date => {
+                    const h = fmtDate(date);
+                    lines.push(`--- ${h.full} ---`);
+                    byDate[date].forEach(inst => {
+                        const fmtEvt = (meta) => {
+                            if (!meta) return '';
+                            const mdl = meta.eventModel ? `${meta.eventModel} | ` : '';
+                            return `${mdl}${meta.eventName} (${meta.eventTime})`;
+                        };
+                        if (inst.type === 'move') {
+                            lines.push(`  MOVE: ${fmtEvt(inst.source)}  -->  ${fmtEvt(inst.target)}`);
+                            lines.push(`        ${inst.persons.join(', ')}`);
+                        } else if (inst.type === 'add') {
+                            lines.push(`  ADD to ${fmtEvt(inst.target)}:`);
+                            lines.push(`        ${inst.persons.join(', ')}`);
+                        } else {
+                            lines.push(`  REMOVE from ${fmtEvt(inst.source)}:`);
+                            lines.push(`        ${inst.persons.join(', ')}`);
+                        }
+                    });
+                    lines.push('');
+                });
+                navigator.clipboard.writeText(lines.join('\n').trim()).catch(() => {});
+            }, [changes]);
+
+            const scrollToDay = (date) => {
+                const idx = dates.indexOf(date);
+                if (idx >= 0 && timelineRef.current) {
+                    timelineRef.current.scrollTo({ left: idx * DAY_COL_WIDTH, behavior: 'smooth' });
+                }
+            };
+
+            const conflictCount = useMemo(() => {
+                const people = new Set();
+                conflicts.forEach(pm => pm.forEach((_, p) => people.add(p)));
+                return people.size;
+            }, [conflicts]);
+
+            const today = new Date().toISOString().slice(0, 10);
+
+            return (
+                <div className="app-layout">
+                    <div className="app-header">
+                        <div className="flex items-center gap-4">
+                            <div>
+                                <h1 className="text-sm font-bold text-white tracking-tight">
+                                    TPS INTERACTIVE SCHEDULER
+                                    <span className={`saved-indicator ${savedShow ? 'show' : ''}`}>saved</span>
+                                </h1>
+                                <p className="text-xs text-gray-500">
+                                    {visibleEvents.length} events
+                                    {conflictCount > 0 && <span className="text-red-400 ml-2">⚠ {conflictCount} conflict{conflictCount > 1 ? 's' : ''}</span>}
+                                </p>
+                            </div>
+                            {viewMode === 'timeline' && (
+                                <div className="day-tabs ml-4">
+                                    {dates.map(d => {
+                                        const h = fmtDate(d);
+                                        return <div key={d} className={`day-tab ${d === today ? 'today' : ''}`} onClick={() => scrollToDay(d)}>{h.weekday} {h.day}</div>;
+                                    })}
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <button
+                                className={`focus-toggle-btn ${focusEnabled ? 'on' : 'off'}`}
+                                onClick={() => { setFocusEnabled(prev => { if (prev) setFocusedEventId(null); return !prev; }); }}
+                                title={focusEnabled ? 'Focus mode ON — click events to highlight and see availability' : 'Focus mode OFF'}
+                            >Focus {focusEnabled ? 'ON' : 'OFF'}</button>
+                            <div className="view-tabs">
+                                <div className={`view-tab ${viewMode === 'timeline' ? 'active' : ''}`} onClick={() => setViewMode('timeline')}>Timeline</div>
+                                <div className={`view-tab ${viewMode === 'rainbow' ? 'active' : ''}`} onClick={() => setViewMode('rainbow')}>Rainbow</div>
+                            </div>
+                            <button onClick={onChangeSelection} className="filter-btn">Edit Selection</button>
+                            <button onClick={() => { if (!confirm('Discard all changes and refresh from Whiteboard 2.0?')) return; onRefreshFromWhiteboard(); }} className="filter-btn" style={{ borderColor: 'rgba(59,130,246,0.3)', color: '#60a5fa' }}>Refresh from Whiteboard</button>
+                        </div>
+                    </div>
+
+                    {/* Both views always mounted; hidden via display:none to preserve scroll/state */}
+                    <div className="timeline-area" ref={timelineRef} style={viewMode !== 'timeline' ? { display: 'none' } : undefined}
+                        onClick={(e) => { if (focusEnabled && !e.target.closest('.event-card')) setFocusedEventId(null); }}>
+                        <div className="days-container">
+                            {dates.map(date => (
+                                <DayColumn
+                                    key={date}
+                                    date={date}
+                                    events={eventsByDate[date] || []}
+                                    roster={roster}
+                                    conflicts={conflicts}
+                                    onRemove={handleRemove}
+                                    onAdd={handleAdd}
+                                    onShowTooltip={showTooltip}
+                                    onHideTooltip={hideTooltip}
+                                    focusedEventId={focusedEventId}
+                                    onFocusEvent={setFocusedEventId}
+                                    focusEnabled={focusEnabled}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div style={{ gridColumn: 1, gridRow: 3, display: viewMode !== 'timeline' ? 'none' : undefined }}>
+                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
+                    </div>
+
+                    {/* Rainbow: always mounted for state preservation but hidden when not active */}
+                    <div className="rainbow-area" style={viewMode !== 'rainbow' ? { display: 'none' } : undefined}>
+                        <RainbowView workingEvents={workingEvents} roster={roster} dates={dates} />
+                    </div>
+
+                    <ChangeSummary
+                        changes={changes}
+                        onUndoGroup={handleUndoGroup}
+                        onClearAll={handleClearAll}
+                        onCopy={handleCopy}
+                    />
+
+                    {tooltip && (
+                        <div className="conflict-tooltip-portal" style={{
+                            left: tooltip.x, top: tooltip.y,
+                            transform: 'translateX(-50%)',
+                        }}>
+                            {tooltip.text}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        // ==========================================
+        // APP
+        // ==========================================
+
+        function App() {
+            const [screen, setScreen] = useState('loading');
+            const [allEvents, setAllEvents] = useState([]);
+            const [roster, setRoster] = useState({});
+            const [dates, setDates] = useState([]);
+            const [selectedIds, setSelectedIds] = useState(new Set());
+            const [naCats, setNaCats] = useState(new Set());
+            const [progress, setProgress] = useState('Initializing...');
+            const [error, setError] = useState(null);
+            const [cachedWorkingState, setCachedWorkingState] = useState(null);
+
+            const refreshFromWhiteboard = useCallback(() => {
+                clearState();
+                window.location.reload();
+            }, []);
+
+            useEffect(() => {
+                const load = async () => {
+                    try {
+                        // Check for saved working copy first
+                        const cached = loadWorkingCopy();
+                        if (cached && cached.workingEvents.length > 0) {
+                            setProgress('Restoring from local cache...');
+                            const filtered = {};
+                            Object.entries(cached.roster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
+                            setRoster(filtered);
+                            setDates(cached.dates);
+                            setAllEvents(cached.allEvents);
+                            setSelectedIds(cached.selectedIds);
+                            setNaCats(cached.naCats);
+                            setCachedWorkingState(cached);
+                            setScreen('scheduler');
+                            return;
+                        }
+
+                        setProgress('Fetching schedule data...');
+                        let loadedRoster, loadedEvents, loadedDates;
+
+                        try {
+                            const [rosterRes, batchRes] = await Promise.all([
+                                fetch(`${API_URL}?type=roster`),
+                                fetch(`${API_URL}?type=batch`)
+                            ]);
+                            const rosterJson = await rosterRes.json();
+                            const batchJson = await batchRes.json();
+                            if (rosterJson.error) throw new Error(rosterJson.message);
+                            if (batchJson.error) throw new Error(batchJson.message);
+                            loadedRoster = rosterJson.roster;
+                            loadedDates = batchJson.days.map(d => d.isoDate);
+                            loadedEvents = mergeDuplicateEvents(transformBatchData(batchJson, loadedRoster), loadedRoster);
+                        } catch (apiErr) {
+                            console.warn('API failed, using sample data:', apiErr.message);
+                            setProgress('Using sample data...');
+                            loadedRoster = SAMPLE_ROSTER;
+                            loadedDates = SAMPLE_DATES;
+                            loadedEvents = buildSampleEvents();
+                        }
+
+                        const filtered = {};
+                        Object.entries(loadedRoster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
+
+                        setRoster(filtered);
+                        setDates(loadedDates);
+                        setAllEvents(loadedEvents);
+
+                        // Check for saved state (selections only)
+                        const saved = loadState();
+                        if (saved && saved.selectedIds.size > 0) {
+                            setSelectedIds(saved.selectedIds);
+                            setNaCats(saved.naCats);
+                        }
+
+                        setScreen('selection');
+                    } catch (err) {
+                        setError(err.message);
+                    }
+                };
+                load();
+            }, []);
+
+            const handleContinue = (ids, cats) => {
+                setSelectedIds(ids);
+                setNaCats(cats);
+                setScreen('scheduler');
+            };
+
+            if (error) {
+                return (
+                    <div className="loading-screen">
+                        <div className="text-red-400 text-center">
+                            <div className="text-lg font-bold mb-2">Error</div>
+                            <div className="text-sm text-gray-400 mb-4">{error}</div>
+                            <button onClick={() => window.location.reload()} className="px-4 py-2 bg-blue-600 rounded-lg text-white font-bold text-sm">Retry</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (screen === 'loading') return <LoadingScreen progress={progress} />;
+
+            if (screen === 'selection') {
+                return (
+                    <EventSelectionScreen
+                        allEvents={allEvents}
+                        roster={roster}
+                        dates={dates}
+                        onContinue={handleContinue}
+                        initialSelected={selectedIds}
+                        initialNaCats={naCats}
+                    />
+                );
+            }
+
+            return (
+                <SchedulerView
+                    allEvents={allEvents}
+                    roster={roster}
+                    dates={dates}
+                    initialSelectedIds={selectedIds}
+                    initialNaCats={naCats}
+                    onChangeSelection={() => { clearWorkingCopy(); setScreen('selection'); }}
+                    cachedWorkingState={cachedWorkingState}
+                    onRefreshFromWhiteboard={refreshFromWhiteboard}
+                />
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
