@@ -1,23 +1,24 @@
-<!-- Interactive Scheduler v3.3 — Rainbow Enhancements & Event Focus Mode -->
-<!--  
-Bug Fixes                                                                                                                                                                                                                                                                                                         
-  
-  - Rainbow view vertical clipping
-  - Conflict tooltip duplication                                                                                                                                                                                                                                                                                      - Picker conflict hover (no details on hover)                                                                                                                                                                                                                                                                     
-  - View switch resets picker/scroll state
+<!-- Interactive Scheduler v3.6 — Rainbow View Revamp -->
+<!--
+  v3.6 Rainbow View Revamp
+  - Layout restructured: toolbar outside scroll container, grid inside dedicated .rainbow-scroll
+  - Sticky headers now use simple top:0 (removed fragile ResizeObserver + CSS variable approach)
+  - Fixed header height (44px) for reliable layout and marker positioning
+  - Date headers match Gantt style: centered weekday + day/month, ruler marks at 6/9/12/15/18
+  - Alternating row backgrounds for visual separation (even/odd pattern)
+  - Name column: opaque backgrounds, drop shadow for clean sticky-left rendering
+  - Hour grid lines in cells (9, 12, 15) for time alignment
+  - Event bar text truncation fixed (min-width:0, overflow:hidden on label span)
+  - Event bar styling polished: larger font (0.65rem), better hover effects, text shadow
+  - Corner cell labeled "PERSONNEL" to match Gantt
+  - Timeline marker/range lines use fixed 45px top offset
 
-  Rainbow Enhancements
-
-  - Click event bars for detail popup (modal with personnel, times, flight window)
-  - Timeline handles: click for marker, drag for range (15-min snap)
-  - Sticky date headers + sticky name column on scroll
-  - Personnel filter modal (group toggles, search, individual checkboxes)
-
-  New Features
-
-  - Event Focus Mode — click event to highlight, dims others, greys out unavailable picker pucks with conflict tooltip (checks all events incl. readonly); Focus ON/OFF toggle in header
-  - Picker multi-select — select multiple roster categories simultaneously
-  - Local cache — working state survives page refresh; "Refresh from Whiteboard" button to reload from API
+  v3.5 Changes (prior)
+  - Rainbow timeline misalignment fixed
+  - Rainbow sticky header fixed
+  - Timeline marker handles match Gantt
+  - Tooltip artifact on person delete fixed
+  - STC-A/B NAs: roster-based category detection
   -->
 <!DOCTYPE html>
 <html lang="en">
@@ -789,9 +790,9 @@ Bug Fixes
         }
         .saved-indicator.show { opacity: 1; }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.03); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+        ::-webkit-scrollbar { width: 12px; height: 12px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 6px; }
         ::-webkit-scrollbar-corner { background: #1a1a2e; }
 
         /* ===== VIEW TOGGLE TABS ===== */
@@ -817,22 +818,31 @@ Bug Fixes
         .rainbow-area {
             grid-column: 1;
             grid-row: 2 / 4;
-            overflow: auto;
-            position: relative;
+            display: flex;
+            flex-direction: column;
             background: rgba(0,0,0,0.15);
+            min-height: 0;
+            overflow: hidden;
         }
 
         .rainbow-toolbar {
-            position: sticky;
-            top: 0;
+            flex-shrink: 0;
             z-index: 45;
             background: rgba(26, 26, 46, 0.98);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding: 4px 12px;
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
+            min-height: 28px;
+        }
+
+        .rainbow-scroll {
+            flex: 1;
+            overflow: auto;
+            position: relative;
         }
 
         .rainbow-filter-btn {
@@ -857,6 +867,7 @@ Bug Fixes
             display: grid;
             gap: 1px;
             min-width: max-content;
+            position: relative;
         }
 
         .rainbow-corner {
@@ -867,6 +878,8 @@ Bug Fixes
             background: rgba(26, 26, 46, 1);
             border-right: 1px solid rgba(255,255,255,0.08);
             border-bottom: 1px solid rgba(255,255,255,0.08);
+            height: 44px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
 
         .rainbow-date-header {
@@ -875,25 +888,38 @@ Bug Fixes
             z-index: 30;
             background: rgba(30, 30, 60, 1);
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 4px 6px 0;
+            padding: 4px 0 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            height: 44px;
+            user-select: none;
+            cursor: pointer;
         }
 
         .rainbow-date-label {
-            font-size: 0.6rem;
+            text-align: center;
+        }
+        .rainbow-date-label .rb-weekday {
+            font-size: 0.7rem;
             font-weight: 700;
             color: white;
+            text-transform: uppercase;
+        }
+        .rainbow-date-label .rb-daymonth {
+            font-size: 0.55rem;
+            color: #94a3b8;
         }
 
         .rainbow-time-ruler {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.45rem;
-            color: rgba(255,255,255,0.3);
             position: relative;
-            height: 12px;
+            width: 100%;
+            height: 14px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.4);
+            margin-top: auto;
+            pointer-events: none;
         }
 
         .rainbow-time-ruler span {
@@ -905,13 +931,14 @@ Bug Fixes
             position: sticky;
             left: 0;
             z-index: 20;
-            background: rgba(20, 20, 40, 0.98);
-            border-right: 1px solid rgba(255,255,255,0.08);
+            background: rgba(15, 15, 35, 1);
+            border-right: 1px solid rgba(255,255,255,0.15);
             padding: 2px 8px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             min-height: 28px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
         }
 
         .rainbow-name-text {
@@ -948,31 +975,39 @@ Bug Fixes
             background: rgba(15, 15, 35, 0.6);
             min-height: 28px;
             overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
-
         .rainbow-cell:hover { background: rgba(15, 15, 35, 0.8); }
+        .rb-hour-line {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 1px;
+            background: rgba(255,255,255,0.04);
+            pointer-events: none;
+            z-index: 1;
+        }
 
         .rb-event-bar {
             position: absolute;
             height: 20px;
             border-radius: 2px;
-            font-size: 0.5rem;
+            font-size: 0.65rem;
             font-weight: 500;
             color: rgba(255,255,255,0.9);
             display: flex;
             align-items: center;
-            padding: 0 3px;
+            padding: 0 4px;
             overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
             z-index: 5;
-            cursor: default;
-            transition: filter 0.1s;
+            cursor: pointer;
+            transition: transform 0.1s;
+            line-height: 1;
         }
 
         .rb-event-bar:hover {
             z-index: 50;
-            filter: brightness(1.3);
+            filter: brightness(1.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .rb-bar-flying { background: rgba(16, 185, 129, 0.5); border: 1px solid rgba(16, 185, 129, 0.7); }
@@ -994,51 +1029,90 @@ Bug Fixes
         .rb-bar-label {
             position: relative;
             z-index: 2;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            text-shadow: 0 0 2px rgba(0,0,0,0.8);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
         }
 
-        /* ===== RAINBOW STICKY ENHANCEMENTS ===== */
-        .rainbow-corner {
-            z-index: 35;
-        }
-        .rainbow-name-cell {
-            background: rgba(15, 15, 35, 1);
-        }
-        .rainbow-cat-separator {
-            z-index: 20;
-        }
-
-        /* ===== RAINBOW TIMELINE MARKERS ===== */
-        .rb-timeline-marker {
+        /* ===== RAINBOW TIMELINE HANDLES (in header) ===== */
+        .rb-handle-container {
             position: absolute;
             top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .rb-marker-handle {
+            position: absolute;
+            bottom: 0;
+            height: 14px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border-radius: 2px 2px 0 0;
+            transform: translateX(-50%);
+            z-index: 60;
+            cursor: ew-resize;
+            pointer-events: auto;
+            touch-action: none;
+        }
+        .rb-marker-handle::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #ef4444;
+        }
+        .rb-range-handle {
+            position: absolute;
+            bottom: 0;
+            height: 40px;
+            width: 16px;
+            cursor: ew-resize;
+            z-index: 60;
+            pointer-events: auto;
+            display: flex;
+            justify-content: center;
+            touch-action: none;
+        }
+        .rb-range-handle-visual {
+            width: 4px;
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 2px;
+        }
+
+        /* ===== RAINBOW GRID-LEVEL MARKER/RANGE (spans full height below header) ===== */
+        .rb-grid-line {
+            position: absolute;
+            top: 45px;
             bottom: 0;
             width: 2px;
-            background: #ef4444;
+            background-color: #ef4444;
             box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
             pointer-events: none;
-            z-index: 15;
+            z-index: 55;
         }
-        .rb-timeline-range {
+        .rb-grid-range {
             position: absolute;
-            top: 0;
+            top: 45px;
             bottom: 0;
-            background: rgba(59, 130, 246, 0.15);
+            background-color: rgba(59, 130, 246, 0.15);
             border-left: 1px solid rgba(59, 130, 246, 0.5);
             border-right: 1px solid rgba(59, 130, 246, 0.5);
             pointer-events: none;
-            z-index: 15;
-        }
-        .rb-handle-label {
-            position: absolute;
-            top: -16px;
-            transform: translateX(-50%);
-            font-size: 0.55rem;
-            font-weight: 700;
-            color: #3b82f6;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 16;
+            z-index: 55;
         }
         .rb-ruler-interactive {
             position: absolute;
@@ -1814,11 +1888,22 @@ Bug Fixes
         // LOCAL STORAGE
         // ==========================================
 
-        const saveState = (changes, selectedIds, naCats) => {
+        // Stable event key for matching across sessions (IDs are session-specific)
+        const eventNaturalKey = (ev) => `${ev.date}|${ev.section}|${ev.eventName}|${ev.startTime || ''}|${ev.model || ''}`;
+
+        const saveState = (changes, selectedIds, naCats, allEvents) => {
             try {
+                // Save natural keys of selected events (stable across reloads)
+                const selectedKeys = allEvents
+                    ? [...selectedIds].map(id => {
+                        const ev = allEvents.find(e => e.id === id);
+                        return ev ? eventNaturalKey(ev) : null;
+                    }).filter(Boolean)
+                    : [];
                 localStorage.setItem(STORAGE_KEY, JSON.stringify({
                     changes,
                     selectedIds: [...selectedIds],
+                    selectedKeys,
                     naCats: [...naCats],
                     savedAt: new Date().toISOString(),
                 }));
@@ -1875,6 +1960,7 @@ Bug Fixes
                 return {
                     changes: data.changes || [],
                     selectedIds: new Set(data.selectedIds || []),
+                    selectedKeys: data.selectedKeys || [],
                     naCats: new Set(data.naCats || []),
                     savedAt: data.savedAt,
                 };
@@ -1945,18 +2031,63 @@ Bug Fixes
                 NA:     { bg: 'rgba(239,68,68,0.1)',   border: '#ef4444', text: '#fca5a5' },
             };
 
+            // Student event name patterns — these are curriculum events that should
+            // inherit class from crewed siblings rather than defaulting to 'Other'
+            const STUDENT_PATTERNS = ['CF', 'AIRMANSHIP'];
+            const isStudentEventName = (name) => STUDENT_PATTERNS.some(pat => name.startsWith(pat));
+
             // Classify all non-readonly, non-NA events and organize by date > class > section
+            // Two-pass: first classify normally, then reclassify uncrewed student events via sibling inheritance
             const { byDateClassified, classSets } = useMemo(() => {
                 const map = {};
                 const sets = { 'A-Class': new Set(), 'B-Class': new Set(), 'Staff': new Set(), 'Other': new Set() };
 
                 dates.forEach(d => { map[d] = {}; });
 
+                // Pass 1: classify all events, build (date|eventName) → class lookup
+                const eventClass = new Map();         // ev.id → class
+                const dateNameClass = new Map();      // "date|NAME" → 'A-Class'|'B-Class'|'Staff'
+                const studentEvents = [];             // events needing reclassification
+
                 allEvents.forEach(ev => {
                     if (ev.readonly || ev.section === 'NA') return;
                     if (!map[ev.date]) return;
 
                     const cls = classifyEvent(ev, roster);
+                    eventClass.set(ev.id, cls);
+
+                    const uName = (ev.eventName || '').toUpperCase().trim();
+                    if (cls !== 'Other') {
+                        dateNameClass.set(`${ev.date}|${uName}`, cls);
+                    } else if (isStudentEventName(uName)) {
+                        studentEvents.push(ev);
+                    }
+                });
+
+                // Pass 2: reclassify uncrewed student events via sibling inheritance
+                studentEvents.forEach(ev => {
+                    const uName = (ev.eventName || '').toUpperCase().trim();
+                    // Try exact name match on same date first
+                    let inherited = dateNameClass.get(`${ev.date}|${uName}`);
+                    // Broaden: any classified student-pattern event on same date
+                    if (!inherited) {
+                        for (const [k, v] of dateNameClass) {
+                            const sep = k.indexOf('|');
+                            if (k.substring(0, sep) === ev.date && isStudentEventName(k.substring(sep + 1)) && (v === 'A-Class' || v === 'B-Class')) {
+                                inherited = v;
+                                break;
+                            }
+                        }
+                    }
+                    if (inherited) eventClass.set(ev.id, inherited);
+                });
+
+                // Build final groupings
+                allEvents.forEach(ev => {
+                    if (ev.readonly || ev.section === 'NA') return;
+                    if (!map[ev.date]) return;
+
+                    const cls = eventClass.get(ev.id) || 'Other';
                     sets[cls].add(ev.id);
 
                     const key = `${cls}|${ev.section}`;
@@ -1974,18 +2105,14 @@ Bug Fixes
                 return { byDateClassified: map, classSets: sets };
             }, [allEvents, dates, roster]);
 
-            // Categories that have NA events
+            // All roster categories that have members (available for NA conflict tracking)
             const naCategoriesAvailable = useMemo(() => {
-                const cats = new Set();
-                allEvents.forEach(ev => {
-                    if (ev.section !== 'NA') return;
-                    ev.personnel.forEach(p => {
-                        const c = personCat(p, roster);
-                        if (c) cats.add(c);
-                    });
-                });
-                return [...cats].sort();
-            }, [allEvents, roster]);
+                const rosterCats = new Set(Object.keys(roster).filter(cat => roster[cat] && roster[cat].length > 0));
+                // Use CATEGORY_COLORS key order for consistent display, then any extras alphabetically
+                const ordered = Object.keys(CATEGORY_COLORS).filter(cat => rosterCats.has(cat));
+                rosterCats.forEach(cat => { if (!ordered.includes(cat)) ordered.push(cat); });
+                return ordered;
+            }, [roster]);
 
             // Toggle individual event
             const toggleEvent = (id) => {
@@ -2236,7 +2363,7 @@ Bug Fixes
                 >
                     {name}
                     {hasCon && <span className="conflict-icon">!</span>}
-                    {onRemove && <span className="chip-remove" onClick={(e) => { e.stopPropagation(); e.preventDefault(); onRemove(name); }}>✕</span>}
+                    {onRemove && <span className="chip-remove" onClick={(e) => { e.stopPropagation(); e.preventDefault(); if (onHideTooltip) onHideTooltip(); onRemove(name); }}>✕</span>}
                 </span>
             );
         };
@@ -2517,7 +2644,7 @@ Bug Fixes
                         {people.map(p => {
                             const isUnavailable = focusedAvailability && focusedAvailability.has(p.name);
                             const unavailText = isUnavailable
-                                ? 'Busy: ' + focusedAvailability.get(p.name).map(c => `${c.model ? c.model + ' ' : ''}${c.eventName} (${c.startTime}-${c.endTime || '??'})`).join('; ')
+                                ? focusedAvailability.get(p.name).map(c => `${c.assigned ? 'Assigned: ' : 'Busy: '}${c.model ? c.model + ' ' : ''}${c.eventName} (${c.startTime}-${c.endTime || '??'})`).join('\n')
                                 : null;
                             return (
                                 <PersonnelChip
@@ -2795,7 +2922,9 @@ Bug Fixes
             const [rbSelection, setRbSelection] = useState(null);
             const [filterOpen, setFilterOpen] = useState(false);
             const [visiblePersonnel, setVisiblePersonnel] = useState(null); // null = show all
+            const [selectedCategory, setSelectedCategory] = useState('All');
             const dragRef = useRef(null);
+            const scrollRef = useRef(null);
 
             const toggleType = useCallback((key) => {
                 setVisibleTypes(prev => {
@@ -2874,44 +3003,84 @@ Bug Fixes
                 return { events: sorted, laneCount: lanes.length };
             }, []);
 
-            // Time ruler marks (same as day column ruler)
+            // Time ruler marks — match Gantt pattern: 6, 9, 12, 15, 18
             const rulerMarks = useMemo(() => {
-                const marks = [];
-                for (let h = 6; h <= 18; h += 2) {
-                    marks.push({ label: `${h.toString().padStart(2,'0')}`, pct: timePct(h * 60) });
-                }
-                return marks;
+                return [6, 9, 12, 15, 18].map(h => ({
+                    label: String(h),
+                    pct: timePct(h * 60),
+                }));
+            }, []);
+
+            // Hour grid lines for cells (every 3 hours matching ruler)
+            const hourLines = useMemo(() => {
+                return [9, 12, 15].map(h => timePct(h * 60));
             }, []);
 
             const colCount = dates.length + 1;
 
             // Timeline handle: pointer events for single-click marker / drag range
             const pctToMinutes = useCallback((pct) => {
-                const raw = TIMELINE_START + (pct / 100) * TIMELINE_RANGE;
-                return Math.round(raw / 15) * 15; // snap to 15-min
+                return Math.round(TIMELINE_START + (pct / 100) * TIMELINE_RANGE);
             }, []);
 
-            const handleRulerPointerDown = useCallback((e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const pct = ((e.clientX - rect.left) / rect.width) * 100;
-                const mins = pctToMinutes(pct);
-                dragRef.current = { startMins: mins, rect, dragging: false };
-                setRbSelection({ type: 'marker', start: mins, end: mins });
-
+            // Shared pointer-move/up for timeline handles
+            const addRbGlobalListeners = useCallback(() => {
                 const onMove = (me) => {
                     if (!dragRef.current) return;
-                    const mPct = ((me.clientX - dragRef.current.rect.left) / dragRef.current.rect.width) * 100;
-                    const mMins = pctToMinutes(Math.max(0, Math.min(100, mPct)));
-                    const s = dragRef.current.startMins;
-                    if (Math.abs(mMins - s) > 5) dragRef.current.dragging = true;
-                    if (dragRef.current.dragging) {
-                        setRbSelection({ type: 'range', start: Math.min(s, mMins), end: Math.max(s, mMins) });
+                    const { mode, dateIndex, originTime, initialSelection } = dragRef.current;
+                    // Calculate minutes from pointer position relative to the date column
+                    const area = scrollRef.current;
+                    if (!area) return;
+                    const areaRect = area.getBoundingClientRect();
+                    const scrollLeft = area.scrollLeft;
+                    const colLeft = 161 + dateIndex * (RAINBOW_COL_WIDTH + 1); // px from grid left (+1px per gap)
+                    const colVisualLeft = areaRect.left + colLeft - scrollLeft;
+                    const xInCol = me.clientX - colVisualLeft;
+                    const pct = Math.max(0, Math.min(100, (xInCol / RAINBOW_COL_WIDTH) * 100));
+                    const currentTime = pctToMinutes(pct);
+
+                    if (mode === 'create') {
+                        if (Math.abs(currentTime - originTime) > 10) {
+                            setRbSelection({ type: 'range', dateIndex, start: Math.min(originTime, currentTime), end: Math.max(originTime, currentTime) });
+                        } else {
+                            setRbSelection({ type: 'marker', dateIndex, start: currentTime, end: currentTime });
+                        }
+                    } else if (mode === 'drag-marker') {
+                        setRbSelection({ ...initialSelection, start: currentTime, end: currentTime });
+                    } else if (mode === 'drag-start') {
+                        const newStart = Math.min(currentTime, initialSelection.end - 15);
+                        setRbSelection({ ...initialSelection, start: newStart });
+                    } else if (mode === 'drag-end') {
+                        const newEnd = Math.max(currentTime, initialSelection.start + 15);
+                        setRbSelection({ ...initialSelection, end: newEnd });
                     }
                 };
-                const onUp = () => { dragRef.current = null; window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); };
+                const onUp = () => {
+                    dragRef.current = null;
+                    window.removeEventListener('pointermove', onMove);
+                    window.removeEventListener('pointerup', onUp);
+                };
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', onUp);
             }, [pctToMinutes]);
+
+            const handleRulerPointerDown = useCallback((e, dateIndex) => {
+                if (e.button !== 0) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                const pct = ((e.clientX - rect.left) / rect.width) * 100;
+                const mins = pctToMinutes(pct);
+                if (rbSelection) { setRbSelection(null); return; }
+                dragRef.current = { mode: 'create', dateIndex, originTime: mins };
+                setRbSelection({ type: 'marker', dateIndex, start: mins, end: mins });
+                addRbGlobalListeners();
+            }, [pctToMinutes, rbSelection, addRbGlobalListeners]);
+
+            const handleRbHandleDrag = useCallback((mode, e) => {
+                if (e.button !== 0) return;
+                e.stopPropagation();
+                dragRef.current = { mode, dateIndex: rbSelection.dateIndex, initialSelection: { ...rbSelection } };
+                addRbGlobalListeners();
+            }, [rbSelection, addRbGlobalListeners]);
 
             // Escape key clears selection
             useEffect(() => {
@@ -2920,33 +3089,18 @@ Bug Fixes
                 return () => window.removeEventListener('keydown', onKey);
             }, []);
 
-            // Render timeline marker/range overlay inside a cell
-            const renderCellOverlay = useCallback((sel) => {
-                if (!sel) return null;
-                if (sel.type === 'marker') {
-                    const pct = timePct(sel.start);
-                    return (
-                        <>
-                            <div className="rb-timeline-marker" style={{ left: pct + '%' }} />
-                            <div className="rb-handle-label" style={{ left: pct + '%' }}>{minutesToTime(sel.start)}</div>
-                        </>
-                    );
-                }
-                if (sel.type === 'range') {
-                    const lPct = timePct(sel.start);
-                    const rPct = timePct(sel.end);
-                    const durMins = sel.end - sel.start;
-                    const durLabel = durMins >= 60 ? `${Math.floor(durMins/60)}:${String(durMins%60).padStart(2,'0')}` : `${durMins}m`;
-                    return (
-                        <>
-                            <div className="rb-timeline-range" style={{ left: lPct + '%', width: (rPct - lPct) + '%' }} />
-                            <div className="rb-handle-label" style={{ left: lPct + '%' }}>{minutesToTime(sel.start)}</div>
-                            <div className="rb-handle-label" style={{ left: rPct + '%' }}>{minutesToTime(sel.end)}</div>
-                            <div className="rb-handle-label" style={{ left: ((lPct + rPct) / 2) + '%', top: '-4px', color: '#93c5fd' }}>{durLabel}</div>
-                        </>
-                    );
-                }
-                return null;
+            // Category dropdown handler (matches Gantt pattern)
+            const handleRbCategoryChange = useCallback((e) => {
+                const cat = e.target.value;
+                setSelectedCategory(cat);
+                if (cat === 'All') setVisiblePersonnel(null);
+                else if (cat !== 'Custom' && roster[cat]) setVisiblePersonnel(new Set(roster[cat]));
+            }, [roster]);
+
+            const handleRbFilterApply = useCallback((newSelection) => {
+                setVisiblePersonnel(newSelection);
+                setSelectedCategory('Custom');
+                setFilterOpen(false);
             }, []);
 
             return (
@@ -2969,33 +3123,77 @@ Bug Fixes
                                     Clear Marker
                                 </button>
                             )}
-                            <button onClick={() => setFilterOpen(true)} style={{ padding: '2px 8px', fontSize: '0.55rem', background: visiblePersonnel ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.05)', color: visiblePersonnel ? '#60a5fa' : 'rgba(255,255,255,0.5)', border: `1px solid ${visiblePersonnel ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 4, cursor: 'pointer' }}>
-                                {visiblePersonnel ? `Personnel (${visiblePersonnel.size})` : 'Filter Personnel'}
+                            <button onClick={() => setFilterOpen(true)} className="filter-btn" style={{ padding: '2px 8px', fontSize: '0.55rem', background: 'rgba(55,65,81,0.8)', color: '#fff', border: '1px solid rgba(75,85,99,0.6)', borderRadius: 6, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 12, height: 12 }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                                Filter
                             </button>
-                            {visiblePersonnel && (
-                                <button onClick={() => setVisiblePersonnel(null)} style={{ padding: '2px 6px', fontSize: '0.5rem', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', background: 'none', border: 'none' }} title="Show all personnel">✕</button>
-                            )}
+                            <select value={selectedCategory} onChange={handleRbCategoryChange} style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', color: '#d1d5db', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', outline: 'none', cursor: 'pointer' }}>
+                                <option value="All">All Personnel</option>
+                                {Object.keys(roster).map(cat => (<option key={cat} value={cat}>{cat}</option>))}
+                                <option value="Custom" disabled style={{ color: 'rgba(255,255,255,0.3)' }}>Custom Selection</option>
+                            </select>
                         </div>
                     </div>
 
+                    <div className="rainbow-scroll" ref={scrollRef}>
                     <div
                         className="rainbow-grid"
                         style={{ gridTemplateColumns: `160px repeat(${dates.length}, ${RAINBOW_COL_WIDTH}px)` }}
                     >
                         {/* Header row: corner + date headers */}
                         <div className="rainbow-corner" style={{ padding: '4px 8px', display: 'flex', alignItems: 'flex-end' }}>
-                            <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.25)' }}>CREW MEMBER</span>
+                            <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>PERSONNEL</span>
                         </div>
-                        {dates.map(d => {
+                        {dates.map((d, dIdx) => {
                             const h = fmtDate(d);
+                            const isSelected = rbSelection && rbSelection.dateIndex === dIdx;
                             return (
-                                <div key={d} className="rainbow-date-header" style={{ position: 'relative' }}>
-                                    <div className="rainbow-date-label">{h.weekday} {h.day} {h.month}</div>
+                                <div key={d} className="rainbow-date-header">
+                                    <div className="rainbow-date-label">
+                                        <div className="rb-weekday">{h.weekday}</div>
+                                        <div className="rb-daymonth">{h.day} {h.month}</div>
+                                    </div>
                                     <div className="rainbow-time-ruler" style={{ position: 'relative' }}>
                                         {rulerMarks.map(m => (
                                             <span key={m.label} style={{ left: m.pct + '%' }}>{m.label}</span>
                                         ))}
-                                        <div className="rb-ruler-interactive" onPointerDown={handleRulerPointerDown} />
+                                        <div className="rb-ruler-interactive" onPointerDown={(e) => { e.stopPropagation(); handleRulerPointerDown(e, dIdx); }} />
+                                        {isSelected && rbSelection.type === 'marker' && (() => {
+                                            const pct = timePct(rbSelection.start);
+                                            return (
+                                                <div className="rb-handle-container">
+                                                    <div className="rb-marker-handle" style={{ left: `${pct}%` }} onPointerDown={(e) => handleRbHandleDrag('drag-marker', e)}>
+                                                        {minutesToTime(rbSelection.start)}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+                                        {isSelected && rbSelection.type === 'range' && (() => {
+                                            const sPct = timePct(rbSelection.start);
+                                            const ePct = timePct(rbSelection.end);
+                                            const durMins = rbSelection.end - rbSelection.start;
+                                            const durLabel = durMins >= 60 ? `${Math.floor(durMins/60)}:${String(durMins%60).padStart(2,'0')}` : `${durMins}m`;
+                                            const midPct = (sPct + ePct) / 2;
+                                            return (
+                                                <div className="rb-handle-container">
+                                                    <div style={{ position:'absolute', left:`${sPct}%`, top:'0px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#3b82f6', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                                                        {minutesToTime(rbSelection.start)}
+                                                    </div>
+                                                    <div style={{ position:'absolute', left:`${midPct}%`, top:'10px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#93c5fd', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                                                        {durLabel}
+                                                    </div>
+                                                    <div style={{ position:'absolute', left:`${ePct}%`, top:'0px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#3b82f6', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                                                        {minutesToTime(rbSelection.end)}
+                                                    </div>
+                                                    <div className="rb-range-handle" style={{ left: `calc(${sPct}% - 8px)` }} onPointerDown={(e) => handleRbHandleDrag('drag-start', e)}>
+                                                        <div className="rb-range-handle-visual" />
+                                                    </div>
+                                                    <div className="rb-range-handle" style={{ left: `calc(${ePct}% - 8px)` }} onPointerDown={(e) => handleRbHandleDrag('drag-end', e)}>
+                                                        <div className="rb-range-handle-visual" />
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
                                     </div>
                                 </div>
                             );
@@ -3027,7 +3225,9 @@ Bug Fixes
 
                                         return (
                                             <div key={date} className="rainbow-cell" style={{ height: cellH }}>
-                                                {renderCellOverlay(rbSelection)}
+                                                {hourLines.map(pct => (
+                                                    <div key={pct} className="rb-hour-line" style={{ left: pct + '%' }} />
+                                                ))}
                                                 {laid.map((ev, i) => {
                                                     const left = timePct(ev.startMin);
                                                     const width = Math.max(2, timePct(ev.endMin) - left);
@@ -3069,9 +3269,27 @@ Bug Fixes
                                 </React.Fragment>
                             );
                         })}
+                        {/* Grid-level marker/range line spanning full height below header */}
+                        {rbSelection && (() => {
+                            const colLeft = 161 + rbSelection.dateIndex * (RAINBOW_COL_WIDTH + 1); // +1px per gap
+                            if (rbSelection.type === 'marker') {
+                                const pct = timePct(rbSelection.start);
+                                const leftPx = colLeft + (pct / 100) * RAINBOW_COL_WIDTH;
+                                return <div className="rb-grid-line" style={{ left: `${leftPx}px` }} />;
+                            }
+                            if (rbSelection.type === 'range') {
+                                const sPct = timePct(rbSelection.start);
+                                const ePct = timePct(rbSelection.end);
+                                const leftPx = colLeft + (sPct / 100) * RAINBOW_COL_WIDTH;
+                                const widthPx = ((ePct - sPct) / 100) * RAINBOW_COL_WIDTH;
+                                return <div className="rb-grid-range" style={{ left: `${leftPx}px`, width: `${widthPx}px` }} />;
+                            }
+                            return null;
+                        })()}
                     </div>
+                    </div>{/* close rainbow-scroll */}
                     <RainbowModal event={modalEvent} onClose={() => setModalEvent(null)} />
-                    <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={setVisiblePersonnel} />
+                    <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={handleRbFilterApply} />
                 </>
             );
         };
@@ -3084,6 +3302,7 @@ Bug Fixes
             const [savedShow, setSavedShow] = useState(false);
             const [tooltip, setTooltip] = useState(null);
             const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow'
+            const [showRefreshModal, setShowRefreshModal] = useState(false);
             const [focusedEventId, setFocusedEventId] = useState(null);
             const [focusEnabled, setFocusEnabled] = useState(true);
             const timelineRef = useRef(null);
@@ -3091,7 +3310,9 @@ Bug Fixes
             const restoredFromCache = useRef(false);
 
             const showTooltip = useCallback((text, rect) => {
-                setTooltip({ text, x: rect.left + rect.width / 2, y: rect.bottom + 6 });
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const showAbove = spaceBelow < 80;
+                setTooltip({ text, x: rect.left + rect.width / 2, y: showAbove ? rect.top - 6 : rect.bottom + 6, above: showAbove });
             }, []);
             const hideTooltip = useCallback(() => setTooltip(null), []);
 
@@ -3106,6 +3327,8 @@ Bug Fixes
                     setWorkingEvents(allEvents.map(ev => ({ ...ev, personnel: [...ev.personnel] })));
                     setChanges([]);
                 }
+                // Save selections immediately so they persist across refresh
+                saveState([], initialSelectedIds, initialNaCats, allEvents);
                 // Use requestAnimationFrame to ensure state is settled before enabling change tracking
                 requestAnimationFrame(() => { initialized.current = true; });
             }, [allEvents]);
@@ -3146,6 +3369,12 @@ Bug Fixes
                 const fPersonnel = new Set(fev.personnel);
                 // Map: person -> [{ eventName, model, startTime, endTime }]
                 const unavailable = new Map();
+                // People already on the focused event are "assigned" — grey them out too
+                fev.personnel.forEach(person => {
+                    if (!unavailable.has(person)) unavailable.set(person, []);
+                    unavailable.get(person).push({ eventName: fev.eventName, model: fev.model, startTime: fev.startTime, endTime: fev.endTime, assigned: true });
+                });
+                // People on overlapping events
                 workingEvents.forEach(ev => {
                     if (ev.id === focusedEventId) return;
                     if (ev.date !== fDate) return;
@@ -3153,7 +3382,6 @@ Bug Fixes
                     if (eS == null || fStart == null) return;
                     if (eS < fEnd && eE > fStart) {
                         ev.personnel.forEach(person => {
-                            if (fPersonnel.has(person)) return; // already on focused event
                             if (!unavailable.has(person)) unavailable.set(person, []);
                             unavailable.get(person).push({ eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime });
                         });
@@ -3174,7 +3402,7 @@ Bug Fixes
             // Auto-save changes + full working copy
             useEffect(() => {
                 if (!initialized.current) return;
-                saveState(changes, initialSelectedIds, initialNaCats);
+                saveState(changes, initialSelectedIds, initialNaCats, allEvents);
                 saveWorkingCopy(workingEvents, changes, allEvents, roster, dates, initialSelectedIds, initialNaCats);
                 if (changes.length > 0) {
                     setSavedShow(true);
@@ -3359,7 +3587,10 @@ Bug Fixes
                                 <div className={`view-tab ${viewMode === 'rainbow' ? 'active' : ''}`} onClick={() => setViewMode('rainbow')}>Rainbow</div>
                             </div>
                             <button onClick={onChangeSelection} className="filter-btn">Edit Selection</button>
-                            <button onClick={() => { if (!confirm('Discard all changes and refresh from Whiteboard 2.0?')) return; onRefreshFromWhiteboard(); }} className="filter-btn" style={{ borderColor: 'rgba(59,130,246,0.3)', color: '#60a5fa' }}>Refresh from Whiteboard</button>
+                            <button onClick={() => setShowRefreshModal(true)} className="filter-btn" style={{ borderColor: 'rgba(59,130,246,0.3)', color: '#60a5fa', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
+                                <span>Refresh from Whiteboard</span>
+                                <span style={{ fontSize: '0.45rem', color: 'rgba(96,165,250,0.5)', fontWeight: 400 }}>Clears local work</span>
+                            </button>
                         </div>
                     </div>
 
@@ -3402,10 +3633,46 @@ Bug Fixes
                         onCopy={handleCopy}
                     />
 
+                    {showRefreshModal && (
+                        <div className="modal-overlay" onClick={() => setShowRefreshModal(false)}>
+                            <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 440 }}>
+                                <h2 className="text-lg font-bold text-white mb-4">Refresh from Whiteboard 2.0</h2>
+                                <p style={{ fontSize: '0.7rem', color: '#9ca3af', marginBottom: 16 }}>
+                                    This will discard all local changes and pull fresh data.
+                                </p>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                    <button
+                                        onClick={() => { setShowRefreshModal(false); onRefreshFromWhiteboard('quick'); }}
+                                        style={{ padding: '12px 16px', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.4)', borderRadius: 8, cursor: 'pointer', textAlign: 'left' }}
+                                    >
+                                        <div style={{ fontWeight: 700, color: '#60a5fa', fontSize: '0.75rem', marginBottom: 2 }}>Quick Refresh</div>
+                                        <div style={{ fontSize: '0.6rem', color: '#9ca3af' }}>
+                                            Pulls latest cached data from the server. Fast (~10 seconds).
+                                            Use this for routine refreshes during the day.
+                                        </div>
+                                    </button>
+                                    <button
+                                        onClick={() => { setShowRefreshModal(false); onRefreshFromWhiteboard('full'); }}
+                                        style={{ padding: '12px 16px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 8, cursor: 'pointer', textAlign: 'left' }}
+                                    >
+                                        <div style={{ fontWeight: 700, color: '#fbbf24', fontSize: '0.75rem', marginBottom: 2 }}>Full Refresh</div>
+                                        <div style={{ fontSize: '0.6rem', color: '#9ca3af' }}>
+                                            Forces Google Apps Script to re-pull all data from Whiteboard 2.0.
+                                            Slower (~1 minute). Use when data seems stale or after schedule changes in Whiteboard.
+                                        </div>
+                                    </button>
+                                </div>
+                                <button onClick={() => setShowRefreshModal(false)} style={{ marginTop: 12, padding: '6px 12px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#9ca3af', cursor: 'pointer', fontSize: '0.6rem', width: '100%' }}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                     {tooltip && (
                         <div className="conflict-tooltip-portal" style={{
                             left: tooltip.x, top: tooltip.y,
-                            transform: 'translateX(-50%)',
+                            transform: tooltip.above ? 'translate(-50%, -100%)' : 'translateX(-50%)',
                         }}>
                             {tooltip.text}
                         </div>
@@ -3429,9 +3696,59 @@ Bug Fixes
             const [error, setError] = useState(null);
             const [cachedWorkingState, setCachedWorkingState] = useState(null);
 
-            const refreshFromWhiteboard = useCallback(() => {
-                clearState();
-                window.location.reload();
+            const refreshFromWhiteboard = useCallback(async (mode) => {
+                clearWorkingCopy();
+                setCachedWorkingState(null);
+                setScreen('loading');
+
+                // Save current selections before refresh
+                const savedSelections = loadState();
+
+                try {
+                    const batchUrl = mode === 'full'
+                        ? `${API_URL}?type=batch&refresh=true`
+                        : `${API_URL}?type=batch`;
+                    setProgress(mode === 'full' ? 'Full refresh from Whiteboard 2.0 (this may take ~1 min)...' : 'Quick refresh...');
+
+                    const [rosterRes, batchRes] = await Promise.all([
+                        fetch(`${API_URL}?type=roster`),
+                        fetch(batchUrl)
+                    ]);
+                    const rosterJson = await rosterRes.json();
+                    const batchJson = await batchRes.json();
+                    if (rosterJson.error) throw new Error(rosterJson.message);
+                    if (batchJson.error) throw new Error(batchJson.message);
+
+                    const loadedRoster = rosterJson.roster;
+                    const loadedDates = batchJson.days.map(d => d.isoDate);
+                    const loadedEvents = mergeDuplicateEvents(transformBatchData(batchJson, loadedRoster), loadedRoster);
+
+                    const filtered = {};
+                    Object.entries(loadedRoster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
+
+                    setRoster(filtered);
+                    setDates(loadedDates);
+                    setAllEvents(loadedEvents);
+
+                    // Restore selections by natural key
+                    if (savedSelections && savedSelections.selectedKeys && savedSelections.selectedKeys.length > 0) {
+                        const keySet = new Set(savedSelections.selectedKeys);
+                        const matchedIds = new Set();
+                        loadedEvents.forEach(ev => {
+                            if (keySet.has(eventNaturalKey(ev))) matchedIds.add(ev.id);
+                        });
+                        if (matchedIds.size > 0) {
+                            setSelectedIds(matchedIds);
+                            setNaCats(savedSelections.naCats || new Set());
+                            setScreen('scheduler');
+                            return;
+                        }
+                    }
+
+                    setScreen('selection');
+                } catch (err) {
+                    setError('Refresh failed: ' + err.message);
+                }
             }, []);
 
             useEffect(() => {
@@ -3483,11 +3800,21 @@ Bug Fixes
                         setDates(loadedDates);
                         setAllEvents(loadedEvents);
 
-                        // Check for saved state (selections only)
+                        // Check for saved state (selections from previous session)
                         const saved = loadState();
-                        if (saved && saved.selectedIds.size > 0) {
-                            setSelectedIds(saved.selectedIds);
-                            setNaCats(saved.naCats);
+                        if (saved && saved.selectedKeys && saved.selectedKeys.length > 0) {
+                            // Match saved natural keys against freshly loaded events
+                            const keySet = new Set(saved.selectedKeys);
+                            const matchedIds = new Set();
+                            loadedEvents.forEach(ev => {
+                                if (keySet.has(eventNaturalKey(ev))) matchedIds.add(ev.id);
+                            });
+                            if (matchedIds.size > 0) {
+                                setSelectedIds(matchedIds);
+                                setNaCats(saved.naCats || new Set());
+                                setScreen('scheduler');
+                                return;
+                            }
                         }
 
                         setScreen('selection');
