@@ -1,0 +1,88 @@
+This is the list of issues used to troubleshoot bugs in GUI HTML/index.html
+
+Issue Log:
+
+Date/Time: 2/10/26 0434L PST
+- Suspect flying events crew list spills into True/False areas
+    **I have made the changes. But check my work.
+    **What would be helpful is adding a constant that is easily accessible to this section that is properly commented for identification/access that has this structure built in one section.
+    const crew = row.slice(6, 15).filter(c => c && c.trim());
+
+    6-13 stops at the last person. 14 is notes. 15-17 are logical operators.
+
+    Example JSON flight event:
+    0       "C-12",
+    1       "08:00",
+    2       "08:00",
+    3       "10:00",
+    4       "10:00",
+    5       "CPT",
+    6       "Root, S",
+    7       "Graham, J",
+    8       "",
+    9       "",
+    10      "",
+    11      "",
+    12      "",
+    13      "",
+    14      "",
+    15      "FALSE",
+    16      "FALSE",
+    17      "FALSE"
+
+    JSON Flight Structure:
+    0       "Model",
+    1       "Brief Start",
+    2       "ETD",
+    3       "ETA",
+    4       "Debrief End",
+    5       "Event",
+    6       "Crew",
+    7       "",
+    8       "",
+    9       "",
+    10      "",
+    11      "",
+    12      "",
+    13      "",
+    14      "Notes",
+    15      "Effective",
+    16      "CX/Non-E",
+    17      "Partially E"
+
+- Similarly corrected ground events.
+    **Corrected** - People 3-12, notes 13
+    ** ISSUE ** - Noticing that "CX/Non-E" isn't data that is collected. Same for flying events. That's important because sometimes an event is cancelled before it happens. That event shouldn't be shown.
+    CX/Non-E for ground is "15" for ground events and "16" for flying events.
+        - CX/Non-E Flight - 16
+        - CX/Non-E Ground - 15
+        ** I added "cancelled" property to flying and ground events. Check my work and then implement filtering to remove cancelled events.
+    
+- Not sure how to check NAs. The code structure is different than before. It is missing notes so I added that field.
+    - Check notes for this format:
+    0       "Reason",
+    1       "Start",
+    2       "End",
+    3       "Person(s)",
+    4       "",
+    5       "",
+    6       "",
+    7       "",
+    8       "",
+    9       "",
+    10      "",
+    11      "",
+    12      "",
+    13      "Notes"
+
+- Academics - Only alpha and bravo classes need acadmeics. staff won't have academics in that section.
+            const parseAcademics = (data, roster, date) => {
+            if (!data) return [];
+            const events = [];
+            const groupMap = {
+                'Alpha FTC': 'FTC-A', 'Alpha STC': 'STC-A',
+                'Bravo FTC': 'FTC-B', 'Bravo STC': 'STC-B',
+                'IP': 'Staff IP', 'Staff STC': 'Staff STC',
+                'IFTE/IWSO': 'Staff IFTE/ICSO'
+
+- Feature Request - A persistent filter for event types. Allow selection of Supervision "Supv", Flying "Flt", Ground "Gnd", NAs, and Notes. Have them as buttons selected by default. When deselected, they will be greyed out. When selected they will match their destination color format.

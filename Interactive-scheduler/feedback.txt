@@ -1,0 +1,180 @@
+See screenshot.
+
+Really nice first stab. Great UI. Review my notes on your assumptions file.
+
+The view is very cluttered. Maybe resizing the events to be dynamic for number of people. But I don't want you to think I hate the UI. It is just that people overlap with events and other people.
+
+Notes such as "Can we move up 30 mins due to..." show up as people. Strange behavior.
+
+Unclear what conflicts there are. It is highlighted, but I just don't know what the issue is.
+
+Can drag people between events, but cannot drag a new person onto an event from the picker.
+
+On initial load, change summary shows changes. It shouldn't because I haven't made any changes.
+
+Choosing events should be more user friendly than a list of events. It should match the schedule somewhat with minimal info (such as model, event, times, existing crew). Should be categorized by date. NAs should allow selection by crew list (FTC-A, Staff IP, etc), not individual NA.
+
+**Version 2 Feedback**
+It's almost perfect. Functionality works well.
+
+Top row conflict popups are obscured by timeline. [FIXED in v3.0 — tooltip portal with position:fixed at root level, z-index 9999]
+
+There is still a real-estate issue with short-timed events (1 hr) and many people. [FIXED in v3.0 — min-width:140px on cards + width-aware estimateHeight()]
+
+Duplicate events, but not duplicate students. Sometimes in whiteboard (the sheet), there is a larger event that has more students and people than it has people slots available on a given line. Schedulers then duplicate the event to add more people. This appears as a new event, but it in-fact is the same event. Characteristics of these are same exact event name, same exact instructor (or first name that appears), but different students. This is a hard feature to incorporate reliably and without other unintended bugs. Put your best thinking agent on this one to reason through corner cases of this fix. Ultimately those events should show up as one, but you want to be sure they are in-fact the same event. [FIXED in v3.0 — mergeDuplicateEvents() merges by (date+eventName+times+lead instructor). NA/readonly excluded. See fix-duplicate-merging.md for 13 corner cases analyzed]
+
+Change summary simply tracks each change, but doesn't track net change. For example, if I move Borek off F-16 CF-1, then move him back onto it, there would be 2 left in the change summary, when the net change is zero. It also should group when it makes sense. For example if I move multiple students from event to event, then it should list the students on one line. The idea is to make the instructions simple for the human to use later. [FIXED in v3.0 — computeNetChanges() cancels net-zero, detects moves, groups bulk moves. Clipboard uses MOVE/ADD/REMOVE format. See fix-net-changes.md for 9 scenarios analyzed]
+
+**Version 3.0 Feedback**
+- Change tracking. Seems to track effectively when grouping or moving pucks between events. It doesn't track changes when you remove a person with the X. [FIXED in v3.1 — moved setChanges inside setWorkingEvents updater for React 18 batching atomicity]
+- Conflicts - Orange color scheme makes it difficult to see red bar around name. Also, when hovering over the conflict circle in the upper right, there is a duplicate popup that overtakes the UI popup. Its the same info, just overlapped. Just use the UI red popup. [FIXED in v3.1 — conflict outline changed to amber/yellow (#fbbf24) with glow for universal contrast; removed duplicate native title tooltip from badge and chips]
+- Event overlapping. See pictures. Events are overlapping horizontally. If it would help, allow users to drag events vertically (not horizontally) within their respective flight, ground, and NA sections. Maybe this would help organize events for them as well. [FIXED in v3.1 — added visualEnd() accounting for min-width:140px expansion in lane assignment; overflow:hidden on section-lanes]
+- Duplicate event merging effective from how we talked about it. It looks like schedulers may leave out the instructor on the second line too which makes things challenging. See image of how they schedule multiple lines without an instructor. [FIXED in v3.1 — two-phase merge: groups by base key (no personnel[0]), then checks distinct staff leads; 0-1 leads → merge all, 2+ → sub-group by lead. Added isStaff() roster-aware helper]
+- In the puck chooser, what do the orange circles in the upper right corner mean. Some have them and others don't. Also, why do the puck chooser pucks at the bottom have conflict red edges? When I hover, it just says "CONFLICT: Also on Has time conflict." [FIXED in v3.1 — added "assigned" legend next to orange dot in picker header; picker chips now show specific conflicting event names/times instead of generic "Has time conflict"]
+- In the event chooser, Non-Availability shows up only under the first day which is sort of confusing since it handles all days of NA. Please move the NA section to be separate from the days (top or bottom or other smarter choice). [FIXED in v3.1 — NA section moved to standalone area at top of selection screen, separate from date groups]
+- Also in the event chooser, I think we can spend some time tweaking how this is organized. Goal would be simple and quick selection of relevant events for each scheduler (A-Class Scheduler, B-Class Scheduler, Staff Schedulers, Everything Scheduler). I would like some sort of grouping so that one can grab the correct events quickly and focus on them. [FIXED in v3.1 — events classified as A-Class/B-Class/Staff/Other using keyword matching + roster category analysis; quick-select buttons per category; groups shown per date with class/section headers]
+- There are 3 groups of events, A-class events, B-class events, and staff events. It's hard to fully categorize what's what, but i'll give you the background and let you reason a smart way of handling the organization piece.
+    - A-class events and B-class events are grouped into AM/PM flying windows. A & B classes are spaced out 6 months apart. When a class starts the program, they have academics in the afternoon (usually) and fly in the morning. During the last 6 months of the course, it's swapped with acadmeics being in the morning and flying in the afternoon. That would be similar with ground events since we don't deliberatly schedule events over academics.
+    - Staff events are scheduled whenever, but have names such as the following:
+        CADET
+        NAVY
+        MSN QUAL
+        CHECKRIDE
+        NVG QUAL
+        HI AOA UPGRADE
+        CHASE
+        CURRENCY
+        FERRY FLIGHT
+    - Here are examples of A-class and B-class events. You may notice that sometimes events may have "CF-1 CF-2" for example. You cannot see that CF-1 has been lined through and it was changed to CF-2. That is done for tracking, but eventually changed when the change is made.
+        Check Flight:
+            STUD FTT
+            P/S CHASE (C-12)(TF 5511F)
+            P/S CHASE INTRO (T-38)(TF 5503F)
+            P/S CHASE FAM (T-38)(TF 5502F)
+            WEAPONS FAM (CF 6381F)
+            GLIDER FAM/SOLO (CF 6215F)
+            CF-1
+            CF-2
+            CF-3
+            CF-4
+            CF-5
+            CF-6
+            CF-X
+            TRAINING FLIGHT
+            STUD PROF
+            AIRMANSHIP
+            DEPARTURES (CF 6691F)
+        Performance:
+            PERF PRAC EXAM (PF 8332F)
+            AERO MOD DATA (PF 6230F)
+            AERO MOD DEMO (PF 6221F)
+            CSO/RPA PERF PRACTICAL (PF 8311F)
+            LOW L/D DEMO (PF 6121F)
+            CSO/RPA AP DIR DEMO (PF 8301F)
+            LA/TURN PERF DEMO (PF 8222F)
+            LA/TURN PERF DEMO E/N (PF 8211F)
+            LA/TURN PERF DATA (PF 8230F)
+            TOWER FLYBY (PF 7112F)
+        Systems
+            WEAPONS (SY 7212F)
+            SYS PRACT EXAM (SY 7511F)
+            CSO/RPA SYS PRACT EXAM (SY 7503F)
+            SENSORS DEMO (SY 6131F)
+        Flying Qualities
+            VSS COMBINED DEMO (FQ 6223F)
+            VSS LONG DEMO (FQ 6221F)
+            VSS LAT/DIR DEMO (FQ 6222F)
+            ENGINE OUT DEMO (FQ 9111F)
+            FQ PRACTICAL EXAM (FQ 9511F)
+            GLIDER FQ DEMO (FQ 6230F)
+            DYNAMICS DEMO (FQ 6251F)
+            STALL DEMO (FQ 9221F)
+            STRUCTURES EE (FQ 7232F)
+            HI AOA E/E (FQ 9236F)
+            FQ DATA (FQ 6310F)
+            STATIC STABILITY (FQ 6241F)
+            HQ DEMO (FQ 8141F)
+            HQ/STALL DEMO (FQ 8160F)
+            HQ FLIGHT (FQ 8153F)
+            HQ DATA (FQ 8202F)
+            RPA FQ PRACTICAL EXAM (FQ 9502S)
+            ME HQ (FQ 8121F)
+            FCS VERIFICATION GRND TEST (FQ 7221I)
+            VISTA HQ DEMO (FQ 8181F)
+            GLIDER SPINS (FQ 9211F)
+        Test Foundations
+            AIRBORNE TC INTRO (TF 6241F)
+            CR TC PRIMER (TF 6221C)
+            INTERMEDIATE TC (TF 6251F)
+            CR TEST CONDUCT INTRO (TF 6231C)
+    - It would be rare for A & B classes to have the same flying and ground events simultaneously. However they may both fly an aircraft during the same day, but one has the morning and one has the afternoon.
+
+** Version 3.1 Feedback **
+    - P/S CHASE (T-38)(TF 5503F) is showing up under staff flying events. [FIXED in v3.2 — classifyEvent() now excludes "P/S " prefix events from STAFF_KEYWORDS matching; "P/S" indicates Performance/Syllabus student events]
+    - LOW L/D P/S CHASE is also showing up under staff flying. [FIXED in v3.2 — same fix as above; "P/S" anywhere in event name triggers exclusion from staff keyword matching]
+    - Event combination logic combined events that were actually 2 separate events. Scrutinze logic to account for this. See example \tps_schedule_gannt\Interactive-scheduler\combined-T38-events-error-whiteboard-source.png for source and error is Interactive-scheduler\combined-T38-events-error.png [FIXED in v3.2 — merge Phase 2 now sub-groups by personnel[0] (lead person) regardless of staff status, instead of only checking roster-verified staff leads. Two events with different first-listed personnel stay separate even if neither is detected as staff]
+        - It's probably best for you to see some examples of the flying schedule (images of it). So let me know if you would like those examples. I can provide them. Its a lot of detailed info for a picture screenshot, but if you take your time looking at it you may find some patterns that you can code out.
+        - `tps_schedule_gannt\Interactive-scheduler\combined-T38-events-error.png` and `tps_schedule_gannt\Interactive-scheduler\combined-T38-events-error-whiteboard-source.png` are the examples.
+    - PRIORITY ISSUE - Empty events do not show up but must display. Empty events are those that have a model, times, and event name, but no instructor or students (no people at all). Those are pulled in the JSON request, but are somehow filtered out in the HTML. [FIXED in v3.2 — removed `if (crew.length === 0) return;` guard in flying event parsing; events with model+times+name but no crew now show as empty cards]
+    - Feature request:
+        - Using `GUI HTML\index.html` as the example. Add a crew member rainbow tab that is updated for all of the changes made within the interactive scheduler. Right now data is pulled fresh from Whiteboard 2.0, but data must be consistent with interactive scheduler data and the current changes. The rainbow must show ALL events regardless of event filtering on the interactive scheduler. This does not mean to remove the separate filter from the rainbow for filtering "Supv, Flt, Gnd, NAs, Acad, and Notes" which is defaulted to showing all. Ensure you can navigate between these two tabs seemlessly and while preserving the data. [FIXED in v3.2 — RainbowView component added with Timeline/Rainbow tab toggle; reads from workingEvents (reflects all user changes); shows ALL events for ALL roster personnel; filter toggles for Supv/Flt/Gnd/NAs/Acad; grid layout with sticky name column + date columns with time bars]
+
+** Version 3.2 Feedback **
+    - How does the logic determine how events are sorted into A class, b class, etc? What is the code logic? Seeing some discrepancies when there are no personnel assigned. No change yet, just explain it for me.
+    - Rainbow view clipping. Check vertical alignment/spacing of events. `\Interactive-scheduler\rainbow-vertical-alignment-clipping.png` is an example.
+    - `Interactive-scheduler\conflict-duplication.png` bug seems to duplicate conflicts sometimes.
+    - Not sure what the flashing bounding box in puckboard picker means... I think it is showing there are conflicts, but it doesn't show anything about the conflict when hovering in the picker menu.
+    - Screen persistence/saving state when moving between timeline/rainbow. Resets picker menu and location on the timeline. Same when moving to rainbow.
+    - Rainbow needs some features that are included in `\GUI HTML\index.html`. [FIXED in v3.2 — all four sub-items implemented]
+        - Clicking on events pops up details. [FIXED in v3.2 — RainbowModal component with event details, personnel, flight window]
+        - Timeline handles (single and dual) [FIXED in v3.2 — click ruler for marker, drag for range; snap to 15-min; Escape/button to clear]
+        - Timeline should stay frozen at top row to be in view when scrolling vertically. [FIXED in v3.2 — position:sticky on date headers + name column; corner cell z-index layering]
+        - Group filtering (FTC-A, FTC-B, etc) and individual filtering (individual selection with search). [FIXED in v3.2 — RainbowFilterModal with group toggles, individual checkboxes, search, select/deselect all]
+    - Feature Request:
+        - Picker choices. Allow multiple selections of picker. Meaning I can choose FTC-A and FTC-B to see all of those pucks.
+        - Hover over picker pucks to see conflicts.
+        - **Really Needed Feature** - Selection of event shows who is available in picker menu (make this a settings feature). [FIXED in v3.2 — Event Focus Mode: click event to highlight, dims others, greys out unavailable picker pucks with conflict tooltip on hover, click outside/Escape to deselect, Focus ON/OFF toggle in header (on by default), checks ALL events including readonly]
+            - This enhances the scheduling abilities. When clicking on an event, it will highlight/focus that event (make everything else less bright). In the picker menu, it will grey out individuals who are not available.
+            - Ensure the logic is robust to include all events (not just those events shown).
+            - For those not availble, allow hovering the picker puck to see what would be conflicting.
+            - When deselcting the event (by clicking outside of the event or selecting another event), ensure it reverts to normal mode or select the other event.
+            - Again this requires adding a settings menu to turn this feature off (on by default).
+        - Local Cache: Allow user to refresh page (for example if they need to restart computer), and their work is saved. It won't refresh from Whiteboard 2.0.
+            - Important - It must not try to merge local changes when the data is refreshed from Whiteboard 2.0.
+            - Add button at top (this may be the refresh button already, but just needs retitled). It will clear the local working copy and refresh from Whiteboard.
+
+        ** Version 3.3 Feedback **
+        - Timeline handles don't behave like the timeline-marker-handles in `tps_schedule_gannt\GUI HTML\index.html` [FIXED in v3.4 — reworked to match Gantt pattern: handle UI (marker/range handles) renders in header only; single grid-level vertical line/range spans full height via absolute positioning; removed per-cell overlays; removed snap; added drag-to-resize range handles]
+            - Reference the two types .timeline-marker-handle and .timeline-range-handle
+            - In the rainbow tab you created, it is displaying all the timeline handles in each row (instead of in the timeline, but just the line proceeds vertically)
+            - Snap functionality not required.
+            - Reference `\Interactive-scheduler\timeline-handle-range.png` and `\interactive-scheduler\timeline-handle-range.png` for examples.
+        - Rainbow timeline needs to stay frozen at the top. Not fixed. [FIXED in v3.4 — CSS variable --rb-toolbar-h set via ResizeObserver; date headers + corner cell use sticky top offset below toolbar]
+        - "Refresh from Whiteboard" button needs to have small text underneath that says "Clears local work" or similar/more clear phrasing. [FIXED in v3.4 — added "Clears local work" subtext below button text]
+        - Left/right scroll bar and vertical scroll bar need to be 2x wider than currently are. Both rainbow and timeline. [FIXED in v3.4 — scrollbar width/height doubled from 6px to 12px with matching track/thumb styling]
+        - Picker conflict highlighting shows below and is obscured by lower bounds. Needs to be within visible window (above would work for picker) [FIXED in v3.4 — tooltip auto-detects viewport space; shows above when <80px space below using translate(-50%, -100%)]
+        - The availability picker is GREAT!!! One added request. When I move an available puck to the event, they should not show as availble and be greyed out/show what they are on (just like the other greyed out ones). [FIXED in v3.4 — focused event's own personnel now included in focusedAvailability as "assigned"; tooltip shows "Assigned:" prefix vs "Busy:"]
+        - How does the logic determine how events are sorted into A class, b class, etc? What is the code logic? Seeing some discrepancies when there are no personnel assigned. No change yet, just explain it for me.
+            - You answered this before. I liked your answer about events == 0.
+        - Adjust rainbow filtering. Use the example from index.html. It looks like this `\interactive-scheduler\filtering-display-1.png` [FIXED in v3.4 — replaced custom filter buttons with Gantt-style: Filter button (opens FilterModal) + category dropdown (All Personnel / roster categories / Custom Selection)]
+        - Globally speaking for these changes, i've tweaked `tps_schedule_gannt\GUI HTML\index.html` and refined it to a point that I really like it. For these features on the rainbow please reference those visuals/features to be just like that.
+
+
+        ** Version 3.4 Feedback **
+        - STC-A/B NAs not shown on event chooser. [FIXED in v3.5 — naCategoriesAvailable was deriving categories only from people in actual NA events; if no STC-A/B members had NAs, those categories wouldn't show. Changed to roster-based: any roster category with members is now always available for NA conflict tracking]
+        - Timeline is misaligned with crew member header. `Interactive-Scheduler\timeline-misalignment.png` [FIXED in v3.5 — matched corner + date header heights via --rb-header-h CSS variable; consistent padding; gap-aware column offset (161 + dateIndex * 301); box-shadow on sticky headers]
+        - Timeline is not frozen in line with crew member. It still scrolls down. [FIXED in v3.5 — headerRef + ResizeObserver for dynamic header height; --rb-toolbar-h offsets date headers below toolbar; box-shadow for visual separation]
+        - Timeline marker handles and display times are not exactly like the index.html version. Recheck those images and relevant sections. Adapt them to work in this UI. [FIXED in v3.5 — CSS matches Gantt: rb-marker-handle (red tab + triangle ::after), rb-range-handle (blue draggable), rb-grid-line/rb-grid-range (full-height, top offset below header via --rb-header-h)]
+        - Artifact when messing with picker and choosing people and looking at their conflicts. Not sure how this came about. It is a conflict display. Happens when I hover over a person with a conflict, hit the x to delete them. It stays until I hover over any other person. [FIXED in v3.5 — PersonnelChip X button now calls onHideTooltip() before onRemove() to clear tooltip when chip is destroyed]
+
+        **Version 3.6 Feedback**
+        - Refresh of page, resets event selections. Although the data may be new, use the old event selections from the last session. If there are new events, then they will need to be selected. If there are events that were removed, then they won't show up.
+        - Data refresh (refresh button). Currently only pulls cached events. When clicking refresh, have a window pop up to choose 1 of 2 refresh options.
+            - Option 1 - Quick Refresh (pulls latest cached data... currently what refresh button does)
+            - Option 2 - Full refresh (forces google apps script full run of data).
+            - Explain what each does and approximate refresh time (quick - <10 sec, full - 1 minute)
+        - It still appears that CF rides and airmanship rides without people show up as other events.
+        - Watch item: Not confirmed, but noticed pucks previously placed were removed. It may have been an error on my part or a misunderstanding while I was doing work.
+        - Remove alternating colors. Just make sure all backgrounds of the event area are one color in the rainbow view.
+        - When moving to the rainbow view, I now cannot move back to the timeline view. It just shows entirely the rainbow view.
+            - See `\interactive-scheduler\rainbow-after-clicking-from-timeline.png`

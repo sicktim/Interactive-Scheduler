@@ -1,0 +1,93 @@
+Interactive Scheduler - Design Assumptions & Inferred Features
+=============================================================
+Created: 2026-02-04
+Review these and let me know if any need adjustment.
+
+1. SCOPE OF INTERACTION
+   - Personnel can be ADDED TO and REMOVED FROM events via drag-and-drop or click
+   - Events themselves cannot be created, deleted, or resized from this view
+   - Event times are fixed; only crew assignments are modifiable
+      *They can be modified manually by clicking on the event and enabling time adjustment. Then it can be modified by typing times or by dragging in the UI.*
+
+2. CONFLICT DETECTION
+   - Conflicts are detected across ALL loaded events, not just the ones currently displayed
+   - A conflict = same person assigned to overlapping time blocks on the same day
+   - Personnel notes (TDY, LV, Stanford, etc.) displayed as info but do NOT prevent assignment
+   - Warning icons appear on both the event card and the conflicting personnel chip
+
+3. CHANGE TRACKING
+   - All personnel add/remove/move operations tracked chronologically
+   - Changes are LOCAL ONLY - never pushed to the API or Google Sheet
+   - The change summary is a reference for the scheduler to manually update the source spreadsheet
+   - Individual changes can be undone; "Clear All" also available
+   - Copy-to-clipboard provided for sharing the change list
+   + Allow the work to be saved. I don't know how this would be done practically if there are changes when it loads next. Perhaps a save of the change log?
+
+4. EVENT CATEGORIES & DISPLAY ORDER (per the requirements)
+   - Flights always on top within each day column
+   - Ground events in the middle
+   - NA (non-availability) events at the bottom
+   - Supervision and Academics are included in conflict detection but are READ-ONLY
+     (personnel cannot be added/removed since they're roster-driven)
+   - Supervision/Academics hidden by default in the selection screen
+
+5. EVENT SELECTION PAGE
+   - Shown after data loads, before the main scheduler
+   - Groups events by type (e.g., all "T-38 LOW L/D P/S CHASE" across all days)
+   - Selecting an event type shows ALL instances across all loaded days
+   - Selection can be modified later from within the main scheduler view
+   - Selection persists within the session only (not saved between page loads)
+   - Default: nothing pre-selected (user must choose their responsibility)
+
+6. PERSONNEL PICKER (bottom panel)
+   - Shows all roster personnel grouped by category (FTC-A, Staff IP, etc.)
+   - Category tabs for quick filtering
+   - Search/filter functionality
+   - Personnel already assigned to visible events shown with a "busy" dot
+   - Drag from picker to an event card = ADD that person
+   - Drag between event cards = MOVE (remove from source, add to target)
+   - A person CAN appear on multiple non-overlapping events (not a conflict)
+
+7. DATA SOURCE
+   - Uses the SAME Google Apps Script API as the Gantt chart (roster + batch endpoints)
+   - Sample data embedded for offline/development use
+   - Data is read-only from the API; all modifications tracked locally only
+
+8. VISUAL DESIGN DECISIONS
+   - Personnel chip colors correspond to roster category:
+       FTC-A/B = green shades, STC-A/B = teal/cyan, Staff IP = purple,
+       Staff IFTE/ICSO = indigo, Staff STC = blue, Attached = slate
+       *** Edit to Color Scheme to match the source ***
+       FTC-A = purple shades, FTC-B = orange shades, STC-A/B = same as FTC, Staff IP = green,
+       Staff IFTE/ICSO = indigo, Staff STC = blue, Attached = slate
+       *** See @Interactive-scheduler/color-scheme.png
+   - Section colors: Flying=green, Ground=amber, NA=red
+   - Drop zones highlighted during drag operations
+   - Dark theme consistent with the Gantt chart
+
+9. DAY NAVIGATION
+   - All loaded days displayed as side-by-side columns, horizontally scrollable
+   - Day tabs in the header for quick jump-to navigation
+   - Days that have no selected events still show as empty columns (so user sees full schedule)
+
+10. FLIGHT EVENT CARD DETAILS
+    - Shows aircraft model as left-side label (T38, F-16, C12, etc.)
+    - Card spans brief time to debrief end on the timeline
+    - Inner bar shows ETD-to-ETA (actual flight time) similar to Gantt chart
+    - Crew shown as colored chips inside the card
+    + Event title shown in narrow bar across top of card
+    + Takeoff (etd), and landing (eta) are depicted graphically within the card.
+
+11. GROUND & NA EVENT CARD DETAILS
+    - Ground: labeled "GND", spans start to end time
+    - NA: labeled "NA", spans start to end time, shown in red tones
+    - Both show personnel as chips
+    + Title shown across top like flight card
+
+12. GENERAL ASSUMPTIONS
+    - No authentication or multi-user support
+    - No real-time collaborative editing
+    - All times assumed local (no timezone handling)
+    - Refresh button reloads data from API (discards local changes with confirmation)
+    - Weekend days included only if present in the data
+    - Empty events (all crew removed) remain visible in the view **Good edge case thought! Keep it up!**

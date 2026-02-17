@@ -1,0 +1,1188 @@
+<!-- Version 5.5 - Refresh Button Cache Refresh -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TPS Schedule</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        * {
+            font-family: 'JetBrains Mono', monospace;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll, handle in gantt-container */
+            margin: 0;
+            padding: 0;
+            touch-action: none;
+        }
+
+        #root {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glass-header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            flex-shrink: 0;
+            z-index: 60;
+        }
+
+        /* Event type colors */
+        .event-flying { background: rgba(16, 185, 129, 0.3); border: 1px solid #10b981; }
+        .event-ground { background: rgba(245, 158, 11, 0.6); border: 1px solid #f59e0b; }
+        .event-na { background: rgba(239, 68, 68, 0.6); border: 1px solid #ef4444; }
+        .event-supervision { background: rgba(139, 92, 246, 0.6); border: 1px solid #8b5cf6; }
+        .event-academics { background: rgba(59, 130, 246, 0.6); border: 1px solid #3b82f6; }
+        .event-other { background: rgba(107, 114, 128, 0.6); border: 1px solid #6b7280; }
+
+        /* Flight specific inner bar */
+        .flight-actual-bar {
+            background: rgba(16, 185, 129, 0.9);
+            height: 60%;
+            top: 20%;
+            position: absolute;
+            border-radius: 1px;
+            z-index: 6; 
+        }
+
+        .spinner {
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Gantt Container */
+        .gantt-container {
+            flex: 1;
+            overflow: auto;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            touch-action: none;
+        }
+        
+        .gantt-container:active {
+            cursor: grabbing;
+        }
+        
+        .gantt-grid {
+            display: grid;
+            grid-template-columns: 180px repeat(14, 300px); /* Name col + days */
+            gap: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            min-height: 100%;
+            position: relative;
+        }
+
+        /* Sticky Headers */
+        .gantt-header {
+            background: rgba(30, 30, 60, 1);
+            padding: 6px 8px 0px 8px;
+            text-align: center;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 54px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .header-time-scale {
+            position: relative;
+            width: 100%;
+            height: 14px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: auto;
+            pointer-events: none;
+        }
+
+        /* Corner Piece */
+        .gantt-name-header {
+            position: sticky;
+            left: 0;
+            top: 0;
+            z-index: 50;
+            background: rgba(30, 30, 60, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-weight: bold;
+            cursor: default;
+        }
+
+        /* Row Names */
+        .gantt-row-name {
+            position: sticky;
+            left: 0;
+            background: rgba(20, 20, 40, 1);
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            z-index: 30;
+            border-right: 1px solid rgba(255,255,255,0.15);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+
+        /* Cells */
+        .gantt-cell-container {
+            background: rgba(15, 15, 35, 0.6);
+            position: relative;
+            padding: 0;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .event-bar {
+            position: absolute;
+            height: 20px;
+            border-radius: 2px;
+            font-size: 0.65rem;
+            padding: 0 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            transition: transform 0.1s;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .event-bar-text {
+            z-index: 10;
+            position: relative;
+            text-shadow: 0 0 2px rgba(0,0,0,0.8);
+        }
+
+        .event-bar:hover {
+            z-index: 50;
+            filter: brightness(1.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .personnel-note {
+            position: absolute;
+            bottom: 2px;
+            left: 4px;
+            right: 4px;
+            font-size: 0.6rem;
+            color: #facc15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+            line-height: 1;
+        }
+
+        /* Timeline Overlay Styles */
+        .timeline-grid-line {
+            position: absolute;
+            top: 54px;
+            bottom: 0;
+            width: 2px;
+            background-color: #ef4444;
+            box-shadow: 0 0 4px rgba(239, 68, 68, 0.5);
+            pointer-events: none;
+            z-index: 55;
+            will-change: transform, left;
+        }
+
+        .timeline-grid-range {
+            position: absolute;
+            top: 54px;
+            bottom: 0;
+            background-color: rgba(59, 130, 246, 0.15);
+            border-left: 1px solid rgba(59, 130, 246, 0.5);
+            border-right: 1px solid rgba(59, 130, 246, 0.5);
+            pointer-events: none;
+            z-index: 55;
+            will-change: transform, left;
+        }
+
+        .timeline-handle-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .timeline-marker-handle {
+            position: absolute;
+            top: auto;
+            bottom: 0;
+            height: 14px;
+            background-color: #ef4444;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            border-radius: 2px 2px 0 0;
+            transform: translateX(-50%);
+            z-index: 60;
+            cursor: ew-resize;
+            pointer-events: auto;
+            touch-action: none;
+        }
+
+        .timeline-marker-handle::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid #ef4444;
+        }
+
+        .timeline-range-handle {
+            position: absolute;
+            bottom: 0;
+            height: 40px;
+            width: 16px;
+            cursor: ew-resize;
+            z-index: 60;
+            pointer-events: auto;
+            display: flex;
+            justify-content: center;
+            touch-action: none;
+        }
+
+        .timeline-range-handle-visual {
+            width: 4px;
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 2px;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #1a1a2e;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Filter Modal Specifics */
+        .filter-list {
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 8px;
+            margin-top: 12px;
+            flex: 1;
+        }
+
+        .filter-group-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #9ca3af;
+            padding: 8px 4px 4px 4px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 4px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .filter-item:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .filter-checkbox {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #4b5563;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            background: transparent;
+        }
+
+        .filter-checkbox:checked {
+            background: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .filter-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-corner { background: #1a1a2e; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback, useMemo, useRef } = React;
+
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyZNyrLxkW2vjbq8xpii43rWzYkkDvJTQ_KQCGMyErPZKqssL0XiA_UknwxOJ_XGzAt/exec';
+
+        // --- COLUMN STRUCTURE (per output-sheet.json) ---
+        // slice(start, end) is END-EXCLUSIVE: slice(6,14) gets indices 6-13
+        // Flying:  0=Model 1=Brief 2=ETD 3=ETA 4=Debrief 5=Event 6-13=Crew 14=Notes 15=Eff 16=CX 17=PartE
+        // Ground:  0=Event 1=Start 2=End 3-12=People 13=Notes 14=Eff 15=CX 16=PartE
+        // NA:      0=Reason 1=Start 2=End 3-12=People 13=Notes
+        const COL = {
+            flying:  { crew: [6, 14], notes: 14, cancelled: 16 },
+            ground:  { people: [3, 13], notes: 13, cancelled: 15 },
+            na:      { people: [3, 13], notes: 13 }
+        };
+
+        // --- EVENT TYPE FILTER CONFIG ---
+        const EVENT_TYPE_FILTERS = [
+            { key: 'Supervision', label: 'Supv', color: '#8b5cf6' },
+            { key: 'Flying', label: 'Flt', color: '#10b981' },
+            { key: 'Ground', label: 'Gnd', color: '#f59e0b' },
+            { key: 'NA', label: 'NAs', color: '#ef4444' },
+            { key: 'Academics', label: 'Acad', color: '#3b82f6' },
+            { key: 'Notes', label: 'Notes', color: '#facc15' }
+        ];
+
+        // --- UTILITIES ---
+
+        const timeToMinutes = (timeStr) => {
+            if (!timeStr) return null;
+            const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+            if (!match) return null;
+            return parseInt(match[1]) * 60 + parseInt(match[2]);
+        };
+
+        const minutesToTime = (mins) => {
+            const h = Math.floor(mins / 60);
+            const m = Math.floor(mins % 60);
+            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+        };
+
+        const getPosition = (startStr, endStr) => {
+            const startMin = timeToMinutes(startStr);
+            const endMin = timeToMinutes(endStr) || (startMin + 60); 
+
+            const rangeStart = 6 * 60; // 06:00
+            const rangeEnd = 18 * 60;  // 18:00
+            const totalMin = rangeEnd - rangeStart;
+
+            const s = Math.max(rangeStart, Math.min(rangeEnd, startMin));
+            const e = Math.max(rangeStart, Math.min(rangeEnd, endMin));
+
+            const left = ((s - rangeStart) / totalMin) * 100;
+            const width = ((e - s) / totalMin) * 100;
+
+            return { left: `${left}%`, width: `${Math.max(width, 2)}%` }; 
+        };
+
+        const getLeftPercent = (minutes) => {
+            const rangeStart = 6 * 60;
+            const rangeEnd = 18 * 60;
+            const totalMin = rangeEnd - rangeStart;
+            return Math.max(0, Math.min(100, ((minutes - rangeStart) / totalMin) * 100));
+        };
+
+        const getMinutesFromClick = (e, rect) => {
+            const rangeStart = 6 * 60;
+            const rangeEnd = 18 * 60;
+            const totalMin = rangeEnd - rangeStart;
+            const x = e.clientX - rect.left;
+            const percent = Math.max(0, Math.min(1, x / rect.width));
+            return Math.round(rangeStart + (percent * totalMin));
+        };
+
+        // --- PARSING LOGIC (API DATA STRUCTURE) ---
+
+        const parseSupervision = (data, date) => {
+            if (!data) return [];
+            const events = [];
+            data.forEach(row => {
+                const duty = row[0];
+                if (!duty || duty === 'Supervision' || !duty.trim()) return;
+                for (let i = 1; i < row.length - 2; i += 3) {
+                    const poc = row[i];
+                    if (poc && poc.trim()) {
+                        events.push({
+                            type: 'Supervision',
+                            title: duty.trim(),
+                            start: row[i+1],
+                            end: row[i+2],
+                            person: poc.trim(),
+                            date: date,
+                            fullTitle: `${duty}: ${poc.trim()}`
+                        });
+                    }
+                }
+            });
+            return events;
+        };
+
+        const parseFlying = (data, date) => {
+            if (!data) return [];
+            const events = [];
+            data.forEach(row => {
+                const start = row[1];
+                const eventName = row[5];
+                if (!start || !eventName || eventName === 'Event') return;
+                if (String(row[COL.flying.cancelled]).toUpperCase() === 'TRUE') return;
+
+                const crew = row.slice(...COL.flying.crew).filter(c => c && c.trim());
+                crew.forEach(person => {
+                    events.push({
+                        type: 'Flying',
+                        title: row[0] || 'A/C',
+                        start: start,
+                        end: row[4],
+                        etd: row[2], // Column 2
+                        eta: row[3], // Column 3
+                        person: person.trim(),
+                        date: date,
+                        fullTitle: `${row[0] || ''} - ${eventName}`,
+                        details: `Brief: ${start}, ETD: ${row[2]}, ETA: ${row[3]} Crew: ${crew.join(' | ')}`,
+                        notes: row[COL.flying.notes],
+                        cancelled: row[COL.flying.cancelled]
+                    });
+                });
+            });
+            return events;
+        };
+
+        const parseGround = (data, date) => {
+            if (!data) return [];
+            const events = [];
+            data.forEach(row => {
+                const eventName = row[0];
+                const start = row[1];
+                if (!eventName || !start || eventName === 'Events') return;
+                if (String(row[COL.ground.cancelled]).toUpperCase() === 'TRUE') return;
+
+                const people = row.slice(...COL.ground.people).filter(p => p && p.trim());
+                people.forEach(person => {
+                    events.push({
+                        type: 'Ground',
+                        title: eventName,
+                        start: start,
+                        end: row[2],
+                        person: person.trim(),
+                        date: date,
+                        fullTitle: eventName,
+                        details: `${people.join(' | ')}`,
+                        notes: row[COL.ground.notes],
+                        cancelled: row[COL.ground.cancelled]
+                    });
+                });
+            });
+            return events;
+        };
+
+        const parseNA = (data, date) => {
+            if (!data) return [];
+            const events = [];
+            data.forEach(row => {
+                const reason = row[0];
+                const start = row[1];
+                if (!reason || !start || reason === 'Reason') return;
+
+                const people = row.slice(...COL.na.people).filter(p => p && p.trim());
+                people.forEach(person => {
+                    events.push({
+                        type: 'NA',
+                        title: reason,
+                        start: start,
+                        end: row[2],
+                        person: person.trim(),
+                        date: date,
+                        fullTitle: `NA: ${reason}`,
+                        notes: row[COL.na.notes]
+                    });
+                });
+            });
+            return events;
+        };
+
+        const parseAcademics = (data, roster, date) => {
+            if (!data) return [];
+            const events = [];
+            const groupMap = {
+                'Alpha FTC': 'FTC-A', 'Alpha STC': 'STC-A',
+                'Bravo FTC': 'FTC-B', 'Bravo STC': 'STC-B'
+            };
+
+            data.forEach(row => {
+                const group = row[0];
+                const start = row[1];
+                if (!group || !start || group === 'Academics') return;
+
+                const category = groupMap[group.trim()];
+                if (category && roster[category]) {
+                    roster[category].forEach(person => {
+                        events.push({
+                            type: 'Academics',
+                            title: 'Academics',
+                            start: start,
+                            end: row[2],
+                            person: person, 
+                            date: date,
+                            fullTitle: `${group} Academics`
+                        });
+                    });
+                }
+            });
+            return events;
+        };
+
+        const parsePersonnelStatus = (data, date) => {
+            if (!data) return [];
+            const statuses = [];
+            data.forEach(block => {
+                if (!block) return;
+                block.forEach(row => {
+                    const name = row[0];
+                    const note = row[3];
+                    if (name && note && name.trim() && note.trim() && note.trim() !== 'Notes') {
+                        statuses.push({
+                            person: name.trim(),
+                            status: note.trim(),
+                            date: date
+                        });
+                    }
+                });
+            });
+            return statuses;
+        };
+
+        // --- COMPONENTS ---
+
+        const TimelineHeaderHandles = ({ selection, onUpdate }) => {
+            const { type, start, end } = selection;
+            if (type === 'marker') {
+                const percent = getLeftPercent(start);
+                return (
+                    <div className="timeline-handle-container">
+                        <div className="timeline-marker-handle" style={{ left: `${percent}%` }} onPointerDown={(e) => { e.stopPropagation(); onUpdate('drag-marker', e); }}>
+                            {minutesToTime(start)}
+                        </div>
+                    </div>
+                );
+            }
+            if (type === 'range') {
+                const sPercent = getLeftPercent(start);
+                const ePercent = getLeftPercent(end);
+                const durMins = end - start;
+                const durLabel = durMins >= 60 ? `${Math.floor(durMins/60)}:${String(durMins%60).padStart(2,'0')}` : `${durMins}m`;
+                const midPercent = (sPercent + ePercent) / 2;
+                return (
+                    <div className="timeline-handle-container">
+                        <div style={{ position:'absolute', left:`${sPercent}%`, top:'0px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#3b82f6', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                            {minutesToTime(start)}
+                        </div>
+                        <div style={{ position:'absolute', left:`${midPercent}%`, top:'10px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#93c5fd', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                            {durLabel}
+                        </div>
+                        <div style={{ position:'absolute', left:`${ePercent}%`, top:'0px', transform:'translateX(-50%)', fontSize:'0.6rem', fontWeight:'bold', color:'#3b82f6', pointerEvents:'none', zIndex:61, whiteSpace:'nowrap' }}>
+                            {minutesToTime(end)}
+                        </div>
+                        <div className="timeline-range-handle" style={{ left: `calc(${sPercent}% - 8px)` }} onPointerDown={(e) => { e.stopPropagation(); onUpdate('drag-start', e); }}>
+                            <div className="timeline-range-handle-visual" />
+                        </div>
+                        <div className="timeline-range-handle" style={{ left: `calc(${ePercent}% - 8px)` }} onPointerDown={(e) => { e.stopPropagation(); onUpdate('drag-end', e); }}>
+                            <div className="timeline-range-handle-visual" />
+                        </div>
+                    </div>
+                );
+            }
+            return null;
+        };
+
+        const TimelineMarkerLine = ({ selection, dayIndex }) => {
+            if (!selection || selection.dayIndex !== dayIndex) return null;
+            const { type, start, end } = selection;
+            const leftOffset = 181 + (dayIndex * 301);
+            if (type === 'marker') {
+                const percent = getLeftPercent(start);
+                return <div className="timeline-grid-line" style={{ left: `${leftOffset + (percent * 3)}px` }} />;
+            }
+            if (type === 'range') {
+                const sPercent = getLeftPercent(start);
+                const ePercent = getLeftPercent(end);
+                const widthPercent = ePercent - sPercent;
+                const leftPx = leftOffset + (sPercent * 3);
+                const widthPx = widthPercent * 3;
+                return <div className="timeline-grid-range" style={{ left: `${leftPx}px`, width: `${widthPx}px` }} />;
+            }
+            return null;
+        };
+
+        const Modal = ({ event, onClose }) => {
+            if (!event) return null;
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className={`text-xl font-bold px-3 py-1 rounded bg-opacity-20 border-l-4 ${event.type === 'Flying' ? 'text-green-400 border-green-500' : event.type === 'Ground' ? 'text-yellow-400 border-yellow-500' : event.type === 'NA' ? 'text-red-400 border-red-500' : 'text-blue-400 border-blue-500'}`}>{event.fullTitle || event.title}</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        <div className="space-y-4">
+                            <div className="flex gap-4">
+                                <div className="bg-white/5 p-3 rounded-lg flex-1">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Time</div>
+                                    <div className="text-white">{event.start} - {event.end || '??:??'}</div>
+                                </div>
+                                <div className="bg-white/5 p-3 rounded-lg flex-1">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Date</div>
+                                    <div className="text-white">{event.date}</div>
+                                </div>
+                            </div>
+                            {event.details && (<div className="bg-white/5 p-3 rounded-lg"><div className="text-xs text-gray-500 uppercase font-bold mb-1">Details</div><div className="text-sm text-gray-300">{event.details}</div></div>)}
+                            {event.notes && (<div className="bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20"><div className="text-xs text-yellow-500 uppercase font-bold mb-1">Notes</div><div className="text-sm text-yellow-200 italic">{event.notes}</div></div>)}
+                        </div>
+                        <button onClick={onClose} className="mt-6 w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-bold">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
+        const GanttCell = ({ events, status, onEventClick }) => {
+            const lanes = useMemo(() => {
+                const rows = [];
+                const sorted = [...events].sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+                sorted.forEach(ev => {
+                    const startMin = timeToMinutes(ev.start);
+                    let placed = false;
+                    for (let i = 0; i < rows.length; i++) {
+                        const lastEventInRow = rows[i][rows[i].length - 1];
+                        const lastEndMin = timeToMinutes(lastEventInRow.end) || (timeToMinutes(lastEventInRow.start) + 60);
+                        if (startMin >= lastEndMin) { rows[i].push(ev); placed = true; break; }
+                    }
+                    if (!placed) rows.push([ev]);
+                });
+                return rows;
+            }, [events]);
+            const minHeight = 36;
+            const laneHeight = 22;
+            const noteHeight = status ? 14 : 0;
+            const calculatedHeight = Math.max(minHeight, (lanes.length * laneHeight) + noteHeight + 4);
+            return (
+                <div className="relative w-full h-full" style={{ minHeight: `${calculatedHeight}px` }}>
+                    {lanes.map((lane, laneIdx) => lane.map((ev, evIdx) => {
+                        const pos = getPosition(ev.start, ev.end);
+                        
+                        let flightInner = null;
+                        if (ev.type === 'Flying' && ev.etd && ev.eta) {
+                            const startMin = timeToMinutes(ev.start);
+                            const endMin = timeToMinutes(ev.end);
+                            const etdMin = timeToMinutes(ev.etd);
+                            const etaMin = timeToMinutes(ev.eta);
+                            const totalDur = endMin - startMin;
+                            if (totalDur > 0) {
+                                const leftP = Math.max(0, (etdMin - startMin) / totalDur * 100);
+                                const widthP = Math.max(0, (etaMin - etdMin) / totalDur * 100);
+                                flightInner = <div className="flight-actual-bar" style={{ left: `${leftP}%`, width: `${widthP}%` }}></div>;
+                            }
+                        }
+
+                        return (
+                            <div key={`${laneIdx}-${evIdx}`} className={`event-bar event-${ev.type.toLowerCase()}`} style={{ ...pos, top: `${laneIdx * laneHeight + 2}px` }} title={`${ev.start}-${ev.end}: ${ev.fullTitle || ev.title}`} onClick={(e) => { e.stopPropagation(); onEventClick(ev); }}>
+                                {flightInner}
+                                <span className="event-bar-text truncate relative z-10">{ev.title}</span>
+                            </div>
+                        );
+                    }))}
+                    {status && <div className="personnel-note" title={status.status}>{status.status}</div>}
+                </div>
+            );
+        };
+
+        const FilterModal = ({ isOpen, onClose, roster, currentSelection, onApply }) => {
+            const [search, setSearch] = useState('');
+            const [tempSelection, setTempSelection] = useState(new Set());
+
+            useEffect(() => {
+                if (isOpen) {
+                    setTempSelection(new Set(currentSelection));
+                    setSearch('');
+                }
+            }, [isOpen, currentSelection]);
+
+            const handleToggle = (name) => {
+                const next = new Set(tempSelection);
+                if (next.has(name)) next.delete(name);
+                else next.add(name);
+                setTempSelection(next);
+            };
+
+            const handleToggleGroup = (categoryNames, shouldSelect) => {
+                const next = new Set(tempSelection);
+                categoryNames.forEach(name => {
+                    if (shouldSelect) next.add(name);
+                    else next.delete(name);
+                });
+                setTempSelection(next);
+            };
+
+            const filteredRoster = useMemo(() => {
+                if (!search) return roster;
+                const lower = search.toLowerCase();
+                const result = {};
+                Object.entries(roster).forEach(([cat, names]) => {
+                    const filteredNames = names.filter(n => n.toLowerCase().includes(lower));
+                    if (filteredNames.length > 0) result[cat] = filteredNames;
+                });
+                return result;
+            }, [roster, search]);
+
+            if (!isOpen) return null;
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-xl font-bold text-white">Filter Personnel</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        
+                        <input 
+                            type="text" 
+                            placeholder="Search names..." 
+                            value={search} 
+                            onChange={e => setSearch(e.target.value)}
+                            className="w-full bg-gray-800 border border-gray-700 text-white rounded p-2 mb-2 focus:outline-none focus:border-blue-500"
+                        />
+
+                        <div className="flex gap-2 mb-2">
+                            <button onClick={() => {
+                                const allVisible = Object.values(filteredRoster).flat();
+                                const next = new Set(tempSelection);
+                                allVisible.forEach(n => next.add(n));
+                                setTempSelection(next);
+                            }} className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">Select All Visible</button>
+                            <button onClick={() => {
+                                const allVisible = Object.values(filteredRoster).flat();
+                                const next = new Set(tempSelection);
+                                allVisible.forEach(n => next.delete(n));
+                                setTempSelection(next);
+                            }} className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">Deselect All Visible</button>
+                        </div>
+
+                        <div className="filter-list custom-scrollbar">
+                            {Object.entries(filteredRoster).map(([category, names]) => (
+                                <div key={category} className="mb-2">
+                                    <div className="filter-group-header flex justify-between group">
+                                        <span>{category}</span>
+                                        <span 
+                                            className="cursor-pointer text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            onClick={() => {
+                                                const allInGroupSelected = names.every(n => tempSelection.has(n));
+                                                handleToggleGroup(names, !allInGroupSelected);
+                                            }}
+                                        >
+                                            Toggle Group
+                                        </span>
+                                    </div>
+                                    {names.map(name => (
+                                        <div key={name} className="filter-item" onClick={() => handleToggle(name)}>
+                                            <div className={`filter-checkbox ${tempSelection.has(name) ? 'checked' : ''}`} style={tempSelection.has(name) ? {background:'#3b82f6', borderColor:'#3b82f6'} : {}}></div>
+                                            <span className="text-sm text-gray-300">{name}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ))}
+                            {Object.keys(filteredRoster).length === 0 && <div className="text-gray-500 text-center py-4">No matches found</div>}
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button onClick={onClose} className="px-4 py-2 text-gray-400 hover:text-white">Cancel</button>
+                            <button onClick={() => onApply(tempSelection)} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold">Apply Filter</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        function App() {
+            const [roster, setRoster] = useState({});
+            const [dates, setDates] = useState([]);
+            const [scheduleData, setScheduleData] = useState([]);
+            const [personnelStatuses, setPersonnelStatuses] = useState([]);
+            const [loading, setLoading] = useState(true);
+            const [progress, setProgress] = useState('');
+            const [error, setError] = useState(null);
+            const [selectedCategory, setSelectedCategory] = useState('All');
+            const [visiblePersonnel, setVisiblePersonnel] = useState(new Set());
+            const [isFilterOpen, setIsFilterOpen] = useState(false);
+            const [selectedEvent, setSelectedEvent] = useState(null);
+            const [timelineSelection, setTimelineSelection] = useState(null);
+            const [lastUpdated, setLastUpdated] = useState(null);
+            const [visibleTypes, setVisibleTypes] = useState(new Set(['Supervision', 'Flying', 'Ground', 'NA', 'Academics', 'Notes']));
+            const dragRef = useRef(null);
+
+            const loadData = async () => {
+                try {
+                    setLoading(true);
+                    setProgress('Pulling all that TPS schedule data...');
+                    const [rosterRes, listRes] = await Promise.all([
+                        fetch(`${API_URL}?type=roster`),
+                        fetch(`${API_URL}?type=list`)
+                    ]);
+
+                    const rosterJson = await rosterRes.json();
+                    const listJson = await listRes.json();
+
+                    if (rosterJson.error) throw new Error(rosterJson.message);
+                    if (listJson.error) throw new Error(listJson.message);
+
+                    setRoster(rosterJson.roster);
+                    setVisiblePersonnel(new Set(Object.values(rosterJson.roster).flat()));
+
+                    const sheetList = listJson.sheets;
+                    setDates(sheetList.map(s => s.isoDate));
+
+                    setProgress(`Fetching ${sheetList.length} days...because we care...`);
+
+                    const sheetPromises = sheetList.map(async (sheet) => {
+                        const url = `${API_URL}?type=sheet&name=${encodeURIComponent(sheet.name)}&date=${sheet.isoDate}`;
+                        try {
+                            const res = await fetch(url);
+                            return await res.json();
+                        } catch (e) {
+                            return null;
+                        }
+                    });
+
+                    const sheetsData = await Promise.all(sheetPromises);
+                    setProgress('Parsing raw data...');
+
+                    let allEvents = [];
+                    let allStatuses = [];
+                    let latestFetchTime = null;
+
+                    sheetsData.forEach(dayData => {
+                        if (!dayData || !dayData.schedule || !dayData.schedule.data) return;
+
+                        // Check fetchedAt
+                        if (dayData.metadata && dayData.metadata.fetchedAt) {
+                            const t = new Date(dayData.metadata.fetchedAt);
+                            if (!latestFetchTime || t > latestFetchTime) {
+                                latestFetchTime = t;
+                            }
+                        }
+
+                        const date = dayData.metadata.sourceSheet.date;
+                        const raw = dayData.schedule.data;
+
+                        allEvents.push(...parseSupervision(raw.supervision, date));
+                        allEvents.push(...parseFlying(raw.flying, date));
+                        allEvents.push(...parseGround(raw.ground, date));
+                        allEvents.push(...parseNA(raw.na, date));
+                        allEvents.push(...parseAcademics(raw.academics, rosterJson.roster, date));
+
+                        if (raw.personnelNotes) {
+                            allStatuses.push(...parsePersonnelStatus(raw.personnelNotes, date));
+                        }
+                    });
+
+                    setScheduleData(allEvents);
+                    setPersonnelStatuses(allStatuses);
+                    setLastUpdated(latestFetchTime || new Date());
+                    setLoading(false);
+                } catch (err) {
+                    setError(err.message);
+                    setLoading(false);
+                }
+            };
+
+            const handleRefresh = async () => {
+                try {
+                    setLoading(true);
+                    setProgress('Refreshing from Whiteboard 2.0 (bypassing cache)...');
+                    const batchRes = await fetch(`${API_URL}?type=batch&refresh=true`);
+                    const batchJson = await batchRes.json();
+                    if (batchJson.error) throw new Error(batchJson.message);
+                    setProgress('Cache refreshed. Reloading data...');
+                    await loadData();
+                } catch (err) {
+                    setError(err.message);
+                    setLoading(false);
+                }
+            };
+
+            useEffect(() => { loadData(); }, []);
+
+            const handleCategoryChange = (e) => {
+                const cat = e.target.value;
+                setSelectedCategory(cat);
+                if (cat === 'All') setVisiblePersonnel(new Set(Object.values(roster).flat()));
+                else if (cat !== 'Custom' && roster[cat]) setVisiblePersonnel(new Set(roster[cat]));
+            };
+
+            const handleFilterApply = (newSelection) => {
+                setVisiblePersonnel(newSelection);
+                setSelectedCategory('Custom');
+                setIsFilterOpen(false);
+            };
+
+            const toggleEventType = (key) => {
+                setVisibleTypes(prev => {
+                    const next = new Set(prev);
+                    if (next.has(key)) next.delete(key);
+                    else next.add(key);
+                    return next;
+                });
+            };
+
+            const addGlobalListeners = () => {
+                window.addEventListener('pointermove', handleWindowPointerMove);
+                window.addEventListener('pointerup', handleWindowPointerUp);
+            };
+
+            const handleHeaderMouseDown = (e, dayIndex) => {
+                if (e.button !== 0) return;
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickTime = getMinutesFromClick(e, rect);
+                if (timelineSelection) { setTimelineSelection(null); return; }
+                dragRef.current = { mode: 'create', dayIndex, originTime: clickTime, lastTime: clickTime };
+                setTimelineSelection({ type: 'marker', dayIndex, start: clickTime, end: clickTime });
+                addGlobalListeners();
+            };
+
+            const handleOverlayDragStart = (mode, e) => {
+                if (e.button !== 0) return;
+                dragRef.current = { mode, dayIndex: timelineSelection.dayIndex, initialSelection: { ...timelineSelection } };
+                addGlobalListeners();
+            };
+
+            const handleContainerPointerDown = (e) => {
+                if (e.button !== 0) return;
+                if (e.target.classList.contains('gantt-container')) {
+                    if (e.offsetX > e.target.clientWidth || e.offsetY > e.target.clientHeight) return;
+                }
+                const container = e.currentTarget;
+                dragRef.current = { mode: 'pan', startX: e.clientX, startY: e.clientY, scrollStartX: container.scrollLeft, scrollStartY: container.scrollTop, isDrag: false };
+                addGlobalListeners();
+            };
+
+            const handleWindowPointerMove = (e) => {
+                if (!dragRef.current) return;
+                if (dragRef.current.mode === 'pan') {
+                    const { startX, startY, scrollStartX, scrollStartY } = dragRef.current;
+                    const deltaX = e.clientX - startX;
+                    const deltaY = e.clientY - startY;
+                    if (!dragRef.current.isDrag && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) dragRef.current.isDrag = true;
+                    const container = document.querySelector('.gantt-container');
+                    if (container) { container.scrollLeft = scrollStartX - deltaX; container.scrollTop = scrollStartY - deltaY; }
+                    return;
+                }
+                const { mode, dayIndex, initialSelection, originTime } = dragRef.current;
+                const dayLeft = 180 + (dayIndex * 300);
+                const container = document.querySelector('.gantt-container');
+                const scrollLeft = container ? container.scrollLeft : 0;
+                const containerRect = container.getBoundingClientRect();
+                const columnVisualLeft = containerRect.left + dayLeft - scrollLeft;
+                const xInColumn = e.clientX - columnVisualLeft;
+                const percent = Math.max(0, Math.min(1, xInColumn / 300));
+                const rangeStart = 6 * 60; const rangeEnd = 18 * 60; const totalMin = rangeEnd - rangeStart;
+                const currentTime = Math.round(rangeStart + (percent * totalMin));
+
+                if (mode === 'create') {
+                    if (Math.abs(currentTime - originTime) > 10) { const s = Math.min(originTime, currentTime); const end = Math.max(originTime, currentTime); setTimelineSelection({ type: 'range', dayIndex, start: s, end: end }); }
+                    else { setTimelineSelection({ type: 'marker', dayIndex, start: currentTime, end: currentTime }); }
+                } else if (mode === 'drag-marker') { setTimelineSelection({ ...initialSelection, start: currentTime, end: currentTime }); }
+                else if (mode === 'drag-start') { const newStart = Math.min(currentTime, initialSelection.end - 15); setTimelineSelection({ ...initialSelection, start: newStart }); }
+                else if (mode === 'drag-end') { const newEnd = Math.max(currentTime, initialSelection.start + 15); setTimelineSelection({ ...initialSelection, end: newEnd }); }
+            };
+
+            const handleWindowPointerUp = (e) => {
+                if (dragRef.current && dragRef.current.mode === 'pan') {
+                    if (!dragRef.current.isDrag) {
+                        if (!e.target.closest('.event-bar')) setTimelineSelection(null);
+                    }
+                }
+                dragRef.current = null;
+                window.removeEventListener('pointermove', handleWindowPointerMove);
+                window.removeEventListener('pointerup', handleWindowPointerUp);
+            };
+
+            const personnelList = useMemo(() => {
+                return Object.entries(roster).flatMap(([cat, names]) => {
+                    return names.filter(name => visiblePersonnel.has(name)).map(name => ({ name, category: cat }));
+                });
+            }, [roster, visiblePersonnel]);
+
+            // UPDATED DATE FORMATTING (UTC)
+            const formatHeaderDate = (isoDate) => {
+                const [y, m, d] = isoDate.split('-').map(Number);
+                const date = new Date(Date.UTC(y, m - 1, d));
+                
+                const weekday = date.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' });
+                const month = date.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+                const dayNum = date.getUTCDate();
+
+                return (
+                    <div className="flex flex-col h-full justify-between w-full pointer-events-none">
+                        <div className="flex flex-col items-center">
+                            <span className="font-bold text-white uppercase text-xs">{weekday}</span>
+                            <span className="text-gray-400">{dayNum} {month}</span>
+                        </div>
+                        <div className="header-time-scale">
+                            <span style={{ position: 'absolute', left: '0%' }}>6</span>
+                            <span style={{ position: 'absolute', left: '25%', transform: 'translateX(-50%)' }}>9</span>
+                            <span style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>12</span>
+                            <span style={{ position: 'absolute', left: '75%', transform: 'translateX(-50%)' }}>15</span>
+                            <span style={{ position: 'absolute', left: '100%', transform: 'translateX(-100%)' }}>18</span>
+                        </div>
+                    </div>
+                );
+            };
+
+            if (error) return <div className="text-red-500 p-8 text-center glass-card m-10">Error: {error}</div>;
+
+            return (
+                <div className="flex flex-col h-full">
+                    <Modal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+                    <FilterModal isOpen={isFilterOpen} onClose={() => setIsFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={handleFilterApply} />
+                    <div className="glass-header flex justify-between items-center">
+                        <div>
+                            <h1 className="text-xl font-bold text-white tracking-tight">TPS CREW RAINBOW</h1>
+                            <p className="text-xs text-gray-400">
+                                {loading ? progress : `Active: ${scheduleData.length} Events across ${dates.length} Days`}
+                                {lastUpdated && <span className="ml-3 text-gray-500 border-l border-gray-600 pl-3">Updated: {lastUpdated.toLocaleTimeString()} {lastUpdated.toLocaleDateString()}</span>}
+                            </p>
+                            <div className="flex gap-1 mt-1">
+                                {EVENT_TYPE_FILTERS.map(f => (
+                                    <button
+                                        key={f.key}
+                                        onClick={() => toggleEventType(f.key)}
+                                        className="px-2 py-0.5 rounded text-xs font-bold transition-all"
+                                        style={visibleTypes.has(f.key)
+                                            ? { backgroundColor: f.color + '33', color: f.color, border: `1px solid ${f.color}` }
+                                            : { backgroundColor: 'transparent', color: '#6b7280', border: '1px solid #4b5563' }
+                                        }
+                                    >
+                                        {f.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex gap-3 items-center">
+                            <button onClick={() => setIsFilterOpen(true)} className="bg-gray-700 border border-gray-600 hover:bg-gray-600 text-white px-3 py-1 rounded-lg text-sm flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                                Filter
+                            </button>
+                            <select value={selectedCategory} onChange={handleCategoryChange} className="bg-gray-800 border border-gray-700 text-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="All">All Personnel</option>
+                                {Object.keys(roster).map(cat => (<option key={cat} value={cat}>{cat}</option>))}
+                                <option value="Custom" disabled>Custom Selection</option>
+                            </select>
+                            <button onClick={handleRefresh} className="bg-blue-600 px-4 py-1 rounded-lg text-sm font-bold hover:bg-blue-500 transition-colors">Refresh</button>
+                        </div>
+                    </div>
+                    {loading ? (<div className="flex flex-col items-center justify-center flex-1"><div className="spinner mb-4 w-10 h-10 border-4"></div><div className="text-blue-400 font-bold tracking-widest uppercase text-xs animate-pulse">{progress}</div></div>) : (
+                        <div className="gantt-container" onPointerDown={handleContainerPointerDown}>
+                            <div className="gantt-grid" style={{ gridTemplateColumns: `180px repeat(${dates.length}, 300px)` }}>
+                                <div className="gantt-header gantt-name-header" onPointerDown={(e) => e.stopPropagation()}>PERSONNEL</div>
+                                {dates.map((date, idx) => {
+                                    return (
+                                        <div key={date} className="gantt-header" onPointerDown={(e) => { e.stopPropagation(); handleHeaderMouseDown(e, idx); }}>
+                                            {formatHeaderDate(date)}
+                                            {timelineSelection && timelineSelection.dayIndex === idx && (<TimelineHeaderHandles selection={timelineSelection} onUpdate={handleOverlayDragStart} />)}
+                                        </div>
+                                    );
+                                })}
+                                {personnelList.map((person, idx) => (
+                                    <React.Fragment key={`${person.name}-${idx}`}>
+                                        <div className="gantt-row-name border-b border-gray-800/50"><div><div className="font-bold text-white leading-tight">{person.name}</div><div className="text-[10px] text-gray-500 uppercase tracking-tighter">{person.category}</div></div></div>
+                                        {dates.map(date => {
+                                            const cellEvents = scheduleData.filter(e => e.person === person.name && e.date === date && visibleTypes.has(e.type));
+                                            const status = visibleTypes.has('Notes') ? personnelStatuses.find(s => s.person === person.name && s.date === date) : null;
+                                            return (<div key={`${person.name}-${date}`} className="gantt-cell-container border-b border-gray-800/50 border-r border-gray-800/30"><GanttCell events={cellEvents} status={status} onEventClick={(ev) => { setSelectedEvent(ev); }} /></div>);
+                                        })}
+                                    </React.Fragment>
+                                ))}
+                                {timelineSelection && (<TimelineMarkerLine selection={timelineSelection} dayIndex={timelineSelection.dayIndex} />)}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>

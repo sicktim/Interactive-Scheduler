@@ -1,0 +1,39 @@
+## Squadron Schedule API
+
+Location Personal Link
+https://script.google.com/home/projects/1sgg9q6k4kz9P8SJWHHu-Xl_bpDy18chXxY1P-GaPm9SVS1R3MXxnWiTh/edit
+
+Location Local Directory
+tps-schedule-gannt/Squadron Schedule API
+
+Deployment URL
+https://script.google.com/macros/s/AKfycbyS4XcUEFL8P2wDTUywJc4s_kAAIfss0JHmShgdNVYWguDItWZsc9HWaQfiv4nZPt0N/exec
+
+/** Deployment Parameters
+ * doGet(e) - Main HTTP endpoint
+ *
+ * URL Parameters:
+ *   ?name=Sick           - Name to search for
+ *   ?days=5              - Number of days to search
+ *   ?version=simplified  - Override version (simplified/enhanced)
+ *   ?forceRefresh=true   - Trigger batch cache refresh
+ *   ?viewCache=true      - View all cached data summary
+ *   ?viewCache=person    - View cache for specific person (use with ?name=)
+ *   ?viewCache=bulk      - View ALL cached schedules (for class view)
+ *
+ * @param {Object} e - Google Apps Script event object
+ * @returns {TextOutput} JSON response
+ */
+
+
+## Schedule Events
+
+Location Personal Link
+https://script.google.com/home/projects/10KWQz5fAYwsAK7fb6GG5wVAbpfXxf6k1KgMK_fjvvHxPYmrdELpgL9se/edit
+
+Location Local Directory
+tps-schedule-gannt/Schedule Events
+
+Deployment URL
+https://script.google.com/macros/s/AKfycbyZNyrLxkW2vjbq8xpii43rWzYkkDvJTQ_KQCGMyErPZKqssL0XiA_UknwxOJ_XGzAt/exec
+

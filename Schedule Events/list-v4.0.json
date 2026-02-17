@@ -1,0 +1,40 @@
+{
+  "sheets": [
+    {
+      "name": "Tue 3 Feb",
+      "isoDate": "2026-02-03"
+    },
+    {
+      "name": "Wed 4 Feb",
+      "isoDate": "2026-02-04"
+    },
+    {
+      "name": "Thu 5 Feb",
+      "isoDate": "2026-02-05"
+    },
+    {
+      "name": "Fri 6 Feb",
+      "isoDate": "2026-02-06"
+    },
+    {
+      "name": "Mon 9 Feb",
+      "isoDate": "2026-02-09"
+    },
+    {
+      "name": "Tue 10 Feb",
+      "isoDate": "2026-02-10"
+    },
+    {
+      "name": "Wed 11 Feb",
+      "isoDate": "2026-02-11"
+    },
+    {
+      "name": "Thu 12 Feb",
+      "isoDate": "2026-02-12"
+    },
+    {
+      "name": "Fri 13 Feb",
+      "isoDate": "2026-02-13"
+    }
+  ]
+}

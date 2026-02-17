@@ -1,0 +1,1386 @@
+{
+  "metadata": {
+    "generatedAt": "2026-02-02T21:39:53.581Z",
+    "timezone": "America/Los_Angeles",
+    "sourceSheet": {
+      "name": "Mon 2 Feb",
+      "date": "2026-02-02",
+      "structureUsed": "current"
+    }
+  },
+  "roster": {
+    "FTC-B": [
+      {
+        "name": "Arnold, C",
+        "type": "student"
+      },
+      {
+        "name": "Baum, J",
+        "type": "student"
+      },
+      {
+        "name": "Bean, P",
+        "type": "student"
+      },
+      {
+        "name": "Cagliano, C",
+        "type": "student"
+      },
+      {
+        "name": "Dockum, T",
+        "type": "student"
+      },
+      {
+        "name": "Ehler, A",
+        "type": "student"
+      },
+      {
+        "name": "Ferrer, J",
+        "type": "student"
+      },
+      {
+        "name": "Harms, J *",
+        "type": "student"
+      },
+      {
+        "name": "Heater, M",
+        "type": "student"
+      },
+      {
+        "name": "Juedeman, D",
+        "type": "student"
+      },
+      {
+        "name": "Kalampoukis",
+        "type": "student"
+      },
+      {
+        "name": "Larsen, R",
+        "type": "student"
+      },
+      {
+        "name": "Marshall, R",
+        "type": "student"
+      },
+      {
+        "name": "Olvera, J",
+        "type": "student"
+      },
+      {
+        "name": "Pilling, H",
+        "type": "student"
+      },
+      {
+        "name": "Reed, C",
+        "type": "student"
+      },
+      {
+        "name": "Roberts, J",
+        "type": "student"
+      },
+      {
+        "name": "Rogers, J",
+        "type": "student"
+      },
+      {
+        "name": "Slaughter, J",
+        "type": "student"
+      },
+      {
+        "name": "Stiscia, I",
+        "type": "student"
+      },
+      {
+        "name": "Toth, E",
+        "type": "student"
+      },
+      {
+        "name": "Williams, J",
+        "type": "student"
+      },
+      {
+        "name": "Wilson, R",
+        "type": "student"
+      },
+      {
+        "name": "Wooden, J",
+        "type": "student"
+      }
+    ],
+    "STC-B": [
+      {
+        "name": "Baxter, C",
+        "type": "student"
+      },
+      {
+        "name": "Beck, S",
+        "type": "student"
+      },
+      {
+        "name": "Coolican, H",
+        "type": "student"
+      },
+      {
+        "name": "McIlhenny, M",
+        "type": "student"
+      },
+      {
+        "name": "Newland, A",
+        "type": "student"
+      },
+      {
+        "name": "Rocker, C",
+        "type": "student"
+      }
+    ],
+    "FTC-A": [
+      {
+        "name": "Bertke, F",
+        "type": "student"
+      },
+      {
+        "name": "Bradley, J",
+        "type": "student"
+      },
+      {
+        "name": "Clements, J *",
+        "type": "student"
+      },
+      {
+        "name": "Dobbs, D",
+        "type": "student"
+      },
+      {
+        "name": "Ghesquiere, L",
+        "type": "student"
+      },
+      {
+        "name": "Graham, J",
+        "type": "student"
+      },
+      {
+        "name": "Knoerr, S",
+        "type": "student"
+      },
+      {
+        "name": "Leaf, A",
+        "type": "student"
+      },
+      {
+        "name": "Martinez, P",
+        "type": "student"
+      },
+      {
+        "name": "Morrison, J",
+        "type": "student"
+      },
+      {
+        "name": "Novack, R",
+        "type": "student"
+      },
+      {
+        "name": "Nyang, B",
+        "type": "student"
+      },
+      {
+        "name": "Olson, C",
+        "type": "student"
+      },
+      {
+        "name": "Oren, E",
+        "type": "student"
+      },
+      {
+        "name": "Orfitelli, N",
+        "type": "student"
+      },
+      {
+        "name": "Oshea, P",
+        "type": "student"
+      },
+      {
+        "name": "Pessolano, C",
+        "type": "student"
+      },
+      {
+        "name": "Peterson, R",
+        "type": "student"
+      },
+      {
+        "name": "Pope, D",
+        "type": "student"
+      },
+      {
+        "name": "Rogers, H",
+        "type": "student"
+      },
+      {
+        "name": "Root, S",
+        "type": "student"
+      },
+      {
+        "name": "Ryan, J",
+        "type": "student"
+      },
+      {
+        "name": "Sternat, N",
+        "type": "student"
+      },
+      {
+        "name": "Umland, M",
+        "type": "student"
+      }
+    ],
+    "STC-A": [
+      {
+        "name": "Barbosa, T",
+        "type": "student"
+      },
+      {
+        "name": "Barone, R",
+        "type": "student"
+      },
+      {
+        "name": "Bartkowiak, R",
+        "type": "student"
+      },
+      {
+        "name": "Butcher, M",
+        "type": "student"
+      },
+      {
+        "name": "Doyle, D",
+        "type": "student"
+      },
+      {
+        "name": "Holmes, C",
+        "type": "student"
+      },
+      {
+        "name": "Konnath, M",
+        "type": "student"
+      },
+      {
+        "name": "Pitre, S",
+        "type": "student"
+      },
+      {
+        "name": "Quick, L",
+        "type": "student"
+      },
+      {
+        "name": "Sargent, R",
+        "type": "student"
+      }
+    ],
+    "Staff IP": [
+      {
+        "name": "Adair, T",
+        "type": "staff"
+      },
+      {
+        "name": "Ames",
+        "type": "staff"
+      },
+      {
+        "name": "Borek",
+        "type": "staff"
+      },
+      {
+        "name": "Coleman",
+        "type": "staff"
+      },
+      {
+        "name": "Duede",
+        "type": "staff"
+      },
+      {
+        "name": "Fields",
+        "type": "staff"
+      },
+      {
+        "name": "Fitzgerald",
+        "type": "staff"
+      },
+      {
+        "name": "Gotwald",
+        "type": "staff"
+      },
+      {
+        "name": "Gray, W",
+        "type": "staff"
+      },
+      {
+        "name": "Heary",
+        "type": "staff"
+      },
+      {
+        "name": "Hebmann",
+        "type": "staff"
+      },
+      {
+        "name": "Hickernell",
+        "type": "staff"
+      },
+      {
+        "name": "Hutcheson",
+        "type": "staff"
+      },
+      {
+        "name": "Karlen",
+        "type": "staff"
+      },
+      {
+        "name": "Lovell",
+        "type": "staff"
+      },
+      {
+        "name": "Major, K",
+        "type": "staff"
+      },
+      {
+        "name": "Montes",
+        "type": "staff"
+      },
+      {
+        "name": "Patel",
+        "type": "staff"
+      },
+      {
+        "name": "Payne",
+        "type": "staff"
+      },
+      {
+        "name": "Sick",
+        "type": "staff"
+      },
+      {
+        "name": "Siddiqui",
+        "type": "staff"
+      },
+      {
+        "name": "Smith, K",
+        "type": "staff"
+      },
+      {
+        "name": "Strafaccia",
+        "type": "staff"
+      },
+      {
+        "name": "Vantiger",
+        "type": "staff"
+      },
+      {
+        "name": "White, C",
+        "type": "staff"
+      }
+    ],
+    "Staff STC": [
+      {
+        "name": "Dauk, K",
+        "type": "staff"
+      },
+      {
+        "name": "Farmer, M",
+        "type": "staff"
+      },
+      {
+        "name": "Heinz, D",
+        "type": "staff"
+      },
+      {
+        "name": "Lowry, W",
+        "type": "staff"
+      },
+      {
+        "name": "Neff, B",
+        "type": "staff"
+      },
+      {
+        "name": "Palski, M",
+        "type": "staff"
+      },
+      {
+        "name": "Post, T",
+        "type": "staff"
+      },
+      {
+        "name": "Reis, C",
+        "type": "staff"
+      },
+      {
+        "name": "Ross, J",
+        "type": "staff"
+      },
+      {
+        "name": "Ruchlin, B",
+        "type": "staff"
+      },
+      {
+        "name": "Salerno, C",
+        "type": "staff"
+      },
+      {
+        "name": "Sands, T",
+        "type": "staff"
+      },
+      {
+        "name": "Saunders, M",
+        "type": "staff"
+      },
+      {
+        "name": "Walter, S",
+        "type": "staff"
+      }
+    ],
+    "Staff IFTE/ICSO": [
+      {
+        "name": "Agbeyibor, R",
+        "type": "staff"
+      },
+      {
+        "name": "Aronoff, R",
+        "type": "staff"
+      },
+      {
+        "name": "Baltunis",
+        "type": "staff"
+      },
+      {
+        "name": "Baxley, C",
+        "type": "staff"
+      },
+      {
+        "name": "Bernstein",
+        "type": "staff"
+      },
+      {
+        "name": "Dawson, D",
+        "type": "staff"
+      },
+      {
+        "name": "Echegaray",
+        "type": "staff"
+      },
+      {
+        "name": "Erb, R",
+        "type": "staff"
+      },
+      {
+        "name": "Gahan",
+        "type": "staff"
+      },
+      {
+        "name": "Hamidani",
+        "type": "staff"
+      },
+      {
+        "name": "Hinojos",
+        "type": "staff"
+      },
+      {
+        "name": "Kemper",
+        "type": "staff"
+      },
+      {
+        "name": "Kinard",
+        "type": "staff"
+      },
+      {
+        "name": "McCafferty",
+        "type": "staff"
+      },
+      {
+        "name": "Miller, E",
+        "type": "staff"
+      },
+      {
+        "name": "Peterson, W",
+        "type": "staff"
+      },
+      {
+        "name": "Ricci",
+        "type": "staff"
+      },
+      {
+        "name": "Sanders",
+        "type": "staff"
+      },
+      {
+        "name": "Sisneroz, M",
+        "type": "staff"
+      },
+      {
+        "name": "Tegtmeier",
+        "type": "staff"
+      },
+      {
+        "name": "Vanhoy",
+        "type": "staff"
+      },
+      {
+        "name": "Wenner, A",
+        "type": "staff"
+      }
+    ],
+    "Attached/Support": [
+      {
+        "name": "Adams, D",
+        "type": "staff"
+      },
+      {
+        "name": "Alora",
+        "type": "staff"
+      },
+      {
+        "name": "Brooks",
+        "type": "staff"
+      },
+      {
+        "name": "Buckwalter",
+        "type": "staff"
+      },
+      {
+        "name": "Digiacomo",
+        "type": "staff"
+      },
+      {
+        "name": "Downing",
+        "type": "staff"
+      },
+      {
+        "name": "Elledge",
+        "type": "staff"
+      },
+      {
+        "name": "Flynn",
+        "type": "staff"
+      },
+      {
+        "name": "Forystek",
+        "type": "staff"
+      },
+      {
+        "name": "Freeborn",
+        "type": "staff"
+      },
+      {
+        "name": "Giffen",
+        "type": "staff"
+      },
+      {
+        "name": "Gilliland",
+        "type": "staff"
+      },
+      {
+        "name": "Graham",
+        "type": "staff"
+      },
+      {
+        "name": "Haffner",
+        "type": "staff"
+      },
+      {
+        "name": "Hammond",
+        "type": "staff"
+      },
+      {
+        "name": "Hayes",
+        "type": "staff"
+      },
+      {
+        "name": "Janjua",
+        "type": "staff"
+      },
+      {
+        "name": "Kern, S",
+        "type": "staff"
+      },
+      {
+        "name": "Killingsworth",
+        "type": "staff"
+      },
+      {
+        "name": "Lee, C",
+        "type": "staff"
+      },
+      {
+        "name": "Marcus",
+        "type": "staff"
+      },
+      {
+        "name": "Peter, D",
+        "type": "staff"
+      },
+      {
+        "name": "Peterson, J",
+        "type": "staff"
+      },
+      {
+        "name": "Pinedo",
+        "type": "staff"
+      },
+      {
+        "name": "Praiswater",
+        "type": "staff"
+      },
+      {
+        "name": "Russell",
+        "type": "staff"
+      },
+      {
+        "name": "Shick",
+        "type": "staff"
+      },
+      {
+        "name": "Steigerwald",
+        "type": "staff"
+      },
+      {
+        "name": "Suhr",
+        "type": "staff"
+      },
+      {
+        "name": "Tanner, R",
+        "type": "staff"
+      },
+      {
+        "name": "Valentini",
+        "type": "staff"
+      },
+      {
+        "name": "Vorgert, S",
+        "type": "staff"
+      },
+      {
+        "name": "Webb",
+        "type": "staff"
+      },
+      {
+        "name": "Williford",
+        "type": "staff"
+      },
+      {
+        "name": "Wright",
+        "type": "staff"
+      }
+    ],
+    "Future Category 1": [],
+    "Future Category 2": []
+  },
+  "schedule": [
+    {
+      "section": "Supervision",
+      "time": "07:15",
+      "details": {
+        "duty": "SOF",
+        "startTime": "07:15",
+        "endTime": "12:00"
+      },
+      "personnel": [
+        "Montes"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "12:00",
+      "details": {
+        "duty": "SOF",
+        "startTime": "12:00",
+        "endTime": "16:30"
+      },
+      "personnel": [
+        "416th"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "06:30",
+      "details": {
+        "duty": "OS",
+        "startTime": "06:30",
+        "endTime": "13:00"
+      },
+      "personnel": [
+        "Montes"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "15:00",
+      "details": {
+        "duty": "OS",
+        "startTime": "15:00",
+        "endTime": "17:00"
+      },
+      "personnel": [
+        "Vantiger"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "06:30",
+      "details": {
+        "duty": "ODO",
+        "startTime": "06:30",
+        "endTime": "17:00"
+      },
+      "personnel": [
+        "Bernstein"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "10:15",
+      "details": {
+        "duty": "F-16 FDO",
+        "startTime": "10:15",
+        "endTime": "12:15"
+      },
+      "personnel": [
+        "Lovell"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "15:00",
+      "details": {
+        "duty": "F-16 FDO",
+        "startTime": "15:00",
+        "endTime": "17:00"
+      },
+      "personnel": [
+        "Vantiger"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "07:15",
+      "details": {
+        "duty": "T-38 TDO",
+        "startTime": "07:15",
+        "endTime": "12:00"
+      },
+      "personnel": [
+        "White, C"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": "15:00",
+      "details": {
+        "duty": "T-38 TDO",
+        "startTime": "15:00",
+        "endTime": "16:30"
+      },
+      "personnel": [
+        "Vantiger"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": null,
+      "details": {
+        "duty": "Other (As Req'd)",
+        "startTime": null,
+        "endTime": "08:45"
+      },
+      "personnel": [
+        "T-Bird Ramp Freeze"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": null,
+      "details": {
+        "duty": "Other (As Req'd)",
+        "startTime": null,
+        "endTime": "13:30"
+      },
+      "personnel": [
+        "10:45"
+      ]
+    },
+    {
+      "section": "Supervision",
+      "time": null,
+      "details": {
+        "duty": "Other (As Req'd)",
+        "startTime": null,
+        "endTime": null
+      },
+      "personnel": [
+        "15:30"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "Brief Start",
+      "details": {
+        "model": "Model",
+        "eventName": "Event",
+        "briefTime": "Brief Start",
+        "etd": "ETD",
+        "eta": "ETA",
+        "debriefEnd": "Debrief End",
+        "notes": "Effective"
+      },
+      "personnel": [
+        "Crew",
+        "Notes"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "05:45",
+      "details": {
+        "model": "T-38",
+        "eventName": "P/S CHASE (T-38)(TF 5503F)",
+        "briefTime": "05:45",
+        "etd": "07:45",
+        "eta": "08:45",
+        "debriefEnd": "09:45",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Gotwald",
+        "Bean, P",
+        "MX"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "05:45",
+      "details": {
+        "model": "T-38",
+        "eventName": "P/S CHASE (T-38)(TF 5503F)",
+        "briefTime": "05:45",
+        "etd": "07:45",
+        "eta": "08:45",
+        "debriefEnd": "09:45",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Hickernell",
+        "Kalampoukis",
+        "MX"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "08:15",
+      "details": {
+        "model": "F-16",
+        "eventName": "STRUCTURES EE (FQ7230)",
+        "briefTime": "08:15",
+        "etd": "10:45",
+        "eta": "12:15",
+        "debriefEnd": "13:15",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Juedeman, D",
+        "Gray, W",
+        "CX SI",
+        "MX Canx"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "08:45",
+      "details": {
+        "model": "F-16",
+        "eventName": "SENSORS DEMO (SY6130)",
+        "briefTime": "08:45",
+        "etd": "10:45",
+        "eta": "12:15",
+        "debriefEnd": "13:15",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Toth, E",
+        "Vantiger"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "09:00",
+      "details": {
+        "model": "C-12",
+        "eventName": "ME HQ (FQ8120)",
+        "briefTime": "09:00",
+        "etd": "11:00",
+        "eta": "13:00",
+        "debriefEnd": "14:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Stud no fill",
+        "Ops No Crew"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "09:00",
+      "details": {
+        "model": "C-12 ",
+        "eventName": "MSN QUAL",
+        "briefTime": "09:00",
+        "etd": "11:00",
+        "eta": "12:45",
+        "debriefEnd": "13:45",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Fitzgerald",
+        "Major, K",
+        "Payne",
+        "Do IP Check Prep"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "09:30",
+      "details": {
+        "model": "T-38",
+        "eventName": "LOW L/D BITS",
+        "briefTime": "09:30",
+        "etd": "11:00",
+        "eta": "12:00",
+        "debriefEnd": "13:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Larsen, R",
+        "Harencak"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "09:30",
+      "details": {
+        "model": "T-38",
+        "eventName": "LOW L/D BITS",
+        "briefTime": "09:30",
+        "etd": "11:00",
+        "eta": "12:00",
+        "debriefEnd": "13:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Duede",
+        "Williams, J"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "14:00",
+      "details": {
+        "model": "T-38",
+        "eventName": "MSN QUAL RECURRENCY",
+        "briefTime": "14:00",
+        "etd": "15:30",
+        "eta": "16:30",
+        "debriefEnd": "17:30",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Digiacomo",
+        "White, C"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "14:00",
+      "details": {
+        "model": "T-38",
+        "eventName": "MSN QUAL RECURRENCY",
+        "briefTime": "14:00",
+        "etd": "15:30",
+        "eta": "16:30",
+        "debriefEnd": "17:30",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Jones fell out"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "13:30",
+      "details": {
+        "model": "F-16",
+        "eventName": "MSN QUAL",
+        "briefTime": "13:30",
+        "etd": "15:30",
+        "eta": "17:00",
+        "debriefEnd": "18:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Buckwalter",
+        "Lovell"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "13:30",
+      "details": {
+        "model": "F-16",
+        "eventName": "STAFF SENSORS DEMO",
+        "briefTime": "13:30",
+        "etd": "15:30",
+        "eta": "17:00",
+        "debriefEnd": "18:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Borek",
+        "Hickernell"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "06:45",
+      "details": {
+        "model": "LJ-25",
+        "eventName": "VSS COMBINED DEMO (FQ 6223F)",
+        "briefTime": "06:45",
+        "etd": "08:45",
+        "eta": "10:45",
+        "debriefEnd": "11:45",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Fields",
+        "Arnold, C",
+        "MX"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "11:30",
+      "details": {
+        "model": "LJ-25",
+        "eventName": "LAO",
+        "briefTime": "11:30",
+        "etd": "13:30",
+        "eta": "15:30",
+        "debriefEnd": "16:30",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Hebmann",
+        "Glunt",
+        "MX"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "13:15",
+      "details": {
+        "model": "X-62A",
+        "eventName": "ENGINE RUN",
+        "briefTime": "13:15",
+        "etd": "14:00",
+        "eta": "15:30",
+        "debriefEnd": "16:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Gray, W",
+        "day of add"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "07:00",
+      "details": {
+        "model": "EXTRA",
+        "eventName": "QUAL",
+        "briefTime": "07:00",
+        "etd": "08:00",
+        "eta": "09:00",
+        "debriefEnd": "11:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Slaughter, J",
+        "Pecile",
+        "at Mojave"
+      ]
+    },
+    {
+      "section": "Flying",
+      "time": "07:00",
+      "details": {
+        "model": "EXTRA",
+        "eventName": "QUAL",
+        "briefTime": "07:00",
+        "etd": "09:30",
+        "eta": "10:30",
+        "debriefEnd": "11:00",
+        "notes": "FALSE"
+      },
+      "personnel": [
+        "Wilson, R",
+        "Pecile",
+        "at Mojave"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "Start",
+      "details": {
+        "eventName": "Events",
+        "startTime": "Start",
+        "endTime": "End",
+        "notes": null
+      },
+      "personnel": [
+        "Person(s)"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "15:00",
+      "details": {
+        "eventName": "Testing Unmanned Platforms",
+        "startTime": "15:00",
+        "endTime": "17:00",
+        "notes": null
+      },
+      "personnel": [
+        "Gotwald"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "12:30",
+      "details": {
+        "eventName": "Have TOPHAT Mtg",
+        "startTime": "12:30",
+        "endTime": "14:30",
+        "notes": null
+      },
+      "personnel": [
+        "Wooden, J",
+        "Harms, J *",
+        "Pilling, H",
+        "Dockum, T",
+        "Rogers, J",
+        "Ricci",
+        "Payne"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "12:00",
+      "details": {
+        "eventName": "F-16 Academics",
+        "startTime": "12:00",
+        "endTime": "13:30",
+        "notes": null
+      },
+      "personnel": [
+        "Borek",
+        "Maltz",
+        "Lervick",
+        "Bam",
+        "Dombrowski"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "13:00",
+      "details": {
+        "eventName": "UTD TPS",
+        "startTime": "13:00",
+        "endTime": "14:30",
+        "notes": null
+      },
+      "personnel": [
+        "416th",
+        "Trickey",
+        "Christensen"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "08:00",
+      "details": {
+        "eventName": "PIO SIM (FS Sim A)",
+        "startTime": "08:00",
+        "endTime": "09:00",
+        "notes": "SIM A"
+      },
+      "personnel": [
+        "Gahan",
+        "Cagliano, C",
+        "Stiscia, I"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "08:00",
+      "details": {
+        "eventName": "PIO SIM (FS Sim B)",
+        "startTime": "08:00",
+        "endTime": "09:00",
+        "notes": "SIM B"
+      },
+      "personnel": [
+        "Hamidani",
+        "Larsen, R",
+        "Olvera, J"
+      ]
+    },
+    {
+      "section": "Ground",
+      "time": "09:00",
+      "details": {
+        "eventName": "PIO SIM (FS Sim A)",
+        "startTime": "09:00",
+        "endTime": "10:00",
+        "notes": "SIM A"
+      },
+      "personnel": [
+        "Gahan",
+        "Heater, M",
+        "Marshall, R"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "Start",
+      "details": {
+        "reason": "Reason",
+        "startTime": "Start",
+        "endTime": "End"
+      },
+      "personnel": [
+        "Person(s)"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "07:00",
+      "details": {
+        "reason": "NA",
+        "startTime": "07:00",
+        "endTime": "07:30"
+      },
+      "personnel": [
+        "Duede"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "16:30",
+      "details": {
+        "reason": "NA ",
+        "startTime": "16:30",
+        "endTime": "17:00"
+      },
+      "personnel": [
+        "Duede"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "12:00",
+      "details": {
+        "reason": "Dentist",
+        "startTime": "12:00",
+        "endTime": "16:30"
+      },
+      "personnel": [
+        "Erb, R"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "15:00",
+      "details": {
+        "reason": "Appt",
+        "startTime": "15:00",
+        "endTime": "16:00"
+      },
+      "personnel": [
+        "Fitzgerald"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "09:00",
+      "details": {
+        "reason": "Appt",
+        "startTime": "09:00",
+        "endTime": "10:00"
+      },
+      "personnel": [
+        "Coleman"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "07:30",
+      "details": {
+        "reason": "NA",
+        "startTime": "07:30",
+        "endTime": "10:00"
+      },
+      "personnel": [
+        "Lovell"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "11:15",
+      "details": {
+        "reason": "Meeting",
+        "startTime": "11:15",
+        "endTime": "12:15"
+      },
+      "personnel": [
+        "Heater, M"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "09:00",
+      "details": {
+        "reason": "Emergency Parachute Tng",
+        "startTime": "09:00",
+        "endTime": "10:30"
+      },
+      "personnel": [
+        "Dawson, D"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "14:30",
+      "details": {
+        "reason": "Debrief",
+        "startTime": "14:30",
+        "endTime": "15:00"
+      },
+      "personnel": [
+        "Montes"
+      ]
+    },
+    {
+      "section": "NA",
+      "time": "09:30",
+      "details": {
+        "reason": "Appt",
+        "startTime": "09:30",
+        "endTime": "10:15"
+      },
+      "personnel": [
+        "Hamidani"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAS Performance Profiler</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+    background: #0f172a; color: #e2e8f0;
+    padding: 24px; max-width: 1200px; margin: 0 auto;
+  }
+  h1 { font-size: 20px; color: #38bdf8; margin-bottom: 4px; }
+  h2 { font-size: 15px; color: #94a3b8; margin: 24px 0 8px; border-bottom: 1px solid #1e293b; padding-bottom: 4px; }
+  .subtitle { font-size: 12px; color: #64748b; margin-bottom: 20px; }
+  button {
+    padding: 8px 16px; background: #2563eb; color: white; border: none;
+    border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600;
+    white-space: nowrap;
+  }
+  button:hover { background: #1d4ed8; }
+  .input-section { margin-bottom: 20px; }
+  .input-section label { display: block; font-size: 12px; color: #94a3b8; margin-bottom: 6px; }
+  textarea {
+    width: 100%; min-height: 120px; padding: 10px 12px; background: #1e293b; border: 1px solid #334155;
+    color: #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 11px; resize: vertical;
+  }
+  textarea:focus { border-color: #2563eb; outline: none; }
+  .instructions { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 20px; font-size: 12px; line-height: 1.8; }
+  .instructions ol { padding-left: 20px; }
+  .instructions code { background: #0f172a; padding: 2px 6px; border-radius: 3px; color: #38bdf8; font-size: 11px; }
+  .instructions a { color: #38bdf8; word-break: break-all; }
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; margin: 8px 0; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+  .stat { text-align: center; padding: 8px; }
+  .stat-value { font-size: 22px; font-weight: 700; color: #38bdf8; }
+  .stat-value.warn { color: #f59e0b; }
+  .stat-value.bad { color: #ef4444; }
+  .stat-value.ok { color: #22c55e; }
+  .stat-label { font-size: 10px; color: #64748b; text-transform: uppercase; margin-top: 2px; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { text-align: left; padding: 6px 8px; color: #64748b; border-bottom: 1px solid #334155; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+  td { padding: 6px 8px; border-bottom: 1px solid #1e293b; }
+  tr:hover td { background: #0f172a; }
+  .bar-cell { width: 35%; }
+  .bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .bar { height: 16px; border-radius: 3px; min-width: 2px; }
+  .bar.fast { background: #22c55e; }
+  .bar.med { background: #f59e0b; }
+  .bar.slow { background: #ef4444; }
+  .bar-label { font-size: 11px; color: #94a3b8; white-space: nowrap; }
+  .recs { list-style: none; }
+  .recs li { padding: 6px 0; border-bottom: 1px solid #1e293b; font-size: 13px; line-height: 1.5; }
+  .recs li::before { content: '\2192 '; color: #38bdf8; }
+  .recs li.critical::before { content: '\26A0 '; color: #ef4444; }
+  .recs li.critical { color: #fca5a5; }
+  .comp-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .comp-label { color: #94a3b8; }
+  .comp-val { font-weight: 600; }
+  #error { display: none; background: #451a1a; border: 1px solid #7f1d1d; border-radius: 6px; padding: 12px; margin: 12px 0; color: #fca5a5; font-size: 13px; }
+  #error.visible { display: block; }
+  #results { display: none; }
+  #results.visible { display: block; }
+  .note { font-size: 11px; color: #64748b; margin-top: 4px; font-style: italic; }
+  .rank-num { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-weight: 700; font-size: 11px; margin-right: 6px; }
+  .rank-1 { background: #22c55e; color: #0f172a; }
+  .rank-2 { background: #38bdf8; color: #0f172a; }
+  .rank-3 { background: #f59e0b; color: #0f172a; }
+  .rank-other { background: #334155; color: #94a3b8; }
+  .verdict { padding: 8px 12px; border-radius: 6px; margin: 4px 0; font-size: 12px; }
+  .verdict.significant { background: #451a1a; border-left: 3px solid #ef4444; color: #fca5a5; }
+  .verdict.minimal { background: #0f2a1e; border-left: 3px solid #22c55e; color: #86efac; }
+</style>
+</head>
+<body>
+<h1>GAS Performance Profiler</h1>
+<div class="subtitle">Instruments sheet processing to find bottlenecks. Supports both batch profile and single-sheet deep profile.</div>
+
+<div class="instructions">
+  <ol>
+    <li>Open one of these in a new tab (30-120s wait):
+      <br><code>?type=profile</code> — batch profile (all sheets)
+      <br><code>?type=sheetprofile</code> — deep single-sheet analysis (getDisplayValues breakdown)
+    </li>
+    <li><strong>Ctrl+A</strong>, <strong>Ctrl+C</strong> to copy the JSON</li>
+    <li>Paste below and click <strong>Analyze</strong></li>
+  </ol>
+</div>
+
+<div class="input-section">
+  <label for="jsonInput">Paste JSON response here:</label>
+  <textarea id="jsonInput" placeholder='{"profileVersion":"1.0",...} or {"profileType":"sheetProfile",...}'></textarea>
+</div>
+<button onclick="analyzeInput()">Analyze Results</button>
+
+<div id="error"></div>
+<div id="results"></div>
+
+<script>
+function analyzeInput() {
+  const errorEl = document.getElementById('error');
+  const resultsEl = document.getElementById('results');
+  errorEl.classList.remove('visible');
+  resultsEl.classList.remove('visible');
+  resultsEl.innerHTML = '';
+
+  const raw = document.getElementById('jsonInput').value.trim();
+  if (!raw) { showError('Paste the JSON response first.'); return; }
+
+  let data;
+  try { data = JSON.parse(raw); } catch (e) { showError('Invalid JSON: ' + e.message); return; }
+  if (data.error) { showError('Server error: ' + (data.message || data.error)); return; }
+
+  if (data.profileType === 'sheetProfile') {
+    renderSheetProfile(data);
+  } else if (data.profileVersion) {
+    renderBatchProfile(data);
+  } else {
+    showError('Unrecognized format. Use ?type=profile or ?type=sheetprofile');
+    return;
+  }
+
+  resultsEl.classList.add('visible');
+}
+
+function showError(msg) {
+  const el = document.getElementById('error');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+
+// ==================== SHEET PROFILE ====================
+
+function renderSheetProfile(data) {
+  const r = document.getElementById('results');
+  let html = '';
+
+  // Summary
+  html += '<h2>Sheet: ' + data.sheet + ' (' + data.isoDate + ')</h2>';
+  html += '<div class="card summary-grid">';
+  html += stat(data.totalSeconds, 'Total Profile Time', data.totalMs > 60000 ? 'warn' : '');
+  const dim = data.sheetDimensions;
+  html += stat(dim.dataRangeActual, 'getDataRange Size');
+  html += stat(dim.neededArea, 'Needed Area (CONFIG)');
+  html += stat(dim.excessCellsPct, 'Excess Cells', parseFloat(dim.excessCellsPct) > 20 ? 'warn' : 'ok');
+  html += stat(dim.nonEmptyCells.toLocaleString(), 'Non-Empty Cells');
+  html += stat(dim.fillRate, 'Fill Rate');
+  html += '</div>';
+
+  // Sheet dimensions detail
+  html += '<h2>Sheet Dimensions</h2>';
+  html += '<div class="card">';
+  html += compRow('getDataRange() returns', dim.dataRangeActual + ' = ' + dim.dataRangeCells.toLocaleString() + ' cells');
+  html += compRow('CONFIG needs', dim.neededArea + ' = ' + dim.neededCells.toLocaleString() + ' cells');
+  html += compRow('Excess', dim.excessRows + ' rows, ' + dim.excessCols + ' cols (' + dim.excessCellsPct + ')');
+  html += compRow('Sheet max capacity', dim.maxRows + ' x ' + dim.maxCols);
+  html += compRow('Last data cell', 'Row ' + dim.lastRow + ', Col ' + dim.lastCol);
+  html += '</div>';
+
+  // Test ranking (the main event)
+  html += '<h2>Approach Ranking (fastest first)</h2>';
+  html += '<div class="card"><table>';
+  html += '<tr><th>#</th><th>Approach</th><th>Time</th><th>vs Current</th><th class="bar-cell">Visual</th></tr>';
+  const maxMs = Math.max(...data.ranking.map(r => r.total_ms));
+  data.ranking.forEach(item => {
+    const rankClass = item.rank <= 3 ? 'rank-' + item.rank : 'rank-other';
+    const pct = Math.max((item.total_ms / maxMs) * 100, 2);
+    const barClass = item.rank === 1 ? 'fast' : item.rank <= 3 ? 'med' : 'slow';
+    html += '<tr>';
+    html += '<td><span class="rank-num ' + rankClass + '">' + item.rank + '</span></td>';
+    html += '<td>' + item.approach + '</td>';
+    html += '<td><strong>' + fms(item.total_ms) + '</strong></td>';
+    html += '<td>' + item.vsCurrent + '</td>';
+    html += '<td class="bar-cell"><div class="bar-wrap"><div class="bar ' + barClass + '" style="width:' + pct + '%"></div></div></td>';
+    html += '</tr>';
+  });
+  html += '</table></div>';
+
+  // Detailed test results
+  html += '<h2>Detailed Test Results</h2>';
+  const tests = data.tests;
+  for (const [key, t] of Object.entries(tests)) {
+    html += '<div class="card">';
+    html += '<div style="font-weight:600;margin-bottom:8px;color:#e2e8f0">' + t.label + '</div>';
+    for (const [k, v] of Object.entries(t)) {
+      if (k === 'label') continue;
+      html += compRow(k, typeof v === 'number' ? fms(v) : v);
+    }
+    html += '</div>';
+  }
+
+  // Analysis verdicts
+  html += '<h2>Analysis</h2>';
+  const a = data.analysis;
+
+  html += '<div class="card"><strong>Formatting Cost (getDisplayValues vs getValues)</strong>';
+  html += compRow('getDisplayValues()', fms(a.formattingCost.getDisplayValues_ms));
+  html += compRow('getValues()', fms(a.formattingCost.getValues_ms));
+  html += compRow('Overhead', fms(a.formattingCost.overhead_ms));
+  const fmtSig = a.formattingCost.verdict.startsWith('SIGNIFICANT');
+  html += '<div class="verdict ' + (fmtSig ? 'significant' : 'minimal') + '">' + a.formattingCost.verdict + '</div>';
+  html += '</div>';
+
+  html += '<div class="card"><strong>Excess Data (getDataRange vs needed area)</strong>';
+  html += compRow('getDataRange cells', a.excessData.fullCells.toLocaleString());
+  html += compRow('Needed cells', a.excessData.neededCells.toLocaleString());
+  html += compRow('Excess', a.excessData.excessPct);
+  const exSig = a.excessData.verdict.startsWith('SIGNIFICANT');
+  html += '<div class="verdict ' + (exSig ? 'significant' : 'minimal') + '">' + a.excessData.verdict + '</div>';
+  html += '</div>';
+
+  html += '<div class="card"><strong>GAS Internal Caching</strong>';
+  html += compRow('Cold read (T1)', fms(a.gasCaching.coldRead_ms));
+  html += compRow('Cached read (T5)', fms(a.gasCaching.cachedRead_ms));
+  const cacheSig = a.gasCaching.verdict.startsWith('YES');
+  html += '<div class="verdict ' + (cacheSig ? 'significant' : 'minimal') + '">' + a.gasCaching.verdict + '</div>';
+  if (cacheSig) {
+    html += '<div class="note">Tests 2-4 ran after T1 and may show artificially fast times due to GAS caching. T1 (cold) is the true baseline for per-request performance.</div>';
+  }
+  html += '</div>';
+
+  r.innerHTML = html;
+}
+
+// ==================== BATCH PROFILE ====================
+
+function renderBatchProfile(data) {
+  const r = document.getElementById('results');
+  let html = '';
+
+  html += '<h2>Batch Profile Summary</h2>';
+  html += '<div class="card summary-grid">';
+  const timeClass = data.totalMs > 120000 ? 'bad' : data.totalMs > 60000 ? 'warn' : 'ok';
+  html += stat(data.totalSeconds, 'Server Execution', timeClass);
+  html += stat(data.sheetsProcessed, 'Sheets Processed');
+  html += stat(data.bottleneck.step, 'Bottleneck', 'warn');
+  const cacheClass = data.cache.exceedsLimit ? 'bad' : 'ok';
+  html += stat(data.cache.fullPayloadKB + ' KB', 'Payload Size', cacheClass);
+  html += stat(data.cache.writeTest === 'SUCCESS' ? 'OK' : 'FAIL', 'Cache Write', data.cache.writeTest === 'SUCCESS' ? 'ok' : 'bad');
+  html += '</div>';
+
+  // Timeline
+  html += '<h2>Overall Timeline</h2>';
+  html += '<div class="card"><table>';
+  html += '<tr><th>Step</th><th>Duration</th><th class="bar-cell">Visual</th></tr>';
+  const steps = Object.entries(data.overallTimeline);
+  const maxStep = Math.max(...steps.map(s => s[1]));
+  steps.forEach(([step, ms]) => {
+    if (step === 'compStart') return;
+    const pct = Math.max((ms / maxStep) * 100, 1);
+    const cls = ms > 10000 ? 'slow' : ms > 2000 ? 'med' : 'fast';
+    html += '<tr><td>' + step + '</td><td>' + fms(ms) + '</td><td class="bar-cell"><div class="bar-wrap"><div class="bar ' + cls + '" style="width:' + pct + '%"></div><div class="bar-label">' + fms(ms) + '</div></div></td></tr>';
+  });
+  html += '</table></div>';
+
+  // Per-sheet
+  html += '<h2>Per-Sheet Breakdown</h2>';
+  html += '<div class="card" style="overflow-x:auto"><table>';
+  html += '<tr><th>Sheet</th><th>Total</th><th>getSheetByName</th><th>getDisplayValues</th><th>extractRanges</th><th>serialize</th><th>Rows x Cols</th><th>JSON KB</th></tr>';
+  (data.perSheet || []).forEach(s => {
+    if (s.error) { html += '<tr><td>' + s.name + '</td><td colspan="7" style="color:#ef4444">' + s.error + '</td></tr>'; return; }
+    const d = s.durations || {};
+    html += '<tr><td>' + s.name + '</td><td><strong>' + fms(s.totalMs) + '</strong></td><td>' + fms(d.getSheetByName) + '</td><td>' + fms(d.getDisplayValues) + '</td><td>' + fms(d.extractRanges) + '</td><td>' + fms(d.serialize) + '</td><td>' + s.rows + ' x ' + s.cols + '</td><td>' + s.jsonKB + '</td></tr>';
+  });
+  html += '</table></div>';
+
+  // Comparison & cache
+  if (data.methodComparison) {
+    html += '<h2>Method Comparison</h2><div class="card">';
+    html += compRow('Test sheet', data.methodComparison.sheet);
+    html += compRow('getDataRange (batch)', fms(data.methodComparison.getDataRange_ms));
+    html += compRow('getRangeList (individual)', fms(data.methodComparison.getRangeList_ms));
+    html += '</div>';
+  }
+
+  html += '<h2>Cache Analysis</h2><div class="card">';
+  html += compRow('Payload', data.cache.fullPayloadKB + ' KB');
+  html += compRow('Limit', data.cache.limitKB + ' KB');
+  html += compRow('Exceeds?', data.cache.exceedsLimit ? 'YES' : 'NO');
+  html += compRow('Write test', data.cache.writeTest);
+  if (data.cache.exceedsLimit) {
+    html += '<div class="verdict significant">Payload exceeds 100KB limit. Every request is a cache miss.</div>';
+  }
+  html += '</div>';
+
+  // Recommendations
+  html += '<h2>Recommendations</h2><div class="card"><ul class="recs">';
+  const recs = analyzeBatch(data);
+  recs.forEach(r => { html += '<li class="' + (r.critical ? 'critical' : '') + '">' + r.text + '</li>'; });
+  html += '</ul></div>';
+
+  r.innerHTML = html;
+}
+
+function analyzeBatch(data) {
+  const recs = [];
+  const c = data.cache;
+  const bn = data.bottleneck;
+  if (c.exceedsLimit || c.writeTest !== 'SUCCESS') {
+    recs.push({ critical: true, text: 'Batch payload (' + c.fullPayloadKB + ' KB) exceeds 100KB CacheService limit. Every request is a full re-fetch. Fix: per-sheet caching (each ~36KB fits) or chunked caching.' });
+  }
+  if (bn.step === 'getDisplayValues') {
+    recs.push({ critical: false, text: 'getDisplayValues() is the bottleneck (' + fms(bn.totalMs) + ' total, ' + bn.avgPerSheet + ' avg/sheet). Run ?type=sheetprofile for deeper analysis.' });
+  }
+  const sec = data.totalMs / 1000;
+  if (sec > 300) recs.push({ critical: true, text: 'Execution (' + sec.toFixed(0) + 's) near 360s GAS limit.' });
+  else if (sec > 180) recs.push({ critical: false, text: 'Execution (' + sec.toFixed(0) + 's) within 360s limit but limited headroom.' });
+  const findMs = data.overallTimeline.findAvailableSheets;
+  if (findMs > 3000) recs.push({ critical: false, text: 'findAvailableSheets() takes ' + fms(findMs) + '. Uses 14 getSheetByName() calls. Could use getSheets().map(s=>s.getName()) + Set lookup instead.' });
+  return recs;
+}
+
+// ==================== HELPERS ====================
+
+function stat(value, label, cls) {
+  return '<div class="stat"><div class="stat-value ' + (cls || '') + '">' + value + '</div><div class="stat-label">' + label + '</div></div>';
+}
+
+function compRow(label, value) {
+  return '<div class="comp-row"><span class="comp-label">' + label + '</span><span class="comp-val">' + value + '</span></div>';
+}
+
+function fms(ms) {
+  if (ms === undefined || ms === null) return '\u2014';
+  if (ms >= 10000) return (ms / 1000).toFixed(1) + 's';
+  if (ms >= 1000) return (ms / 1000).toFixed(2) + 's';
+  return ms + 'ms';
+}
+</script>
+</body>
+</html>
