@@ -1872,6 +1872,11 @@
         };
 
         const mergeDuplicateEvents = (events, roster) => {
+            // DISABLED: merge logic causes false positives (merges separate events
+            // with same model/times but different crews). See v3.6.1 feedback.
+            // Keeping function + logic intact for potential future re-enable.
+            return events;
+
             if (!events || events.length === 0) return events;
 
             const mergeableEvents = [];

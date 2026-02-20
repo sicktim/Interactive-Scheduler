@@ -178,3 +178,7 @@ Change summary simply tracks each change, but doesn't track net change. For exam
         - Remove alternating colors. Just make sure all backgrounds of the event area are one color in the rainbow view.
         - When moving to the rainbow view, I now cannot move back to the timeline view. It just shows entirely the rainbow view.
             - See `\interactive-scheduler\rainbow-after-clicking-from-timeline.png`
+        
+        **Version 3.6.1 Feedback**
+        - Noticing repeatedly that duplicate event identification logic sometimes merges two events that are separate events. Either remove duplicate events logic or tweak it to avoid this pitfal. See `Interactive-Scheduler\archive\Two-t38-events-but-separate.png` [FIXED — mergeDuplicateEvents() disabled via early return; function body preserved for potential re-enable. Root cause: events with same model/times/eventName but different crews (one empty, one with instructor) were incorrectly merged because Phase 2 treated "1 lead + 0 no-lead" as leads.size<=1]
+        

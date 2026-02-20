@@ -107,3 +107,9 @@
 
 ### Additional Fixes
 - **STC-A/B NAs not shown** — `naCategoriesAvailable` was deriving categories only from people appearing in actual NA events; if no STC-A/B members had NAs that day, those categories wouldn't appear. Changed to roster-based: any roster category with at least one member is always available for NA conflict tracking selection
+
+---
+
+## v3.7.0 — Event Merging Disabled
+### Bug Fixes
+- **Duplicate event merge disabled** — `mergeDuplicateEvents()` bypassed via early return; function body preserved for potential re-enable. Root cause: events with identical model/times/eventName but different crews (e.g., one with instructor, one empty) were incorrectly merged. Phase 2 treated "1 lead + no-lead events" as `leads.size <= 1`, merging separate scheduling lines. See `archive/Two-t38-events-but-separate.png` for evidence.
