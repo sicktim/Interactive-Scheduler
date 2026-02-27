@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.10.0 — Flying/Ground banded layout -->
+<!-- Interactive Scheduler v3.11.0 — Layout fixes: SIM pairing, band labels, dynamic card heights -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -269,6 +269,15 @@
             color: rgba(255,255,255,0.85);
         }
 
+        /* Ground and NA event names wrap instead of clipping — cards sized dynamically to fit */
+        .event-card-ground .event-name-text,
+        .event-card-na .event-name-text {
+            white-space: normal;
+            word-break: break-word;
+            overflow: visible;
+            text-overflow: unset;
+        }
+
         .event-time-text {
             margin-left: auto;
             font-size: 0.5rem;
@@ -472,6 +481,8 @@
             background: #1e293b !important;
             color: #e2e8f0 !important;
         }
+        /* Hide AM/PM field in native time pickers (Chrome fallback; lang=en-GB is primary fix) */
+        .modal-content input[type="time"]::-webkit-datetime-edit-ampm-field { display: none; }
         .modal-content select option {
             background: #1e293b;
             color: #e2e8f0;
@@ -2432,6 +2443,7 @@
             const SUPV_LANE_H = 40; // px per sub-lane
             const SUBLANE_GAP = 2;  // px between sub-lanes within a role
             const ROLE_GAP = 4;     // px between role groups
+            const LABEL_H = 12;     // px reserved at top of each band for the role label
 
             // Group events by role (eventName)
             const roleGroups = new Map();
@@ -2472,11 +2484,11 @@
                     if (!placed) subLanes.push([ev]);
                 });
 
-                const roleH = subLanes.length * SUPV_LANE_H + Math.max(0, subLanes.length - 1) * SUBLANE_GAP;
+                const roleH = LABEL_H + subLanes.length * SUPV_LANE_H + Math.max(0, subLanes.length - 1) * SUBLANE_GAP;
                 roleBands.push({ role, top: cum, height: roleH });
 
                 subLanes.forEach((lane, li) => {
-                    const laneTop = cum + li * (SUPV_LANE_H + SUBLANE_GAP);
+                    const laneTop = cum + LABEL_H + li * (SUPV_LANE_H + SUBLANE_GAP);
                     lane.forEach(ev => {
                         evMap[ev.id] = { top: laneTop, height: SUPV_LANE_H };
                     });
@@ -2498,6 +2510,7 @@
             const FLYING_LANE_H = 40;  // px per sub-lane within a band
             const SUBLANE_GAP   = 2;   // px between sub-lanes in same band
             const MODEL_GAP     = 4;   // px between model bands
+            const LABEL_H       = 12;  // px reserved at top of each band for the model label
 
             const isSimCR = (ev) => SIM_CR_MODELS.has(ev.model || '');
             const realFlights = events.filter(ev => !isSimCR(ev));
@@ -2512,21 +2525,23 @@
             });
             modelGroups.forEach(evs => evs.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0)));
 
-            // Match each sim/CR to an aircraft model by startTime
+            // Match each sim/CR to an aircraft model by walking backwards through the events array
+            // to find the nearest preceding non-sim/CR event. More reliable than startTime matching
+            // which fails when times differ slightly or multiple aircraft share the same start time.
             const matchedSims   = new Map(); // model → [sim events]
             const unmatchedSims = [];
             simCRs.forEach(sim => {
-                const simStart = sim.startTime;
-                let matched = false;
-                for (const [model] of modelGroups) {
-                    if (modelGroups.get(model).some(ev => ev.startTime === simStart)) {
-                        if (!matchedSims.has(model)) matchedSims.set(model, []);
-                        matchedSims.get(model).push(sim);
-                        matched = true;
-                        break;
-                    }
+                const simIdx = events.indexOf(sim);
+                let precedingModel = null;
+                for (let i = simIdx - 1; i >= 0; i--) {
+                    if (!isSimCR(events[i])) { precedingModel = events[i].model || 'Unknown'; break; }
                 }
-                if (!matched) unmatchedSims.push(sim);
+                if (precedingModel && modelGroups.has(precedingModel)) {
+                    if (!matchedSims.has(precedingModel)) matchedSims.set(precedingModel, []);
+                    matchedSims.get(precedingModel).push(sim);
+                } else {
+                    unmatchedSims.push(sim);
+                }
             });
 
             // Order model bands: FLYING_MODEL_ORDER first, then unknowns alphabetically
@@ -2555,7 +2570,12 @@
                     }
                     if (!placed) flightSubLanes.push([ev]);
                 });
-                const flightH = flightSubLanes.length * FLYING_LANE_H + Math.max(0, flightSubLanes.length - 1) * SUBLANE_GAP;
+                // Per-lane heights for real flights — use estimateHeight so ETD/ETA bar doesn't clip crew chips
+                const flightLaneHeights = flightSubLanes.map(lane =>
+                    Math.max(FLYING_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const flightH = flightLaneHeights.length === 0 ? 0 :
+                    flightLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, flightLaneHeights.length - 1) * SUBLANE_GAP;
 
                 // Greedy sub-lane packing for paired sims (placed below flights in same band)
                 const simSubLanes = [];
@@ -2568,24 +2588,31 @@
                     }
                     if (!placed) simSubLanes.push([ev]);
                 });
-                // +2 for the dashed divider gap between flights and sims within a band
-                const simH = simEvs.length === 0 ? 0 : simSubLanes.length * FLYING_LANE_H + Math.max(0, simSubLanes.length - 1) * SUBLANE_GAP + 2;
+                // Per-lane heights for sims; +2 for the dashed divider gap between flights and sims
+                const simLaneHeights = simSubLanes.map(lane =>
+                    Math.max(FLYING_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const simH = simLaneHeights.length === 0 ? 0 :
+                    simLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, simLaneHeights.length - 1) * SUBLANE_GAP + 2;
 
-                const bandH = flightH + simH;
+                const bandH = LABEL_H + flightH + simH;
                 const displayModel = model === '__SIMS__' ? 'Sims / CR' : model;
                 modelBands.push({ model: displayModel, top: cum, height: bandH, flightH });
 
-                // Assign positions for real flights
+                // Assign positions for real flights — shift down by LABEL_H, cumulative per-lane heights
+                let flightCum = cum + LABEL_H;
                 flightSubLanes.forEach((lane, li) => {
-                    const laneTop = cum + li * (FLYING_LANE_H + SUBLANE_GAP);
-                    lane.forEach(ev => { evMap[ev.id] = { top: laneTop, height: FLYING_LANE_H }; });
+                    const laneH = flightLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: flightCum, height: laneH }; });
+                    flightCum += laneH + SUBLANE_GAP;
                 });
 
-                // Assign positions for sims (below flights, +2 for divider gap)
-                const simTopOffset = cum + flightH + 2;
+                // Assign positions for sims (below flights, +2 for divider gap) — shift down by LABEL_H
+                let simCum = cum + LABEL_H + flightH + 2;
                 simSubLanes.forEach((lane, li) => {
-                    const laneTop = simTopOffset + li * (FLYING_LANE_H + SUBLANE_GAP);
-                    lane.forEach(ev => { evMap[ev.id] = { top: laneTop, height: FLYING_LANE_H }; });
+                    const laneH = simLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: simCum, height: laneH }; });
+                    simCum += laneH + SUBLANE_GAP;
                 });
 
                 cum += bandH + MODEL_GAP;
@@ -2603,6 +2630,7 @@
             const GROUND_LANE_H    = 40;
             const GROUND_SUBLANE_GAP = 2;
             const GROUND_GROUP_GAP   = 4;
+            const LABEL_H            = 12; // px reserved at top of each band for the event-name label
 
             // Group by eventName
             const nameGroups = new Map();
@@ -2635,12 +2663,22 @@
                     if (!placed) subLanes.push([ev]);
                 });
 
-                const bandH = subLanes.length * GROUND_LANE_H + Math.max(0, subLanes.length - 1) * GROUND_SUBLANE_GAP;
-                nameBands.push({ name, top: cum, height: bandH });
+                // Singleton: group has exactly 1 event total — skip the label to save vertical space
+                const isSingleton = grpEvs.length === 1;
+                const labelOffset = isSingleton ? 0 : LABEL_H;
 
+                // Per-lane heights — use estimateHeight so wrapped event names have enough room
+                const subLaneHeights = subLanes.map(lane =>
+                    Math.max(GROUND_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const bandH = labelOffset + subLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, subLanes.length - 1) * GROUND_SUBLANE_GAP;
+                nameBands.push({ name, top: cum, height: bandH, isSingleton });
+
+                let laneCum = cum + labelOffset;
                 subLanes.forEach((lane, li) => {
-                    const laneTop = cum + li * (GROUND_LANE_H + GROUND_SUBLANE_GAP);
-                    lane.forEach(ev => { evMap[ev.id] = { top: laneTop, height: GROUND_LANE_H }; });
+                    const laneH = subLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: laneCum, height: laneH }; });
+                    laneCum += laneH + GROUND_SUBLANE_GAP;
                 });
 
                 cum += bandH + GROUND_GROUP_GAP;
@@ -3424,8 +3462,8 @@
                                         pointerEvents: 'none',
                                     }}>
                                         <span style={{
-                                            position: 'absolute', left: 2, top: '50%', transform: 'translateY(-50%)',
-                                            fontSize: '0.45rem', color: 'rgba(196,181,253,0.45)', fontWeight: 700,
+                                            position: 'absolute', left: 2, top: 1,
+                                            fontSize: '0.45rem', color: 'rgba(196,181,253,0.5)', fontWeight: 700,
                                             letterSpacing: '0.05em', userSelect: 'none',
                                         }}>{role}</span>
                                     </div>
@@ -3444,9 +3482,8 @@
                                         pointerEvents: 'none',
                                     }}>
                                         <span style={{
-                                            position: 'absolute', left: 2, top: Math.min(flightH / 2, height / 2),
-                                            transform: 'translateY(-50%)',
-                                            fontSize: '0.45rem', color: 'rgba(167,243,208,0.45)', fontWeight: 700,
+                                            position: 'absolute', left: 2, top: 1,
+                                            fontSize: '0.45rem', color: 'rgba(167,243,208,0.5)', fontWeight: 700,
                                             letterSpacing: '0.05em', userSelect: 'none',
                                         }}>{model}</span>
                                         {flightH > 0 && flightH < height && (
@@ -3463,20 +3500,30 @@
                             // For Ground: render event-name band separators
                             let groundNameBands = null;
                             if (sec === 'Ground' && layout.nameBands) {
-                                groundNameBands = layout.nameBands.map(({ name, top, height }) => (
-                                    <div key={name} style={{
-                                        position: 'absolute', left: 0, right: 0,
-                                        top, height,
-                                        borderBottom: '1px solid rgba(245,158,11,0.2)',
-                                        pointerEvents: 'none',
-                                    }}>
-                                        <span style={{
-                                            position: 'absolute', left: 2, top: '50%', transform: 'translateY(-50%)',
-                                            fontSize: '0.45rem', color: 'rgba(253,230,138,0.45)', fontWeight: 700,
-                                            letterSpacing: '0.05em', userSelect: 'none',
-                                        }}>{name}</span>
-                                    </div>
-                                ));
+                                groundNameBands = layout.nameBands.map(({ name, top, height, isSingleton }) => {
+                                    if (isSingleton) return (
+                                        <div key={name} style={{
+                                            position: 'absolute', left: 0, right: 0,
+                                            top, height,
+                                            borderBottom: '1px solid rgba(245,158,11,0.1)',
+                                            pointerEvents: 'none',
+                                        }} />
+                                    );
+                                    return (
+                                        <div key={name} style={{
+                                            position: 'absolute', left: 0, right: 0,
+                                            top, height,
+                                            borderBottom: '1px solid rgba(245,158,11,0.2)',
+                                            pointerEvents: 'none',
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute', left: 2, top: 1,
+                                                fontSize: '0.45rem', color: 'rgba(253,230,138,0.5)', fontWeight: 700,
+                                                letterSpacing: '0.05em', userSelect: 'none',
+                                            }}>{name}</span>
+                                        </div>
+                                    );
+                                });
                             }
 
                             return (
@@ -4465,11 +4512,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <input type="text" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} placeholder="HH:MM" maxLength={5} />
+                                    <input type="time" lang="en-GB" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time</label>
-                                    <input type="text" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} placeholder="HH:MM" maxLength={5} />
+                                    <input type="time" lang="en-GB" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} />
                                 </div>
                             </div>
                         </div>
@@ -4590,11 +4637,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <input type="text" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} placeholder="HH:MM" maxLength={5} />
+                                    <input type="time" lang="en-GB" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time *</label>
-                                    <input type="text" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} placeholder="HH:MM" maxLength={5} />
+                                    <input type="time" lang="en-GB" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} />
                                 </div>
                             </div>
                         </div>
