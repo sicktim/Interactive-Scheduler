@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.11.1 — Wider timeline, military time fix, remove hour lines + add-chip -->
+<!-- Interactive Scheduler v3.12.0 — Per-chip canvas measurement with conflict icon support -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -379,12 +379,12 @@
         /* Conflict badge on event card */
         .conflict-badge {
             position: absolute;
-            top: -3px; right: -3px;
+            bottom: -3px; right: -3px;
             min-width: 14px; height: 14px;
-            background: #ef4444;
+            background: #a81a1a;
             border-radius: 7px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.45rem; font-weight: 700;
+            font-size: 0.65rem; font-weight: 1000;
             color: white; z-index: 20;
             box-shadow: 0 0 6px rgba(239,68,68,0.6);
             padding: 0 3px;
@@ -2340,26 +2340,81 @@
         // LANE ASSIGNMENT (dynamic heights)
         // ==========================================
 
-        const estimateHeight = (ev) => {
-            let h = 18; // title bar
-            if (ev.section === 'Flying' && ev.etd && ev.eta) h += 14;
-            const crewCount = Math.max(1, ev.personnel.length);
+        // ── Chip measurement constants (keep in sync with CSS) ──
+        const CHIP_FONT_SIZE_REM = 0.58;    // .chip { font-size }
+        const CHIP_FONT_WEIGHT   = 500;     // .chip { font-weight }
+        const CHIP_HPAD          = 5;       // .chip { padding: 1px 5px } → 5px each side
+        const CHIP_INNER_GAP     = 2;       // .chip { gap: 2px }
+        const CHIP_REMOVE_CHAR   = '✕';     // chip-remove content
+        const CHIP_REMOVE_FSIZE  = 0.50;    // .chip-remove { font-size: 0.5rem }
+        const CHIP_CONFLICT_CHAR = '!';     // .conflict-icon content
+        const CHIP_CONFLICT_FSIZE = 0.55;   // .conflict-icon { font-size: 0.55rem; font-weight: 700 }
+        const CREW_AREA_GAP      = 2;       // .event-crew-area { gap: 2px }
+        const CREW_AREA_HPAD     = 5;       // .event-crew-area { padding: 2px 5px 3px } → 5px each side
+        const CREW_AREA_VPAD     = 5;       // .event-crew-area top(2) + bottom(3)
+        const CHIP_ROW_H         = 16;      // measured chip height (font + padding + gap)
+        const TITLE_BAR_H        = 18;      // title bar height
+        const FLIGHT_BAR_H       = 14;      // ETD/ETA flight time bar
+        const MIN_CARD_H         = 40;      // minimum event card height
 
-            // Width-aware: compute card pixel width from time span
+        // Lazy-init character width measurement via canvas
+        const _chipMetrics = { charW: null, removeW: null, conflictW: null };
+        const getChipMetrics = () => {
+            if (_chipMetrics.charW !== null) return _chipMetrics;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const basePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const chipPx = CHIP_FONT_SIZE_REM * basePx;
+            ctx.font = `${CHIP_FONT_WEIGHT} ${chipPx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.charW = ctx.measureText('M').width;
+            const removePx = CHIP_REMOVE_FSIZE * basePx;
+            ctx.font = `${CHIP_FONT_WEIGHT} ${removePx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.removeW = ctx.measureText(CHIP_REMOVE_CHAR).width;
+            const conflictPx = CHIP_CONFLICT_FSIZE * basePx;
+            ctx.font = `700 ${conflictPx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.conflictW = ctx.measureText(CHIP_CONFLICT_CHAR).width;
+            return _chipMetrics;
+        };
+
+        // Compute pixel width of a single chip.
+        // Conflict icon (!) is always included pessimistically — we don't know at layout
+        // time which chips will have conflicts, and under-estimation causes row clipping.
+        const measureChipWidth = (name, isReadonly) => {
+            const m = getChipMetrics();
+            let w = (CHIP_HPAD * 2);
+            w += name.length * m.charW;
+            w += CHIP_INNER_GAP + m.conflictW;          // always reserve space for '!'
+            if (!isReadonly) w += CHIP_INNER_GAP + m.removeW + 1;
+            return Math.ceil(w);
+        };
+
+        // Greedy row packing — mirrors CSS flex-wrap first-fit behaviour
+        const computeChipRows = (personnel, areaWidth, isReadonly) => {
+            if (personnel.length === 0) return 1;
+            let rows = 1, rowUsed = 0;
+            for (let i = 0; i < personnel.length; i++) {
+                const chipW = measureChipWidth(personnel[i], isReadonly);
+                const needed = rowUsed === 0 ? chipW : CREW_AREA_GAP + chipW;
+                if (rowUsed > 0 && rowUsed + needed > areaWidth) { rows++; rowUsed = chipW; }
+                else { rowUsed += needed; }
+            }
+            return rows;
+        };
+
+        const estimateHeight = (ev) => {
+            let h = TITLE_BAR_H;
+            if (ev.section === 'Flying' && ev.etd && ev.eta) h += FLIGHT_BAR_H;
+
             const sMin = evStart(ev);
             const eMin = evEnd(ev);
             const dur = (eMin - sMin) || 60;
             const widthPct = (dur / TIMELINE_RANGE) * 100;
             const cardPxWidth = Math.max(140, (widthPct / 100) * DAY_COL_WIDTH);
 
-            // Estimate chips per row based on actual card width
-            const chipAreaWidth = cardPxWidth - 14; // padding
-            const avgChipWidth = 78;
-            const chipsPerRow = Math.max(1, Math.floor(chipAreaWidth / avgChipWidth));
-
-            const rows = Math.ceil(crewCount / chipsPerRow);
-            h += rows * 12 + 8;
-            return Math.max(h, 40);
+            const chipAreaWidth = cardPxWidth - (CREW_AREA_HPAD * 2);
+            const rows = computeChipRows(ev.personnel, chipAreaWidth, ev.readonly);
+            h += (rows * CHIP_ROW_H) + CREW_AREA_VPAD;
+            return Math.max(h, MIN_CARD_H);
         };
 
         const buildLayout = (events) => {
@@ -3346,7 +3401,7 @@
                         {event.section !== 'Ground' && event.section !== 'NA' && (
                             <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
                         )}
-                        {event.cancelled && <span style={{ background: '#ef4444', color: 'white', fontSize: '0.45rem', fontWeight: 700, padding: '0 3px', borderRadius: 2 }}>CX</span>}
+                        {event.cancelled && <span style={{ background: '#a81a1a', color: 'white', fontSize: '0.65rem', fontWeight: 1000, padding: '0 3px', borderRadius: 2 }}>CX</span>}
                         {event.isCustom && <span className="custom-badge">+NEW</span>}
                         {event.isCustom && onDeleteCustom && (
                             <span className="custom-delete-btn" title="Delete custom event" onClick={(e) => { e.stopPropagation(); onDeleteCustom(event.id); }}>✕</span>
