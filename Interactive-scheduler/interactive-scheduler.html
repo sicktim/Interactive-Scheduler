@@ -1918,6 +1918,7 @@
                             personnel: people,
                             originalPersonnel: [...people],
                             notes: null, readonly: false,
+                            cancelled: false,
                         });
                     });
                 }
@@ -1937,6 +1938,7 @@
                                     personnel: [poc.trim()],
                                     originalPersonnel: [poc.trim()],
                                     notes: null, readonly: false,
+                                    cancelled: false,
                                 });
                             }
                         }
@@ -1958,6 +1960,7 @@
                             personnel: [...people],
                             originalPersonnel: [...people],
                             notes: null, readonly: true,
+                            cancelled: false,
                         });
                     });
                 }
@@ -2172,12 +2175,14 @@
                                 eventName: evList[j].eventName, model: evList[j].model,
                                 section: evList[j].section,
                                 startTime: evList[j].startTime, endTime: evList[j].endTime,
+                                date: evList[j].date,
                             });
                             // Record on event j
                             addConflict(evList[j].id, {
                                 eventName: evList[i].eventName, model: evList[i].model,
                                 section: evList[i].section,
                                 startTime: evList[i].startTime, endTime: evList[i].endTime,
+                                date: evList[i].date,
                             });
                         });
                     }
@@ -2192,10 +2197,21 @@
             if (!ec) return null;
             const pc = ec.get(person);
             if (!pc || pc.length === 0) return null;
-            return pc.map(c => {
+            // Group by date, sort chronologically
+            const byDate = new Map();
+            pc.forEach(c => {
+                const d = c.date || '?';
+                if (!byDate.has(d)) byDate.set(d, []);
                 const m = c.model ? `${c.model} ` : '';
-                return `${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`;
-            }).join('; ');
+                byDate.get(d).push(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+            });
+            const lines = [];
+            [...byDate.keys()].sort().forEach(date => {
+                const fd = fmtDate(date);
+                lines.push(`${fd.weekday} ${fd.day} ${fd.month}:`);
+                byDate.get(date).forEach(l => lines.push(l));
+            });
+            return lines.join('\n');
         };
 
         const hasConflict = (eventId, person, conflicts) => {
@@ -3622,21 +3638,30 @@
 
             // Build per-person conflict summary with actual event details
             const personConflictSummary = useMemo(() => {
+                // person -> Map<date, Set<formattedEntry>>
                 const summary = new Map();
                 conflicts.forEach((personMap, eventId) => {
                     personMap.forEach((confList, person) => {
-                        if (!summary.has(person)) summary.set(person, new Set());
-                        const s = summary.get(person);
+                        if (!summary.has(person)) summary.set(person, new Map());
+                        const dateMap = summary.get(person);
                         confList.forEach(c => {
+                            const d = c.date || '?';
+                            if (!dateMap.has(d)) dateMap.set(d, new Set());
                             const m = c.model ? `${c.model} ` : '';
-                            s.add(`${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+                            dateMap.get(d).add(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
                         });
                     });
                 });
-                // Convert sets to strings
+                // Convert to formatted strings grouped by date
                 const result = new Map();
-                summary.forEach((detailSet, person) => {
-                    result.set(person, [...detailSet].join('; '));
+                summary.forEach((dateMap, person) => {
+                    const lines = [];
+                    [...dateMap.keys()].sort().forEach(date => {
+                        const fd = fmtDate(date);
+                        lines.push(`${fd.weekday} ${fd.day} ${fd.month}:`);
+                        dateMap.get(date).forEach(l => lines.push(l));
+                    });
+                    result.set(person, lines.join('\n'));
                 });
                 return result;
             }, [conflicts]);
