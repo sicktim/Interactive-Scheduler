@@ -2207,8 +2207,10 @@
             });
             const lines = [];
             [...byDate.keys()].sort().forEach(date => {
-                const fd = fmtDate(date);
-                lines.push(`${fd.weekday} ${fd.day} ${fd.month}:`);
+                const header = (date && date !== '?')
+                    ? (() => { const fd = fmtDate(date); return `${fd.weekday} ${fd.day} ${fd.month}:`; })()
+                    : `${date}:`;
+                lines.push(header);
                 byDate.get(date).forEach(l => lines.push(l));
             });
             return lines.join('\n');
@@ -3291,7 +3293,7 @@
             const handleMouseEnter = (e) => {
                 if ((hasCon || isUnavailable) && onShowTooltip) {
                     const rect = e.currentTarget.getBoundingClientRect();
-                    onShowTooltip(isUnavailable ? conflictText : `Also on: ${conflictText}`, rect);
+                    onShowTooltip(isUnavailable ? conflictText : `Also on:\n${conflictText}`, rect);
                 }
             };
 
@@ -3657,8 +3659,10 @@
                 summary.forEach((dateMap, person) => {
                     const lines = [];
                     [...dateMap.keys()].sort().forEach(date => {
-                        const fd = fmtDate(date);
-                        lines.push(`${fd.weekday} ${fd.day} ${fd.month}:`);
+                        const header = (date && date !== '?')
+                            ? (() => { const fd = fmtDate(date); return `${fd.weekday} ${fd.day} ${fd.month}:`; })()
+                            : `${date}:`;
+                        lines.push(header);
                         dateMap.get(date).forEach(l => lines.push(l));
                     });
                     result.set(person, lines.join('\n'));
