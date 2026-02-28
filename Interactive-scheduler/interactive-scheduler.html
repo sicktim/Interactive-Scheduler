@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.12.0 — Per-chip canvas measurement with conflict icon support -->
+<!-- Interactive Scheduler v3.13.0 — Conflict summary modal, date-grouped tooltips, cancelled exclusion -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -1673,6 +1673,9 @@
         const DAY_COL_WIDTH  = 1125;
 
         const SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
+        const SECTION_PRIORITY = { Flying: 1, Ground: 2, Academics: 3, NA: 4, Supervision: 5 };
+        const SECTION_BADGE    = { Flying: 'FLT', Ground: 'GND', Academics: 'ACD', NA: 'N/A', Supervision: 'SP' };
+        const SECTION_BADGE_COLOR = { Flying: '#3b82f6', Ground: '#16a34a', Academics: '#7c3aed', NA: '#475569', Supervision: '#d97706' };
 
         // Fixed display order for supervision duty roles (SOF → AUTH)
         const SUPERVISION_ROLE_ORDER = [
@@ -1687,7 +1690,7 @@
 
         // Simulator / control-room event model identifiers — placed as sub-tier rows within
         // their paired real-aircraft band (matched by startTime), or in a catch-all band.
-        const SIM_CR_MODELS = new Set(['CR A', 'CR B', 'CR C', 'FS SIM A', 'FS SIM B', 'FS SIM C']);
+        const SIM_CR_MODELS = new Set(['CR A', 'CR B', 'CR C', 'FS SIM A', 'FS SIM B', 'FS SIM C', 'FLYBY TWR']);
 
         // Color scheme matching source spreadsheet
         const CATEGORY_COLORS = {
@@ -3271,6 +3274,125 @@
             );
         };
 
+        // ─── CONFLICT SUMMARY MODAL ───
+
+        const ConflictSummaryModal = ({ conflicts, workingEvents, onClose }) => {
+            const byDate = React.useMemo(() => {
+                const map = new Map(); // date -> [{event, personConflicts: [{person, alsoOn}]}]
+                conflicts.forEach((personMap, eventId) => {
+                    const event = workingEvents.find(e => e.id === eventId);
+                    if (!event) return;
+                    const date = event.date;
+                    if (!map.has(date)) map.set(date, []);
+                    const personConflicts = [];
+                    personMap.forEach((confList, person) => {
+                        const alsoOn = confList.map(c => {
+                            const m = c.model ? `${c.model} ` : '';
+                            return `${m}${c.eventName}`;
+                        }).join(', ');
+                        personConflicts.push({ person, alsoOn });
+                    });
+                    personConflicts.sort((a, b) => a.person.localeCompare(b.person));
+                    map.get(date).push({ event, personConflicts });
+                });
+                // Sort events within each day by section priority then start time
+                map.forEach(events => {
+                    events.sort((a, b) => {
+                        const pa = SECTION_PRIORITY[a.event.section] || 99;
+                        const pb = SECTION_PRIORITY[b.event.section] || 99;
+                        if (pa !== pb) return pa - pb;
+                        return (a.event.startTime || '').localeCompare(b.event.startTime || '');
+                    });
+                });
+                return new Map([...map.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+            }, [conflicts, workingEvents]);
+
+            if (byDate.size === 0) return null;
+
+            return (
+                <div
+                    onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 1000,
+                             display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 56 }}
+                >
+                    <div style={{ background: '#1a1f2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
+                                  width: '92vw', maxWidth: 1300, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+                        {/* Header */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                      padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#f87171',
+                                           textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                &#9888; Conflict Summary
+                            </span>
+                            <button onClick={onClose}
+                                    style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+                                             cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '2px 4px' }}>&#x2715;</button>
+                        </div>
+                        {/* Day columns */}
+                        <div style={{ display: 'flex', gap: 0, overflowX: 'auto', overflowY: 'auto',
+                                      padding: '12px 14px', flex: 1, alignItems: 'flex-start' }}>
+                            {[...byDate.entries()].map(([date, events]) => {
+                                const fd = fmtDate(date);
+                                return (
+                                    <div key={date} style={{ minWidth: 230, maxWidth: 270, flexShrink: 0,
+                                                             borderRight: '1px solid rgba(255,255,255,0.06)',
+                                                             paddingRight: 14, marginRight: 14 }}>
+                                        {/* Day header */}
+                                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8',
+                                                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                                                      marginBottom: 10, paddingBottom: 4,
+                                                      borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            {fd.weekday} {fd.day} {fd.month}
+                                        </div>
+                                        {/* Event blocks */}
+                                        {events.map(({ event, personConflicts }) => {
+                                            const badge = SECTION_BADGE[event.section] || 'OTH';
+                                            const bColor = SECTION_BADGE_COLOR[event.section] || '#475569';
+                                            const mPrefix = event.model ? `${event.model} ` : '';
+                                            const timeStr = event.startTime
+                                                ? `${event.startTime}${event.endTime ? '\u2013' + event.endTime : ''}`
+                                                : '';
+                                            return (
+                                                <div key={event.id} style={{ marginBottom: 10 }}>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline',
+                                                                  gap: 5, marginBottom: 2 }}>
+                                                        <span style={{ fontSize: '0.5rem', fontWeight: 700,
+                                                                       color: '#fff', background: bColor,
+                                                                       padding: '1px 4px', borderRadius: 3,
+                                                                       flexShrink: 0 }}>{badge}</span>
+                                                        <span style={{ fontSize: '0.63rem', color: '#e2e8f0',
+                                                                       fontWeight: 600, lineHeight: 1.3 }}>
+                                                            {mPrefix}{event.eventName}
+                                                        </span>
+                                                    </div>
+                                                    {timeStr && (
+                                                        <div style={{ fontSize: '0.57rem', color: '#64748b',
+                                                                      marginBottom: 4, paddingLeft: 2 }}>
+                                                            {timeStr}
+                                                        </div>
+                                                    )}
+                                                    {personConflicts.map(({ person, alsoOn }) => (
+                                                        <div key={person}
+                                                             style={{ fontSize: '0.6rem', paddingLeft: 6,
+                                                                      lineHeight: 1.6, color: '#cbd5e1' }}>
+                                                            <span style={{ color: '#f87171', marginRight: 3 }}>&#9888;</span>
+                                                            <span style={{ color: '#fbbf24', fontWeight: 600 }}>{person}</span>
+                                                            <span style={{ color: '#64748b' }}> &#x2192; </span>
+                                                            <span style={{ color: '#94a3b8' }}>{alsoOn}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // ─── PERSONNEL CHIP ───
 
         const PersonnelChip = ({ name, roster, conflictText, onRemove, eventId, inPicker, isBusy, isUnavailable, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
@@ -4768,6 +4890,7 @@
             const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow'
             const [showRefreshModal, setShowRefreshModal] = useState(false);
             const [showCreateEvent, setShowCreateEvent] = useState(false);
+            const [showConflictSummary, setShowConflictSummary] = useState(false);
             const [focusedEventId, setFocusedEventId] = useState(null);
             const [focusEnabled, setFocusEnabled] = useState(true);
             const [actionMenu, setActionMenu] = useState(null);   // { event, position } | null
@@ -5168,7 +5291,17 @@
                                 </h1>
                                 <p className="text-xs text-gray-500">
                                     {visibleEvents.length} events
-                                    {conflictCount > 0 && <span className="text-red-400 ml-2">⚠ {conflictCount} conflict{conflictCount > 1 ? 's' : ''}</span>}
+                                    {conflictCount > 0 && (
+                                        <button
+                                            onClick={() => setShowConflictSummary(true)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer',
+                                                     fontFamily: 'inherit', fontSize: 'inherit', padding: 0 }}
+                                            className="text-red-400 ml-2"
+                                            title="View conflict summary"
+                                        >
+                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}
+                                        </button>
+                                    )}
                                 </p>
                             </div>
                             {viewMode === 'timeline' && (
@@ -5286,6 +5419,14 @@
                             dates={dates}
                             onClose={() => setShowCreateEvent(false)}
                             onCreate={handleCreateEvent}
+                        />
+                    )}
+
+                    {showConflictSummary && (
+                        <ConflictSummaryModal
+                            conflicts={conflicts}
+                            workingEvents={workingEvents}
+                            onClose={() => setShowConflictSummary(false)}
                         />
                     )}
 
