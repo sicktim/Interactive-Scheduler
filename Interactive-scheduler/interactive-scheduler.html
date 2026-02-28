@@ -3307,6 +3307,16 @@
                 return new Map([...map.entries()].sort((a, b) => a[0].localeCompare(b[0])));
             }, [conflicts, workingEvents]);
 
+            React.useEffect(() => {
+                if (byDate.size === 0) onClose();
+            }, [byDate.size, onClose]);
+
+            React.useEffect(() => {
+                const handler = (e) => { if (e.key === 'Escape') onClose(); };
+                document.addEventListener('keydown', handler);
+                return () => document.removeEventListener('keydown', handler);
+            }, [onClose]);
+
             if (byDate.size === 0) return null;
 
             return (
