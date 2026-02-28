@@ -2138,6 +2138,7 @@
             // Map: person||date -> [events]
             const pdMap = {};
             allEvents.forEach(ev => {
+                if (ev.cancelled) return;          // exclude cancelled events from conflict detection
                 ev.personnel.forEach(person => {
                     const k = `${person}||${ev.date}`;
                     if (!pdMap[k]) pdMap[k] = [];
