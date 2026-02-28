@@ -2208,7 +2208,7 @@
             const lines = [];
             [...byDate.keys()].sort().forEach(date => {
                 const header = (date && date !== '?')
-                    ? (() => { const fd = fmtDate(date); return `${fd.weekday} ${fd.day} ${fd.month}:`; })()
+                    ? `${fmtDate(date).full}:`
                     : `${date}:`;
                 lines.push(header);
                 byDate.get(date).forEach(l => lines.push(l));
@@ -3660,7 +3660,7 @@
                     const lines = [];
                     [...dateMap.keys()].sort().forEach(date => {
                         const header = (date && date !== '?')
-                            ? (() => { const fd = fmtDate(date); return `${fd.weekday} ${fd.day} ${fd.month}:`; })()
+                            ? `${fmtDate(date).full}:`
                             : `${date}:`;
                         lines.push(header);
                         dateMap.get(date).forEach(l => lines.push(l));
