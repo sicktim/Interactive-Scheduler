@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.11.0 — Layout fixes: SIM pairing, band labels, dynamic card heights -->
+<!-- Interactive Scheduler v3.11.1 — Wider timeline, military time fix, remove hour lines + add-chip -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -102,8 +102,8 @@
         .days-container { display: flex; min-height: 100%; }
 
         .day-column {
-            min-width: 750px;
-            width: 750px;
+            min-width: 1125px;
+            width: 1125px;
             border-right: 2px solid rgba(255,255,255,0.06);
             flex-shrink: 0;
             display: flex;
@@ -375,20 +375,6 @@
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
 
-        .add-chip {
-            padding: 1px 4px;
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 3px;
-            color: rgba(255,255,255,0.25);
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .add-chip:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59,130,246,0.1);
-        }
 
         /* Conflict badge on event card */
         .conflict-badge {
@@ -482,7 +468,6 @@
             color: #e2e8f0 !important;
         }
         /* Hide AM/PM field in native time pickers (Chrome fallback; lang=en-GB is primary fix) */
-        .modal-content input[type="time"]::-webkit-datetime-edit-ampm-field { display: none; }
         .modal-content select option {
             background: #1e293b;
             color: #e2e8f0;
@@ -780,14 +765,6 @@
         .class-group-other { border-left-color: #64748b !important; }
 
         /* ===== MISC ===== */
-        .hour-line {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 1px;
-            background: rgba(255,255,255,0.05);
-            pointer-events: none;
-            z-index: 1;
-        }
 
         .loading-screen {
             display: flex;
@@ -1349,15 +1326,6 @@
 
         /* --- Personnel chips --- */
         .light-mode .chip:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-        .light-mode .add-chip {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.3);
-        }
-        .light-mode .add-chip:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59,130,246,0.08);
-        }
 
         /* --- Conflict tooltip --- */
         .light-mode .conflict-tooltip-portal {
@@ -1493,7 +1461,6 @@
         }
 
         /* --- Misc controls --- */
-        .light-mode .hour-line { background: rgba(0,0,0,0.06); }
         .light-mode .loading-screen { color: #1e293b; }
         .light-mode .spinner {
             border-color: rgba(0,0,0,0.08);
@@ -1703,7 +1670,7 @@
         const TIMELINE_START = 6 * 60;
         const TIMELINE_END   = 18 * 60;
         const TIMELINE_RANGE = TIMELINE_END - TIMELINE_START;
-        const DAY_COL_WIDTH  = 750;
+        const DAY_COL_WIDTH  = 1125;
 
         const SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
 
@@ -2376,7 +2343,7 @@
         const estimateHeight = (ev) => {
             let h = 18; // title bar
             if (ev.section === 'Flying' && ev.etd && ev.eta) h += 14;
-            const crewCount = Math.max(1, ev.personnel.length + 1); // +1 for add chip
+            const crewCount = Math.max(1, ev.personnel.length);
 
             // Width-aware: compute card pixel width from time span
             const sMin = evStart(ev);
@@ -2391,7 +2358,7 @@
             const chipsPerRow = Math.max(1, Math.floor(chipAreaWidth / avgChipWidth));
 
             const rows = Math.ceil(crewCount / chipsPerRow);
-            h += rows * 20 + 6;
+            h += rows * 12 + 8;
             return Math.max(h, 40);
         };
 
@@ -2475,7 +2442,7 @@
                     let placed = false;
                     for (let i = 0; i < subLanes.length; i++) {
                         const lastEv = subLanes[i][subLanes[i].length - 1];
-                        if (s >= (evEnd(lastEv) || s)) {
+                        if (s >= (visualEnd(lastEv) || s)) {
                             subLanes[i].push(ev);
                             placed = true;
                             break;
@@ -2566,7 +2533,7 @@
                     let placed = false;
                     for (let i = 0; i < flightSubLanes.length; i++) {
                         const last = flightSubLanes[i][flightSubLanes[i].length - 1];
-                        if (s >= (evEnd(last) || s)) { flightSubLanes[i].push(ev); placed = true; break; }
+                        if (s >= (visualEnd(last) || s)) { flightSubLanes[i].push(ev); placed = true; break; }
                     }
                     if (!placed) flightSubLanes.push([ev]);
                 });
@@ -2584,7 +2551,7 @@
                     let placed = false;
                     for (let i = 0; i < simSubLanes.length; i++) {
                         const last = simSubLanes[i][simSubLanes[i].length - 1];
-                        if (s >= (evEnd(last) || s)) { simSubLanes[i].push(ev); placed = true; break; }
+                        if (s >= (visualEnd(last) || s)) { simSubLanes[i].push(ev); placed = true; break; }
                     }
                     if (!placed) simSubLanes.push([ev]);
                 });
@@ -2597,7 +2564,7 @@
 
                 const bandH = LABEL_H + flightH + simH;
                 const displayModel = model === '__SIMS__' ? 'Sims / CR' : model;
-                modelBands.push({ model: displayModel, top: cum, height: bandH, flightH });
+                modelBands.push({ model: displayModel, top: cum, height: bandH, flightH, hasSims: simEvs.length > 0 });
 
                 // Assign positions for real flights — shift down by LABEL_H, cumulative per-lane heights
                 let flightCum = cum + LABEL_H;
@@ -2658,7 +2625,7 @@
                     let placed = false;
                     for (let i = 0; i < subLanes.length; i++) {
                         const last = subLanes[i][subLanes[i].length - 1];
-                        if (s >= (evEnd(last) || s)) { subLanes[i].push(ev); placed = true; break; }
+                        if (s >= (visualEnd(last) || s)) { subLanes[i].push(ev); placed = true; break; }
                     }
                     if (!placed) subLanes.push([ev]);
                 });
@@ -3401,7 +3368,6 @@
                                 onHideTooltip={onHideTooltip}
                             />
                         ))}
-                        {!event.readonly && <span className="add-chip" title="Drop personnel here">+</span>}
                     </div>
                 </div>
             );
@@ -3474,7 +3440,7 @@
                             // divider between real-aircraft rows and their paired sim/CR sub-tier.
                             let flyingModelBands = null;
                             if (sec === 'Flying' && layout.modelBands) {
-                                flyingModelBands = layout.modelBands.map(({ model, top, height, flightH }) => (
+                                flyingModelBands = layout.modelBands.map(({ model, top, height, flightH, hasSims }) => (
                                     <div key={model} style={{
                                         position: 'absolute', left: 0, right: 0,
                                         top, height,
@@ -3486,9 +3452,9 @@
                                             fontSize: '0.45rem', color: 'rgba(167,243,208,0.5)', fontWeight: 700,
                                             letterSpacing: '0.05em', userSelect: 'none',
                                         }}>{model}</span>
-                                        {flightH > 0 && flightH < height && (
+                                        {hasSims && flightH > 0 && (
                                             <div style={{
-                                                position: 'absolute', left: 0, right: 0, top: flightH,
+                                                position: 'absolute', left: 0, right: 0, top: 12 + flightH,
                                                 borderTop: '1px dashed rgba(16,185,129,0.15)',
                                                 pointerEvents: 'none',
                                             }} />
@@ -3533,9 +3499,6 @@
                                         {supvRoleBands}
                                         {flyingModelBands}
                                         {groundNameBands}
-                                        {[6,7,8,9,10,11,12,13,14,15,16,17,18].map(h => (
-                                            <div key={h} className="hour-line" style={{ left: `${timePct(h*60)}%` }} />
-                                        ))}
                                         {secEvts.map(ev => {
                                             const pos = layout.evMap[ev.id] || { top: 0, height: 40 };
                                             return (
@@ -4462,6 +4425,53 @@
             );
         };
 
+        // ─── MILITARY TIME INPUT ───
+
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM' }) => {
+            const handleChange = (e) => {
+                let raw = e.target.value;
+                raw = raw.replace(/[^\d:]/g, '');
+                const parts = raw.split(':');
+                if (parts.length > 2) raw = parts[0] + ':' + parts.slice(1).join('');
+                if (raw.length === 2 && !raw.includes(':') && value.length < 2) raw = raw + ':';
+                if (raw.length > 5) raw = raw.slice(0, 5);
+                onChange(raw);
+            };
+
+            const handleKeyDown = (e) => {
+                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+                if (allowed.includes(e.key)) return;
+                if (e.ctrlKey || e.metaKey) return;
+                if (/^\d$/.test(e.key)) return;
+                if (e.key === ':' && !value.includes(':')) return;
+                e.preventDefault();
+            };
+
+            const handleBlur = () => {
+                let v = value.trim();
+                if (!v) return;
+                let hours, minutes;
+                if (v.includes(':')) {
+                    [hours, minutes] = v.split(':');
+                } else if (v.length <= 2) {
+                    hours = v; minutes = '0';
+                } else {
+                    hours = v.slice(0, 2); minutes = v.slice(2);
+                }
+                let h = parseInt(hours, 10), m = parseInt(minutes || '0', 10);
+                if (isNaN(h)) h = 0;
+                if (isNaN(m)) m = 0;
+                h = Math.min(Math.max(h, 0), 23);
+                m = Math.min(Math.max(m, 0), 59);
+                onChange(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+            };
+
+            return <input type="text" maxLength={5} placeholder={placeholder}
+                style={style} value={value} onChange={handleChange}
+                onKeyDown={handleKeyDown} onBlur={handleBlur} inputMode="numeric" />;
+        };
+
         // ─── EDIT EVENT MODAL ───
 
         const EditEventModal = ({ event, onSave, onClose }) => {
@@ -4512,11 +4522,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <input type="time" lang="en-GB" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} />
+                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time</label>
-                                    <input type="time" lang="en-GB" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} />
+                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
                                 </div>
                             </div>
                         </div>
@@ -4637,11 +4647,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <input type="time" lang="en-GB" style={inputStyle} value={startTime} onChange={e => setStartTime(e.target.value)} />
+                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time *</label>
-                                    <input type="time" lang="en-GB" style={inputStyle} value={endTime} onChange={e => setEndTime(e.target.value)} />
+                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
                                 </div>
                             </div>
                         </div>
