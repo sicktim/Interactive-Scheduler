@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.6.1 — Light/Dark Mode -->
+<!-- Interactive Scheduler v3.7.0 — Disable Merging Events -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -1173,11 +1173,11 @@
         .theme-toggle-container {
             position: fixed;
             top: 7px;
-            right: 14px;
+            left: 240px;
             z-index: 9999;
         }
         .theme-toggle-btn {
-            width: 32px; height: 32px;
+            width: 40px; height: 40px;
             border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.15);
             background: rgba(255,255,255,0.06);
@@ -1872,6 +1872,11 @@
         };
 
         const mergeDuplicateEvents = (events, roster) => {
+            // DISABLED: merge logic causes false positives (merges separate events
+            // with same model/times but different crews). See v3.6.1 feedback.
+            // Keeping function + logic intact for potential future re-enable.
+            return events;
+
             if (!events || events.length === 0) return events;
 
             const mergeableEvents = [];
