@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v3.7.0 — Disable Merging Events -->
+<!-- Interactive Scheduler v3.13.0 — Conflict summary modal, date-grouped tooltips, cancelled exclusion -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -102,8 +102,8 @@
         .days-container { display: flex; min-height: 100%; }
 
         .day-column {
-            min-width: 750px;
-            width: 750px;
+            min-width: 1125px;
+            width: 1125px;
             border-right: 2px solid rgba(255,255,255,0.06);
             flex-shrink: 0;
             display: flex;
@@ -194,6 +194,45 @@
             background: rgba(239, 68, 68, 0.18);
             border: 1px solid rgba(239, 68, 68, 0.45);
         }
+        .event-card-supervision {
+            background: rgba(139, 92, 246, 0.18);
+            border: 1px solid rgba(139, 92, 246, 0.45);
+            min-width: 50px;
+        }
+
+        /* Cancelled event styling */
+        .event-card-cancelled {
+            border-color: rgba(239, 68, 68, 0.7) !important;
+            background: rgba(239, 68, 68, 0.08) !important;
+            opacity: 0.75;
+        }
+        .event-card-cancelled .event-name-text {
+            text-decoration: line-through;
+            color: #ef4444;
+        }
+        .rb-bar-cancelled {
+            opacity: 0.5;
+            border-color: rgba(239, 68, 68, 0.8) !important;
+            background: rgba(239, 68, 68, 0.3) !important;
+        }
+
+        /* Custom event styling */
+        .event-card-custom {
+            border-style: dashed !important;
+            border-color: rgba(96, 165, 250, 0.6) !important;
+        }
+        .custom-badge {
+            font-size: 0.45rem;
+            color: #60a5fa;
+            font-weight: 700;
+            margin-left: auto;
+        }
+        .custom-delete-btn {
+            font-size: 0.55rem;
+            color: rgba(239, 68, 68, 0.5);
+            cursor: pointer;
+        }
+        .custom-delete-btn:hover { color: #ef4444; }
 
         /* Event card title bar */
         .event-title-bar {
@@ -222,10 +261,21 @@
         .label-na { background: rgba(239,68,68,0.35); color: #fecaca; }
 
         .event-name-text {
+            flex: 1;
+            min-width: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             color: rgba(255,255,255,0.85);
+        }
+
+        /* Ground and NA event names wrap instead of clipping — cards sized dynamically to fit */
+        .event-card-ground .event-name-text,
+        .event-card-na .event-name-text {
+            white-space: normal;
+            word-break: break-word;
+            overflow: visible;
+            text-overflow: unset;
         }
 
         .event-time-text {
@@ -325,30 +375,16 @@
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
 
-        .add-chip {
-            padding: 1px 4px;
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 3px;
-            color: rgba(255,255,255,0.25);
-            font-size: 0.6rem;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .add-chip:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59,130,246,0.1);
-        }
 
         /* Conflict badge on event card */
         .conflict-badge {
             position: absolute;
-            top: -3px; right: -3px;
+            bottom: -3px; right: -3px;
             min-width: 14px; height: 14px;
-            background: #ef4444;
+            background: #a81a1a;
             border-radius: 7px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.45rem; font-weight: 700;
+            font-size: 0.65rem; font-weight: 1000;
             color: white; z-index: 20;
             box-shadow: 0 0 6px rgba(239,68,68,0.6);
             padding: 0 3px;
@@ -425,6 +461,16 @@
             max-height: 85vh;
             display: flex;
             flex-direction: column;
+        }
+        .modal-content select,
+        .modal-content input {
+            background: #1e293b !important;
+            color: #e2e8f0 !important;
+        }
+        /* Hide AM/PM field in native time pickers (Chrome fallback; lang=en-GB is primary fix) */
+        .modal-content select option {
+            background: #1e293b;
+            color: #e2e8f0;
         }
 
         /* ===== PICKER ===== */
@@ -719,14 +765,6 @@
         .class-group-other { border-left-color: #64748b !important; }
 
         /* ===== MISC ===== */
-        .hour-line {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 1px;
-            background: rgba(255,255,255,0.05);
-            pointer-events: none;
-            z-index: 1;
-        }
 
         .loading-screen {
             display: flex;
@@ -1288,15 +1326,6 @@
 
         /* --- Personnel chips --- */
         .light-mode .chip:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
-        .light-mode .add-chip {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.3);
-        }
-        .light-mode .add-chip:hover {
-            border-color: #3b82f6;
-            color: #3b82f6;
-            background: rgba(59,130,246,0.08);
-        }
 
         /* --- Conflict tooltip --- */
         .light-mode .conflict-tooltip-portal {
@@ -1332,6 +1361,16 @@
         .light-mode .modal-content p { color: #475569 !important; }
         .light-mode .modal-content span { color: #334155; }
         .light-mode .modal-content button { color: #334155; }
+        .light-mode .modal-content select,
+        .light-mode .modal-content input {
+            background: #f1f5f9 !important;
+            color: #0f172a !important;
+            border-color: rgba(0,0,0,0.2) !important;
+        }
+        .light-mode .modal-content select option {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
 
         /* --- Picker --- */
         .light-mode .picker-tab {
@@ -1422,7 +1461,6 @@
         }
 
         /* --- Misc controls --- */
-        .light-mode .hour-line { background: rgba(0,0,0,0.06); }
         .light-mode .loading-screen { color: #1e293b; }
         .light-mode .spinner {
             border-color: rgba(0,0,0,0.08);
@@ -1564,6 +1602,52 @@
         .light-mode .filter-btn[style] span:last-child {
             color: rgba(59,130,246,0.6) !important;
         }
+
+        /* ===== EVENT ACTION MENU PORTAL ===== */
+        .event-action-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: transparent;
+        }
+        .event-action-menu {
+            position: fixed;
+            z-index: 201;
+            width: 56px;
+            height: 56px;
+            user-select: none;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+        }
+        .event-action-menu svg {
+            cursor: pointer;
+            overflow: visible;
+        }
+        .action-tooltip {
+            position: fixed;
+            z-index: 202;
+            background: rgba(0,0,0,0.85);
+            color: #e2e8f0;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 3px 6px;
+            border-radius: 4px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        /* Light mode overrides for action menu */
+        .light-mode .event-action-menu {
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+        }
+        .light-mode .action-tooltip {
+            background: rgba(15,23,42,0.9);
+            color: #f8fafc;
+        }
+
+        /* Light mode overrides for edit/confirm modals — inherit from .modal-content */
+        .light-mode .modal-content .edit-event-modal-title,
+        .light-mode .modal-content .confirm-delete-modal-title { color: #0f172a !important; }
     </style>
 </head>
 <body>
@@ -1586,9 +1670,27 @@
         const TIMELINE_START = 6 * 60;
         const TIMELINE_END   = 18 * 60;
         const TIMELINE_RANGE = TIMELINE_END - TIMELINE_START;
-        const DAY_COL_WIDTH  = 750;
+        const DAY_COL_WIDTH  = 1125;
 
-        const SECTION_ORDER = ['Flying', 'Ground', 'NA'];
+        const SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
+        const SECTION_PRIORITY = { Flying: 1, Ground: 2, Academics: 3, NA: 4, Supervision: 5 };
+        const SECTION_BADGE    = { Flying: 'FLT', Ground: 'GND', Academics: 'ACD', NA: 'N/A', Supervision: 'SP' };
+        const SECTION_BADGE_COLOR = { Flying: '#3b82f6', Ground: '#16a34a', Academics: '#7c3aed', NA: '#475569', Supervision: '#d97706' };
+
+        // Fixed display order for supervision duty roles (SOF → AUTH)
+        const SUPERVISION_ROLE_ORDER = [
+            'SOF', 'OS', 'ODO',
+            'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO',
+            "Other (As Req'd)",
+            'FOA', 'AUTH',
+        ];
+
+        // Fixed display order for aircraft model bands in the Flying section
+        const FLYING_MODEL_ORDER = ['F-16', 'T-38', 'C-12', 'LJ-25', 'A-29', 'U-2', 'X-62A', 'EXTRA'];
+
+        // Simulator / control-room event model identifiers — placed as sub-tier rows within
+        // their paired real-aircraft band (matched by startTime), or in a catch-all band.
+        const SIM_CR_MODELS = new Set(['CR A', 'CR B', 'CR C', 'FS SIM A', 'FS SIM B', 'FS SIM C', 'FLYBY TWR']);
 
         // Color scheme matching source spreadsheet
         const CATEGORY_COLORS = {
@@ -1760,19 +1862,24 @@
                     raw.flying.forEach(row => {
                         const briefTime = row[1];
                         const eventName = row[5];
-                        if (!briefTime || !eventName || eventName === 'Event') return;
-                        const crew = row.slice(6, 15).filter(isValidName).map(c => c.trim());
+                        const model = (row[0] || '').trim();
+                        if (eventName === 'Event') return; // skip header row
+                        if (!briefTime && !eventName && !model) return; // skip truly empty rows
+                        const crew = row.slice(6, 14).filter(isValidName).map(c => c.trim());
+                        const cxField = row[16];
+                        const cancelled = (cxField === 'TRUE' || cxField === true || cxField === 'CX');
                         all.push({
                             id: mkId(), section: 'Flying', date,
-                            model: (row[0] || '').trim(),
-                            eventName,
+                            model,
+                            eventName: eventName || model || 'Unnamed Event',
                             startTime: briefTime,
                             endTime: row[4],
                             etd: row[2], eta: row[3],
                             personnel: crew,
                             originalPersonnel: [...crew],
-                            notes: (row[15] && row[15] !== 'FALSE') ? row[15] : null,
+                            notes: (row[14] && row[14] !== 'FALSE') ? row[14] : null,
                             readonly: false,
+                            cancelled,
                         });
                     });
                 }
@@ -1781,17 +1888,21 @@
                     raw.ground.forEach(row => {
                         const evName = row[0];
                         const start = row[1];
-                        if (!evName || !start || evName === 'Events') return;
-                        const people = row.slice(3, 10).filter(isValidName).map(p => p.trim());
+                        if (evName === 'Events') return; // skip header row
+                        if (!evName && !start) return; // skip truly empty rows
+                        const people = row.slice(3, 13).filter(isValidName).map(p => p.trim());
+                        const cxGround = row[15];
+                        const cancelled = (cxGround === 'TRUE' || cxGround === true || cxGround === 'CX');
                         all.push({
                             id: mkId(), section: 'Ground', date,
-                            model: null, eventName: evName,
+                            model: null, eventName: evName || 'Unnamed Event',
                             startTime: start, endTime: row[2],
                             etd: null, eta: null,
                             personnel: people,
                             originalPersonnel: [...people],
-                            notes: (row[10] && row[10] !== 'FALSE') ? row[10] : null,
+                            notes: (row[13] && row[13] !== 'FALSE') ? row[13] : null,
                             readonly: false,
+                            cancelled,
                         });
                     });
                 }
@@ -1810,6 +1921,7 @@
                             personnel: people,
                             originalPersonnel: [...people],
                             notes: null, readonly: false,
+                            cancelled: false,
                         });
                     });
                 }
@@ -1828,7 +1940,8 @@
                                     etd: null, eta: null,
                                     personnel: [poc.trim()],
                                     originalPersonnel: [poc.trim()],
-                                    notes: null, readonly: true,
+                                    notes: null, readonly: false,
+                                    cancelled: false,
                                 });
                             }
                         }
@@ -1850,6 +1963,7 @@
                             personnel: [...people],
                             originalPersonnel: [...people],
                             notes: null, readonly: true,
+                            cancelled: false,
                         });
                     });
                 }
@@ -2030,6 +2144,7 @@
             // Map: person||date -> [events]
             const pdMap = {};
             allEvents.forEach(ev => {
+                if (ev.cancelled) return;          // exclude cancelled events from conflict detection
                 ev.personnel.forEach(person => {
                     const k = `${person}||${ev.date}`;
                     if (!pdMap[k]) pdMap[k] = [];
@@ -2044,6 +2159,8 @@
                 if (evList.length < 2) return;
                 for (let i = 0; i < evList.length; i++) {
                     for (let j = i + 1; j < evList.length; j++) {
+                        // Supervision-vs-supervision: roles are structured, no cross-role conflict flagging
+                        if (evList[i].section === 'Supervision' && evList[j].section === 'Supervision') continue;
                         if (!overlap(evList[i], evList[j])) continue;
                         const common = evList[i].personnel.filter(p => evList[j].personnel.includes(p));
                         common.forEach(person => {
@@ -2061,12 +2178,14 @@
                                 eventName: evList[j].eventName, model: evList[j].model,
                                 section: evList[j].section,
                                 startTime: evList[j].startTime, endTime: evList[j].endTime,
+                                date: evList[j].date,
                             });
                             // Record on event j
                             addConflict(evList[j].id, {
                                 eventName: evList[i].eventName, model: evList[i].model,
                                 section: evList[i].section,
                                 startTime: evList[i].startTime, endTime: evList[i].endTime,
+                                date: evList[i].date,
                             });
                         });
                     }
@@ -2081,10 +2200,23 @@
             if (!ec) return null;
             const pc = ec.get(person);
             if (!pc || pc.length === 0) return null;
-            return pc.map(c => {
+            // Group by date, sort chronologically
+            const byDate = new Map();
+            pc.forEach(c => {
+                const d = c.date || '?';
+                if (!byDate.has(d)) byDate.set(d, []);
                 const m = c.model ? `${c.model} ` : '';
-                return `${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`;
-            }).join('; ');
+                byDate.get(d).push(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+            });
+            const lines = [];
+            [...byDate.keys()].sort().forEach(date => {
+                const header = (date && date !== '?')
+                    ? `${fmtDate(date).full}:`
+                    : `${date}:`;
+                lines.push(header);
+                byDate.get(date).forEach(l => lines.push(l));
+            });
+            return lines.join('\n');
         };
 
         const hasConflict = (eventId, person, conflicts) => {
@@ -2104,8 +2236,27 @@
         function computeNetChanges(changes) {
             if (!changes || changes.length === 0) return [];
 
+            const EVENT_LEVEL_TYPES = new Set(['event-cancel', 'event-edit', 'event-delete']);
+
+            // Collect event-level changes (cancel/edit/delete) as discrete entries
+            const eventLevelItems = [];
+            changes.forEach((ch, idx) => {
+                if (EVENT_LEVEL_TYPES.has(ch.type)) {
+                    eventLevelItems.push({
+                        type: ch.type, date: ch.date, rawIndices: [idx], firstIndex: idx,
+                        persons: [],
+                        source: { eventId: ch.eventId, eventName: ch.eventName,
+                                  eventModel: ch.eventModel, eventTime: ch.eventTime, date: ch.date },
+                        cancelledBefore: ch.cancelledBefore, cancelledAfter: ch.cancelledAfter,
+                        before: ch.before, after: ch.after,
+                        deletedEvent: ch.deletedEvent,
+                    });
+                }
+            });
+
             const netMap = new Map();
             changes.forEach((ch, idx) => {
+                if (EVENT_LEVEL_TYPES.has(ch.type)) return; // handled above
                 const key = `${ch.person}||${ch.eventId}`;
                 if (!netMap.has(key)) {
                     netMap.set(key, {
@@ -2180,7 +2331,29 @@
                 group.firstIndex = Math.min(group.firstIndex, inst.firstIndex);
             });
 
-            const result = Array.from(groupMap.values());
+            // Collapse event-cancel chains per eventId: even-length = net zero (omit), odd = keep last state
+            const cancelGroups = new Map();
+            eventLevelItems.forEach(item => {
+                if (item.type === 'event-cancel') {
+                    if (!cancelGroups.has(item.source.eventId)) cancelGroups.set(item.source.eventId, []);
+                    cancelGroups.get(item.source.eventId).push(item);
+                }
+            });
+            const handledCancelIds = new Set();
+            const netEventItems = [];
+            eventLevelItems.forEach(item => {
+                if (item.type !== 'event-cancel') { netEventItems.push(item); return; }
+                const eid = item.source.eventId;
+                if (handledCancelIds.has(eid)) return;
+                handledCancelIds.add(eid);
+                const chain = cancelGroups.get(eid);
+                if (chain.length % 2 === 0) return; // cancel+uncancel = net zero, omit
+                // Odd-length chain: net effect is the last change; merge all rawIndices for full undo
+                const allIndices = chain.flatMap(c => c.rawIndices);
+                netEventItems.push({ ...chain[chain.length - 1], rawIndices: allIndices, firstIndex: Math.min(...allIndices) });
+            });
+
+            const result = [...Array.from(groupMap.values()), ...netEventItems];
             result.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.firstIndex - b.firstIndex);
             return result;
         }
@@ -2189,26 +2362,81 @@
         // LANE ASSIGNMENT (dynamic heights)
         // ==========================================
 
-        const estimateHeight = (ev) => {
-            let h = 18; // title bar
-            if (ev.section === 'Flying' && ev.etd && ev.eta) h += 14;
-            const crewCount = Math.max(1, ev.personnel.length + 1); // +1 for add chip
+        // ── Chip measurement constants (keep in sync with CSS) ──
+        const CHIP_FONT_SIZE_REM = 0.58;    // .chip { font-size }
+        const CHIP_FONT_WEIGHT   = 500;     // .chip { font-weight }
+        const CHIP_HPAD          = 5;       // .chip { padding: 1px 5px } → 5px each side
+        const CHIP_INNER_GAP     = 2;       // .chip { gap: 2px }
+        const CHIP_REMOVE_CHAR   = '✕';     // chip-remove content
+        const CHIP_REMOVE_FSIZE  = 0.50;    // .chip-remove { font-size: 0.5rem }
+        const CHIP_CONFLICT_CHAR = '!';     // .conflict-icon content
+        const CHIP_CONFLICT_FSIZE = 0.55;   // .conflict-icon { font-size: 0.55rem; font-weight: 700 }
+        const CREW_AREA_GAP      = 2;       // .event-crew-area { gap: 2px }
+        const CREW_AREA_HPAD     = 5;       // .event-crew-area { padding: 2px 5px 3px } → 5px each side
+        const CREW_AREA_VPAD     = 5;       // .event-crew-area top(2) + bottom(3)
+        const CHIP_ROW_H         = 16;      // measured chip height (font + padding + gap)
+        const TITLE_BAR_H        = 18;      // title bar height
+        const FLIGHT_BAR_H       = 14;      // ETD/ETA flight time bar
+        const MIN_CARD_H         = 40;      // minimum event card height
 
-            // Width-aware: compute card pixel width from time span
+        // Lazy-init character width measurement via canvas
+        const _chipMetrics = { charW: null, removeW: null, conflictW: null };
+        const getChipMetrics = () => {
+            if (_chipMetrics.charW !== null) return _chipMetrics;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const basePx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+            const chipPx = CHIP_FONT_SIZE_REM * basePx;
+            ctx.font = `${CHIP_FONT_WEIGHT} ${chipPx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.charW = ctx.measureText('M').width;
+            const removePx = CHIP_REMOVE_FSIZE * basePx;
+            ctx.font = `${CHIP_FONT_WEIGHT} ${removePx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.removeW = ctx.measureText(CHIP_REMOVE_CHAR).width;
+            const conflictPx = CHIP_CONFLICT_FSIZE * basePx;
+            ctx.font = `700 ${conflictPx}px 'JetBrains Mono', monospace`;
+            _chipMetrics.conflictW = ctx.measureText(CHIP_CONFLICT_CHAR).width;
+            return _chipMetrics;
+        };
+
+        // Compute pixel width of a single chip.
+        // Conflict icon (!) is always included pessimistically — we don't know at layout
+        // time which chips will have conflicts, and under-estimation causes row clipping.
+        const measureChipWidth = (name, isReadonly) => {
+            const m = getChipMetrics();
+            let w = (CHIP_HPAD * 2);
+            w += name.length * m.charW;
+            w += CHIP_INNER_GAP + m.conflictW;          // always reserve space for '!'
+            if (!isReadonly) w += CHIP_INNER_GAP + m.removeW + 1;
+            return Math.ceil(w);
+        };
+
+        // Greedy row packing — mirrors CSS flex-wrap first-fit behaviour
+        const computeChipRows = (personnel, areaWidth, isReadonly) => {
+            if (personnel.length === 0) return 1;
+            let rows = 1, rowUsed = 0;
+            for (let i = 0; i < personnel.length; i++) {
+                const chipW = measureChipWidth(personnel[i], isReadonly);
+                const needed = rowUsed === 0 ? chipW : CREW_AREA_GAP + chipW;
+                if (rowUsed > 0 && rowUsed + needed > areaWidth) { rows++; rowUsed = chipW; }
+                else { rowUsed += needed; }
+            }
+            return rows;
+        };
+
+        const estimateHeight = (ev) => {
+            let h = TITLE_BAR_H;
+            if (ev.section === 'Flying' && ev.etd && ev.eta) h += FLIGHT_BAR_H;
+
             const sMin = evStart(ev);
             const eMin = evEnd(ev);
             const dur = (eMin - sMin) || 60;
             const widthPct = (dur / TIMELINE_RANGE) * 100;
             const cardPxWidth = Math.max(140, (widthPct / 100) * DAY_COL_WIDTH);
 
-            // Estimate chips per row based on actual card width
-            const chipAreaWidth = cardPxWidth - 14; // padding
-            const avgChipWidth = 78;
-            const chipsPerRow = Math.max(1, Math.floor(chipAreaWidth / avgChipWidth));
-
-            const rows = Math.ceil(crewCount / chipsPerRow);
-            h += rows * 20 + 6;
-            return Math.max(h, 40);
+            const chipAreaWidth = cardPxWidth - (CREW_AREA_HPAD * 2);
+            const rows = computeChipRows(ev.personnel, chipAreaWidth, ev.readonly);
+            h += (rows * CHIP_ROW_H) + CREW_AREA_VPAD;
+            return Math.max(h, MIN_CARD_H);
         };
 
         const buildLayout = (events) => {
@@ -2248,6 +2476,259 @@
             });
 
             return { evMap, total: cum };
+        };
+
+        // Supervision-specific layout: each duty role gets its own band in SUPERVISION_ROLE_ORDER.
+        // Within each band, genuine time overlaps get stacked into sub-lanes.
+        // Returns evMap (id → {top,height}) and roleBands ([{role,top,height}]) for the separator overlay.
+        const buildSupervisionLayout = (events) => {
+            if (events.length === 0) return { evMap: {}, total: 0, roleBands: [] };
+
+            const SUPV_LANE_H = 40; // px per sub-lane
+            const SUBLANE_GAP = 2;  // px between sub-lanes within a role
+            const ROLE_GAP = 4;     // px between role groups
+            const LABEL_H = 12;     // px reserved at top of each band for the role label
+
+            // Group events by role (eventName)
+            const roleGroups = new Map();
+            events.forEach(ev => {
+                if (!roleGroups.has(ev.eventName)) roleGroups.set(ev.eventName, []);
+                roleGroups.get(ev.eventName).push(ev);
+            });
+
+            // Sort events within each role by start time
+            roleGroups.forEach(evs => evs.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0)));
+
+            // Order role bands: known roles first, then unknowns sorted alphabetically
+            const orderedRoles = [
+                ...SUPERVISION_ROLE_ORDER.filter(r => roleGroups.has(r)),
+                ...[...roleGroups.keys()].filter(r => !SUPERVISION_ROLE_ORDER.includes(r)).sort(),
+            ];
+
+            const evMap = {};
+            const roleBands = [];
+            let cum = 0;
+
+            orderedRoles.forEach(role => {
+                const roleEvs = roleGroups.get(role);
+
+                // Greedy sub-lane packing: assign each event to the first lane it fits in
+                const subLanes = []; // each lane is an array of events
+                roleEvs.forEach(ev => {
+                    const s = evStart(ev) || 0;
+                    let placed = false;
+                    for (let i = 0; i < subLanes.length; i++) {
+                        const lastEv = subLanes[i][subLanes[i].length - 1];
+                        if (s >= (visualEnd(lastEv) || s)) {
+                            subLanes[i].push(ev);
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if (!placed) subLanes.push([ev]);
+                });
+
+                const roleH = LABEL_H + subLanes.length * SUPV_LANE_H + Math.max(0, subLanes.length - 1) * SUBLANE_GAP;
+                roleBands.push({ role, top: cum, height: roleH });
+
+                subLanes.forEach((lane, li) => {
+                    const laneTop = cum + LABEL_H + li * (SUPV_LANE_H + SUBLANE_GAP);
+                    lane.forEach(ev => {
+                        evMap[ev.id] = { top: laneTop, height: SUPV_LANE_H };
+                    });
+                });
+
+                cum += roleH + ROLE_GAP;
+            });
+
+            return { evMap, total: cum, roleBands };
+        };
+
+        // Flying-specific layout: groups events into model bands (F-16, T-38, …).
+        // Within each band, CR/FS SIM events that share a startTime with a real sortie are placed
+        // as a sub-tier row (below the flights). Unmatched sims collect in a "Sims / CR" band.
+        // Returns evMap (id → {top,height}), total height, and modelBands ([{model,top,height,flightH}]).
+        const buildFlyingLayout = (events) => {
+            if (events.length === 0) return { evMap: {}, total: 0, modelBands: [] };
+
+            const FLYING_LANE_H = 40;  // px per sub-lane within a band
+            const SUBLANE_GAP   = 2;   // px between sub-lanes in same band
+            const MODEL_GAP     = 4;   // px between model bands
+            const LABEL_H       = 12;  // px reserved at top of each band for the model label
+
+            const isSimCR = (ev) => SIM_CR_MODELS.has(ev.model || '');
+            const realFlights = events.filter(ev => !isSimCR(ev));
+            const simCRs      = events.filter(ev =>  isSimCR(ev));
+
+            // Group real flights by model
+            const modelGroups = new Map(); // model → [events]
+            realFlights.forEach(ev => {
+                const m = ev.model || 'Unknown';
+                if (!modelGroups.has(m)) modelGroups.set(m, []);
+                modelGroups.get(m).push(ev);
+            });
+            modelGroups.forEach(evs => evs.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0)));
+
+            // Match each sim/CR to an aircraft model by walking backwards through the events array
+            // to find the nearest preceding non-sim/CR event. More reliable than startTime matching
+            // which fails when times differ slightly or multiple aircraft share the same start time.
+            const matchedSims   = new Map(); // model → [sim events]
+            const unmatchedSims = [];
+            simCRs.forEach(sim => {
+                const simIdx = events.indexOf(sim);
+                let precedingModel = null;
+                for (let i = simIdx - 1; i >= 0; i--) {
+                    if (!isSimCR(events[i])) { precedingModel = events[i].model || 'Unknown'; break; }
+                }
+                if (precedingModel && modelGroups.has(precedingModel)) {
+                    if (!matchedSims.has(precedingModel)) matchedSims.set(precedingModel, []);
+                    matchedSims.get(precedingModel).push(sim);
+                } else {
+                    unmatchedSims.push(sim);
+                }
+            });
+
+            // Order model bands: FLYING_MODEL_ORDER first, then unknowns alphabetically
+            const orderedModels = [
+                ...FLYING_MODEL_ORDER.filter(m => modelGroups.has(m)),
+                ...[...modelGroups.keys()].filter(m => !FLYING_MODEL_ORDER.includes(m)).sort(),
+            ];
+            if (unmatchedSims.length > 0) orderedModels.push('__SIMS__');
+
+            const evMap       = {};
+            const modelBands  = [];
+            let cum = 0;
+
+            orderedModels.forEach(model => {
+                const flightEvs = model === '__SIMS__' ? [] : (modelGroups.get(model) || []);
+                const simEvs    = model === '__SIMS__' ? unmatchedSims : (matchedSims.get(model) || []);
+
+                // Greedy sub-lane packing for real flights
+                const flightSubLanes = [];
+                flightEvs.forEach(ev => {
+                    const s = evStart(ev) || 0;
+                    let placed = false;
+                    for (let i = 0; i < flightSubLanes.length; i++) {
+                        const last = flightSubLanes[i][flightSubLanes[i].length - 1];
+                        if (s >= (visualEnd(last) || s)) { flightSubLanes[i].push(ev); placed = true; break; }
+                    }
+                    if (!placed) flightSubLanes.push([ev]);
+                });
+                // Per-lane heights for real flights — use estimateHeight so ETD/ETA bar doesn't clip crew chips
+                const flightLaneHeights = flightSubLanes.map(lane =>
+                    Math.max(FLYING_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const flightH = flightLaneHeights.length === 0 ? 0 :
+                    flightLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, flightLaneHeights.length - 1) * SUBLANE_GAP;
+
+                // Greedy sub-lane packing for paired sims (placed below flights in same band)
+                const simSubLanes = [];
+                simEvs.forEach(ev => {
+                    const s = evStart(ev) || 0;
+                    let placed = false;
+                    for (let i = 0; i < simSubLanes.length; i++) {
+                        const last = simSubLanes[i][simSubLanes[i].length - 1];
+                        if (s >= (visualEnd(last) || s)) { simSubLanes[i].push(ev); placed = true; break; }
+                    }
+                    if (!placed) simSubLanes.push([ev]);
+                });
+                // Per-lane heights for sims; +2 for the dashed divider gap between flights and sims
+                const simLaneHeights = simSubLanes.map(lane =>
+                    Math.max(FLYING_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const simH = simLaneHeights.length === 0 ? 0 :
+                    simLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, simLaneHeights.length - 1) * SUBLANE_GAP + 2;
+
+                const bandH = LABEL_H + flightH + simH;
+                const displayModel = model === '__SIMS__' ? 'Sims / CR' : model;
+                modelBands.push({ model: displayModel, top: cum, height: bandH, flightH, hasSims: simEvs.length > 0 });
+
+                // Assign positions for real flights — shift down by LABEL_H, cumulative per-lane heights
+                let flightCum = cum + LABEL_H;
+                flightSubLanes.forEach((lane, li) => {
+                    const laneH = flightLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: flightCum, height: laneH }; });
+                    flightCum += laneH + SUBLANE_GAP;
+                });
+
+                // Assign positions for sims (below flights, +2 for divider gap) — shift down by LABEL_H
+                let simCum = cum + LABEL_H + flightH + 2;
+                simSubLanes.forEach((lane, li) => {
+                    const laneH = simLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: simCum, height: laneH }; });
+                    simCum += laneH + SUBLANE_GAP;
+                });
+
+                cum += bandH + MODEL_GAP;
+            });
+
+            return { evMap, total: cum, modelBands };
+        };
+
+        // Ground-specific layout: groups events by eventName into horizontal bands.
+        // Within each band, genuine time overlaps get stacked into sub-lanes.
+        // Returns evMap (id → {top,height}), total height, and nameBands ([{name,top,height}]).
+        const buildGroundLayout = (events) => {
+            if (events.length === 0) return { evMap: {}, total: 0, nameBands: [] };
+
+            const GROUND_LANE_H    = 40;
+            const GROUND_SUBLANE_GAP = 2;
+            const GROUND_GROUP_GAP   = 4;
+            const LABEL_H            = 12; // px reserved at top of each band for the event-name label
+
+            // Group by eventName
+            const nameGroups = new Map();
+            events.forEach(ev => {
+                const key = ev.eventName || 'Unknown';
+                if (!nameGroups.has(key)) nameGroups.set(key, []);
+                nameGroups.get(key).push(ev);
+            });
+            nameGroups.forEach(evs => evs.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0)));
+
+            // Alphabetical ordering — consistent and simple
+            const orderedNames = [...nameGroups.keys()].sort();
+
+            const evMap     = {};
+            const nameBands = [];
+            let cum = 0;
+
+            orderedNames.forEach(name => {
+                const grpEvs = nameGroups.get(name);
+
+                // Greedy sub-lane packing
+                const subLanes = [];
+                grpEvs.forEach(ev => {
+                    const s = evStart(ev) || 0;
+                    let placed = false;
+                    for (let i = 0; i < subLanes.length; i++) {
+                        const last = subLanes[i][subLanes[i].length - 1];
+                        if (s >= (visualEnd(last) || s)) { subLanes[i].push(ev); placed = true; break; }
+                    }
+                    if (!placed) subLanes.push([ev]);
+                });
+
+                // Singleton: group has exactly 1 event total — skip the label to save vertical space
+                const isSingleton = grpEvs.length === 1;
+                const labelOffset = isSingleton ? 0 : LABEL_H;
+
+                // Per-lane heights — use estimateHeight so wrapped event names have enough room
+                const subLaneHeights = subLanes.map(lane =>
+                    Math.max(GROUND_LANE_H, ...lane.map(ev => estimateHeight(ev)))
+                );
+                const bandH = labelOffset + subLaneHeights.reduce((s, h) => s + h, 0) + Math.max(0, subLanes.length - 1) * GROUND_SUBLANE_GAP;
+                nameBands.push({ name, top: cum, height: bandH, isSingleton });
+
+                let laneCum = cum + labelOffset;
+                subLanes.forEach((lane, li) => {
+                    const laneH = subLaneHeights[li];
+                    lane.forEach(ev => { evMap[ev.id] = { top: laneCum, height: laneH }; });
+                    laneCum += laneH + GROUND_SUBLANE_GAP;
+                });
+
+                cum += bandH + GROUND_GROUP_GAP;
+            });
+
+            return { evMap, total: cum, nameBands };
         };
 
         // ==========================================
@@ -2380,6 +2861,20 @@
             clearWorkingCopy();
         };
 
+        // Custom events localStorage
+        const CUSTOM_EVENTS_KEY = 'tps-scheduler-custom-events';
+
+        const saveCustomEvents = (events) => {
+            try { localStorage.setItem(CUSTOM_EVENTS_KEY, JSON.stringify(events)); } catch (e) {}
+        };
+
+        const loadCustomEvents = () => {
+            try {
+                const raw = localStorage.getItem(CUSTOM_EVENTS_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch (e) { return []; }
+        };
+
         // ==========================================
         // COMPONENTS
         // ==========================================
@@ -2434,9 +2929,10 @@
             const [naCats, setNaCats] = useState(initialNaCats || new Set());
 
             const secColors = {
-                Flying: { bg: 'rgba(16,185,129,0.1)', border: '#10b981', text: '#6ee7b7' },
-                Ground: { bg: 'rgba(245,158,11,0.1)', border: '#f59e0b', text: '#fde68a' },
-                NA:     { bg: 'rgba(239,68,68,0.1)',   border: '#ef4444', text: '#fca5a5' },
+                Flying:      { bg: 'rgba(16,185,129,0.1)',  border: '#10b981', text: '#6ee7b7' },
+                Ground:      { bg: 'rgba(245,158,11,0.1)',  border: '#f59e0b', text: '#fde68a' },
+                NA:          { bg: 'rgba(239,68,68,0.1)',    border: '#ef4444', text: '#fca5a5' },
+                Supervision: { bg: 'rgba(139,92,246,0.1)',   border: '#8b5cf6', text: '#c4b5fd' },
             };
 
             // Student event name patterns — these are curriculum events that should
@@ -2458,7 +2954,7 @@
                 const studentEvents = [];             // events needing reclassification
 
                 allEvents.forEach(ev => {
-                    if (ev.readonly || ev.section === 'NA') return;
+                    if (ev.readonly || ev.section === 'NA' || ev.section === 'Supervision') return;
                     if (!map[ev.date]) return;
 
                     const cls = classifyEvent(ev, roster);
@@ -2492,7 +2988,7 @@
 
                 // Build final groupings
                 allEvents.forEach(ev => {
-                    if (ev.readonly || ev.section === 'NA') return;
+                    if (ev.readonly || ev.section === 'NA' || ev.section === 'Supervision') return;
                     if (!map[ev.date]) return;
 
                     const cls = eventClass.get(ev.id) || 'Other';
@@ -2521,6 +3017,25 @@
                 rosterCats.forEach(cat => { if (!ordered.includes(cat)) ordered.push(cat); });
                 return ordered;
             }, [roster]);
+
+            // Supervision events grouped by date (selectable separately from classified events)
+            const supervisionByDate = useMemo(() => {
+                const map = {};
+                allEvents.forEach(ev => {
+                    if (ev.section !== 'Supervision') return;
+                    if (!map[ev.date]) map[ev.date] = [];
+                    map[ev.date].push(ev);
+                });
+                // Sort by start time within each date
+                Object.values(map).forEach(arr => arr.sort((a, b) => (evStart(a) || 0) - (evStart(b) || 0)));
+                return map;
+            }, [allEvents]);
+
+            const allSupervisionIds = useMemo(() => {
+                const ids = new Set();
+                allEvents.forEach(ev => { if (ev.section === 'Supervision') ids.add(ev.id); });
+                return ids;
+            }, [allEvents]);
 
             // Toggle individual event
             const toggleEvent = (id) => {
@@ -2564,7 +3079,9 @@
 
             const selectAll = () => {
                 const all = new Set();
-                allEvents.forEach(ev => { if (!ev.readonly && ev.section !== 'NA') all.add(ev.id); });
+                allEvents.forEach(ev => {
+                    if (!ev.readonly && ev.section !== 'NA') all.add(ev.id);
+                });
                 setSelectedIds(all);
                 setNaCats(new Set(naCategoriesAvailable));
             };
@@ -2608,6 +3125,31 @@
                         <p className="text-xs text-gray-500 mb-2" style={{ lineHeight: 1.6 }}>
                             Conflict detection checks ALL events regardless of selection.
                         </p>
+
+                        {/* SUPERVISION (all-or-nothing toggle) */}
+                        {allSupervisionIds.size > 0 && (() => {
+                            const allSel = [...allSupervisionIds].every(id => selectedIds.has(id));
+                            return (
+                                <div style={{ marginBottom: 20 }}>
+                                    <div className="selection-separator" style={{ color: '#c4b5fd', borderColor: 'rgba(139,92,246,0.3)' }}>SUPERVISION</div>
+                                    <div style={{ padding: '4px 8px' }}>
+                                        <div
+                                            className={`na-cat-chip ${allSel ? 'selected' : ''}`}
+                                            onClick={() => {
+                                                setSelectedIds(prev => {
+                                                    const next = new Set(prev);
+                                                    allSupervisionIds.forEach(id => allSel ? next.delete(id) : next.add(id));
+                                                    return next;
+                                                });
+                                            }}
+                                            style={allSel ? { borderColor: '#8b5cf6', color: '#c4b5fd', background: 'rgba(139,92,246,0.15)' } : undefined}
+                                        >
+                                            Include Supervision ({allSupervisionIds.size} events)
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                         {/* NON-AVAILABILITY (separate from dates) */}
                         {naCategoriesAvailable.length > 0 && (
@@ -2732,6 +3274,135 @@
             );
         };
 
+        // ─── CONFLICT SUMMARY MODAL ───
+
+        const ConflictSummaryModal = ({ conflicts, workingEvents, onClose }) => {
+            const byDate = React.useMemo(() => {
+                const map = new Map(); // date -> [{event, personConflicts: [{person, alsoOn}]}]
+                conflicts.forEach((personMap, eventId) => {
+                    const event = workingEvents.find(e => e.id === eventId);
+                    if (!event) return;
+                    const date = event.date;
+                    if (!map.has(date)) map.set(date, []);
+                    const personConflicts = [];
+                    personMap.forEach((confList, person) => {
+                        const alsoOn = confList.map(c => {
+                            const m = c.model ? `${c.model} ` : '';
+                            return `${m}${c.eventName}`;
+                        }).join(', ');
+                        personConflicts.push({ person, alsoOn });
+                    });
+                    personConflicts.sort((a, b) => a.person.localeCompare(b.person));
+                    map.get(date).push({ event, personConflicts });
+                });
+                // Sort events within each day by section priority then start time
+                map.forEach(events => {
+                    events.sort((a, b) => {
+                        const pa = SECTION_PRIORITY[a.event.section] || 99;
+                        const pb = SECTION_PRIORITY[b.event.section] || 99;
+                        if (pa !== pb) return pa - pb;
+                        return (a.event.startTime || '').localeCompare(b.event.startTime || '');
+                    });
+                });
+                return new Map([...map.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+            }, [conflicts, workingEvents]);
+
+            React.useEffect(() => {
+                if (byDate.size === 0) onClose();
+            }, [byDate.size, onClose]);
+
+            React.useEffect(() => {
+                const handler = (e) => { if (e.key === 'Escape') onClose(); };
+                document.addEventListener('keydown', handler);
+                return () => document.removeEventListener('keydown', handler);
+            }, [onClose]);
+
+            if (byDate.size === 0) return null;
+
+            return (
+                <div
+                    onClick={e => { if (e.target === e.currentTarget) onClose(); }}
+                    style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', zIndex: 1000,
+                             display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 56 }}
+                >
+                    <div style={{ background: '#1a1f2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8,
+                                  width: '92vw', maxWidth: 1300, maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+                        {/* Header */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                      padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
+                            <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#f87171',
+                                           textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                                &#9888; Conflict Summary
+                            </span>
+                            <button onClick={onClose}
+                                    style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
+                                             cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '2px 4px' }}>&#x2715;</button>
+                        </div>
+                        {/* Day columns */}
+                        <div style={{ display: 'flex', gap: 0, overflowX: 'auto', overflowY: 'auto',
+                                      padding: '12px 14px', flex: 1, alignItems: 'flex-start' }}>
+                            {[...byDate.entries()].map(([date, events]) => {
+                                const fd = fmtDate(date);
+                                return (
+                                    <div key={date} style={{ minWidth: 230, maxWidth: 270, flexShrink: 0,
+                                                             borderRight: '1px solid rgba(255,255,255,0.06)',
+                                                             paddingRight: 14, marginRight: 14 }}>
+                                        {/* Day header */}
+                                        <div style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8',
+                                                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                                                      marginBottom: 10, paddingBottom: 4,
+                                                      borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                            {fd.weekday} {fd.day} {fd.month}
+                                        </div>
+                                        {/* Event blocks */}
+                                        {events.map(({ event, personConflicts }) => {
+                                            const badge = SECTION_BADGE[event.section] || 'OTH';
+                                            const bColor = SECTION_BADGE_COLOR[event.section] || '#475569';
+                                            const mPrefix = event.model ? `${event.model} ` : '';
+                                            const timeStr = event.startTime
+                                                ? `${event.startTime}${event.endTime ? '\u2013' + event.endTime : ''}`
+                                                : '';
+                                            return (
+                                                <div key={event.id} style={{ marginBottom: 10 }}>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline',
+                                                                  gap: 5, marginBottom: 2 }}>
+                                                        <span style={{ fontSize: '0.5rem', fontWeight: 700,
+                                                                       color: '#fff', background: bColor,
+                                                                       padding: '1px 4px', borderRadius: 3,
+                                                                       flexShrink: 0 }}>{badge}</span>
+                                                        <span style={{ fontSize: '0.63rem', color: '#e2e8f0',
+                                                                       fontWeight: 600, lineHeight: 1.3 }}>
+                                                            {mPrefix}{event.eventName}
+                                                        </span>
+                                                    </div>
+                                                    {timeStr && (
+                                                        <div style={{ fontSize: '0.57rem', color: '#64748b',
+                                                                      marginBottom: 4, paddingLeft: 2 }}>
+                                                            {timeStr}
+                                                        </div>
+                                                    )}
+                                                    {personConflicts.map(({ person, alsoOn }) => (
+                                                        <div key={person}
+                                                             style={{ fontSize: '0.6rem', paddingLeft: 6,
+                                                                      lineHeight: 1.6, color: '#cbd5e1' }}>
+                                                            <span style={{ color: '#f87171', marginRight: 3 }}>&#9888;</span>
+                                                            <span style={{ color: '#fbbf24', fontWeight: 600 }}>{person}</span>
+                                                            <span style={{ color: '#64748b' }}> &#x2192; </span>
+                                                            <span style={{ color: '#94a3b8' }}>{alsoOn}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // ─── PERSONNEL CHIP ───
 
         const PersonnelChip = ({ name, roster, conflictText, onRemove, eventId, inPicker, isBusy, isUnavailable, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
@@ -2754,7 +3425,7 @@
             const handleMouseEnter = (e) => {
                 if ((hasCon || isUnavailable) && onShowTooltip) {
                     const rect = e.currentTarget.getBoundingClientRect();
-                    onShowTooltip(isUnavailable ? conflictText : `Also on: ${conflictText}`, rect);
+                    onShowTooltip(isUnavailable ? conflictText : `Also on:\n${conflictText}`, rect);
                 }
             };
 
@@ -2778,7 +3449,7 @@
 
         // ─── EVENT CARD ───
 
-        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent }) => {
+        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent, onDeleteCustom, onEventAction }) => {
             const [dragOver, setDragOver] = useState(false);
 
             const sMin = evStart(event);
@@ -2789,7 +3460,7 @@
             const cCount = eventConflictCount(event.id, conflicts);
             const secClass = `event-card-${event.section.toLowerCase()}`;
             const labelClass = `label-${event.section.toLowerCase()}`;
-            const typeLabel = event.section === 'Flying' ? (event.model || 'FLT') : event.section === 'Ground' ? 'GND' : 'NA';
+            const typeLabel = event.section === 'Flying' ? (event.model || 'FLT') : event.section === 'Ground' ? 'GND' : event.section === 'NA' ? 'NA' : null; // Supervision: no type label
 
             // Flight bar (ETD→ETA within the card)
             let flightBar = null;
@@ -2848,12 +3519,21 @@
 
             return (
                 <div
-                    className={`event-card ${secClass} ${dragOver ? 'drag-over' : ''} ${isFocused ? 'focused' : ''} ${isDimmed ? 'dimmed' : ''}`}
+                    className={`event-card ${secClass} ${event.cancelled ? 'event-card-cancelled' : ''} ${event.isCustom ? 'event-card-custom' : ''} ${dragOver ? 'drag-over' : ''} ${isFocused ? 'focused' : ''} ${isDimmed ? 'dimmed' : ''}`}
                     style={{ left: `${leftPct}%`, width: `${Math.max(widthPct, 4)}%`, top: `${top}px`, height: `${height}px` }}
                     onDragOver={handleDragOver}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
-                    onClick={(e) => { if (onFocusEvent && !event.readonly) { e.stopPropagation(); onFocusEvent(isFocused ? null : event.id); } }}
+                    onClick={(e) => {
+                        if (event.readonly) return;
+                        e.stopPropagation();
+                        if (onEventAction) {
+                            if (onFocusEvent) onFocusEvent(event.id); // focus + show menu simultaneously
+                            onEventAction(event, e.currentTarget.getBoundingClientRect());
+                        } else if (onFocusEvent) {
+                            onFocusEvent(isFocused ? null : event.id);
+                        }
+                    }}
                 >
                     {cCount > 0 && (
                         <div className="conflict-badge"
@@ -2863,10 +3543,20 @@
                             {cCount}
                         </div>
                     )}
-                    <div className="event-title-bar">
-                        <span className={`event-type-label ${labelClass}`}>{typeLabel}</span>
+                    <div className="event-title-bar" title={
+                        (event.section === 'Ground' || event.section === 'NA')
+                            ? `${event.startTime}–${event.endTime || '??'}` : undefined
+                    }>
+                        {typeLabel && <span className={`event-type-label ${labelClass}`}>{typeLabel}</span>}
                         <span className="event-name-text">{event.eventName}</span>
-                        <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
+                        {event.section !== 'Ground' && event.section !== 'NA' && (
+                            <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
+                        )}
+                        {event.cancelled && <span style={{ background: '#a81a1a', color: 'white', fontSize: '0.65rem', fontWeight: 1000, padding: '0 3px', borderRadius: 2 }}>CX</span>}
+                        {event.isCustom && <span className="custom-badge">+NEW</span>}
+                        {event.isCustom && onDeleteCustom && (
+                            <span className="custom-delete-btn" title="Delete custom event" onClick={(e) => { e.stopPropagation(); onDeleteCustom(event.id); }}>✕</span>
+                        )}
                     </div>
                     {flightBar}
                     <div className="event-crew-area" onDragOver={handleDragOver} onDragLeave={() => setDragOver(false)} onDrop={handleDrop}>
@@ -2884,7 +3574,6 @@
                                 onHideTooltip={onHideTooltip}
                             />
                         ))}
-                        {!event.readonly && <span className="add-chip" title="Drop personnel here">+</span>}
                     </div>
                 </div>
             );
@@ -2892,7 +3581,7 @@
 
         // ─── DAY COLUMN ───
 
-        const DayColumn = ({ date, events, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled }) => {
+        const DayColumn = ({ date, events, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction }) => {
             const hdr = fmtDate(date);
             const today = new Date().toISOString().slice(0, 10);
             const isToday = date === today;
@@ -2901,7 +3590,16 @@
                 const result = {};
                 SECTION_ORDER.forEach(sec => {
                     const secEvts = events.filter(ev => ev.section === sec);
-                    result[sec] = { events: secEvts, layout: buildLayout(secEvts) };
+                    result[sec] = {
+                        events: secEvts,
+                        layout: sec === 'Supervision'
+                            ? buildSupervisionLayout(secEvts)
+                            : sec === 'Flying'
+                            ? buildFlyingLayout(secEvts)
+                            : sec === 'Ground'
+                            ? buildGroundLayout(secEvts)
+                            : buildLayout(secEvts),
+                    };
                 });
                 return result;
             }, [events]);
@@ -2924,13 +3622,89 @@
                             const { events: secEvts, layout } = sectionData[sec];
                             if (secEvts.length === 0) return null;
                             const divClass = `section-divider section-divider-${sec.toLowerCase()}`;
+
+                            // For supervision: render role band separators from pre-computed layout.roleBands
+                            let supvRoleBands = null;
+                            if (sec === 'Supervision' && layout.roleBands) {
+                                supvRoleBands = layout.roleBands.map(({ role, top, height }) => (
+                                    <div key={role} style={{
+                                        position: 'absolute', left: 0, right: 0,
+                                        top, height,
+                                        borderBottom: '1px solid rgba(139,92,246,0.2)',
+                                        pointerEvents: 'none',
+                                    }}>
+                                        <span style={{
+                                            position: 'absolute', left: 2, top: 1,
+                                            fontSize: '0.45rem', color: 'rgba(196,181,253,0.5)', fontWeight: 700,
+                                            letterSpacing: '0.05em', userSelect: 'none',
+                                        }}>{role}</span>
+                                    </div>
+                                ));
+                            }
+
+                            // For Flying: render model band separators. Each band may have a dashed
+                            // divider between real-aircraft rows and their paired sim/CR sub-tier.
+                            let flyingModelBands = null;
+                            if (sec === 'Flying' && layout.modelBands) {
+                                flyingModelBands = layout.modelBands.map(({ model, top, height, flightH, hasSims }) => (
+                                    <div key={model} style={{
+                                        position: 'absolute', left: 0, right: 0,
+                                        top, height,
+                                        borderBottom: '1px solid rgba(16,185,129,0.2)',
+                                        pointerEvents: 'none',
+                                    }}>
+                                        <span style={{
+                                            position: 'absolute', left: 2, top: 1,
+                                            fontSize: '0.45rem', color: 'rgba(167,243,208,0.5)', fontWeight: 700,
+                                            letterSpacing: '0.05em', userSelect: 'none',
+                                        }}>{model}</span>
+                                        {hasSims && flightH > 0 && (
+                                            <div style={{
+                                                position: 'absolute', left: 0, right: 0, top: 12 + flightH,
+                                                borderTop: '1px dashed rgba(16,185,129,0.15)',
+                                                pointerEvents: 'none',
+                                            }} />
+                                        )}
+                                    </div>
+                                ));
+                            }
+
+                            // For Ground: render event-name band separators
+                            let groundNameBands = null;
+                            if (sec === 'Ground' && layout.nameBands) {
+                                groundNameBands = layout.nameBands.map(({ name, top, height, isSingleton }) => {
+                                    if (isSingleton) return (
+                                        <div key={name} style={{
+                                            position: 'absolute', left: 0, right: 0,
+                                            top, height,
+                                            borderBottom: '1px solid rgba(245,158,11,0.1)',
+                                            pointerEvents: 'none',
+                                        }} />
+                                    );
+                                    return (
+                                        <div key={name} style={{
+                                            position: 'absolute', left: 0, right: 0,
+                                            top, height,
+                                            borderBottom: '1px solid rgba(245,158,11,0.2)',
+                                            pointerEvents: 'none',
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute', left: 2, top: 1,
+                                                fontSize: '0.45rem', color: 'rgba(253,230,138,0.5)', fontWeight: 700,
+                                                letterSpacing: '0.05em', userSelect: 'none',
+                                            }}>{name}</span>
+                                        </div>
+                                    );
+                                });
+                            }
+
                             return (
                                 <div key={sec}>
                                     <div className={divClass}>{sec === 'NA' ? 'NON-AVAIL' : sec.toUpperCase()}</div>
                                     <div className="section-lanes" style={{ height: `${layout.total || 50}px` }}>
-                                        {[6,7,8,9,10,11,12,13,14,15,16,17,18].map(h => (
-                                            <div key={h} className="hour-line" style={{ left: `${timePct(h*60)}%` }} />
-                                        ))}
+                                        {supvRoleBands}
+                                        {flyingModelBands}
+                                        {groundNameBands}
                                         {secEvts.map(ev => {
                                             const pos = layout.evMap[ev.id] || { top: 0, height: 40 };
                                             return (
@@ -2950,6 +3724,8 @@
                                                     isFocused={focusEnabled && focusedEventId === ev.id}
                                                     isDimmed={focusEnabled && !!focusedEventId && focusedEventId !== ev.id}
                                                     onFocusEvent={onFocusEvent}
+                                                    onDeleteCustom={onDeleteCustom}
+                                                    onEventAction={onEventAction}
                                                 />
                                             );
                                         })}
@@ -2996,21 +3772,32 @@
 
             // Build per-person conflict summary with actual event details
             const personConflictSummary = useMemo(() => {
+                // person -> Map<date, Set<formattedEntry>>
                 const summary = new Map();
                 conflicts.forEach((personMap, eventId) => {
                     personMap.forEach((confList, person) => {
-                        if (!summary.has(person)) summary.set(person, new Set());
-                        const s = summary.get(person);
+                        if (!summary.has(person)) summary.set(person, new Map());
+                        const dateMap = summary.get(person);
                         confList.forEach(c => {
+                            const d = c.date || '?';
+                            if (!dateMap.has(d)) dateMap.set(d, new Set());
                             const m = c.model ? `${c.model} ` : '';
-                            s.add(`${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+                            dateMap.get(d).add(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
                         });
                     });
                 });
-                // Convert sets to strings
+                // Convert to formatted strings grouped by date
                 const result = new Map();
-                summary.forEach((detailSet, person) => {
-                    result.set(person, [...detailSet].join('; '));
+                summary.forEach((dateMap, person) => {
+                    const lines = [];
+                    [...dateMap.keys()].sort().forEach(date => {
+                        const header = (date && date !== '?')
+                            ? `${fmtDate(date).full}:`
+                            : `${date}:`;
+                        lines.push(header);
+                        dateMap.get(date).forEach(l => lines.push(l));
+                    });
+                    result.set(person, lines.join('\n'));
                 });
                 return result;
             }, [conflicts]);
@@ -3079,6 +3866,59 @@
         // ─── CHANGE SUMMARY (v3 — net changes with grouping) ───
 
         const NetChangeEntry = ({ inst, formatEvent, onUndo }) => {
+            if (inst.type === 'event-cancel') {
+                const wasCancelled = inst.cancelledAfter;
+                return (
+                    <div className="change-entry">
+                        <span style={{ color: wasCancelled ? '#ef4444' : '#10b981', fontWeight: 700, fontSize: '0.7rem', flexShrink: 0 }}>
+                            {wasCancelled ? 'CX' : '✓'}
+                        </span>
+                        <div className="change-detail">
+                            <span style={{ color: 'rgba(255,255,255,0.5)' }}>{wasCancelled ? 'Cancelled: ' : 'Un-cancelled: '}</span>
+                            {formatEvent(inst.source)}
+                        </div>
+                        <span className="change-undo" onClick={onUndo} title="Undo">↩</span>
+                    </div>
+                );
+            }
+            if (inst.type === 'event-edit') {
+                const diffs = [];
+                if (inst.before && inst.after) {
+                    if (inst.before.eventName !== inst.after.eventName) diffs.push(`name \u2192 "${inst.after.eventName}"`);
+                    if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
+                        diffs.push(`${inst.after.startTime}\u2013${inst.after.endTime || '??'}`);
+                    if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
+                }
+                return (
+                    <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+                            <span style={{ color: '#a78bfa', fontWeight: 700, fontSize: '0.7rem', flexShrink: 0 }}>✎</span>
+                            <div className="change-detail" style={{ flex: 1 }}>
+                                <span style={{ color: 'rgba(255,255,255,0.5)' }}>Edited: </span>
+                                {formatEvent(inst.source)}
+                            </div>
+                            <span className="change-undo" onClick={onUndo} title="Undo">↩</span>
+                        </div>
+                        {diffs.length > 0 && (
+                            <div style={{ paddingLeft: 18, color: '#c4b5fd', fontSize: '0.55rem', lineHeight: 1.4 }}>
+                                {diffs.join(' · ')}
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+            if (inst.type === 'event-delete') {
+                return (
+                    <div className="change-entry">
+                        <span style={{ color: '#ef4444', fontWeight: 700, fontSize: '0.7rem', flexShrink: 0 }}>✕</span>
+                        <div className="change-detail">
+                            <span style={{ color: '#fca5a5' }}>Removed: </span>
+                            {formatEvent(inst.source)}
+                        </div>
+                        <span className="change-undo" onClick={onUndo} title="Undo (restores event)">↩</span>
+                    </div>
+                );
+            }
             if (inst.type === 'move') {
                 return (
                     <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
@@ -3087,7 +3927,7 @@
                             <div className="change-detail" style={{ flex: 1 }}>
                                 <span style={{ color: 'rgba(255,255,255,0.5)' }}>{formatEvent(inst.source)}</span>
                                 <span style={{ color: '#3b82f6', margin: '0 4px' }}>&rarr;</span>
-                                <span style={{ color: 'rgba(255,255,255,0.7)' }}>{formatEvent(inst.target)}</span>
+                                <span style={{ color: 'rgba(255,255,255,0.7)' }}>{formatEvent(inst.target, inst.date)}</span>
                             </div>
                             <span className="change-undo" onClick={onUndo} title="Undo all">↩</span>
                         </div>
@@ -3136,9 +3976,14 @@
             const sortedDates = Object.keys(byDate).sort();
             const netCount = netInstructions.length;
 
-            const formatEvent = (meta) => {
+            // contextDate: if provided and different from meta.date, inject short date into time parens
+            const formatEvent = (meta, contextDate) => {
                 if (!meta) return '';
                 const model = meta.eventModel ? `${meta.eventModel} | ` : '';
+                if (contextDate && meta.date && meta.date !== contextDate) {
+                    const df = fmtDate(meta.date);
+                    return `${model}${meta.eventName} (${df.weekday}, ${df.day} ${df.month}, ${meta.eventTime})`;
+                }
                 return `${model}${meta.eventName} (${meta.eventTime})`;
             };
 
@@ -3360,6 +4205,7 @@
                             eta: ev.eta,
                             personnel: ev.personnel,
                             id: ev.id,
+                            cancelled: ev.cancelled || false,
                         });
                     });
                 });
@@ -3661,7 +4507,7 @@
                                                     return (
                                                         <div
                                                             key={i}
-                                                            className={`rb-event-bar ${barClass}`}
+                                                            className={`rb-event-bar ${barClass}${ev.cancelled ? ' rb-bar-cancelled' : ''}`}
                                                             style={{ left: left + '%', width: width + '%', top, cursor: 'pointer' }}
                                                             title={`${ev.title}\n${ev.start || '?'}–${ev.end || '?'}`}
                                                             onClick={() => setModalEvent(ev)}
@@ -3702,6 +4548,348 @@
             );
         };
 
+        // ─── CREATE EVENT MODAL ───
+
+        // ─── EVENT ACTION MENU ───
+
+        const EventActionMenu = ({ event, position, onEdit, onCancel, onDelete, onClose }) => {
+            const [hovered, setHovered] = React.useState(null); // 'edit' | 'cancel' | 'remove' | null
+
+            // Close on Escape key
+            React.useEffect(() => {
+                const handler = (e) => { if (e.key === 'Escape') onClose(); };
+                document.addEventListener('keydown', handler);
+                return () => document.removeEventListener('keydown', handler);
+            }, [onClose]);
+
+            const isCancelled = !!event.cancelled;
+
+            // SVG section colors
+            const editColor   = hovered === 'edit'   ? '#2563eb' : '#1d4ed8';
+            const cancelColor = hovered === 'cancel'
+                ? (isCancelled ? '#16a34a' : '#ef4444')
+                : (isCancelled ? '#166534' : '#b91c1c');
+            const removeColor = hovered === 'remove' ? '#dc2626' : '#7f1d1d';
+
+            // Tooltip position helpers — offset each section's tooltip from its region
+            let tooltipStyle = null;
+            let tooltipText = null;
+            if (hovered === 'edit') {
+                tooltipText = 'EDIT';
+                tooltipStyle = { top: position.top - 22, left: position.left + 28, transform: 'translateX(-50%)' };
+            } else if (hovered === 'cancel') {
+                tooltipText = isCancelled ? 'UN-CANCEL' : 'CANCEL EVENT';
+                tooltipStyle = { top: position.top + 46, left: position.left - 4, transform: 'translateX(-50%)' };
+            } else if (hovered === 'remove') {
+                tooltipText = 'REMOVE EVENT';
+                tooltipStyle = { top: position.top + 46, left: position.left + 60, transform: 'translateX(-50%)' };
+            }
+
+            return (
+                <>
+                    <div className="event-action-backdrop" onClick={onClose} />
+                    <div className="event-action-menu" style={{ top: position.top, left: position.left }}>
+                        <svg width="56" height="56" viewBox="0 0 56 56">
+                            {/* Edit — top semicircle */}
+                            <path
+                                d="M 28,28 L 0,28 A 28,28 0 0,1 56,28 Z"
+                                fill={editColor}
+                                stroke="rgba(255,255,255,0.15)"
+                                strokeWidth="0.5"
+                                onMouseEnter={() => setHovered('edit')}
+                                onMouseLeave={() => setHovered(null)}
+                                onClick={(e) => { e.stopPropagation(); onEdit(); }}
+                                style={{ cursor: 'pointer', transition: 'fill 0.12s' }}
+                            />
+                            {/* CNX — bottom-left quarter */}
+                            <path
+                                d="M 28,28 L 0,28 A 28,28 0 0,0 28,56 Z"
+                                fill={cancelColor}
+                                stroke="rgba(255,255,255,0.15)"
+                                strokeWidth="0.5"
+                                onMouseEnter={() => setHovered('cancel')}
+                                onMouseLeave={() => setHovered(null)}
+                                onClick={(e) => { e.stopPropagation(); onCancel(); }}
+                                style={{ cursor: 'pointer', transition: 'fill 0.12s' }}
+                            />
+                            {/* Remove — bottom-right quarter */}
+                            <path
+                                d="M 28,28 L 28,56 A 28,28 0 0,0 56,28 Z"
+                                fill={removeColor}
+                                stroke="rgba(255,255,255,0.15)"
+                                strokeWidth="0.5"
+                                onMouseEnter={() => setHovered('remove')}
+                                onMouseLeave={() => setHovered(null)}
+                                onClick={(e) => { e.stopPropagation(); onDelete(); }}
+                                style={{ cursor: 'pointer', transition: 'fill 0.12s' }}
+                            />
+                            {/* Dividing lines */}
+                            <line x1="0" y1="28" x2="56" y2="28" stroke="rgba(255,255,255,0.2)" strokeWidth="1" pointerEvents="none" />
+                            <line x1="28" y1="28" x2="28" y2="56" stroke="rgba(255,255,255,0.2)" strokeWidth="1" pointerEvents="none" />
+                            {/* Icon labels — positioned at geometric centroids of each sector */}
+                            <text x="28" y="15" textAnchor="middle" dominantBaseline="middle"
+                                fill="rgba(255,255,255,0.95)" fontSize="16" fontWeight="700" fontFamily="JetBrains Mono, monospace" pointerEvents="none">&#8943;</text>
+                            <text x="16" y="40" textAnchor="middle" dominantBaseline="middle"
+                                fill="rgba(255,255,255,0.95)" fontSize="10" fontWeight="700" fontFamily="JetBrains Mono, monospace" pointerEvents="none">CNX</text>
+                            <text x="40" y="40" textAnchor="middle" dominantBaseline="middle"
+                                fill="rgba(255,255,255,0.95)" fontSize="13" fontWeight="700" fontFamily="JetBrains Mono, monospace" pointerEvents="none">&#10005;</text>
+                        </svg>
+                    </div>
+                    {tooltipText && (
+                        <div className="action-tooltip" style={tooltipStyle}>{tooltipText}</div>
+                    )}
+                </>
+            );
+        };
+
+        // ─── MILITARY TIME INPUT ───
+
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM' }) => {
+            const handleChange = (e) => {
+                let raw = e.target.value;
+                raw = raw.replace(/[^\d:]/g, '');
+                const parts = raw.split(':');
+                if (parts.length > 2) raw = parts[0] + ':' + parts.slice(1).join('');
+                if (raw.length === 2 && !raw.includes(':') && value.length < 2) raw = raw + ':';
+                if (raw.length > 5) raw = raw.slice(0, 5);
+                onChange(raw);
+            };
+
+            const handleKeyDown = (e) => {
+                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+                if (allowed.includes(e.key)) return;
+                if (e.ctrlKey || e.metaKey) return;
+                if (/^\d$/.test(e.key)) return;
+                if (e.key === ':' && !value.includes(':')) return;
+                e.preventDefault();
+            };
+
+            const handleBlur = () => {
+                let v = value.trim();
+                if (!v) return;
+                let hours, minutes;
+                if (v.includes(':')) {
+                    [hours, minutes] = v.split(':');
+                } else if (v.length <= 2) {
+                    hours = v; minutes = '0';
+                } else {
+                    hours = v.slice(0, 2); minutes = v.slice(2);
+                }
+                let h = parseInt(hours, 10), m = parseInt(minutes || '0', 10);
+                if (isNaN(h)) h = 0;
+                if (isNaN(m)) m = 0;
+                h = Math.min(Math.max(h, 0), 23);
+                m = Math.min(Math.max(m, 0), 59);
+                onChange(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+            };
+
+            return <input type="text" maxLength={5} placeholder={placeholder}
+                style={style} value={value} onChange={handleChange}
+                onKeyDown={handleKeyDown} onBlur={handleBlur} inputMode="numeric" />;
+        };
+
+        // ─── EDIT EVENT MODAL ───
+
+        const EditEventModal = ({ event, onSave, onClose }) => {
+            const [eventName, setEventName] = useState(event.eventName || '');
+            const [model, setModel] = useState(event.model || '');
+            const [startTime, setStartTime] = useState(event.startTime || '');
+            const [endTime, setEndTime] = useState(event.endTime || '');
+
+            const handleSubmit = () => {
+                if (!eventName.trim() || !startTime) return;
+                onSave(event.id, {
+                    eventName: eventName.trim(),
+                    model: event.section === 'Flying' ? (model.trim() || null) : event.model,
+                    startTime,
+                    endTime: endTime || null,
+                });
+                onClose();
+            };
+
+            const inputStyle = { background: '#1e293b', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 6, padding: '6px 10px', color: '#e2e8f0', fontSize: '0.7rem', width: '100%', fontFamily: 'inherit' };
+
+            const hdr = event.date ? fmtDate(event.date) : null;
+            const dateDisplay = hdr ? `${hdr.weekday} ${hdr.day} ${hdr.month}` : event.date;
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+                        <h2 className="text-lg font-bold text-white mb-4 edit-event-modal-title">Edit Event</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div>
+                                <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Event Name *</label>
+                                <input style={inputStyle} value={eventName} onChange={e => setEventName(e.target.value)} placeholder="Event name" autoFocus />
+                            </div>
+                            {event.section === 'Flying' && (
+                                <div>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Model</label>
+                                    <input style={inputStyle} value={model} onChange={e => setModel(e.target.value)} placeholder="e.g. T-38, F-16" />
+                                </div>
+                            )}
+                            <div>
+                                <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Section</label>
+                                <div style={{ ...inputStyle, color: 'rgba(255,255,255,0.35)', cursor: 'not-allowed' }}>{event.section}</div>
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Date (read-only)</label>
+                                <div style={{ ...inputStyle, color: 'rgba(255,255,255,0.35)', cursor: 'not-allowed' }}>{dateDisplay}</div>
+                            </div>
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
+                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time</label>
+                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                            <button
+                                onClick={handleSubmit}
+                                disabled={!eventName.trim() || !startTime}
+                                style={{
+                                    flex: 1, padding: '8px 16px', borderRadius: 6, fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit',
+                                    background: eventName.trim() ? '#2563eb' : '#374151',
+                                    color: eventName.trim() ? 'white' : '#6b7280',
+                                    border: 'none',
+                                }}
+                            >Save Changes</button>
+                            <button onClick={onClose} style={{ flex: 1, padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#9ca3af', cursor: 'pointer', fontSize: '0.7rem', fontFamily: 'inherit' }}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── CONFIRM DELETE MODAL ───
+
+        const ConfirmDeleteModal = ({ event, onCancelEvent, onConfirmDelete, onClose }) => {
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 420 }}>
+                        <h2 className="text-lg font-bold text-white mb-3 confirm-delete-modal-title">Remove Event?</h2>
+                        <p style={{ fontSize: '0.7rem', color: '#9ca3af', marginBottom: 8, lineHeight: 1.5 }}>
+                            Are you sure you want to remove <strong style={{ color: '#e2e8f0' }}>{event.eventName}</strong> from the schedule?
+                        </p>
+                        <p style={{ fontSize: '0.65rem', color: '#9ca3af', marginBottom: 20, lineHeight: 1.5 }}>
+                            Did you mean to <strong style={{ color: '#fbbf24' }}>cancel (CNX)</strong> it instead? Cancelled events remain visible with a strikethrough.
+                        </p>
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                            <button
+                                onClick={onCancelEvent}
+                                style={{ flex: 1, minWidth: 120, padding: '8px 12px', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.4)', borderRadius: 6, color: '#fbbf24', cursor: 'pointer', fontSize: '0.65rem', fontWeight: 700, fontFamily: 'inherit' }}
+                            >CNX Instead</button>
+                            <button
+                                onClick={onConfirmDelete}
+                                style={{ flex: 1, minWidth: 120, padding: '8px 12px', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)', borderRadius: 6, color: '#f87171', cursor: 'pointer', fontSize: '0.65rem', fontWeight: 700, fontFamily: 'inherit' }}
+                            >Remove Event</button>
+                            <button
+                                onClick={onClose}
+                                style={{ flex: 1, minWidth: 100, padding: '8px 12px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#9ca3af', cursor: 'pointer', fontSize: '0.65rem', fontFamily: 'inherit' }}
+                            >Never mind</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const CreateEventModal = ({ dates, onClose, onCreate }) => {
+            const [eventName, setEventName] = useState('');
+            const [section, setSection] = useState('Flying');
+            const [model, setModel] = useState('');
+            const [date, setDate] = useState(dates[0] || '');
+            const [startTime, setStartTime] = useState('08:00');
+            const [endTime, setEndTime] = useState('09:00');
+
+            const handleSubmit = () => {
+                if (!eventName.trim() || !date || !startTime || !endTime) return;
+                onCreate({
+                    id: 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
+                    section,
+                    date,
+                    model: section === 'Flying' ? (model.trim() || null) : null,
+                    eventName: eventName.trim(),
+                    startTime,
+                    endTime,
+                    etd: null, eta: null,
+                    personnel: [],
+                    originalPersonnel: [],
+                    notes: null,
+                    readonly: false,
+                    isCustom: true,
+                    cancelled: false,
+                });
+                onClose();
+            };
+
+            const inputStyle = { background: '#1e293b', border: '1px solid rgba(255,255,255,0.25)', borderRadius: 6, padding: '6px 10px', color: '#e2e8f0', fontSize: '0.7rem', width: '100%', fontFamily: 'inherit' };
+            const selectStyle = { ...inputStyle, appearance: 'auto', WebkitAppearance: 'menulist' };
+
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+                        <h2 className="text-lg font-bold text-white mb-4">Create New Event</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div>
+                                <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Event Name *</label>
+                                <input style={inputStyle} value={eventName} onChange={e => setEventName(e.target.value)} placeholder="e.g. CF-1, SOF, CHECKRIDE" autoFocus />
+                            </div>
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Section</label>
+                                    <select style={selectStyle} value={section} onChange={e => setSection(e.target.value)}>
+                                        <option value="Supervision">Supervision</option>
+                                        <option value="Flying">Flying</option>
+                                        <option value="Ground">Ground</option>
+                                        <option value="NA">Non-Availability</option>
+                                    </select>
+                                </div>
+                                {section === 'Flying' && (
+                                    <div style={{ flex: 1 }}>
+                                        <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Model</label>
+                                        <input style={inputStyle} value={model} onChange={e => setModel(e.target.value)} placeholder="e.g. T-38, F-16" />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Date *</label>
+                                <select style={selectStyle} value={date} onChange={e => setDate(e.target.value)}>
+                                    {dates.map(d => { const h = fmtDate(d); return <option key={d} value={d}>{h.weekday} {h.day} {h.month} ({d})</option>; })}
+                                </select>
+                            </div>
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
+                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                    <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time *</label>
+                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                            <button
+                                onClick={handleSubmit}
+                                disabled={!eventName.trim() || !date || !startTime || !endTime}
+                                style={{
+                                    flex: 1, padding: '8px 16px', borderRadius: 6, fontWeight: 700, fontSize: '0.7rem', cursor: 'pointer', fontFamily: 'inherit',
+                                    background: eventName.trim() ? '#2563eb' : '#374151',
+                                    color: eventName.trim() ? 'white' : '#6b7280',
+                                    border: 'none',
+                                }}
+                            >Create Event</button>
+                            <button onClick={onClose} style={{ flex: 1, padding: '8px 16px', background: 'transparent', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 6, color: '#9ca3af', cursor: 'pointer', fontSize: '0.7rem', fontFamily: 'inherit' }}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         // ─── SCHEDULER VIEW ───
 
         const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard }) => {
@@ -3711,8 +4899,13 @@
             const [tooltip, setTooltip] = useState(null);
             const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow'
             const [showRefreshModal, setShowRefreshModal] = useState(false);
+            const [showCreateEvent, setShowCreateEvent] = useState(false);
+            const [showConflictSummary, setShowConflictSummary] = useState(false);
             const [focusedEventId, setFocusedEventId] = useState(null);
             const [focusEnabled, setFocusEnabled] = useState(true);
+            const [actionMenu, setActionMenu] = useState(null);   // { event, position } | null
+            const [editingEvent, setEditingEvent] = useState(null); // event object | null
+            const [confirmDelete, setConfirmDelete] = useState(null); // event object | null
             const timelineRef = useRef(null);
             const initialized = useRef(false);
             const restoredFromCache = useRef(false);
@@ -3723,6 +4916,88 @@
                 setTooltip({ text, x: rect.left + rect.width / 2, y: showAbove ? rect.top - 6 : rect.bottom + 6, above: showAbove });
             }, []);
             const hideTooltip = useCallback(() => setTooltip(null), []);
+
+            // ─── EVENT ACTION HANDLERS ───
+
+            const handleEventActionClick = useCallback((event, rect) => {
+                const top = Math.max(rect.top - 30, 8);
+                const left = Math.max(Math.min(rect.right - 28, window.innerWidth - 70), 8);
+                setActionMenu({ event, position: { top, left } });
+            }, []);
+
+            const handleCancelEvent = useCallback((eventId) => {
+                setWorkingEvents(prev => {
+                    const ev = prev.find(e => e.id === eventId);
+                    if (!ev) return prev;
+                    const cancelledAfter = !ev.cancelled;
+                    if (initialized.current) {
+                        setChanges(c => [...c, {
+                            type: 'event-cancel',
+                            eventId: ev.id,
+                            eventName: ev.eventName,
+                            eventModel: ev.model,
+                            eventTime: ev.startTime,
+                            eventSection: ev.section,
+                            date: ev.date,
+                            cancelledBefore: !!ev.cancelled,
+                            cancelledAfter,
+                        }]);
+                    }
+                    return prev.map(e => e.id === eventId ? { ...e, cancelled: cancelledAfter } : e);
+                });
+                setActionMenu(null);
+            }, []);
+
+            const handleEditSave = useCallback((eventId, updates) => {
+                setWorkingEvents(prev => {
+                    const ev = prev.find(e => e.id === eventId);
+                    if (!ev) return prev;
+                    if (initialized.current) {
+                        setChanges(c => [...c, {
+                            type: 'event-edit',
+                            eventId: ev.id,
+                            eventName: ev.eventName,
+                            eventModel: ev.model,
+                            eventTime: ev.startTime,
+                            eventSection: ev.section,
+                            date: ev.date,
+                            before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime },
+                            after: updates,
+                        }]);
+                    }
+                    return prev.map(e => e.id === eventId ? { ...e, ...updates } : e);
+                });
+                setEditingEvent(null);
+            }, []);
+
+            const handleDeleteEvent = useCallback((event) => {
+                setConfirmDelete(event);
+                setActionMenu(null);
+            }, []);
+
+            const handleDeleteConfirmed = useCallback(() => {
+                const ev = confirmDelete;
+                if (!ev) return;
+                // Remove from custom events storage if applicable
+                if (ev.isCustom) {
+                    const customs = loadCustomEvents().filter(e => e.id !== ev.id);
+                    saveCustomEvents(customs);
+                }
+                if (initialized.current) {
+                    setChanges(c => [...c, {
+                        type: 'event-delete',
+                        eventId: ev.id,
+                        eventName: ev.eventName,
+                        eventModel: ev.model,
+                        eventTime: ev.startTime,
+                        eventSection: ev.section,
+                        date: ev.date,
+                        deletedEvent: { ...ev, personnel: [...(ev.personnel || [])] },
+                    }]);
+                }
+                setWorkingEvents(prev => prev.filter(e => e.id !== ev.id));
+                setConfirmDelete(null);
+            }, [confirmDelete]);
 
             // Initialize working events — from cache if available, otherwise from allEvents
             useEffect(() => {
@@ -3745,6 +5020,7 @@
             const visibleEvents = useMemo(() => {
                 return workingEvents.filter(ev => {
                     if (ev.readonly) return false;
+                    if (ev.isCustom) return true; // custom events always visible
                     if (ev.section === 'NA') {
                         return ev.personnel.some(p => {
                             const c = personCat(p, roster);
@@ -3890,6 +5166,25 @@
                     sortedDesc.forEach(idx => {
                         const ch = changes[idx];
                         if (!ch) return;
+
+                        if (ch.type === 'event-cancel') {
+                            const ev = next.find(e => e.id === ch.eventId);
+                            if (ev) ev.cancelled = ch.cancelledBefore;
+                            return;
+                        }
+                        if (ch.type === 'event-edit') {
+                            const ev = next.find(e => e.id === ch.eventId);
+                            if (ev && ch.before) Object.assign(ev, ch.before);
+                            return;
+                        }
+                        if (ch.type === 'event-delete') {
+                            if (ch.deletedEvent && !next.find(e => e.id === ch.eventId)) {
+                                next.push({ ...ch.deletedEvent, personnel: [...(ch.deletedEvent.personnel || [])] });
+                            }
+                            return;
+                        }
+
+                        // Existing person-centric undo
                         const event = next.find(e => e.id === ch.eventId);
                         if (!event) return;
                         if (ch.type === 'add') {
@@ -3925,13 +5220,30 @@
                     const h = fmtDate(date);
                     lines.push(`--- ${h.full} ---`);
                     byDate[date].forEach(inst => {
-                        const fmtEvt = (meta) => {
+                        const fmtEvt = (meta, contextDate) => {
                             if (!meta) return '';
                             const mdl = meta.eventModel ? `${meta.eventModel} | ` : '';
+                            if (contextDate && meta.date && meta.date !== contextDate) {
+                                const df = fmtDate(meta.date);
+                                return `${mdl}${meta.eventName} (${df.weekday}, ${df.day} ${df.month}, ${meta.eventTime})`;
+                            }
                             return `${mdl}${meta.eventName} (${meta.eventTime})`;
                         };
-                        if (inst.type === 'move') {
-                            lines.push(`  MOVE: ${fmtEvt(inst.source)}  -->  ${fmtEvt(inst.target)}`);
+                        if (inst.type === 'event-cancel') {
+                            lines.push(`  ${inst.cancelledAfter ? 'CANCELLED' : 'UN-CANCELLED'}: ${fmtEvt(inst.source)}`);
+                        } else if (inst.type === 'event-edit') {
+                            const diffs = [];
+                            if (inst.before && inst.after) {
+                                if (inst.before.eventName !== inst.after.eventName) diffs.push(`name -> "${inst.after.eventName}"`);
+                                if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
+                                    diffs.push(`time -> ${inst.after.startTime}-${inst.after.endTime || '??'}`);
+                                if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model -> ${inst.after.model || '-'}`);
+                            }
+                            lines.push(`  EDITED: ${fmtEvt(inst.source)}${diffs.length ? ` [${diffs.join(', ')}]` : ''}`);
+                        } else if (inst.type === 'event-delete') {
+                            lines.push(`  REMOVED: ${fmtEvt(inst.source)}`);
+                        } else if (inst.type === 'move') {
+                            lines.push(`  MOVE: ${fmtEvt(inst.source)}  -->  ${fmtEvt(inst.target, inst.date)}`);
                             lines.push(`        ${inst.persons.join(', ')}`);
                         } else if (inst.type === 'add') {
                             lines.push(`  ADD to ${fmtEvt(inst.target)}:`);
@@ -3945,6 +5257,23 @@
                 });
                 navigator.clipboard.writeText(lines.join('\n').trim()).catch(() => {});
             }, [changes]);
+
+            // Create custom event
+            const handleCreateEvent = useCallback((newEvent) => {
+                // Add to localStorage custom events list
+                const customs = loadCustomEvents();
+                customs.push(newEvent);
+                saveCustomEvents(customs);
+                // Add to working events + allEvents (so it persists through filter)
+                setWorkingEvents(prev => [...prev, { ...newEvent, personnel: [...newEvent.personnel] }]);
+            }, []);
+
+            // Delete custom event
+            const handleDeleteCustomEvent = useCallback((eventId) => {
+                const customs = loadCustomEvents().filter(e => e.id !== eventId);
+                saveCustomEvents(customs);
+                setWorkingEvents(prev => prev.filter(ev => ev.id !== eventId));
+            }, []);
 
             const scrollToDay = (date) => {
                 const idx = dates.indexOf(date);
@@ -3972,7 +5301,17 @@
                                 </h1>
                                 <p className="text-xs text-gray-500">
                                     {visibleEvents.length} events
-                                    {conflictCount > 0 && <span className="text-red-400 ml-2">⚠ {conflictCount} conflict{conflictCount > 1 ? 's' : ''}</span>}
+                                    {conflictCount > 0 && (
+                                        <button
+                                            onClick={() => setShowConflictSummary(true)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer',
+                                                     fontFamily: 'inherit', fontSize: 'inherit', padding: 0 }}
+                                            className="text-red-400 ml-2"
+                                            title="View conflict summary"
+                                        >
+                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}
+                                        </button>
+                                    )}
                                 </p>
                             </div>
                             {viewMode === 'timeline' && (
@@ -3990,6 +5329,12 @@
                                 onClick={() => { setFocusEnabled(prev => { if (prev) setFocusedEventId(null); return !prev; }); }}
                                 title={focusEnabled ? 'Focus mode ON — click events to highlight and see availability' : 'Focus mode OFF'}
                             >Focus {focusEnabled ? 'ON' : 'OFF'}</button>
+                            <button
+                                className="filter-btn"
+                                onClick={() => setShowCreateEvent(true)}
+                                title="Create a new custom event"
+                                style={{ borderColor: 'rgba(96,165,250,0.4)', color: '#60a5fa', fontWeight: 700, fontSize: '0.85rem', padding: '2px 10px' }}
+                            >+</button>
                             <div className="view-tabs">
                                 <div className={`view-tab ${viewMode === 'timeline' ? 'active' : ''}`} onClick={() => setViewMode('timeline')}>Timeline</div>
                                 <div className={`view-tab ${viewMode === 'rainbow' ? 'active' : ''}`} onClick={() => setViewMode('rainbow')}>Rainbow</div>
@@ -4020,6 +5365,8 @@
                                     focusedEventId={focusedEventId}
                                     onFocusEvent={setFocusedEventId}
                                     focusEnabled={focusEnabled}
+                                    onDeleteCustom={handleDeleteCustomEvent}
+                                    onEventAction={handleEventActionClick}
                                 />
                             ))}
                         </div>
@@ -4077,6 +5424,22 @@
                         </div>
                     )}
 
+                    {showCreateEvent && (
+                        <CreateEventModal
+                            dates={dates}
+                            onClose={() => setShowCreateEvent(false)}
+                            onCreate={handleCreateEvent}
+                        />
+                    )}
+
+                    {showConflictSummary && (
+                        <ConflictSummaryModal
+                            conflicts={conflicts}
+                            workingEvents={workingEvents}
+                            onClose={() => setShowConflictSummary(false)}
+                        />
+                    )}
+
                     {tooltip && (
                         <div className="conflict-tooltip-portal" style={{
                             left: tooltip.x, top: tooltip.y,
@@ -4084,6 +5447,33 @@
                         }}>
                             {tooltip.text}
                         </div>
+                    )}
+
+                    {/* Action menu portal */}
+                    {actionMenu && (
+                        <EventActionMenu
+                            event={actionMenu.event}
+                            position={actionMenu.position}
+                            onEdit={() => { setEditingEvent(actionMenu.event); setActionMenu(null); }}
+                            onCancel={() => handleCancelEvent(actionMenu.event.id)}
+                            onDelete={() => handleDeleteEvent(actionMenu.event)}
+                            onClose={() => setActionMenu(null)}
+                        />
+                    )}
+                    {editingEvent && (
+                        <EditEventModal
+                            event={editingEvent}
+                            onSave={handleEditSave}
+                            onClose={() => setEditingEvent(null)}
+                        />
+                    )}
+                    {confirmDelete && (
+                        <ConfirmDeleteModal
+                            event={confirmDelete}
+                            onCancelEvent={() => { handleCancelEvent(confirmDelete.id); setConfirmDelete(null); }}
+                            onConfirmDelete={handleDeleteConfirmed}
+                            onClose={() => setConfirmDelete(null)}
+                        />
                     )}
                 </div>
             );
@@ -4126,7 +5516,7 @@
                     const batchUrl = mode === 'full'
                         ? `${API_URL}?type=batch&refresh=true`
                         : `${API_URL}?type=batch`;
-                    setProgress(mode === 'full' ? 'Full refresh from Whiteboard 2.0 (this may take ~1 min)...' : 'Quick refresh...');
+                    setProgress(mode === 'full' ? 'Full refresh from Whiteboard 2.0 (typically 30s)...' : 'Quick refresh...');
 
                     const [rosterRes, batchRes] = await Promise.all([
                         fetch(`${API_URL}?type=roster`),
@@ -4139,7 +5529,12 @@
 
                     const loadedRoster = rosterJson.roster;
                     const loadedDates = batchJson.days.map(d => d.isoDate);
-                    const loadedEvents = mergeDuplicateEvents(transformBatchData(batchJson, loadedRoster), loadedRoster);
+                    let loadedEvents = mergeDuplicateEvents(transformBatchData(batchJson, loadedRoster), loadedRoster);
+
+                    // Merge in custom events (only those matching available dates)
+                    const dateSet = new Set(loadedDates);
+                    const customs = loadCustomEvents().filter(e => dateSet.has(e.date));
+                    if (customs.length > 0) loadedEvents = [...loadedEvents, ...customs];
 
                     const filtered = {};
                     Object.entries(loadedRoster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
@@ -4210,6 +5605,11 @@
                             loadedDates = SAMPLE_DATES;
                             loadedEvents = buildSampleEvents();
                         }
+
+                        // Merge in custom events (only those matching available dates)
+                        const dateSet = new Set(loadedDates);
+                        const customs = loadCustomEvents().filter(e => dateSet.has(e.date));
+                        if (customs.length > 0) loadedEvents = [...loadedEvents, ...customs];
 
                         const filtered = {};
                         Object.entries(loadedRoster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
