@@ -1,9 +1,9 @@
 # TPS Interactive Scheduler — Agent Handoff Instructions
 
-> **Current Version:** 3.5
-> **File:** `Interactive-scheduler/interactive-scheduler.html` (~3560 lines)
-> **Last Updated:** 2026-02-12
-> **Status:** v3.5 complete — Timeline Alignment, Handle Polish & Tooltip Fix
+> **Current Version:** 4.1.0
+> **File:** `Interactive-scheduler/interactive-scheduler.html` (~9049 lines)
+> **Last Updated:** 2026-03-02
+> **Status:** v4.1.0 complete — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts
 
 ### PROCESS REQUIREMENT
 **Before implementing ANY fix**, agents MUST:

@@ -182,3 +182,23 @@ Change summary simply tracks each change, but doesn't track net change. For exam
         **Version 3.6.1 Feedback**
         - Noticing repeatedly that duplicate event identification logic sometimes merges two events that are separate events. Either remove duplicate events logic or tweak it to avoid this pitfal. See `Interactive-Scheduler\archive\Two-t38-events-but-separate.png` [FIXED — mergeDuplicateEvents() disabled via early return; function body preserved for potential re-enable. Root cause: events with same model/times/eventName but different crews (one empty, one with instructor) were incorrectly merged because Phase 2 treated "1 lead + 0 no-lead" as leads.size<=1]
         
+        **Version 3.7 Feedback**
+        - Events without a name do not display. If there are any fields populated from Model, times, through event name, then it should be listed.
+        - Cancelled events don't flag as cancelled. If CX/Non-E is checked then the event isn't happening. Still show it, but flag it red.
+        - No Supervision section. Add supervision to the timeline, allow it to be selected above non-availability in the event selection.
+        - Add new event. The ability to create an event would be useful. Just a simple (+) box somewhere in the UI that opens a popup to create an event. Ensure this event is persistent across refreshes. Ensure it is visibily different from events pulled from whiteboard. It needs the option to delete it as well.
+        - General Question: What options do we have within the UI to utilize the right click of a mouse?
+        - Light/dark mode
+
+        **Version 4.0.1 Feedback**
+        - Visually supervision column groups need some separation. Visually separate (either with distance or a bold line) column groups (Duty, different POC/Start/End groups). [FIXED in v4.1.0 — CSS selector bug fixed; 10px padding-left gap + border-left on POC/Notes columns]
+        - Remove Other (As Req'd). I know it's a field currently in Whiteboard, but eventually we will replace whiteboard with this so we can just add another Supervision line. When adding a new supervision line "+ Add Supervision Event", it will create a new line
+        with the supervision title. This will create a new supervision event when times are filled in. Likewise, if a supervision event is created on the timeline view, it will show as a new line in Whiteboard. [FIXED in v4.1.0 — "Other (As Req'd)" removed; dynamic duty rows for custom events; lazy event creation from empty slots with time-completion trigger]
+        - There is no way to add/edit a new supervision column group. There IS a column group available, but I cannot add times or people into it. Only existing fields are editable and draggable/drag-into-able. This will take some thought about when to create a new
+        event (ie, when a time is entered vs when ALL times are entered.) [FIXED in v4.1.0 — empty triplet slots now render editable POC drop target + time inputs; materializes as custom event when both times entered]
+        - Lastly, AUTH and FOA aren't updating from Whiteboard right now. Ensure you update those fields. I attached a snippet of the JSON that is retrieved from the Google Apps Script. I just snipped the supervision section in
+        @Interactive-scheduler/batch-output-extract.json . The FOA person will appear after 'FOA' and AUTH person will appear after 'AUTH'. [FIXED in v4.1.0 — supervision footer row parser fixed; FOA/AUTH emitted as events; seeded into duty pucks on load]
+        - Conflict "!" doesn't show on whiteboard pucks. It shows in the picker menu, but not on the whiteboard pucks. It should show on all pucks. [FIXED in v4.1.0 — amber conflict outline + ! icon threaded through all 4 whiteboard tables]
+            - On whiteboard views, conflicts should be limited to ONLY what is on that specific day. Picker menu shouldn't show conflicts from another date (this is a bigger change, may need an implementation strategy). [FIXED in v4.1.0 — wbDayConflicts filtered Map passed to WhiteboardView and PersonnelPicker in whiteboard mode]
+            - Also only on whiteboard views, conflict summary should only count/show conflicts on that day. [FIXED in v4.1.0 — conflictCount and ConflictSummaryModal scope to active day in whiteboard mode; (today) suffix on header button]
+

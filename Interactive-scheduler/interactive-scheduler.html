@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.0.1 — Whiteboard view with inline editing, crew assignment, and cell highlighting -->
+<!-- Interactive Scheduler v4.1.0 — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -1439,15 +1439,17 @@
             padding: 2px 4px;
             height: 20px;
         }
-        /* Bold left border on the first column of each POC/Start/End triplet group */
-        .wb-supv-group-start th,
-        .wb-supv-group-start td {
-            border-left: 2px solid rgba(255,255,255,0.18) !important;
-            padding-left: 6px;
+        /* Left border + padding gap on the first column of each POC/Start/End triplet group */
+        /* NOTE: class is applied directly on <th>/<td>, so selectors must be th.class / td.class */
+        th.wb-supv-group-start,
+        td.wb-supv-group-start {
+            border-left: 2px solid rgba(255,255,255,0.22) !important;
+            padding-left: 10px !important;
         }
-        .light-mode .wb-supv-group-start th,
-        .light-mode .wb-supv-group-start td {
-            border-left: 2px solid rgba(0,0,0,0.18) !important;
+        .light-mode th.wb-supv-group-start,
+        .light-mode td.wb-supv-group-start {
+            border-left: 2px solid rgba(0,0,0,0.22) !important;
+            padding-left: 10px !important;
         }
 
         /* Flex row: Supervision left, Academics right */
@@ -1855,6 +1857,106 @@
             border-color: rgba(59,130,246,0.4);
             color: rgba(59,130,246,0.7);
             background: rgba(59,130,246,0.04);
+        }
+
+        /* Pending supervision slot — empty triplet editable state */
+        .wb-pending-poc-cell {
+            min-width: 0;
+            padding: 1px 3px !important;
+            padding-left: 10px !important;
+            vertical-align: middle;
+            cursor: default;
+            border-left: 2px solid rgba(255,255,255,0.22) !important; /* matches wb-supv-group-start separator */
+        }
+        .light-mode .wb-pending-poc-cell {
+            border-left: 2px solid rgba(0,0,0,0.22) !important;
+        }
+        .wb-pending-poc-drop {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 14px;
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 3px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.2);
+            cursor: default;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .wb-pending-poc-drop.wb-pending-poc-dragover {
+            border-color: rgba(59,130,246,0.6);
+            color: rgba(59,130,246,0.8);
+            background: rgba(59,130,246,0.06);
+        }
+        .wb-pending-poc-stored {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 3px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            opacity: 0.6;
+            font-style: italic;
+            background: rgba(255,255,255,0.06);
+            cursor: default;
+        }
+        .wb-pending-poc-stored .wb-pending-poc-remove {
+            cursor: pointer;
+            opacity: 0.5;
+            font-size: 0.5rem;
+            line-height: 1;
+            padding: 0 1px;
+        }
+        .wb-pending-poc-stored .wb-pending-poc-remove:hover { opacity: 1; }
+        .wb-pending-time-td {
+            padding: 1px 2px !important;
+            vertical-align: middle;
+        }
+        .wb-pending-time-input {
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.35);
+            font: inherit;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 0 1px;
+            outline: none;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .wb-pending-time-input:focus {
+            border-bottom-color: rgba(59,130,246,0.6);
+            color: rgba(255,255,255,0.85);
+        }
+        .wb-pending-time-input.wb-pending-time-amber {
+            border-bottom-color: rgba(251,191,36,0.6);
+            border-bottom-width: 2px;
+        }
+        /* Light mode overrides for pending slots */
+        .light-mode .wb-pending-poc-drop {
+            border-color: rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.2);
+        }
+        .light-mode .wb-pending-poc-drop.wb-pending-poc-dragover {
+            border-color: rgba(59,130,246,0.5);
+            color: rgba(59,130,246,0.7);
+        }
+        .light-mode .wb-pending-poc-stored {
+            background: rgba(0,0,0,0.04);
+        }
+        .light-mode .wb-pending-time-input {
+            border-bottom-color: rgba(0,0,0,0.12);
+            color: rgba(0,0,0,0.3);
+        }
+        .light-mode .wb-pending-time-input:focus {
+            border-bottom-color: rgba(59,130,246,0.5);
+            color: rgba(0,0,0,0.85);
+        }
+        .light-mode .wb-pending-time-input.wb-pending-time-amber {
+            border-bottom-color: rgba(217,119,6,0.7);
         }
 
         /* Delete row button */
@@ -2396,7 +2498,7 @@
         const SECTION_BADGE    = { Flying: 'FLT', Ground: 'GND', Academics: 'ACD', NA: 'N/A', Supervision: 'SP' };
         const SECTION_BADGE_COLOR = { Flying: '#3b82f6', Ground: '#16a34a', Academics: '#7c3aed', NA: '#475569', Supervision: '#d97706' };
         const WB_SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
-        const SUPV_DUTY_ORDER = ['SOF', 'OS', 'ODO', 'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO', "Other (As Req'd)"];
+        const SUPV_DUTY_ORDER = ['SOF', 'OS', 'ODO', 'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO'];
         // Fixed row definitions for the Academics table (always 4 rows regardless of event data)
         const ACAD_FIXED_CATS = [
             { label: 'Alpha FTC', alphaKey: 'alpha', classKey: 'ftc', catColor: 'FTC-A' },
@@ -2752,6 +2854,37 @@
 
                 if (raw.supervision) {
                     raw.supervision.forEach(row => {
+                        // Detect FOA/AUTH footer row BEFORE the empty-duty guard.
+                        // Footer row structure: row[0]="" row[9]="FOA" row[10]=foaPerson row[12]="AUTH" row[13]=authPerson
+                        if (row[9] === 'FOA') {
+                            const foaPerson = (row[10] && row[10].trim()) ? row[10].trim() : null;
+                            const authPerson = (row[13] && row[13].trim()) ? row[13].trim() : null;
+                            if (foaPerson && isValidName(foaPerson)) {
+                                all.push({
+                                    id: mkId(), section: 'Supervision', date,
+                                    model: null, eventName: 'FOA',
+                                    startTime: null, endTime: null,
+                                    etd: null, eta: null,
+                                    personnel: [foaPerson],
+                                    originalPersonnel: [foaPerson],
+                                    notes: null, readonly: false,
+                                    cancelled: false,
+                                });
+                            }
+                            if (authPerson && isValidName(authPerson)) {
+                                all.push({
+                                    id: mkId(), section: 'Supervision', date,
+                                    model: null, eventName: 'AUTH',
+                                    startTime: null, endTime: null,
+                                    etd: null, eta: null,
+                                    personnel: [authPerson],
+                                    originalPersonnel: [authPerson],
+                                    notes: null, readonly: false,
+                                    cancelled: false,
+                                });
+                            }
+                            return; // footer row consumed, skip triplet loop
+                        }
                         const duty = row[0];
                         if (!duty || duty === 'Supervision' || !duty.trim()) return;
                         for (let i = 1; i < row.length - 2; i += 3) {
@@ -4591,7 +4724,7 @@
 
         // ─── DAY COLUMN ───
 
-        const DayColumn = ({ date, events, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
+        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
             const hdr = fmtDate(date);
             const today = new Date().toISOString().slice(0, 10);
             const isToday = date === today;
@@ -4614,12 +4747,59 @@
                 return result;
             }, [events]);
 
+            // Abbreviate a name for the FOA/AUTH chip (Last name only, or first 8 chars)
+            const abbrevName = (name) => {
+                if (!name) return '';
+                const parts = name.split(/[\s,]+/).filter(Boolean);
+                // "Smith, J" -> "Smith" / "Smith J" -> "Smith" / "Smith" -> "Smith"
+                return parts[0].slice(0, 8);
+            };
+
             return (
                 <div className="day-column" style={{ borderColor: isToday ? 'rgba(59,130,246,0.25)' : undefined }}>
                     <div className="day-header" style={{ borderBottom: isToday ? '2px solid #3b82f6' : undefined }}>
-                        <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white' }}>{hdr.weekday}</div>
-                            <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>{hdr.day} {hdr.month}</div>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                            <div style={{ flex: 1, textAlign: 'center' }}>
+                                <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white' }}>{hdr.weekday}</div>
+                                <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>{hdr.day} {hdr.month}</div>
+                            </div>
+                            {/* FOA / AUTH duty chips — only shown when populated */}
+                            {(foaAuth && (foaAuth.foa || foaAuth.auth)) && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-end', flexShrink: 0 }}>
+                                    {foaAuth.foa && (() => {
+                                        const c = chipColor(foaAuth.foa, roster);
+                                        return (
+                                            <div title={`FOA: ${foaAuth.foa}`} style={{
+                                                display: 'flex', alignItems: 'center', gap: 2,
+                                                background: c.bg, color: c.text,
+                                                borderRadius: 3, padding: '1px 4px',
+                                                fontSize: '0.48rem', fontWeight: 700, lineHeight: 1.4,
+                                                maxWidth: 64, overflow: 'hidden',
+                                                userSelect: 'none', cursor: 'default',
+                                            }}>
+                                                <span style={{ opacity: 0.7, fontSize: '0.42rem' }}>FOA</span>
+                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{abbrevName(foaAuth.foa)}</span>
+                                            </div>
+                                        );
+                                    })()}
+                                    {foaAuth.auth && (() => {
+                                        const c = chipColor(foaAuth.auth, roster);
+                                        return (
+                                            <div title={`AUTH: ${foaAuth.auth}`} style={{
+                                                display: 'flex', alignItems: 'center', gap: 2,
+                                                background: c.bg, color: c.text,
+                                                borderRadius: 3, padding: '1px 4px',
+                                                fontSize: '0.48rem', fontWeight: 700, lineHeight: 1.4,
+                                                maxWidth: 64, overflow: 'hidden',
+                                                userSelect: 'none', cursor: 'default',
+                                            }}>
+                                                <span style={{ opacity: 0.7, fontSize: '0.42rem' }}>AUTH</span>
+                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{abbrevName(foaAuth.auth)}</span>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            )}
                         </div>
                         <div className="timeline-ruler">
                             {[6,9,12,15,18].map(h => (
@@ -6084,7 +6264,8 @@
 
         // ─────────────────────── WhiteboardCrewCell ───────────────────────────
         const WhiteboardCrewCell = ({ person, eventId, slotIndex, roster, onAdd, onRemove, onFocusEvent,
-            highlight, highlightMode, onHighlight, readonly, className: extraClass }) => {
+            highlight, highlightMode, onHighlight, readonly, className: extraClass,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const [dragOver, setDragOver] = useState(false);
             const color = person ? chipColor(person, roster) : null;
@@ -6140,11 +6321,15 @@
 
             const style = person && color ? { background: color.bg, color: color.text } : {};
 
+            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
+            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
+
             return (
                 <td className={cellClass} style={style} onClick={handleClick}
                     onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                     {person ? (
                         <span
+                            className={hasCon ? 'chip-conflict' : undefined}
                             draggable
                             style={{ cursor: 'grab', display: 'inline-flex', alignItems: 'center', gap: '2px' }}
                             onDragStart={(e) => {
@@ -6159,11 +6344,18 @@
                             }}
                             onDragEnd={(e) => {
                                 e.currentTarget.style.opacity = '1';
-                            }}>
+                            }}
+                            onMouseEnter={(e) => {
+                                if (hasCon && onShowTooltip) {
+                                    onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                }
+                            }}
+                            onMouseLeave={onHideTooltip}>
                             {person}
+                            {hasCon && <span className="conflict-icon">!</span>}
                             {!readonly && (
                                 <span className="wb-crew-remove"
-                                    onClick={(e) => { e.stopPropagation(); onRemove(eventId, person); }}>
+                                    onClick={(e) => { e.stopPropagation(); if (onHideTooltip) onHideTooltip(); onRemove(eventId, person); }}>
                                     {'\u00D7'}
                                 </span>
                             )}
@@ -6392,7 +6584,8 @@
         // plus a + button to add placeholder slots.
         const WhiteboardCrewGroup = ({ crew, placeholders, eventId, roster, onAdd, onRemove,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            onFocusEvent, colSpan, highlights, highlightMode, onHighlight }) => {
+            onFocusEvent, colSpan, highlights, highlightMode, onHighlight,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const [dragOver, setDragOver] = useState(false);
             const [addMenuOpen, setAddMenuOpen] = useState(false);
@@ -6505,9 +6698,11 @@
                             const color = person ? chipColor(person, roster) : null;
                             const style = color ? { background: color.bg, color: color.text } : {};
                             const isPending = pendingFill && pendingFill.person === person;
+                            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
+                            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
                             return (
                                 <span key={i} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-                                    <span className="wb-crew-chip" style={style}
+                                    <span className={`wb-crew-chip${hasCon ? ' chip-conflict' : ''}`} style={style}
                                         draggable
                                         onDragStart={(e) => {
                                             e.dataTransfer.setData('text/plain', JSON.stringify({
@@ -6521,11 +6716,18 @@
                                         }}
                                         onDragEnd={(e) => {
                                             e.currentTarget.style.opacity = '1';
-                                        }}>
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (hasCon && onShowTooltip) {
+                                                onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                            }
+                                        }}
+                                        onMouseLeave={onHideTooltip}>
                                         {person}
+                                        {hasCon && <span className="conflict-icon">!</span>}
                                         {onRemove && (
                                             <span className="wb-crew-remove"
-                                                onClick={(e) => { e.stopPropagation(); onRemove(eventId, person); }}>
+                                                onClick={(e) => { e.stopPropagation(); if (onHideTooltip) onHideTooltip(); onRemove(eventId, person); }}>
                                                 {'\u00D7'}
                                             </span>
                                         )}
@@ -6623,17 +6825,60 @@
             return '';
         };
 
+        // ─────────────── PendingTimeInput (used by WhiteboardSupervision) ────────
+        // Lightweight input for pending supervision slot times.
+        // Manages its own draft to avoid per-keystroke parent state updates.
+        // onCommit(value) fires once on blur or Enter with the trimmed value.
+        const PendingTimeInput = ({ value, amber, placeholder, onCommit }) => {
+            const [draft, setDraft] = React.useState(value || '');
+            const inputRef = React.useRef(null);
+
+            // Keep draft in sync when value is reset from parent (e.g. day change clears pendingSlots)
+            React.useEffect(() => { setDraft(value || ''); }, [value]);
+
+            const commit = () => {
+                onCommit(draft.trim());
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); commit(); if (inputRef.current) inputRef.current.blur(); }
+                else if (e.key === 'Escape') { setDraft(value || ''); if (inputRef.current) inputRef.current.blur(); }
+                // Tab: commit happens on subsequent blur; natural Tab navigation continues
+            };
+
+            const cls = [
+                'wb-pending-time-input',
+                amber ? 'wb-pending-time-amber' : '',
+            ].filter(Boolean).join(' ');
+
+            return (
+                <input ref={inputRef}
+                    type="text"
+                    className={cls}
+                    value={draft}
+                    placeholder={placeholder || 'HH:MM'}
+                    maxLength={5}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onBlur={commit}
+                    onKeyDown={handleKeyDown}
+                    onClick={(e) => e.stopPropagation()}
+                />
+            );
+        };
+
         // ─────────────────────── WhiteboardSupervision ────────────────────────
         const WhiteboardSupervision = ({ events, roster, onEditSave, onAdd, onRemove, onFocusEvent,
-            focusedEventId, highlights, highlightMode, onHighlight, onCreateEvent, onDeleteCustom, activeDay }) => {
+            focusedEventId, highlights, highlightMode, onHighlight, onCreateEvent, onDeleteCustom, activeDay,
+            conflicts, onShowTooltip, onHideTooltip }) => {
             const byDuty = useMemo(() => {
                 const map = {};
                 SUPV_DUTY_ORDER.forEach(d => { map[d] = []; });
                 events.forEach(ev => {
-                    const duty = ev.eventName;
-                    const key = SUPV_DUTY_ORDER.find(d => duty.trim().toUpperCase() === d.toUpperCase())
+                    const duty = (ev.eventName || '').trim();
+                    const key = SUPV_DUTY_ORDER.find(d => duty.toUpperCase() === d.toUpperCase())
                         || SUPV_DUTY_ORDER.find(d => duty.toUpperCase().includes(d.toUpperCase()))
-                        || "Other (As Req'd)";
+                        || duty
+                        || 'Unnamed Duty';
                     if (!map[key]) map[key] = [];
                     map[key].push(ev);
                 });
@@ -6646,6 +6891,28 @@
             }, [onEditSave]);
 
             const maxTriplets = 4;
+
+            // ── Pending slot state ──────────────────────────────────────────────
+            // Shape: { [dutyKey + '_' + slotIndex]: { startTime: '', endTime: '', poc: null } }
+            // Pure UI state — not persisted, not in workingEvents. Cleared on day change.
+            const [pendingSlots, setPendingSlots] = useState({});
+            // Track which POC drop targets are currently being dragged over
+            const [pocDragOver, setPocDragOver] = useState({});
+
+            // Clear pending slot state when the active day changes
+            React.useEffect(() => {
+                setPendingSlots({});
+                setPocDragOver({});
+            }, [activeDay]);
+
+            // Helper: update one field in one pending slot
+            const updatePending = useCallback((slotKey, field, value) => {
+                setPendingSlots(prev => ({
+                    ...prev,
+                    [slotKey]: { startTime: '', endTime: '', poc: null, ...(prev[slotKey] || {}), [field]: value },
+                }));
+            }, []);
+
 
             return (
                 <React.Fragment>
@@ -6677,75 +6944,264 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {SUPV_DUTY_ORDER.map(duty => {
-                                const evts = byDuty[duty] || [];
-                                const rowEvId = evts[0]?.id || null;
-                                const rowFocusClass = focusedEventId && rowEvId
-                                    ? (evts.some(ev => ev.id === focusedEventId) ? 'wb-row-focused' : 'wb-row-dimmed')
-                                    : '';
-                                return (
-                                    <tr key={duty} className={rowFocusClass || undefined}
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={(e) => {
-                                            const tag = e.target.tagName;
-                                            if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'LABEL' || tag === 'SELECT') return;
-                                            if (e.target.closest('.wb-crew-chip') || e.target.closest('.wb-remove-btn') ||
-                                                e.target.closest('.wb-checkbox') || e.target.closest('.placeholder-chip') ||
-                                                e.target.closest('.wb-add-btn') || e.target.closest('.wb-delete-btn')) return;
-                                            if (!rowEvId) return;
-                                            if (onFocusEvent) onFocusEvent(evts.some(ev => ev.id === focusedEventId) ? null : rowEvId);
-                                        }}>
-                                        <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.6rem' }}>{duty}</td>
-                                        {Array.from({ length: maxTriplets }, (_, i) => {
-                                            const ev = evts[i];
-                                            if (!ev) return (
-                                                <React.Fragment key={i}><td className="wb-supv-group-start"></td><td></td><td></td></React.Fragment>
-                                            );
-                                            return (
-                                                <React.Fragment key={i}>
-                                                    <WhiteboardCrewCell person={ev.personnel[0] || null}
-                                                        eventId={ev.id} slotIndex={0} roster={roster}
-                                                        onAdd={onAdd} onRemove={onRemove} onFocusEvent={onFocusEvent}
-                                                        highlight={highlights ? highlights[`${ev.id}:crew:0`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight}
-                                                        className="wb-supv-group-start" />
-                                                    <WhiteboardCell value={ev.startTime} field="startTime" eventId={ev.id} type="time"
-                                                        onSave={handleCellSave}
-                                                        highlight={highlights ? highlights[`${ev.id}:startTime`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight} />
-                                                    <WhiteboardCell value={ev.endTime} field="endTime" eventId={ev.id} type="time"
-                                                        onSave={handleCellSave}
-                                                        highlight={highlights ? highlights[`${ev.id}:endTime`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight} />
-                                                </React.Fragment>
-                                            );
-                                        })}
-                                        <WhiteboardCell value={evts[0]?.notes || ''} field="notes"
-                                            eventId={evts[0]?.id} type="text" onSave={handleCellSave}
-                                            highlight={highlights && evts[0] ? highlights[`${evts[0].id}:notes`] : null}
-                                            highlightMode={highlightMode}
-                                            onHighlight={onHighlight}
-                                            className="wb-supv-group-start" />
-                                        <td>
-                                            {evts.some(ev => ev.isCustom) && onDeleteCustom && (
-                                                <span className="wb-delete-btn"
-                                                    onClick={() => {
-                                                        const customEv = evts.find(ev => ev.isCustom);
-                                                        if (customEv) onDeleteCustom(customEv.id);
-                                                    }}
-                                                    title="Remove custom event">{'\u2715'}</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {(() => {
+                                // Shared row renderer — used for both fixed-order and dynamic rows
+                                const renderRow = (duty) => {
+                                    const evts = byDuty[duty] || [];
+                                    const rowEvId = evts[0]?.id || null;
+                                    const rowFocusClass = focusedEventId && rowEvId
+                                        ? (evts.some(ev => ev.id === focusedEventId) ? 'wb-row-focused' : 'wb-row-dimmed')
+                                        : '';
+                                    return (
+                                        <tr key={duty} className={rowFocusClass || undefined}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={(e) => {
+                                                const tag = e.target.tagName;
+                                                if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'LABEL' || tag === 'SELECT') return;
+                                                if (e.target.closest('.wb-crew-chip') || e.target.closest('.wb-remove-btn') ||
+                                                    e.target.closest('.wb-checkbox') || e.target.closest('.placeholder-chip') ||
+                                                    e.target.closest('.wb-add-btn') || e.target.closest('.wb-delete-btn')) return;
+                                                if (e.target.closest('.wb-pending-poc-cell') || e.target.closest('.wb-pending-time-td')) return;
+                                                if (!rowEvId) return;
+                                                if (onFocusEvent) onFocusEvent(evts.some(ev => ev.id === focusedEventId) ? null : rowEvId);
+                                            }}>
+                                            <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.6rem' }}>{duty}</td>
+                                            {Array.from({ length: maxTriplets }, (_, i) => {
+                                                const ev = evts[i];
+                                                if (ev) {
+                                                    // Occupied triplet — existing event
+                                                    return (
+                                                        <React.Fragment key={i}>
+                                                            <WhiteboardCrewCell person={ev.personnel[0] || null}
+                                                                eventId={ev.id} slotIndex={0} roster={roster}
+                                                                onAdd={onAdd} onRemove={onRemove} onFocusEvent={onFocusEvent}
+                                                                highlight={highlights ? highlights[`${ev.id}:crew:0`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight}
+                                                                className="wb-supv-group-start"
+                                                                conflicts={conflicts}
+                                                                onShowTooltip={onShowTooltip}
+                                                                onHideTooltip={onHideTooltip} />
+                                                            <WhiteboardCell value={ev.startTime} field="startTime" eventId={ev.id} type="time"
+                                                                onSave={handleCellSave}
+                                                                highlight={highlights ? highlights[`${ev.id}:startTime`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight} />
+                                                            <WhiteboardCell value={ev.endTime} field="endTime" eventId={ev.id} type="time"
+                                                                onSave={handleCellSave}
+                                                                highlight={highlights ? highlights[`${ev.id}:endTime`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight} />
+                                                        </React.Fragment>
+                                                    );
+                                                }
+
+                                                // ── Empty triplet slot — editable pending state ──────────────
+                                                const slotKey = `${duty}_${i}`;
+                                                const slot = pendingSlots[slotKey] || { startTime: '', endTime: '', poc: null };
+                                                const stVal = slot.startTime || '';
+                                                const etVal = slot.endTime   || '';
+                                                // Amber highlighting rules:
+                                                // 1. A time field is empty and the OTHER time field has any content
+                                                // 2. A time field has content but it fails TIME_RE (invalid format)
+                                                // A stored POC alone does NOT trigger amber on times.
+                                                const stOk = !!(stVal && TIME_RE.test(stVal));
+                                                const etOk = !!(etVal && TIME_RE.test(etVal));
+                                                const anyTimeContent = !!(stVal || etVal);
+                                                const stAmber = !!(anyTimeContent && !stOk);
+                                                const etAmber = !!(anyTimeContent && !etOk);
+
+                                                // POC cell drop handlers
+                                                const handlePocDragOver = (e) => {
+                                                    e.preventDefault();
+                                                    e.dataTransfer.dropEffect = 'copy';
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: true }));
+                                                };
+                                                const handlePocDragLeave = () => {
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: false }));
+                                                };
+                                                const handlePocDrop = (e) => {
+                                                    e.preventDefault();
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: false }));
+                                                    const raw = e.dataTransfer.getData('text/plain');
+                                                    if (!raw) return;
+                                                    let personName = raw;
+                                                    let sourceId = null;
+                                                    try {
+                                                        const parsed = JSON.parse(raw);
+                                                        if (parsed.isBlankPuck) return;
+                                                        personName = parsed.person || raw;
+                                                        sourceId = parsed.sourceEventId || null;
+                                                    } catch(ignored) {}
+                                                    if (!personName) return;
+                                                    // Build the current slot state with the new POC
+                                                    const updatedSlot = { startTime: '', endTime: '', poc: null, ...slot, poc: personName };
+                                                    // If both times are already present + valid → create event immediately
+                                                    const st = (updatedSlot.startTime || '').trim();
+                                                    const et = (updatedSlot.endTime   || '').trim();
+                                                    if (st && et && TIME_RE.test(st) && TIME_RE.test(et)) {
+                                                        // Times already satisfied — create event with poc included
+                                                        if (onCreateEvent) {
+                                                            // If person came from another event, remove them from source
+                                                            if (sourceId && onRemove) onRemove(sourceId, personName);
+                                                            const personnel = [personName];
+                                                            onCreateEvent('Supervision', activeDay, {
+                                                                eventName: duty,
+                                                                startTime: st,
+                                                                endTime:   et,
+                                                                personnel,
+                                                                originalPersonnel: [...personnel],
+                                                            });
+                                                            setPendingSlots(prev => {
+                                                                const next = { ...prev };
+                                                                delete next[slotKey];
+                                                                return next;
+                                                            });
+                                                        }
+                                                    } else {
+                                                        // Times not yet set — store poc for later; if person came from source event, do NOT remove yet
+                                                        setPendingSlots(prev => ({
+                                                            ...prev,
+                                                            [slotKey]: { ...updatedSlot, pocSourceId: sourceId },
+                                                        }));
+                                                    }
+                                                };
+
+                                                // Time input commit handler — checks if both times now present
+                                                const handleTimeCommit = (field, rawValue) => {
+                                                    const trimmed = rawValue.trim();
+                                                    const updatedSlot = {
+                                                        startTime: '', endTime: '', poc: null,
+                                                        ...slot,
+                                                        [field]: trimmed,
+                                                    };
+                                                    // Validate — if invalid, just store (amber border will show)
+                                                    if (trimmed && !TIME_RE.test(trimmed)) {
+                                                        // Store as-is; amber border via stAmber/etAmber check above will remain
+                                                        setPendingSlots(prev => ({
+                                                            ...prev,
+                                                            [slotKey]: updatedSlot,
+                                                        }));
+                                                        return;
+                                                    }
+                                                    // Save the new value first
+                                                    setPendingSlots(prev => ({
+                                                        ...prev,
+                                                        [slotKey]: updatedSlot,
+                                                    }));
+                                                    // Then attempt creation if both times are now set + valid
+                                                    const st = (updatedSlot.startTime || '').trim();
+                                                    const et = (updatedSlot.endTime   || '').trim();
+                                                    if (st && et && TIME_RE.test(st) && TIME_RE.test(et)) {
+                                                        if (onCreateEvent) {
+                                                            // If the POC was dragged from an existing event, remove them from source now
+                                                            if (updatedSlot.pocSourceId && updatedSlot.poc && onRemove) {
+                                                                onRemove(updatedSlot.pocSourceId, updatedSlot.poc);
+                                                            }
+                                                            const personnel = updatedSlot.poc ? [updatedSlot.poc] : [];
+                                                            onCreateEvent('Supervision', activeDay, {
+                                                                eventName: duty,
+                                                                startTime: st,
+                                                                endTime:   et,
+                                                                personnel,
+                                                                originalPersonnel: [...personnel],
+                                                            });
+                                                            setPendingSlots(prev => {
+                                                                const next = { ...prev };
+                                                                delete next[slotKey];
+                                                                return next;
+                                                            });
+                                                        }
+                                                    }
+                                                };
+
+                                                return (
+                                                    <React.Fragment key={i}>
+                                                        {/* Empty POC cell — drop target */}
+                                                        <td className="wb-pending-poc-cell"
+                                                            onDragOver={handlePocDragOver}
+                                                            onDragLeave={handlePocDragLeave}
+                                                            onDrop={handlePocDrop}>
+                                                            {slot.poc ? (
+                                                                <span className="wb-pending-poc-stored"
+                                                                    style={chipColor(slot.poc, roster) ? {
+                                                                        background: chipColor(slot.poc, roster).bg,
+                                                                        color: chipColor(slot.poc, roster).text,
+                                                                    } : {}}>
+                                                                    {slot.poc}
+                                                                    <span className="wb-pending-poc-remove"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            updatePending(slotKey, 'poc', null);
+                                                                        }}
+                                                                        title="Remove pending POC">{'\u00D7'}</span>
+                                                                </span>
+                                                            ) : (
+                                                                <span className={[
+                                                                    'wb-pending-poc-drop',
+                                                                    pocDragOver[slotKey] ? 'wb-pending-poc-dragover' : '',
+                                                                ].filter(Boolean).join(' ')}
+                                                                    title="Drop a person here to set as POC">
+                                                                    +
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        {/* Pending Start time input */}
+                                                        <td className="wb-pending-time-td">
+                                                            <PendingTimeInput
+                                                                value={stVal}
+                                                                amber={stAmber}
+                                                                placeholder="HH:MM"
+                                                                onCommit={(v) => handleTimeCommit('startTime', v)}
+                                                            />
+                                                        </td>
+                                                        {/* Pending End time input */}
+                                                        <td className="wb-pending-time-td">
+                                                            <PendingTimeInput
+                                                                value={etVal}
+                                                                amber={etAmber}
+                                                                placeholder="HH:MM"
+                                                                onCommit={(v) => handleTimeCommit('endTime', v)}
+                                                            />
+                                                        </td>
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                            <WhiteboardCell value={evts[0]?.notes || ''} field="notes"
+                                                eventId={evts[0]?.id} type="text" onSave={handleCellSave}
+                                                highlight={highlights && evts[0] ? highlights[`${evts[0].id}:notes`] : null}
+                                                highlightMode={highlightMode}
+                                                onHighlight={onHighlight}
+                                                className="wb-supv-group-start" />
+                                            <td>
+                                                {evts.some(ev => ev.isCustom) && onDeleteCustom && (
+                                                    <span className="wb-delete-btn"
+                                                        onClick={() => {
+                                                            const customEv = evts.find(ev => ev.isCustom);
+                                                            if (customEv) onDeleteCustom(customEv.id);
+                                                        }}
+                                                        title="Remove custom event">{'\u2715'}</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    );
+                                };
+                                // Fixed rows in canonical SUPV_DUTY_ORDER
+                                const fixedRows = SUPV_DUTY_ORDER.map(duty => renderRow(duty));
+                                // Dynamic rows: duty keys not in SUPV_DUTY_ORDER (custom/unrecognized duties)
+                                // Rendered in insertion order (Object.keys preserves insertion order in V8)
+                                const dynamicKeys = Object.keys(byDuty).filter(k => !SUPV_DUTY_ORDER.includes(k));
+                                const dynamicRows = dynamicKeys.map(duty => renderRow(duty));
+                                return [...fixedRows, ...dynamicRows];
+                            })()}
                         </tbody>
                     </table>
                     {onCreateEvent && (
-                        <button className="wb-add-row" onClick={() => onCreateEvent('Supervision', activeDay)}>
+                        <button className="wb-add-row" onClick={() => {
+                            const dutyName = (window.prompt('Enter duty name (e.g. "SOF", "ODO", or a custom title):') || '').trim();
+                            if (!dutyName) return;
+                            onCreateEvent('Supervision', activeDay, { eventName: dutyName });
+                        }}>
                             + Add Supervision Event
                         </button>
                     )}
@@ -6758,7 +7214,8 @@
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -6856,7 +7313,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(6)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -6892,7 +7352,8 @@
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -6975,7 +7436,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(3)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -7058,7 +7522,8 @@
             onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -7135,7 +7600,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(3)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -7187,6 +7655,28 @@
             React.useEffect(() => {
                 setDutyState(loadDutyForDay(String(activeDay ?? '')));
             }, [activeDay]);
+
+            // Seed duty pucks from API-parsed FOA/AUTH supervision events when localStorage is empty.
+            // Runs when activeDay or workingEvents change. Does NOT overwrite existing user assignments.
+            React.useEffect(() => {
+                if (!activeDay) return;
+                const dayKey = String(activeDay);
+                const stored = loadDutyForDay(dayKey);
+                // Only seed if both slots are empty (user has not made any assignments for this day)
+                if (stored.foa.length > 0 || stored.auth.length > 0) return;
+                const dayEvts = workingEvents.filter(ev => ev.date === activeDay && ev.section === 'Supervision');
+                const foaEv   = dayEvts.find(ev => /^FOA$/i.test(ev.eventName || ''));
+                const authEv  = dayEvts.find(ev => /^AUTH$/i.test(ev.eventName || ''));
+                const foaPerson  = foaEv  && foaEv.personnel[0]  ? foaEv.personnel[0]  : null;
+                const authPerson = authEv && authEv.personnel[0] ? authEv.personnel[0] : null;
+                if (!foaPerson && !authPerson) return; // nothing to seed
+                const seeded = {
+                    foa:  foaPerson  ? [foaPerson]  : [],
+                    auth: authPerson ? [authPerson] : [],
+                };
+                setDutyState(seeded);
+                saveDutyForDay(dayKey, seeded);
+            }, [activeDay, workingEvents]);
 
             const updateDuty = (slot, newList) => {
                 const next = { ...dutyState, [slot]: newList };
@@ -7364,7 +7854,7 @@
                 return () => document.removeEventListener('pointerdown', handleDown);
             }, [pickerTarget]);
 
-            const handleCreateWbEvent = useCallback((section, date) => {
+            const handleCreateWbEvent = useCallback((section, date, extraFields) => {
                 const id = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
                 const ev = {
                     id, section, date,
@@ -7382,6 +7872,7 @@
                     cancelled: false,
                     effective: false,
                     partiallyEffective: false,
+                    ...(extraFields || {}),
                 };
                 onCreateEvent(ev);
             }, [onCreateEvent]);
@@ -7480,7 +7971,10 @@
                                                 onHighlight={handleHighlightCellClick}
                                                 onCreateEvent={handleCreateWbEvent}
                                                 onDeleteCustom={onDeleteCustom}
-                                                activeDay={activeDay} />
+                                                activeDay={activeDay}
+                                                conflicts={conflicts}
+                                                onShowTooltip={onShowTooltip}
+                                                onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
                                             <WhiteboardAcademics events={acadEvts} roster={roster} />
@@ -7498,7 +7992,9 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : sec === 'Ground' ? (
                                     <WhiteboardGround events={evts} roster={roster} conflicts={conflicts}
                                         onEditSave={onEditSave} onStatusChange={onStatusChange}
@@ -7511,7 +8007,9 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : sec === 'NA' ? (
                                     <WhiteboardNA events={evts} roster={roster}
                                         onEditSave={onEditSave} onAdd={onAdd} onRemove={onRemove}
@@ -7523,7 +8021,10 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        conflicts={conflicts}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : null}
                             </div>
                         );
@@ -7714,15 +8215,57 @@
             }, [workingEvents, initialSelectedIds, initialNaCats, roster]);
 
             // Events by date
+            // Guard: skip events with null startTime (e.g. FOA/AUTH supervision footer rows).
+            // Those events are already displayed as DayColumn header pills via foaByDate.
+            // Passing them to EventCard would produce NaN left/width values (timePct(null) = NaN).
             const eventsByDate = useMemo(() => {
                 const m = {};
                 dates.forEach(d => { m[d] = []; });
-                visibleEvents.forEach(ev => { if (m[ev.date]) m[ev.date].push(ev); });
+                visibleEvents.forEach(ev => {
+                    if (ev.startTime == null) return;
+                    if (m[ev.date]) m[ev.date].push(ev);
+                });
                 return m;
             }, [visibleEvents, dates]);
 
+            // FOA/AUTH per date — scan workingEvents for supervision events named 'FOA' / 'AUTH'
+            // Derived from ALL workingEvents (not filtered visibleEvents) so chips always appear
+            // even when the Supervision section is not selected in the event picker.
+            const foaByDate = useMemo(() => {
+                const m = {};
+                dates.forEach(d => { m[d] = { foa: null, auth: null }; });
+                workingEvents.forEach(ev => {
+                    if (ev.section !== 'Supervision') return;
+                    if (!m[ev.date]) return;
+                    if (/^FOA$/i.test(ev.eventName || '') && ev.personnel[0]) {
+                        m[ev.date].foa = ev.personnel[0];
+                    } else if (/^AUTH$/i.test(ev.eventName || '') && ev.personnel[0]) {
+                        m[ev.date].auth = ev.personnel[0];
+                    }
+                });
+                return m;
+            }, [workingEvents, dates]);
+
             // Conflict detection on ALL events
             const conflicts = useMemo(() => detectConflicts(workingEvents), [workingEvents]);
+
+            // Day-scoped conflict map for whiteboard view — filters to only conflicts where the
+            // conflicting event shares the currently active whiteboard day. Cross-day conflicts
+            // are noise in whiteboard mode (which shows one day at a time).
+            const wbDayConflicts = useMemo(() => {
+                const resolvedDay = wbActiveDay || (dates && (dates.includes(today) ? today : dates[0]));
+                if (!resolvedDay || !conflicts) return conflicts;
+                const filtered = new Map();
+                conflicts.forEach((personMap, eventId) => {
+                    const filteredPersonMap = new Map();
+                    personMap.forEach((entries, person) => {
+                        const filteredEntries = entries.filter(c => c.date === resolvedDay);
+                        if (filteredEntries.length > 0) filteredPersonMap.set(person, filteredEntries);
+                    });
+                    if (filteredPersonMap.size > 0) filtered.set(eventId, filteredPersonMap);
+                });
+                return filtered;
+            }, [conflicts, wbActiveDay, dates, today]);
 
             // Focus mode: compute who is unavailable during the focused event's time window
             const focusedAvailability = useMemo(() => {
@@ -8037,10 +8580,11 @@
             };
 
             const conflictCount = useMemo(() => {
+                const src = viewMode === 'whiteboard' ? wbDayConflicts : conflicts;
                 const people = new Set();
-                conflicts.forEach(pm => pm.forEach((_, p) => people.add(p)));
+                src.forEach(pm => pm.forEach((_, p) => people.add(p)));
                 return people.size;
-            }, [conflicts]);
+            }, [conflicts, wbDayConflicts, viewMode]);
 
             const today = new Date().toISOString().slice(0, 10);
 
@@ -8063,7 +8607,7 @@
                                             className="text-red-400 ml-2"
                                             title="View conflict summary"
                                         >
-                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}
+                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}{viewMode === 'whiteboard' ? ' (today)' : ''}
                                         </button>
                                     )}
                                 </p>
@@ -8122,6 +8666,7 @@
                                     events={eventsByDate[date] || []}
                                     roster={roster}
                                     conflicts={conflicts}
+                                    foaAuth={foaByDate[date] || { foa: null, auth: null }}
                                     onRemove={handleRemove}
                                     onAdd={handleAdd}
                                     onShowTooltip={showTooltip}
@@ -8140,7 +8685,7 @@
                     </div>
 
                     <div style={{ gridColumn: 1, gridRow: 3, display: (viewMode !== 'timeline' && viewMode !== 'whiteboard') ? 'none' : undefined }}>
-                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
+                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
                     </div>
 
                     {/* Rainbow: always mounted for state preservation but hidden when not active */}
@@ -8153,7 +8698,7 @@
                         <WhiteboardView
                             workingEvents={workingEvents}
                             roster={roster}
-                            conflicts={conflicts}
+                            conflicts={wbDayConflicts}
                             dates={dates}
                             today={today}
                             activeDay={wbActiveDay || (dates && (dates.includes(today) ? today : dates[0]))}
@@ -8228,7 +8773,7 @@
 
                     {showConflictSummary && (
                         <ConflictSummaryModal
-                            conflicts={conflicts}
+                            conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts}
                             workingEvents={workingEvents}
                             onClose={() => setShowConflictSummary(false)}
                         />

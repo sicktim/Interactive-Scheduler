@@ -2,6 +2,21 @@
 
 ---
 
+## v4.1.0 — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts
+
+### Bug Fixes
+- **Supervision column separators** — Fixed CSS selector bug (`.wb-supv-group-start th` → `th.wb-supv-group-start`); added 10px padding-left gap with visible border-left for POC/Notes column groups; dark and light mode both correct
+- **FOA/AUTH from API** — Supervision parser now detects footer row (`row[9]==='FOA'`) before empty-duty guard; extracts FOA/AUTH person names, emits as Supervision events; seeds whiteboard duty puck slots on load; null-time guard prevents FOA/AUTH events from rendering as empty timeline EventCards
+
+### New Features
+- **Whiteboard conflict indicators** — Conflict `!` badge (amber outline + pulse + icon) now appears on whiteboard crew chips across all 4 tables (Flying, Ground, NA, Supervision); tooltip shows conflicting event details on hover; `onHideTooltip()` called before chip removal to prevent tooltip artifact
+- **Day-scoped conflicts in whiteboard view** — When viewing the whiteboard, conflict chips, picker availability, conflict count, and ConflictSummaryModal all scope to the active day only; header button shows `(today)` suffix to indicate scoped count; timeline and rainbow views unchanged
+- **FOA/AUTH in timeline date bar** — FOA and AUTH person chips now appear in timeline day column headers alongside the date; colored by roster category; only shown when assigned
+- **Dynamic supervision duty rows** — Removed "Other (As Req'd)" from fixed duty list; events with unrecognized duty names create their own rows at the bottom of the supervision table; custom duty rows persist via existing custom event system
+- **Lazy supervision event creation** — Empty supervision triplet slots are now editable; entering both start and end times creates a custom supervision event; partial completion (one time only) highlights the empty field with amber border; POC can be pre-assigned via drag and included at event creation
+
+---
+
 ## v1.0 — Initial Prototype
 - Three-screen flow: Loading → Event Selection → Scheduler View
 - Single HTML file with React 18 + Babel + TailwindCSS

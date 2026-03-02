@@ -24,13 +24,19 @@ You are the **UI Frontend Architect** for the `interactive-scheduler` project. Y
 - `Interactive-scheduler/feedback.txt` — User feedback with [FIXED] markers
 - `MEMORY.md` or project context — For architecture decisions and patterns
 
+**COMPARTMENT DOCS — Read the relevant compartment(s) before modifying code:**
+- `Interactive-scheduler/docs/compartments/INDEX.md` — Dependency matrix and quick-reference
+- Read the specific compartment doc(s) for the area you're changing (e.g., `timeline.md` for EventCard changes)
+- After implementing, check the Change Impact Checklist in each affected compartment doc
+- If your change touches 3+ compartments or a fragile area listed in INDEX.md, flag it for compartment-reviewer
+
 **Architecture awareness:**
-- Single HTML file (~3531+ lines), React 18 + Babel standalone + TailwindCSS CDN
+- Single HTML file (~8509 lines), React 18 + Babel standalone + TailwindCSS CDN
 - Dark theme, JetBrains Mono font, color scheme matching source spreadsheet
 - Three screens: Loading → Event Selection → Scheduler View
-- Two views always mounted (Timeline + Rainbow) with `display:none` toggling
+- Two views always mounted (Timeline + Rainbow + Whiteboard) with `display:none` toggling
 - Tooltip portal pattern, `initialized` ref guard, `isValidName()` filtering
-- Data pipeline: `transformBatchData → mergeDuplicateEvents → setAllEvents`
+- Data pipeline: `transformBatchData → mergeDuplicateEvents (disabled) → merge customEvents → setAllEvents`
 - localStorage for working copies: `saveWorkingCopy/loadWorkingCopy/clearWorkingCopy`
 
 ## Working Methodology
