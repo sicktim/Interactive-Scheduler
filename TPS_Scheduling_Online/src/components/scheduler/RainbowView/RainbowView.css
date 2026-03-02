@@ -1,0 +1,458 @@
+/* ─── Rainbow Toolbar ─── */
+.rainbow-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: var(--bg-rainbow-toolbar);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.rainbow-toolbar-label {
+  font-size: 0.55rem;
+  color: var(--text-toolbar);
+  font-weight: 600;
+}
+
+.rainbow-toolbar-right {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.rainbow-filter-btn {
+  padding: 2px 8px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  border: 1px solid var(--border-btn);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.rainbow-filter-btn.active {
+  border-color: var(--filter-color);
+  color: var(--filter-color);
+  background: var(--filter-bg);
+}
+
+.rb-clear-marker-btn {
+  padding: 2px 8px;
+  font-size: 0.55rem;
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border: 1px solid var(--color-danger-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.rb-filter-btn {
+  padding: 2px 8px;
+  font-size: 0.55rem;
+  background: var(--rb-control-bg);
+  color: white;
+  border: 1px solid var(--rb-control-border);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rb-category-select {
+  background: var(--rb-select-bg);
+  border: 1px solid var(--rb-control-border);
+  color: var(--rb-select-text);
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.55rem;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ─── Rainbow Grid ─── */
+.rainbow-scroll {
+  flex: 1;
+  overflow: auto;
+  position: relative;
+}
+
+.rainbow-grid {
+  display: grid;
+  position: relative;
+  gap: 0 1px;
+}
+
+.rainbow-corner {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-rainbow-corner);
+  border-right: 1px solid var(--border-rainbow-corner);
+  border-bottom: 1px solid var(--border-rainbow-corner);
+  box-shadow: var(--shadow-rainbow-corner);
+  padding: 4px 8px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.rainbow-corner-label {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.rainbow-date-header {
+  position: sticky;
+  top: 0;
+  z-index: 45;
+  background: var(--bg-rainbow-header);
+  border-bottom: 1px solid var(--border-color);
+  padding: 4px 4px 0;
+  box-shadow: var(--shadow-rainbow-header);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rainbow-date-label { text-align: center; }
+.rb-weekday { font-weight: 700; font-size: 0.7rem; color: var(--text-heading); }
+.rb-daymonth { font-size: 0.55rem; color: var(--text-secondary); }
+
+.rainbow-time-ruler {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.55rem;
+  color: var(--ruler-color);
+  height: 14px;
+  position: relative;
+}
+
+.rainbow-time-ruler span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+.rb-ruler-interactive {
+  position: absolute;
+  inset: 0;
+  cursor: crosshair;
+  z-index: 30;
+}
+
+/* ─── Rainbow Name Cells ─── */
+.rainbow-name-cell {
+  position: sticky;
+  left: 0;
+  z-index: 30;
+  background: var(--bg-rainbow-name);
+  border-right: 1px solid var(--border-rainbow-name);
+  border-bottom: 1px solid var(--border-rainbow-cell);
+  box-shadow: var(--shadow-rainbow-name);
+  padding: 4px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rainbow-name-text {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-rainbow-name);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rainbow-cat-text {
+  font-size: 0.45rem;
+  color: var(--text-rainbow-cat);
+}
+
+.rainbow-cat-separator {
+  grid-column: 1 / -1;
+  background: var(--bg-rainbow-separator);
+  padding: 3px 10px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-rainbow-separator);
+  letter-spacing: 0.05em;
+  border-top: 1px solid var(--border-rainbow-separator);
+  border-bottom: 1px solid var(--border-rainbow-separator);
+  position: sticky;
+  left: 0;
+}
+
+.rainbow-cell {
+  position: relative;
+  background: var(--bg-rainbow-cell);
+  border-bottom: 1px solid var(--border-rainbow-cell);
+  transition: background 0.1s;
+}
+.rainbow-cell:hover { background: var(--bg-rainbow-cell-hover); }
+
+/* ─── Rainbow Event Bars ─── */
+.rb-event-bar {
+  position: absolute;
+  height: 20px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 5;
+  transition: filter 0.1s;
+}
+.rb-event-bar:hover { filter: brightness(1.3); z-index: 15; }
+
+.rb-bar-flying { background: var(--rb-bar-flying-bg); border: 1px solid var(--rb-bar-flying-border); }
+.rb-bar-ground { background: var(--rb-bar-ground-bg); border: 1px solid var(--rb-bar-ground-border); }
+.rb-bar-na { background: var(--rb-bar-na-bg); border: 1px solid var(--rb-bar-na-border); }
+.rb-bar-supervision { background: var(--rb-bar-supervision-bg); border: 1px solid var(--rb-bar-supervision-border); }
+.rb-bar-academics { background: var(--rb-bar-academics-bg); border: 1px solid var(--rb-bar-academics-border); }
+
+.rb-bar-label {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: var(--rb-bar-text);
+  text-shadow: var(--rb-bar-text-shadow);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+
+.rb-flight-inner {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: var(--flight-bar-inner);
+  border-left: 2px solid var(--flight-bar-border);
+  border-right: 2px solid var(--flight-bar-border);
+}
+
+.rb-hour-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--rb-hour-line);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── Rainbow Selection Handles ─── */
+.rb-handle-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 22px;
+  z-index: 60;
+}
+
+.rb-marker-handle {
+  position: absolute;
+  transform: translateX(-50%);
+  background: var(--rb-marker-color);
+  color: white;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  cursor: grab;
+  z-index: 61;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.rb-range-handle {
+  position: absolute;
+  width: 16px;
+  height: 24px;
+  cursor: ew-resize;
+  z-index: 62;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rb-range-handle-visual {
+  width: 4px;
+  height: 16px;
+  background: var(--rb-marker-color);
+  border-radius: 2px;
+}
+
+.rb-time-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: var(--rb-marker-color);
+  pointer-events: none;
+  z-index: 61;
+  white-space: nowrap;
+}
+
+.rb-dur-label {
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: bold;
+  color: var(--accent-blue-text-light);
+  pointer-events: none;
+  z-index: 61;
+  white-space: nowrap;
+}
+
+.rb-grid-line {
+  position: absolute;
+  top: 52px;
+  bottom: 0;
+  width: 2px;
+  background: var(--rb-marker-line);
+  pointer-events: none;
+  z-index: 35;
+}
+
+.rb-grid-range {
+  position: absolute;
+  top: 52px;
+  bottom: 0;
+  background: var(--rb-range-fill);
+  border-left: 2px solid var(--rb-marker-line);
+  border-right: 2px solid var(--rb-marker-line);
+  pointer-events: none;
+  z-index: 35;
+}
+
+/* ─── Rainbow Modal ─── */
+.rb-modal-info-box {
+  background: var(--rb-info-box-bg);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.rb-modal-label {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.rb-modal-value { color: var(--text-heading); }
+
+.rb-modal-personnel {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.rb-modal-close-btn {
+  margin-top: 24px;
+  width: 100%;
+  padding: 8px;
+  background: var(--accent-blue-dark);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.rb-modal-close-btn:hover { background: var(--accent-blue); }
+
+/* ─── Rainbow Filter Modal ─── */
+.rb-filter-search {
+  width: 100%;
+  background: var(--rb-select-bg);
+  border: 1px solid var(--rb-control-border);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  outline: none;
+}
+.rb-filter-search:focus { border-color: var(--accent-blue); }
+
+.rb-filter-btn-sm {
+  font-size: 0.6rem;
+  background: var(--rb-control-bg);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.rb-filter-btn-sm:hover { background: var(--rb-control-hover-bg); }
+
+.rb-filter-modal-body {
+  max-height: 380px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.rb-filter-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-faint);
+}
+.rb-filter-group-header:hover { background: var(--bg-hover); }
+
+.rb-filter-person-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px 3px 24px;
+  font-size: 0.7rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+.rb-filter-person-row:hover { background: var(--bg-hover); }
+
+.rb-filter-cb {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--border-cb);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  flex-shrink: 0;
+}
+.rb-filter-cb.checked { background: var(--cb-active-bg); border-color: var(--cb-active-border); color: white; }
+
+.rb-filter-cancel {
+  padding: 8px 16px;
+  color: var(--text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.rb-filter-cancel:hover { color: var(--text-heading); }
+
+.rb-filter-apply {
+  padding: 8px 16px;
+  background: var(--accent-blue-dark);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rb-filter-apply:hover { background: var(--accent-blue); }

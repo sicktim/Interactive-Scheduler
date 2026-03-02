@@ -1,0 +1,1255 @@
+{
+  "transformedAt": "2026-02-27T04:23:01.215Z",
+  "phases": {
+    "AN": {
+      "v1Events": 49,
+      "v2Events": 49,
+      "match": true,
+      "v1Prereqs": 0,
+      "v2Prereqs": 0,
+      "prereqMatch": true
+    },
+    "AS": {
+      "v1Events": 84,
+      "v2Events": 84,
+      "match": true,
+      "v1Prereqs": 103,
+      "v2Prereqs": 103,
+      "prereqMatch": true
+    },
+    "CF": {
+      "v1Events": 97,
+      "v2Events": 97,
+      "match": true,
+      "v1Prereqs": 350,
+      "v2Prereqs": 350,
+      "prereqMatch": true
+    },
+    "FQ": {
+      "v1Events": 95,
+      "v2Events": 95,
+      "match": true,
+      "v1Prereqs": 183,
+      "v2Prereqs": 183,
+      "prereqMatch": true
+    },
+    "PF": {
+      "v1Events": 57,
+      "v2Events": 57,
+      "match": true,
+      "v1Prereqs": 210,
+      "v2Prereqs": 210,
+      "prereqMatch": true
+    },
+    "SO": {
+      "v1Events": 16,
+      "v2Events": 16,
+      "match": true,
+      "v1Prereqs": 17,
+      "v2Prereqs": 17,
+      "prereqMatch": true
+    },
+    "SY": {
+      "v1Events": 96,
+      "v2Events": 96,
+      "match": true,
+      "v1Prereqs": 239,
+      "v2Prereqs": 239,
+      "prereqMatch": true
+    },
+    "TF": {
+      "v1Events": 130,
+      "v2Events": 130,
+      "match": true,
+      "v1Prereqs": 380,
+      "v2Prereqs": 380,
+      "prereqMatch": true
+    },
+    "TL": {
+      "v1Events": 31,
+      "v2Events": 31,
+      "match": true,
+      "v1Prereqs": 32,
+      "v2Prereqs": 32,
+      "prereqMatch": true
+    }
+  },
+  "totals": {
+    "v1Events": 655,
+    "v2Events": 655,
+    "v1Prereqs": 1514,
+    "v2Prereqs": 1514
+  },
+  "unmatchedNotes": [
+    {
+      "phase": "TF",
+      "event": "TF 5501M",
+      "prereq": "CF 6370F",
+      "notes": "[req’d for TF 5502F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5501M",
+      "prereq": "CF 6701F",
+      "notes": "[req’d for TF 5503F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5502F",
+      "prereq": "CF 6370F",
+      "notes": "[req’d for TF 5502F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5502F",
+      "prereq": "CF 6701F",
+      "notes": "[req’d for TF 5503F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5503F",
+      "prereq": "CF 6370F",
+      "notes": "[req’d for TF 5502F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5503F",
+      "prereq": "CF 6701F",
+      "notes": "[req’d for TF 5503F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5510M",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5510M",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5510M",
+      "prereq": "CF 6805F",
+      "notes": "[req’d for TF 5511F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5511F",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5511F",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5511F",
+      "prereq": "CF 6805F",
+      "notes": "[req’d for TF 5511F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5520F",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5520F",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 5520F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 5520F",
+      "prereq": "CF 6805F",
+      "notes": "[req’d for TF 5511F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6201A",
+      "prereq": "PF 8202E",
+      "notes": "[req’d for TF 6202B]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6202B",
+      "prereq": "PF 8202E",
+      "notes": "[req’d for TF 6202B]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6220M",
+      "prereq": "CF 6621C",
+      "notes": "[req’d for TF 6231C]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6221C",
+      "prereq": "CF 6621C",
+      "notes": "[req’d for TF 6231C]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6232F",
+      "prereq": "CF 6673F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6232F",
+      "prereq": "CF 6680F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6232F",
+      "prereq": "CF 6681F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6232F",
+      "prereq": "TF 6221C",
+      "notes": "[req’d for TF 6231C]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6233C",
+      "prereq": "CF 6673F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6233C",
+      "prereq": "CF 6680F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6233C",
+      "prereq": "CF 6681F",
+      "notes": "[req’d for TF 6232F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6233C",
+      "prereq": "TF 6221C",
+      "notes": "[req’d for TF 6231C]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "CF 6503S",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "CF 6550F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "CF 6803F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "TF 6221C",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6240M",
+      "prereq": "TF 6267F",
+      "notes": "[req’d for TF 6242F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "CF 6503S",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "CF 6550F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "CF 6803F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "TF 6221C",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6241F",
+      "prereq": "TF 6267F",
+      "notes": "[req’d for TF 6242F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "CF 6503S",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "CF 6542F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "CF 6550F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "CF 6551F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "CF 6803F",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "TF 6221C",
+      "notes": "[req’d for TF 6241F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6242F",
+      "prereq": "TF 6267F",
+      "notes": "[req’d for TF 6242F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6250M",
+      "prereq": "TF 6241F",
+      "notes": "[req’d for TF 6251F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6250M",
+      "prereq": "PF 8241F",
+      "notes": "[req’d for TF 6251F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6251F",
+      "prereq": "TF 6241F",
+      "notes": "[req’d for TF 6251F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6251F",
+      "prereq": "PF 8241F",
+      "notes": "[req’d for TF 6251F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6260A",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6261A",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6262A",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6263M",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6264F",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6265R",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6266M",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6267F",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5120H",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5130A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5141A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5210A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5220A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "CF 5301A",
+      "notes": "[req’d for TF 6264F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6268R",
+      "prereq": "TF 6404Z",
+      "notes": "[req’d for TF 6263M]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6270B",
+      "prereq": "CF 5101H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6270B",
+      "prereq": "CF 5110H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6270B",
+      "prereq": "CF 5140A",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6270B",
+      "prereq": "CF 6304S",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6270B",
+      "prereq": "TF 6233C",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6271C",
+      "prereq": "CF 5101H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6271C",
+      "prereq": "CF 5110H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6271C",
+      "prereq": "CF 5140A",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6271C",
+      "prereq": "CF 6304S",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6271C",
+      "prereq": "TF 6233C",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6272F",
+      "prereq": "CF 5101H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6272F",
+      "prereq": "CF 5110H",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6272F",
+      "prereq": "CF 5140A",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6272F",
+      "prereq": "CF 6304S",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6272F",
+      "prereq": "TF 6233C",
+      "notes": "[req’d for TF 6272F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6401A",
+      "prereq": "TF 6320A",
+      "notes": "[req’d for TF 6402R]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6402R",
+      "prereq": "TF 6320A",
+      "notes": "[req’d for TF 6402R]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6403R",
+      "prereq": "TF 6320A",
+      "notes": "[req’d for TF 6402R]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 6404Z",
+      "prereq": "TF 6320A",
+      "notes": "[req’d for TF 6402R]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7110M",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7110M",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7111G",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7111G",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7112F",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7112F",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7113R",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7113R",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7112F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7120M",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7120M",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7121G",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7121G",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7122F",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7122F",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7123R",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7123R",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7122F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7130M",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7130M",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7131G",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7131G",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7132F",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7132F",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7133R",
+      "prereq": "FQ 6222F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 7133R",
+      "prereq": "FQ 6223F",
+      "notes": "[req’d for TF 7132F]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8101A",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8101A",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8102W",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8102W",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8103W",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8103W",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8104W",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8104W",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8105W",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8105W",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8106R",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8106R",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8107W",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8107W",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8108Y",
+      "prereq": "TF 5410A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8108Y",
+      "prereq": "TF 6104A",
+      "notes": "[req’d for TF 8104W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8301Y",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8302W",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8303Y",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8304W",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8305W",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8306R",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 8307Y",
+      "prereq": "TF 8201F",
+      "notes": "[req’d for 8302W]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "FQ 9502S",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "FQ 9511F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "FQ 9512C",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "SY 7503F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "SY 7511F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "SY 7512C",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9110M",
+      "prereq": "SY 7521O",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "FQ 9502S",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "FQ 9511F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "FQ 9512C",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "SY 7503F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "SY 7511F",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "SY 7512C",
+      "notes": "[req’d for TF 9111E]"
+    },
+    {
+      "phase": "TF",
+      "event": "TF 9111E",
+      "prereq": "SY 7521O",
+      "notes": "[req’d for TF 9111E]"
+    }
+  ]
+}

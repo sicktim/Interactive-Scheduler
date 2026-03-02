@@ -1,0 +1,164 @@
+.event-card {
+  position: absolute;
+  border-radius: 4px;
+  cursor: default;
+  transition: box-shadow 0.15s, filter 0.15s;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  overflow: hidden;
+  min-width: 140px;
+}
+
+.event-card:hover {
+  z-index: 20;
+  filter: brightness(1.15);
+  box-shadow: var(--shadow-card-hover);
+  overflow: visible;
+}
+
+.event-card.drag-over {
+  box-shadow: var(--drag-glow) !important;
+  z-index: 25;
+}
+
+.event-card-flying {
+  background: var(--card-flying-bg);
+  border: 1px solid var(--card-flying-border);
+}
+.event-card-ground {
+  background: var(--card-ground-bg);
+  border: 1px solid var(--card-ground-border);
+}
+.event-card-na {
+  background: var(--card-na-bg);
+  border: 1px solid var(--card-na-border);
+}
+
+.event-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  font-size: 0.58rem;
+  line-height: 1.2;
+  min-height: 16px;
+  background: var(--bg-title-bar);
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.event-type-label {
+  font-weight: 700;
+  font-size: 0.58rem;
+  padding: 0 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.label-flying { background: var(--label-flying-bg); color: var(--label-flying-text); }
+.label-ground { background: var(--label-ground-bg); color: var(--label-ground-text); }
+.label-na { background: var(--label-na-bg); color: var(--label-na-text); }
+
+.event-name-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-event-name);
+}
+
+.event-time-text {
+  margin-left: auto;
+  font-size: 0.5rem;
+  color: var(--text-event-time);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.flight-bar-row {
+  position: relative;
+  height: 12px;
+  margin: 1px 6px;
+}
+
+.flight-bar-track {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--flight-bar-track);
+  border-radius: 2px;
+}
+
+.flight-bar-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: var(--flight-bar-fill);
+  border-radius: 2px;
+  border-left: 2px solid var(--flight-bar-border);
+  border-right: 2px solid var(--flight-bar-border);
+}
+
+.flight-time-marker {
+  position: absolute;
+  top: -1px;
+  font-size: 0.45rem;
+  color: var(--flight-time-color);
+  line-height: 1;
+}
+.flight-time-marker.etd { transform: translateX(-100%); padding-right: 2px; }
+.flight-time-marker.eta { transform: translateX(0%); padding-left: 2px; }
+
+.event-crew-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 2px 5px 3px;
+  align-items: center;
+}
+
+.add-chip {
+  padding: 1px 4px;
+  border: 1px dashed var(--add-chip-border);
+  border-radius: 3px;
+  color: var(--add-chip-color);
+  font-size: 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.add-chip:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  background: var(--accent-blue-bg);
+}
+
+.conflict-badge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  min-width: 14px;
+  height: 14px;
+  background: var(--conflict-badge-bg);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.45rem;
+  font-weight: 700;
+  color: white;
+  z-index: 20;
+  box-shadow: var(--conflict-badge-glow);
+  padding: 0 3px;
+}
+
+.event-card.focused {
+  z-index: 25;
+  filter: brightness(1.2);
+  box-shadow: var(--focus-ring);
+}
+.event-card.dimmed {
+  opacity: 0.35;
+  filter: brightness(0.7);
+}

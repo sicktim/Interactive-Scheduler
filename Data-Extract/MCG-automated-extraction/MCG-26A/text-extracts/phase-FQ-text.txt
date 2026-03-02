@@ -1,0 +1,835 @@
+===== PAGE 82 =====
+ 
+82 
+ 
+Flight Sciences: Flying Qualities Phase 
+The flying qualities phase is designed to introduce the student to modern flying qualities academics, 
+resources, vocabulary, skills and test approaches such that the graduate will be able to thoroughly and 
+systematically evaluate the flying qualities of any air vehicle, platform or system. Specifically, the student 
+will learn how dynamics of air vehicles and operators interact in flight. The flying qualities Phase is designed 
+to explore aerodynamics, flight mechanics, controls and structures individually and their interactions with the 
+air vehicle as a system. Further, the flying qualities Phase will discuss aircraft flight envelopes and how to 
+safely manage technical and safety risk as the flight envelope is opened and explored for testing and 
+operational use. Upon graduation, the student will have both an academic as well as an intuitive and practical 
+understand of these topics and will have the necessary tools, references, contacts and or knowledge to safely 
+and efficiently execute a flying qualities evaluation. 
+References and Texts 
+The primary references used for teaching are classroom textbooks, course handouts and PowerPoint 
+slides. These slides can be found on the TPS curriculum portal under classes indexed with the FQ prefix. A 
+legacy Flying Qualities Textbook is also present on the TPS Portal and can be used by you to augment the 
+material covered in the lectures. Each student at TPS has access to a classroom set of the three texts used 
+during the course of study. They are the primary texts for all FQ courses. They are: 
+ 
+1. H. Hsu, Signals and Systems, Schaum’s Outlines Phase, McGraw-Hill, 1st Edition, 1995. 
+2. B. Stevens and F. Lewis, Aircraft Control and Simulation, Wiley, 2nd Edition, 2004. 
+3. T. R. Yechout, et al., Introduction to Aircraft Flight Mechanics, AIAA Education Phase, Reston 
+Va, 2nd Edition, 2014. 
+ 
+Other references for FQ course are those listed below which can be found on the TPS curriculum portal.  
+ 
+1. B. Donaldson, Analysis of Aircraft Structures, An Introduction, Cambridge, New York, NY, 2nd 
+Edition, 2012 
+2. D. Hodges and A. Pierce, Introduction to Structural Dynamics and Aeroelasticity, Cambridge, New 
+York, NY 2nd Edition, 2012  
+ 
+Other texts have been used in the creation of the course material. A list of some of these texts is below: 
+ 
+1. Anon. “Flying qualities of piloted aircraft.” Department of Defense, MIL-STD-1797B, Wright 
+Patterson, OH, February 15, 2006. 
+2. G. Cooper and R. Harper, “The use of pilot rating in the evaluation of aircraft handling qualities.” 
+Technical Report TN D-5153, NASA, April 1969. 
+3. J. Hodgkinson, Aircraft Handling Qualities. AIAA, 1
+st Edition, 1999. 
+4. D. McRuer, I. Ashkenas, and D. Graham. Aircraft Dynamics and Automatic Control. Princeton 
+University Press, Princeton, New Jersey, 1973. 
+5. D. G. Mitchell, et al. “Evolution, revolution, and challenges of handling qualities.” Journal of 
+Guidance, Navigation, Control, and Dynamics, 27(1):12-28, January-February 2004. 
+6. R. C. Nelson, Flight Stability and Automatic Control, McGraw Hill, 2
+nd Edition, 1998. 
+7. K. Ogata, Modern Control Engineering. Prentice-Hall, Upper Saddle River, NJ, 3
+rd Edition, 1997 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 83 =====
+ 
+83 
+ 
+Additional Information 
+Homework 
+As a general rule, homework assignments will be given to broaden the students’ understanding of a topic 
+covered in block. The homework assignment may extend beyond that material covered in class to cover 
+additional material found in your text. The homework assignment is meant to be a learning exercise, and as 
+such normally can be done in a group setting, instructor dependent, so long as each person turns in his/her 
+own work. Copying of material turned in is not allowed in any form, unless specifically stated by the 
+instructor. 
+FQ Reference Cards 
+A model aircraft and a FQ formula reference card will be provided at the beginning of the FQ Phase. Both 
+reference materials will be the only set provided. They will be allowed for use on any FQ quiz, test, exam, 
+homework, or other activity in the Phase. During the FQ 8000 course a second reference card (Cooper 
+Harper Rating Scale and Pilot Induced Oscillation Tendency Classification scale) will be provided. This card 
+will also be allowed as a reference during any quiz, test, exam, homework, or other activity in the FQ Phase. 
+Quizzes and Tests 
+Tests are completed without the aid of another student. Tests are designed to assess the students’ 
+knowledge and not to teach a new concept. Specifically, testing will be administered to determine if the 
+students’ are meeting the learning objectives for a given event. During flying qualities tests, the model aircraft 
+and flying qualities reference cards are allowed. Other reference materials (including on-line references) may 
+be allowed during a specific test and will be provided by the instructor. 
+Reports 
+The culmination of most flight tests are the reports that are used to disseminate the information to the rest 
+of the test community. The reports will often require the student to take data from multiple flight tests and 
+support conclusions and recommendations with analysis. All major report products in the FQ Phase will be 
+done as a group report. Depending on the event, the reporting products may be an informal oral report, an 
+informal written report, a formal written report, a formal oral report, or a combination thereof. 
+Curriculum Organization and Learning Objectives 
+The flying qualities curriculum is organized topically into 4 major courses. Within each course is a set of 
+events (classes, labs, or flight tests). The major courses are: 6000 Aircraft Flight Mechanics, 7000 Flight 
+Control Systems, 8000 Handling Qualities Evaluation, and 9000 Envelope Expansion.  
+Learning in each event may be evaluated by assigned homework, a quiz, a test report (oral or written), or a 
+direct evaluation of your performance during that event. A block diagram showing how the courses relate to 
+an aircraft/pilot system can be found in Figure 19. The following section will present a brief description of 
+each course and its top-level learning objectives. Detailed learning objectives will be provided at each 
+curriculum event. An overview of the curriculum can be seen in Figure 20.
+
+
+===== PAGE 84 =====
+ 
+84 
+ 
+ 
+ 
+Figure 19: Flying Qualities Phase Block Diagram 
+Figure 20: Flight Sciences – Flying Qualities Overview 
+
+
+===== PAGE 85 =====
+ 
+85 
+ 
+FQ 6000 Aircraft Flight Mechanics 
+(3 Semester Credit Hours) 
+The 6000-level course gives the student an understanding of aircraft rigid body motion. Students will 
+learn how to compare various aircraft and predict their dynamics based on an understanding of the aircraft 
+equations of motion and analysis techniques. 
+FQ 6100 Aircraft Equations of Motion  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the fundamental principles governing the rigid-body equations of motion for aircraft. 
+TLO 2. Explain the differences between body-axis, stability-axis, and wind-axis reference frames in 
+aircraft dynamics. 
+TLO 3. Apply the six-degree-of-freedom equations of motion to determine aircraft translational and 
+rotational motion. 
+TLO 4. Characterize the effects of simplifying assumptions on the nonlinear and linearized equations 
+of motion. 
+TLO 5. Compute aircraft dynamic responses using numerical methods to solve the equations of 
+motion. 
+TLO 6. Discuss modern methods of interpreting equations of motion, such as uncertainty quantification 
+and sensitivity analysis. 
+ 
+FQ 6101A Aircraft Equations of Motion Lecture 
+FQ 6102E Aircraft Equations of Motion Exam 
+FQ 6103Z Aircraft Equations of Motion Debrief 
+The rigid body equations of motion for an aircraft are derived, and then trim solutions are presented. The 
+equations are linearized in both state space as well as transfer function methods. 
+Prerequisites: 
+AN 5160A Flight Sciences Phase Introduction 
+ 
+
+
+===== PAGE 86 =====
+ 
+86 
+ 
+FQ 6200 Aircraft Stability  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain concepts of aircraft static and dynamic stability 
+TLO 2. Collect data to determine aircraft stability characteristics 
+TLO 3. Analyze data from flight test to determine aircraft stability characteristics 
+TLO 4. Compare flight test data to Mil-Std-1797B. 
+ 
+FQ 6201A Aircraft Stability Lecture 
+FQ 6202E Aircraft Stability Exam 
+FQ 6203Z Aircraft Stability Debrief 
+The concepts of static and dynamic stability are applied to aircraft. Aircraft modes of motion are 
+introduced. Stability derivatives and their influence are presented. Finally, MIL-STD 1797B guidelines are 
+introduced and applied to the static and dynamic stability parameters to predict an aircraft’s handling qualities 
+or to assess a specification compliance. Concepts taught in this course are reinforced using a simulation 
+laboratory exercise. 
+Prerequisites: 
+FQ 6102E Aircraft Equations of Motion Exam 
+ 
+FQ 6210S Flying Qualities Sim 
+This event introduces several Flight Test Techniques (FTTs) used in flying qualities testing and then uses 
+those FTTs to explore how changing stability derivatives of an aircraft changes its flying qualities. 
+Prerequisites: 
+FQ 6201A Aircraft Stability Lecture [Hour 4] 
+ 
+FQ 6220M Learjet VSS Introduction MIB 
+FQ 6221F Learjet Long Stability Flight (P/RPA) 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) 
+These sorties explore the “s-plane” to further explore how FTTs are used to investigate an aircraft, and to 
+identify and qualify modes of motion. They also associate how open loop characteristics influence closed 
+loop flying qualities and introduce handling qualities evaluations and the use of the Cooper-Harper rating 
+scale. 
+Prerequisites: 
+FQ 6202E Aircraft Stability Exam 
+FQ 6210S Flying Qualities Sim 
+TF 6241F C-12 Airborne Test Conduct Intro [req’d for FQ 6221F] 
+ 
+FQ 6230F Glider Flying Qualities Flight 
+This event introduces open loop flying qualities of an unpowered aircraft. 
+Prerequisites: 
+CF 6203F Glider Familiarization (ABM/CSO/FTE/select P/RPA) 
+or 
+CF 6215F Glider Familiarization and Solo (select P) 
+FQ 6202E Aircraft Stability Exam 
+FQ 6210S Flying Qualities Sim 
+ 
+ 
+ 
+
+
+===== PAGE 87 =====
+ 
+87 
+ 
+ 
+FQ 6240M C-12 Static Stability Flight MIB 
+FQ 6241F C-12 Static Stability Flight 
+This event introduces the students to FTTs used to assess an aircraft’s static stability and to assess against 
+a military specification. 
+Prerequisites: 
+FQ 6202E Aircraft Stability Exam 
+FQ 6210S Flying Qualities Sim 
+TF 6251F C-12 Intermediate Airborne Test Conduct (FTC) [req’d for FQ 6241F]  
+ 
+FQ 6250M Dynamics Control Room MIB (ABM/FTE) 
+FQ 6251F T-38 Dynamics Flight (CSO/P/RPA) 
+FQ 6252C T-38 Dynamics Control Room (ABM/FTE with CSO/P/RPA desired as DE) 
+This event introduces students to FTTs used to assess a fighter type aircraft’s dynamic stability flying 
+qualities and shows the dependence of flying qualities on flight condition. The sortie also introduces the 
+student team to control room and disciplined engineer operations and flying qualities telemetered parameters 
+review and assessment while managing an ongoing airborne test. Finally, the event will introduce CR 
+operations to CSO/P/RPA aircrew. 
+Prerequisites: 
+CF 6362F T-38 CF-3 (P) [req’d for FQ 6251F] 
+CF 6370F T-38 Flight Training (ABM/CSO/FTE) [req’d for FQ 6251F] 
+CF 6804F T-38 CF-4 (RPA) [req’d for FQ 6251F] 
+FQ 6202E Aircraft Stability Exam 
+FQ 6210S Flying Qualities Sim 
+TF 6251F C-12 Intermediate Airborne Test Conduct (FTC) [req’d for FQ 6251F] 
+ 
+
+
+===== PAGE 88 =====
+ 
+88 
+ 
+Figure 21: FQ 6200 Aircraft Stability 
+
+
+===== PAGE 89 =====
+ 
+89 
+ 
+FQ 6300 Flying Qualities Testing 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Evaluate an aircraft’s unaugmented static stability flying qualities against those found in MIL-
+STD 1797B. The student will also be able to identify and use unaugmented dynamic stability 
+criteria found in MIL-STD 1797B.  
+ 
+FQ 6301A T-38 Flying Qualities Test Plan Brief 
+This event introduces the students to the flying qualities T-38 test plan. It will introduce the plan in three 
+parts. The first part is longitudinal where students are left with constructing cards from given test objectives 
+and measures of performance. The second part is lateral-directional where students will develop measures of 
+performance and cards from given objectives. The third part will be conducted later after handling qualities 
+academics. In that phase students will have to determine objectives, measures of performance and develop 
+cards from a set of requirements. In all parts, students will be responsible for defending their test approaches 
+and mitigation/build-up plans to a reviewing T38 IP and IFTE. 
+Prerequisites: 
+FQ 6202E Aircraft Stability Exam 
+ 
+FQ 6310-1F T-38 Flying Qualities Test Plan Data Flight 1-2 
+These are student designed and planned flights allowing the students to gather data in support of their 
+flying qualities test plan report. 
+ 
+Prerequisites: 
+FQ 6241F C-12 Static Stability Flight 
+FQ 6251F T-38 Dynamics Flight (CSO/P/RPA) 
+FQ 6252C T-38 Dynamics Control Room (ABM/FTE with CSO/P/RPA desired as DE) 
+FQ 6320W T-38 Flying Qualities Test Plan Working Group 
+ 
+FQ 6320W T-38 Flying Qualities Test Plan Working Group 
+FQ 6321R T-38 Flying Qualities Test Plan Oral Report 
+This a project composes several events, all tightly integrated to guide the student along its progression. 
+The student will explore MIL-STD-1797 while collecting data in an unsupervised fashion. It will give the 
+student the opportunity to participate in planning a test across multiple flights while ensuring the quality of 
+the data collected is high enough to write a report detailing the findings. The student will develop measures of 
+performance and test maneuvers to assess the open loop flying qualities of the T-38 as an area defense fighter. 
+Not only does this event illustrate how flying qualities or spec-compliance testing might happen, but it also 
+enforces requirements traceability and associates test maneuvers with test objectives via measures of 
+performance. All the student’s testing experience to this point will be required to make a final 
+recommendation as to whether to purchase this aircraft for a developing nation.  
+Prerequisites: 
+FQ 6301A T-38 Flying Qualities Test Plan Brief 
+FQ 6311F T-38 Flying Qualities Test Plan Data Flight 2 [req’d for FQ 6321R] 
+TF 6102A Test Planning Lecture 
+TF 6420A Oral Reporting Lecture [req’d for FQ 6321R] 
+
+
+===== PAGE 90 =====
+ 
+90 
+ 
+Figure 22: FQ 6300 Flying Qualities Testing 
+
+
+===== PAGE 91 =====
+ 
+91 
+ 
+FQ 7000 Flight Control Systems 
+(3 Semester Credit Hours) 
+The 7000-level course provides the student with an understanding of aircraft linear control systems as 
+applied to aircraft. Students will learn basic linear analysis techniques and how to evaluate a control 
+system’s performance as related to piloted and unpiloted air vehicles.  
+ 
+FQ 7100 Flight Control Systems  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain classical and modern flight control systems' structure and expected behavior. 
+TLO 2. Demonstrate how to use Bode and root locus tools to evaluate the dynamics of a feedback 
+control system. 
+TLO 3. Examine control filters and compensators and their impact to the control systems response. 
+TLO 4. Demonstrate usage of MIL-STD-1797 to predict flying and handling qualities. 
+TLO 5. Interpret the characteristics of pilot-induced oscillations. 
+ 
+FQ 7101A Flight Control Systems Lecture 
+FQ 7102E Flight Control Systems Exam 
+FQ 7103Z Flight Control System Debrief 
+Feedback flight control systems are introduced along with motivation for transition from mechanical to 
+automatic flight control systems. Linear analysis techniques are presented with applications to aircraft flight 
+controls. These fundamental concepts will be used throughout the 7000-level course. Feedback flight control 
+system implementation is introduced to demonstrate how augmented control systems are used to enhance air 
+vehicle stability and performance. Examples of classical proportional, integral, derivative and LQR (linear 
+quadratic regulator) control systems are presented as is gain scheduling, mode shaping. Basic linear control 
+design and analysis techniques are then applied to aircraft. Considerations for modern aircraft with relevant 
+examples are given as well as issues associated with flight testing control systems. Finally, an introduction to 
+digital control and other analysis planes are discussed. 
+Prerequisites: 
+FQ 6202E Aircraft Stability Exam 
+ 
+
+
+===== PAGE 92 =====
+ 
+92 
+ 
+FQ 7200 Structures Testing  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe basic aircraft structural components, frame of reference, structural principles (forces, 
+force reactions, material properties) related to airframe loads and flutter analysis, and the impact 
+of material/shape selection on resulting forces. 
+TLO 2. Explain the structures discipline in terms of subdisciplines including Airframe Loads, 
+Aeroelasticity, and Aerodynamic and Inertial Loads with Aeroelastic Response, along with their 
+associated buildup and instrumentation provisions. 
+TLO 3. Develop structures (loads and flutter) test methodology, test series unique considerations, and 
+instrumentation requirements for given aircraft structural modifications. 
+TLO 4. Execute elevated risk structures (LCO and Loads) flight test from the cockpit or the control 
+room using buildup principles and test series specific communications plan / recovery 
+provisions. 
+ 
+FQ 7201A Structures Fundamentals Lecture 
+FQ 7202A Structures Flight Testing Lecture 
+FQ 7203E Structures Exam 
+FQ 7204Z Structures Debrief 
+Static structural analysis is presented along with basic stress/strain analysis. Dynamics applied to non-
+rigid bodies is also presented, to include basic dynamics and ending with flutter and aeroservoelasticity. A 
+fundamental exposition of basic analysis techniques used for aircraft structures is reviewed. Statics and 
+dynamic structural test. Techniques are presented and include both ground and flight test considerations and 
+buildup.  
+Prerequisites: 
+FQ 7102E Flight Control Systems Exam  
+ 
+FQ 7210A Flight Control Systems Development and Integration Testing Lecture 
+The testing process used to clear flight control algorithms for flight test is covered. Flight simulation 
+facilities are discussed. The processes for ground test verification, structural coupling testing, and rigid body 
+limit cycle testing are also discussed. 
+Prerequisites: 
+FQ 7203E Structures Exam 
+ 
+FQ 7220M Learjet Flight Control Systems Verification Ground Test MIB 
+FQ 7221I Learjet Flight Control Systems Verification Ground Test 
+This event explores how flight control system verification and validation is executed including an 
+introduction to ground vibration testing and a demonstration of how structural notch filters are implemented. 
+Prerequisites: 
+FQ 7210A Flight Control Systems Development and Integration Testing Lecture 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 93 =====
+ 
+93 
+ 
+FQ 7230M F-16 Structures Envelope Expansion MIB 
+FQ 7231C F-16 Structures Envelope Expansion Control Room (ABM/FTE) 
+FQ 7232F F-16 Structures Envelope Expansion (CSO/P/RPA) 
+This flight is the students’ first look at how a structural envelope expansion test might be constructed and 
+executed, placing emphasis on safe envelope expansion techniques and proper realization of and reactions to 
+abort criteria for elevated risk flight test. 
+Prerequisites: 
+CF 6673F F-16 CF-4 (P, crew solo) [req’d for FQ 7231C] 
+CF 6680F F-16 Flight Training (ABM/CSO/FTE/RPA) [req’d for FQ 7231C] 
+CF 6681F F-16 Flight Training (P, non-crew solo) [req’d for FQ 7231C] 
+FQ 7203E Structures Exam 
+ 
+FQ 7240M F-16 Flutter/LCO Testing MIB 
+FQ 7241C F-16 Flutter/LCO Testing Control Room (ABM/FTE) 
+FQ 7242F F-16 Flutter/LCO Testing (CSO/P/RPA) 
+This flight is the students’ first look at how a Flutter or LCO test might be constructed and executed, 
+placing emphasis on safe envelope expansion techniques and proper realization of and reactions to abort 
+criteria for elevated risk flight test. 
+Prerequisites: 
+CF 6673F F-16 CF-4 (P, crew solo) [req’d for FQ 7241C] 
+CF 6680F F-16 Flight Training (ABM/CSO/FTE/RPA) [req’d for FQ 7241C] 
+CF 6681F F-16 Flight Training (P, non-crew solo) [req’d for FQ 7241C] 
+FQ 7203E Structures Exam 
+ 
+
+
+===== PAGE 94 =====
+ 
+94 
+ 
+ 
+Figure 23: FQ 7200 Structures Testing 
+
+
+===== PAGE 95 =====
+ 
+95 
+ 
+FQ 7300 Data-Driven Control 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 9. Understand the use of different control methods and their applications. 
+TLO 10. Understand the use of different simulations and their applications. 
+TLO 11. Understand different data collection methods and their applications. 
+TLO 12. Evaluate the “sim to real gap” for a given scenario. 
+TLO 13. Create hazard and risk mitigation strategies for various autonomy scenarios. 
+TLO 14. Apply control methods to different applications. 
+TLO 15. Analyze robustness methods and training tools for their accuracy and proper information. 
+TLO 16. Analyze methods for testing autonomous systems. 
+ 
+FQ 7301A Data-Driven Analysis and Control for Domain Sciences Lecture 
+FQ 7302E Data-Driven Analysis and Control for Domain Sciences Exam 
+FQ 7303Z Data-Driven Analysis and Control for Domain Sciences Debrief 
+This block will cover advanced Data-Driven control techniques. It includes a broad scope of topics that 
+build an understanding of aspects to consider when testing an autonomy-based system.  Topics include 
+identifying and analyzing different types of control systems and when to apply them, describing different 
+categories of data and proper methods for their analysis, describing different forms and fidelity of simulation 
+and their application, analyzing the use of Monte Carlo testing to include its advantages and pitfalls, and 
+identifying key issues to consider when building up to and executing flight tests. It is taught consecutively 
+with AS 6600 Data-Driven Control. 
+Prerequisites: 
+FQ 7102E Flight Control Systems Exam 
+ 
+FQ 7310A Data-Driven Control Capstone 
+This block will be the capstone for Data-Driven Control. It involves a hands-on exercise applying the 
+skills learned throughout the program related to data-driven test. 
+Prerequisites: 
+FQ 7301A Data-Driven Analysis and Control for Domain Sciences Lecture 
+ 
+
+
+===== PAGE 96 =====
+ 
+96 
+ 
+FQ 8000 Handling Qualities Evaluation 
+(2 Semester Credit Hours) 
+The 8000-level course takes all the material introduced previously in the flying qualities curriculum and 
+applies it to handling qualities evaluation. Students will learn how to properly evaluate an aircraft’s handling 
+qualities in both a quantitative and qualitative sense. 
+ 
+FQ 8100 Handling Qualities Evaluation  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Understand the basic “vocabulary” of handling qualities testing and will be conversant in that 
+vocabulary in a technical flight test environment.  
+TLO 2. Evaluate an aircraft using the Cooper-Harper rating scale and be able to provide proper pilot 
+opinion to support those ratings. In giving and recording pilot opinion, the student will apply 
+the concept that pilot dynamics are coupled with flying qualities to create handling qualities.  
+TLO 3. Evaluate an aircraft for PIO tendencies. 
+TLO 4. Understand the differences of handling qualities of piloted and unpiloted aircraft.  
+TLO 5. Evaluate the dynamics of an aircraft based on MIL-STD- 1797B. 
+ 
+FQ 8101A Handling Qualities Evaluation Lecture  
+FQ 8102E Handling Qualities Evaluation Exam 
+FQ 8103Z Handling Qualities Evaluation Debrief 
+The Cooper Harper rating scale is introduced. PIO rating scales are also introduced. A human’s effect on 
+aircraft stability is discussed. The different phases of handling qualities testing are presented. Concepts 
+taught in this course are reinforced using a simulation laboratory exercise. 
+Prerequisites: 
+FQ 7210A Flight Control Systems Development and Integration Testing Lecture 
+ 
+FQ 8110S Handling Qualities Sim 
+FQ 8111S PIO Sim 
+These simulator sessions provide a basis for how handling qualities ratings are given and explores the 
+details of using the Cooper-Harper Ratings Scale and the PIO Ratings Scale as well as the importance of pilot 
+comments when evaluating the handling qualities of an aircraft. The use of numerical methods to analyze 
+multiple ratings from different pilots will be discussed. 
+Prerequisites: 
+FQ 8101A Handling Qualities Evaluation Lecture [Hour 4] 
+FQ 8102E Handling Qualities Evaluation Exam [req’d for FQ 8111S] 
+ 
+FQ 8120M C-12 Multi Engine Handling Qualities MIB 
+FQ 8121F C-12 Multi Engine Handling Qualities Flight 
+This flight introduces students to dynamic characteristics of a propeller-driven aircraft, stalls of a 
+classical cambered airfoil, an introduction to FAR Part 23 certification, and a look into traditional transport 
+handling qualities maneuvers. 
+Prerequisites: 
+FQ 6241F C-12 Static Stability Flight [req’d for FQ 8121F] 
+FQ 8110S Handling Qualities Sim 
+FQ 9201A Stall, Departure and Spin Testing Lecture [req’d for FQ 8121F] 
+ 
+ 
+ 
+
+
+===== PAGE 97 =====
+ 
+97 
+ 
+FQ 8130M Learjet Handling Qualities Project Flight MIB 
+FQ 8131F Learjet Handling Qualities Project Flight 
+This event allows students to investigate and evaluate different approach and landing control law designs. 
+Prerequisites: 
+FQ 8111S PIO Sim 
+ 
+FQ 8140M T-38 Handling Qualities Flight MIB 
+FQ 8141F T-38 Handling Qualities Flight (P/RPA) 
+FQ 8150F Target for T-38 Handling Qualities Flight (P) 
+This event is an additional look at handling qualities flight testing demonstrating the connection between 
+open loop flying qualities and closed loop handling qualities and demonstrating the use of rating scales in 
+flight.  
+Prerequisites: 
+CF 6701F T-38 CF-Form (P) [req’d for FQ 8141F/FQ 8150F] 
+CF 6806F T-38 CF-6 Formation (RPA) [req’d for FQ 8141F] 
+FQ 6251F T-38 Dynamics Flight (CSO/P/RPA) [req’d for FQ 8141F] 
+FQ 6252C T-38 Dynamics Control Room (ABM/FTE with CSO/P/RPA as DE) [req’d for FQ 8141F] 
+FQ 8111S PIO Sim 
+ 
+FQ 8160F T-38 Combined Handling Qualities/Stall Flight (ABM/CSO/FTE) 
+This is a merged version of the T-38 Handling Qualities Flight and T-38 Stall Flight geared toward non- 
+pilots. 
+Prerequisites: 
+FQ 6251F T-38 Dynamics Flight (CSO/P/RPA) 
+FQ 6252C T-38 Dynamics Control Room (ABM/FTE with CSO/P/RPA as DE) 
+FQ 8140M T-38 Handling Qualities Flight MIB 
+FQ 9220M T-38 Stall Flight MIB 
+ 
+FQ 8170M Learjet Pilot Induced Oscillation (PIO) Flight MIB (P/RPA) 
+FQ 8171F Learjet Pilot Induced Oscillation (PIO) Flight (P/RPA) 
+This event allows students to investigate and evaluate different flight test techniques developed to 
+identify potential PIO triggers or events. 
+Prerequisites: 
+FQ 8130M Learjet Handling Qualities Project Flight MIB 
+FQ 8131F Learjet Handling Qualities Project Flight [req’d for FQ 8171F] 
+ 
+FQ 8180M VISTA Handling Qualities Flight MIB  
+FQ 8181F VISTA Handling Qualities Flight 
+These flights are a capstone to the handling qualities curriculum and use the variable stability system of 
+the NF-16D VISTA aircraft to explore stability augmentation systems, pilot-in-the-loop oscillations, and 
+several different powered-approach control law designs. 
+Prerequisites: 
+FQ 8111S PIO Sim 
+FQ 8131F Learjet Handling Qualities Project Flight [req’d for FQ 8181F] 
+FQ 8141F T-38 Handling Qualities Flight (P/RPA) [req’d for FQ 8181F] 
+FQ 8160F T-38 Combined Handling Qualities/Stall Flight (ABM/CSO/FTE) [req’d for FQ 8181F] 
+FQ 9221F T-38 Stall Flight (P) [req’d for FQ 8181F] 
+
+
+===== PAGE 98 =====
+ 
+98 
+ 
+Figure 24: FQ 8100 Handling Qualities Evaluation 
+
+
+===== PAGE 99 =====
+ 
+99 
+ 
+FQ 8200 Handling Qualities Flight Testing 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Evaluate an aircraft using the Cooper-Harper rating scale and be able to provide proper pilot 
+opinion to support those ratings. In giving and recording pilot opinion, the student will apply 
+the concept that pilot dynamics are coupled with flying qualities to create handling qualities.  
+TLO 2. Evaluate an aircraft for PIO tendencies. 
+TLO 3. Evaluate the dynamics of an aircraft based on MIL-STD- 1797B. 
+ 
+FQ 8201M T-38 Handling Qualities Test Plan MIB 
+FQ 8202F T-38 Handling Qualities Test Plan Data Flight 
+This is a student designed and executed event that enables the students to gather data to support their 
+T-38 Handling Qualities Test Plan Oral Report. Any target qualified student can support this flight event. 
+Prerequisites: 
+FQ 6311F T-38 Flying Qualities Test Plan Data Flight 2 [req’d for FQ 8202F] 
+FQ 8140M T-38 Handling Qualities Flight MIB 
+FQ 8141F T-38 Handling Qualities Flight (P/RPA) [req’d for FQ 8202F] 
+FQ 8160F T-38 Combined Handling Qualities/Stall Flight (ABM/CSO/FTE) [req’d for FQ 8202F] 
+ 
+FQ 8210Y T-38 Handling Qualities Test Plan Oral Report 
+This project is a continuation of the FQ 6301A Flying Qualities Test Plan Project. Building on the 
+knowledge the student gained from that project, they will first design handling qualities tasks to evaluate the 
+mission performance of the T-38 as an area defense fighter for foreign military sales. The student will be 
+briefed in the FQ 8201M T-38 Handling Qualities Test Plan MIB where expectations will be set and 
+requirements for the project will be discussed. Next they will design tasks and present test cards to be signed 
+by a T-38 Instructor Pilot. The student will then go execute their plan to gather data in FQ 8202F T-38 
+Handling Qualities Test Plan Data Flight. Once you have collected and analyzed all your data, you will 
+present your findings to a board in the FQ 8210Y T-38 Handling Qualities Test Plan Oral Report.  
+Prerequisites: 
+FQ 6321R T-38 Flying Qualities Test Plan Oral Report 
+FQ 8202F T-38 Handling Qualities Test Plan Data Flight 
+ 
+
+
+===== PAGE 100 =====
+ 
+100 
+ 
+FQ 9000 Envelope Expansion 
+(4 Semester Credit Hours) 
+The 9000-level course demonstrates how the buildup approach can be used for handling qualities testing 
+in different phases of vehicle flight testing. Starting with first flight and then working to more operational 
+test requirements this course exposes the student to handling qualities testing across the entire life cycle of a 
+flight vehicle. 
+ 
+FQ 9100 Failure Modes Testing  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall tenants of failure modes testing.  
+ 
+FQ 9101A Failure Modes Testing Lecture 
+Various vehicle failure modes are evaluated in this block. Specifically, engine out testing is addressed. 
+Failure mode and effect testing/analysis are addressed. 
+Prerequisites: 
+FQ 8120M C-12 Multi Engine Handling Qualities Flight MIB 
+ 
+FQ 9110M KC-135/C-12 Engine Out Testing Flight MIB 
+FQ 9111F KC-135/C-12 Engine Out Testing Flight 
+These engine-out sorties demonstrate typical engine out test procedures and FTTs for large multi-engine 
+aircraft. This event will only be executed in one aircraft, either the KC-135 or the C-12, not both. 
+Prerequisites: 
+FQ 8121F C-12 Multi Engine Handling Qualities Flight [req’d for FQ 9111F] 
+FQ 9101A Failure Modes Testing Lecture 
+ 
+
+
+===== PAGE 101 =====
+ 
+101 
+ 
+FQ 9200 Stall, Departure and Spin Testing 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the mechanics and contributors to aircraft stalls. 
+TLO 2. Describe the mechanics and dangers of inertial and kinematic coupling. 
+TLO 3. Describe the mechanics of spins and the aircraft properties that contribute to them. 
+TLO 4. Determine how to recover from spins in various aircraft types. 
+TLO 5. Explain how to conduct stall, departure, and spin testing. 
+ 
+FQ 9201A Stall, Departure and Spin Testing Lecture  
+FQ 9202E Stall, Departure and Spin Testing Exam 
+FQ 9203Z Stall, Departure and Spin Testing Debrief 
+The aerodynamics associated with stall are presented and various high-angle-of-attack terms are formally 
+defined. The equations of motion are revisited for coupling and spins and then analyzed. High angle-of- 
+attack test methodologies are presented including those discussed by MIL-STD-1797B and MIL-F-83691B. 
+Analysis and recovery techniques for this regime of flight are developed for use in future flight tests. 
+Prerequisites: 
+FQ 7102E Flight Control Systems Exam 
+ 
+FQ 9210M Glider Spin Flight MIB  
+FQ 9211F Glider Spin Flight  
+This flight puts into practice buildup concepts and FTTs commonly used in aircraft spin testing.  
+Prerequisites: 
+CF 6203F Glider Familiarization (ABM/CSO/FTE/select P/RPA) [req’d for FQ 9211F] 
+or 
+CF 6215F Glider Familiarization and Solo (select P) [req’d for FQ 9211F] 
+FQ 9201A Stall, Departure and Spin Testing Lecture 
+ 
+FQ 9220M T-38 Stall Flight MIB 
+FQ 9221F T-38 Stall Flight (P/RPA) 
+This event demonstrates and allows the student to practice FTTs associated with approach to stall, stall, 
+and lift boundary determination as well as a flight of the T-38 at several extremes of airspeed and angle of 
+attack. 
+Prerequisites: 
+CF 6362F T-38 CF-3 (P) [req’d for FQ 9221F] 
+CF 6804F T-38 CF-4 (RPA) [req’d for FQ 9221F] 
+FQ 9201A Stall, Departure and Spin Testing Lecture 
+ 
+ 
+
+
+===== PAGE 102 =====
+ 
+102 
+ 
+FQ 9230M F-16 Departure Demo MIB 
+FQ 9231F F-16 Departure Demo Flight  
+The objective of this mission is to train students in the proper accomplishment of F-16 nose-high slow-
+speed recoveries, recognition of departure from controlled flight, post-departure recovery procedures and 
+pitch-rocking techniques, and demonstrate potential errors and their consequences. 
+Prerequisites: 
+CF 6673F F-16 CF-4 (P, crew solo) [req’d for FQ 9231F] 
+CF 6680F F-16 Flight Training (ABM/CSO/FTE/RPA) [req’d for FQ 9231F] 
+CF 6681F F-16 Flight Training (P, non-crew solo) [req’d for FQ 9231F] 
+FQ 9202E Stall, Departure and Spin Testing Exam  
+ 
+FQ 9240M F-16 High AOA Envelope Expansion MIB 
+FQ 9241W F-16 High AOA Envelope Expansion Test Plan Working Group 1 
+FQ 9242W F-16 High AOA Envelope Expansion Test Plan Working Group 2 
+FQ 9243W F-16 High AOA Envelope Expansion Flight Readiness Review 
+FQ 9244S F-16 High AOA Envelope Expansion Rehearsal Sim (CSO/P/RPA) 
+FQ 9245C F-16 High AOA Envelope Expansion Rehearsal Control Room (ABM/FTE) 
+FQ 9246F F-16 High AOA Envelope Expansion Data Flight(CSO/P/RPA)  
+FQ 9247C F-16 High AOA Envelope Expansion Control Room (ABM/FTE with CSO/P/RPA 
+desired not required as DE) 
+FQ 9248Y F-16 High AOA Envelope Expansion Oral Report 
+For the High AOA Envelope Expansion project, the student will receive project requirements and be 
+given information needed to complete the project at the MIB. The students will then be given time to develop 
+a plan during the instructor facilitated FQ 9241W F-16 High AOA Envelope Expansion TPWG 1. The 
+students will then be broken up into teams where they will finalize their plan during FQ 9242W F-16 High 
+AOA Envelope Expansion TPWG 2 and FQ 9243W High AOA Envelope Expansion Flight Readiness 
+Review. The students will demonstrate to their instructors that they can execute their plan in the rehearsal sim 
+and control room. Finally, the teams will execute their plan on the data flight and control room. The team will 
+analyze and report on their data as part of FQ 9248Y F-16 High AOA Envelope Expansion Oral Report. 
+Prerequisites: 
+FQ 9231F F-16 Departure Flight [req’d for FQ 9244S] 
+FQ 6252C T-38 Dynamics Control Room (ABM/FTE with CSO/P/RPA as DE) [req’d for FQ 9245C] 
+or  
+TF 6231C F-16/Control Room Test Conduct Intro (ABM/FTE) [req’d for FQ 9245C] 
+FQ 9202E Stall, Departure and Spin Testing Exam  
+FQ 9221F T-38 Stall Flight (P) [req’d for FQ 9244S] 
+PF 8221C T-38 Turn Performance Control Room (ABM/FTE) [req’d for FQ 9245C] 
+ 
+
+
+===== PAGE 103 =====
+ 
+103 
+ 
+ 
+Figure 25: FQ 9200 Stall, Departure and Spin Testing 
+
+
+===== PAGE 104 =====
+ 
+ 
+104 
+ 
+FQ 9300 Stores Certification 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall the process of certifying aircraft stores. 
+ 
+FQ 9301A Stores Certification Lecture 
+The analytical process and flight test methods used to qualify stores on aircraft for safe operation are 
+introduced. 
+Prerequisites: 
+FQ 7203E Structures Exam 
+FQ 8101A Handling Qualities Evaluation Lecture 
+ 
+
+
+===== PAGE 105 =====
+ 
+ 
+105 
+ 
+FQ 9400 First Flight  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe how the concept of build-up approach is applied to first flights and envelope 
+expansion testing.  
+TLO 2. Describe how risk mitigation is addressed in test planning and mission materials in a first 
+flight and in envelope expansion.  
+TLO 3. Describe the types of testing that are done during ground testing, low-speed taxi, and high-
+speed taxi.  
+TLO 4. Describe how the elements comprising a maneuver block are determined.  
+TLO 5. Given an FTT, describe what information is provided and which test objectives can be met.  
+TLO 6. Describe the general flight conditions and configurations that should be tested during a first 
+flight.  
+TLO 7. List the major components of a generic first flight profile. 
+ 
+FQ 9401A Aircraft Flight Envelope Testing Lecture 
+This block introduces the concept of aircraft flight envelope expansion as well as the creation of 
+aircraft flight manuals using testing that will occur during the Flying Qualities Phase. 
+Prerequisites: 
+FQ 6201A Aircraft Stability Lecture 
+ 
+FQ 9410A First Flight and Envelope Expansion Lecture  
+FQ 9411E First Flight and Envelope Expansion Exam 
+FQ 9412Z First Flight and Envelope Expansion Debrief 
+The process leading to first flight of an aircraft is presented. Issues associated with experimental flight 
+test are presented. 
+Prerequisites: 
+FQ 8101A Handling Qualities Evaluation Lecture 
+ 
+
+
+===== PAGE 106 =====
+ 
+ 
+106 
+ 
+FQ 9500 Envelope Expansion Practical Exams  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Execute a flying qualities test.  
+ 
+FQ 9501M Sim Flying Qualities Practical Exam MIB (ABM/CSO/RPA) 
+ 
+FQ 9502S Sim Flying Qualities Practical Exam (ABM/CSO/RPA)  
+FQ 9503R Sim Flying Qualities Practical Exam Written Report (ABM/CSO/RPA)  
+The objective of the sim is to evaluate the student ABM/CSO/RPA ability to plan, execute, and report 
+a flying and handling qualities evaluation using hand-held data techniques. The students are given a 
+scenario in which they must conduct an initial evaluation of a proposed solution to address the significant 
+time delays often encountered when flying RPAs or handling remotely guided munitions. The student is 
+tasked to plan and fly the sim then provide an informal written report on the results and recommendations. 
+Prerequisites: 
+FQ 8210Y T-38 Handling Qualities Test Plan Oral Report 
+ 
+FQ 9510M T-38 Flying Qualities Practical Exam MIB (FTE/P)  
+FQ 9511F T-38 Flying Qualities Practical Exam (P) 
+FQ 9512C T-38 Flying Qualities Practical Control Room (FTE) 
+FQ 9513R T-38 Flying Qualities Practical Exam Written Report (FTE/P) 
+The objective of the sortie is to evaluate the student pilot/FTE ability to plan, execute, and report a 
+flying and handling qualities evaluation. The students are given a scenario in which information on the 
+T-38 pitch PIO susceptibility at high speed and low altitude is requested. It will take more than one sortie 
+to provide this information, so an engineering team elects to fly a single sortie to narrow the focus of the 
+effort. The students are tasked to plan and fly this sortie then provide an informal written report to the 
+engineering team on the results and recommendations for worthwhile additional testing. 
+Prerequisites: 
+FQ 8210Y T-38 Handling Qualities Test Plan Oral Report 
+ 

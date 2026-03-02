@@ -1,0 +1,110 @@
+{
+  "sourceDocument": "MCG 25B",
+  "extractedAt": "2026-02-18",
+  "transformedAt": "2026-02-22",
+  "schemaVersion": 3,
+  "pdfMetadata": {
+    "pages": 165,
+    "title": "MCG 25B",
+    "author": "carl.gotwald.1@us.af.mil",
+    "created": "2025-08-09",
+    "modified": "2025-08-24"
+  },
+  "phases": {
+    "AN": { "events": 49, "prereqs": 0, "ftc": 0, "stc": 0, "shared": 49 },
+    "AS": { "events": 74, "prereqs": 93, "ftc": 0, "stc": 74, "shared": 0 },
+    "CF": { "events": 99, "prereqs": 351, "ftc": 94, "stc": 5, "shared": 0 },
+    "FQ": { "events": 91, "prereqs": 238, "ftc": 91, "stc": 0, "shared": 0 },
+    "PF": { "events": 55, "prereqs": 193, "ftc": 54, "stc": 1, "shared": 0 },
+    "SO": { "events": 16, "prereqs": 17, "ftc": 0, "stc": 16, "shared": 0 },
+    "SY": { "events": 86, "prereqs": 203, "ftc": 12, "stc": 8, "shared": 66 },
+    "TF": { "events": 124, "prereqs": 257, "ftc": 41, "stc": 29, "shared": 54 },
+    "TL": { "events": 27, "prereqs": 28, "ftc": 0, "stc": 0, "shared": 27 }
+  },
+  "totals": {
+    "events": 621,
+    "prerequisites": 1380,
+    "figures": 30,
+    "dependencyEdges": 1491,
+    "courseBreakdown": { "FTC": 292, "STC": 133, "Shared": 196 },
+    "courseAssignmentSources": {
+      "explicit": 78,
+      "figure": 0,
+      "module": 315,
+      "phase": 228
+    }
+  },
+  "validation": {
+    "countIntegrity": "PASS",
+    "countIntegrityDetail": {
+      "v1Events": 621,
+      "v2Events": 621,
+      "v3Events": 621,
+      "v1Prereqs": 1380,
+      "v2Prereqs": 1380,
+      "v3Prereqs": 1380,
+      "allMatch": true
+    },
+    "courseAssignment": "PASS",
+    "courseAssignmentDetail": {
+      "nullAssignments": 0,
+      "ftcOnlyPhasesSTC": {
+        "CF": 5,
+        "PF": 1,
+        "FQ": 0,
+        "note": "CF/PF STC events are explicit overrides (STC students attend some ground training)"
+      },
+      "stcOnlyPhasesFTC": {
+        "SO": 0,
+        "AS": 0
+      }
+    },
+    "dependencyGraph": "WARN",
+    "dependencyGraphDetail": {
+      "totalNodes": 621,
+      "totalEdges": 1491,
+      "edgesBySource": { "text": 1380, "figure": 111 },
+      "edgesByType": { "prerequisite": 1431, "sequence": 60 },
+      "orphanPrereqs": 36,
+      "orphanTypes": {
+        "textErrata": ["PF 8210F (known errata, referenced 3x)", "FQ 8112S (referenced 2x)"],
+        "noneCode": ["'None' referenced by AS 6101B, TL 7201B"],
+        "figureDerived": "22 orphans from figure-derived edges using module-level codes not matching individual event codes"
+      },
+      "cycleDetected": true,
+      "cycleNote": "Cycle traced to Figure 29 (TF 6200 Execute) bidirectional edge between TF 6270A and TF 6430A. This is a display artifact in the flow diagram, not a real circular dependency."
+    },
+    "figureCoverage": "PASS",
+    "figureCoverageDetail": {
+      "totalFiguresInPDF": 30,
+      "figuresExtracted": 30,
+      "figuresAnalyzed": 30,
+      "courseOverviewValidated": true,
+      "embeddedImages": 61,
+      "renderedPages": 32
+    },
+    "unmatchedNotes": [],
+    "spotChecks": "PASS",
+    "spotCheckDetail": {
+      "eventsChecked": 5,
+      "eventsPassed": 5,
+      "events": [
+        { "code": "CF 5101H", "name": "Emergency Parachute Training", "result": "PASS", "notes": "All fields match PDF p17" },
+        { "code": "TF 6103A", "name": "Test Planning Lecture", "result": "PASS", "notes": "Course assignment Shared correct, prereqs match" },
+        { "code": "FQ 8101A", "name": "HQ Evaluation Lecture", "result": "PASS", "notes": "FTC correct, 'Hour 4' partial completion preserved" },
+        { "code": "SY 6131F", "name": "F-16 Sensors Flight", "result": "PASS", "notes": "9/9 prereqs match including cross-phase, crew solo scoping" },
+        { "code": "AS 7101A", "name": "Satellite Systems Review", "result": "PASS", "notes": "STC correct, prereqs match, 14 TLOs verified" }
+      ]
+    }
+  },
+  "pipelineHistory": {
+    "stage0_images": "2026-02-22 — 61 embedded images, 32 rendered pages, 30 figure captions",
+    "stage0_figures": "2026-02-22 — 30 figures analyzed via Claude Code visual analysis",
+    "stage1_v1": "2026-02-18 — 9 phases extracted by parallel agents (621 events)",
+    "stage2_v2": "2026-02-19 — transform-v2.cjs, 0 unmatched notes",
+    "stage3_v3": "2026-02-22 — transform-v3.cjs with course assignments + figure data",
+    "stage4_depGraph": "2026-02-22 — 1491 edges (1380 text + 111 figure)",
+    "stage5_validation": "2026-02-22 — count integrity PASS, course assignment PASS, dep graph WARN (cycles + orphans)",
+    "stage6_viewer": "2026-02-22 — viewer-v3-template.html deployed to Version-3-course-aware/viewer/"
+  }
+}

@@ -1,0 +1,14 @@
+.conflict-tooltip-portal {
+  position: fixed;
+  background: var(--conflict-tooltip-bg);
+  border: 1px solid var(--conflict-tooltip-border);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.5rem;
+  color: var(--conflict-tooltip-text);
+  white-space: pre-line;
+  z-index: 9999;
+  pointer-events: none;
+  box-shadow: var(--shadow-tooltip);
+  max-width: 320px;
+}

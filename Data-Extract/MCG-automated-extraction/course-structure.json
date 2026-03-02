@@ -1,0 +1,162 @@
+{
+  "_description": "TPS Course Structure Reference — Maps phases and module ranges to FTC/STC/Shared. Derived from MCG Figure 3 (Course Overview) and phase introductions. This file is used by the extraction pipeline to assign course types to events.",
+  "_source": "MCG 25B Figure 3: Course Overview + phase intro text",
+  "_note": "Module ranges are 25B-specific. Update for each new MCG class if numbering changes.",
+
+  "courses": {
+    "FTC": {
+      "fullName": "Flight Test Course",
+      "description": "Flight test engineering curriculum for pilots and flight test engineers",
+      "studentPositions": ["P", "FTE", "CSO", "ABM", "RPA"]
+    },
+    "STC": {
+      "fullName": "Space Test Course",
+      "description": "Space systems test engineering curriculum",
+      "studentPositions": ["P", "FTE", "CSO", "ABM", "RPA"]
+    }
+  },
+
+  "phases": {
+    "AN": {
+      "phaseName": "Ancillary Training",
+      "courseAssignment": "Shared",
+      "rationale": "Orientation and check-in training common to all students",
+      "modules": {
+        "AN 5000": { "moduleName": "Ancillary Training", "courseAssignment": "Shared" }
+      }
+    },
+    "TL": {
+      "phaseName": "Test Leadership",
+      "courseAssignment": "Shared",
+      "rationale": "Leadership curriculum taken by both FTC and STC students",
+      "modules": {
+        "TF 5000": { "moduleName": "Strategic Context", "courseAssignment": "Shared" },
+        "TF 6000": { "moduleName": "Negotiation, Persuasion & Communication (NPC)", "courseAssignment": "Shared" },
+        "TF 7000": { "moduleName": "Innovation", "courseAssignment": "Shared" },
+        "TF 8000": { "moduleName": "Case Studies", "courseAssignment": "Shared" }
+      }
+    },
+    "CF": {
+      "phaseName": "Check Flight Training",
+      "courseAssignment": "FTC",
+      "rationale": "Figure 3 shows CF under FTC only (dark background). Check flights are aircraft-specific and only apply to flight test students.",
+      "modules": {
+        "CF 5000": { "moduleName": "Common Ground Training", "courseAssignment": "FTC" },
+        "CF 6000": { "moduleName": "Flight Training", "courseAssignment": "FTC" }
+      }
+    },
+    "SO": {
+      "phaseName": "Space System Operations",
+      "courseAssignment": "STC",
+      "rationale": "Figure 3 shows SO under STC only (dark background). Space operations apply exclusively to space test students.",
+      "modules": {
+        "SO 6000": { "moduleName": "Operations Training", "courseAssignment": "STC" }
+      }
+    },
+    "TF": {
+      "phaseName": "Test Foundations",
+      "courseAssignment": "Shared",
+      "rationale": "Figure 3 shows TF in center (shared). Core test methodology for both courses. Individual events may specify FTC or STC applicability.",
+      "modules": {
+        "TF 5000": { "moduleName": "Foundations", "courseAssignment": "Shared" },
+        "TF 6000": { "moduleName": "Plan, Execute, Analyze, Report, Special Subjects (PEARS)", "courseAssignment": "Shared" },
+        "TF 7000": { "moduleName": "Qualitative Evaluations", "courseAssignment": "Shared" },
+        "TF 8000": { "moduleName": "Test Management Project", "courseAssignment": "Shared" },
+        "TF 9000": { "moduleName": "Comprehensive Exams", "courseAssignment": "Shared" }
+      }
+    },
+    "PF": {
+      "phaseName": "Performance",
+      "courseAssignment": "FTC",
+      "rationale": "Figure 3 shows PF under Flight Sciences (FTC side, dark background). Aircraft performance testing.",
+      "modules": {
+        "PF 5000": { "moduleName": "Performance Preliminaries", "courseAssignment": "FTC" },
+        "PF 6000": { "moduleName": "Performance Fundamentals", "courseAssignment": "FTC" },
+        "PF 7000": { "moduleName": "Performance Systems", "courseAssignment": "FTC" },
+        "PF 8000": { "moduleName": "Performance Characterization", "courseAssignment": "FTC" }
+      }
+    },
+    "FQ": {
+      "phaseName": "Flying Qualities",
+      "courseAssignment": "FTC",
+      "rationale": "Figure 3 shows FQ under Flight Sciences (FTC side, dark background). Aircraft handling qualities testing.",
+      "modules": {
+        "FQ 6000": { "moduleName": "Aircraft Flight Mechanics", "courseAssignment": "FTC" },
+        "FQ 7000": { "moduleName": "Flight Control Systems", "courseAssignment": "FTC" },
+        "FQ 8000": { "moduleName": "Handling Qualities Evaluation", "courseAssignment": "FTC" },
+        "FQ 9000": { "moduleName": "Envelope Expansion", "courseAssignment": "FTC" }
+      }
+    },
+    "AS": {
+      "phaseName": "Astronautical Sciences",
+      "courseAssignment": "STC",
+      "rationale": "Figure 3 shows AS under STC side (dark background). Satellite and space systems analysis.",
+      "modules": {
+        "AS 6000": { "moduleName": "Fundamentals", "courseAssignment": "STC" },
+        "AS 7000": { "moduleName": "Satellite Sub-systems", "courseAssignment": "STC" },
+        "AS 8000": { "moduleName": "Astrodynamics", "courseAssignment": "STC" },
+        "AS 9000": { "moduleName": "Threats & Special Topics", "courseAssignment": "STC" }
+      }
+    },
+    "SY": {
+      "phaseName": "Mission Systems",
+      "courseAssignment": "Shared",
+      "rationale": "Figure 3 shows SY in center (shared). Mission systems testing applies to both courses. Events may specify FTC/STC.",
+      "modules": {
+        "SY 5000": { "moduleName": "Mission Systems Foundations", "courseAssignment": "Shared" },
+        "SY 6000": { "moduleName": "Component Mission Systems", "courseAssignment": "Shared" },
+        "SY 7000": { "moduleName": "Platform Mission Systems", "courseAssignment": "Shared" },
+        "SY 8000": { "moduleName": "Kill Web Mission Systems", "courseAssignment": "Shared" },
+        "SY 9000": { "moduleName": "Selected Topics", "courseAssignment": "Shared" }
+      }
+    }
+  },
+
+  "courseOverviewFigure": {
+    "figureNumber": 3,
+    "figureName": "Course Overview",
+    "layout": {
+      "sharedTop": ["AN", "TL"],
+      "ftcLeft": ["CF"],
+      "stcRight": ["SO"],
+      "sharedCenter": ["TF"],
+      "ftcFlightSciences": ["PF", "FQ"],
+      "stcAstroSciences": ["AS"],
+      "sharedBottom": ["SY"]
+    },
+    "visualCues": {
+      "darkBackground": "Course-specific phases (FTC or STC)",
+      "lightBackground": "Shared phases (both courses)",
+      "orangeText": "Course/module codes",
+      "blackText": "Course/module names"
+    }
+  },
+
+  "eventTypeCodeMap": {
+    "A": { "name": "Academic Lecture", "category": "Academics" },
+    "B": { "name": "Brief", "category": "Ground" },
+    "C": { "name": "Control Room", "category": "Operations" },
+    "D": { "name": "Debrief", "category": "Ground" },
+    "E": { "name": "Exam", "category": "Academics" },
+    "F": { "name": "Flight", "category": "Flying" },
+    "G": { "name": "Ground Training", "category": "Ground" },
+    "H": { "name": "Hands-On Training", "category": "Ground" },
+    "L": { "name": "Lab", "category": "Lab" },
+    "M": { "name": "Mission", "category": "Operations" },
+    "P": { "name": "Presentation/Report", "category": "Academics" },
+    "R": { "name": "Report", "category": "Academics" },
+    "S": { "name": "Simulation", "category": "Simulation" },
+    "T": { "name": "Mission Brief/Study Period", "category": "Ground" },
+    "W": { "name": "Working Group", "category": "Academics" },
+    "X": { "name": "MIB (Mission Information Brief)", "category": "Ground" },
+    "Z": { "name": "Debrief", "category": "Ground" }
+  },
+
+  "positionCodes": {
+    "P": { "name": "Pilot", "courseEligibility": ["FTC", "STC"] },
+    "FTE": { "name": "Flight Test Engineer", "courseEligibility": ["FTC", "STC"] },
+    "CSO": { "name": "Combat Systems Officer", "courseEligibility": ["FTC"] },
+    "ABM": { "name": "Air Battle Manager", "courseEligibility": ["FTC"] },
+    "RPA": { "name": "Remotely Piloted Aircraft", "courseEligibility": ["FTC"] }
+  }
+}

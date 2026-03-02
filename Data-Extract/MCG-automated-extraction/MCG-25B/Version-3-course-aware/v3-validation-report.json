@@ -1,0 +1,211 @@
+{
+  "transformedAt": "2026-02-22T23:46:19.705Z",
+  "phases": {
+    "AN": {
+      "v2Events": 49,
+      "v3Events": 49,
+      "match": true,
+      "v2Prereqs": 0,
+      "v3Prereqs": 0,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 0,
+        "STC": 0,
+        "Shared": 49
+      },
+      "sourceBreakdown": {
+        "explicit": 0,
+        "figure": 0,
+        "module": 0,
+        "phase": 49
+      }
+    },
+    "AS": {
+      "v2Events": 74,
+      "v3Events": 74,
+      "match": true,
+      "v2Prereqs": 93,
+      "v3Prereqs": 93,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 0,
+        "STC": 74,
+        "Shared": 0
+      },
+      "sourceBreakdown": {
+        "explicit": 0,
+        "figure": 0,
+        "module": 74,
+        "phase": 0
+      }
+    },
+    "CF": {
+      "v2Events": 99,
+      "v3Events": 99,
+      "match": true,
+      "v2Prereqs": 351,
+      "v3Prereqs": 351,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 94,
+        "STC": 5,
+        "Shared": 0
+      },
+      "sourceBreakdown": {
+        "explicit": 16,
+        "figure": 0,
+        "module": 51,
+        "phase": 32
+      }
+    },
+    "FQ": {
+      "v2Events": 91,
+      "v3Events": 91,
+      "match": true,
+      "v2Prereqs": 238,
+      "v3Prereqs": 238,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 91,
+        "STC": 0,
+        "Shared": 0
+      },
+      "sourceBreakdown": {
+        "explicit": 0,
+        "figure": 0,
+        "module": 91,
+        "phase": 0
+      }
+    },
+    "PF": {
+      "v2Events": 55,
+      "v3Events": 55,
+      "match": true,
+      "v2Prereqs": 193,
+      "v3Prereqs": 193,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 54,
+        "STC": 1,
+        "Shared": 0
+      },
+      "sourceBreakdown": {
+        "explicit": 1,
+        "figure": 0,
+        "module": 54,
+        "phase": 0
+      }
+    },
+    "SO": {
+      "v2Events": 16,
+      "v3Events": 16,
+      "match": true,
+      "v2Prereqs": 17,
+      "v3Prereqs": 17,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 0,
+        "STC": 16,
+        "Shared": 0
+      },
+      "sourceBreakdown": {
+        "explicit": 0,
+        "figure": 0,
+        "module": 16,
+        "phase": 0
+      }
+    },
+    "SY": {
+      "v2Events": 86,
+      "v3Events": 86,
+      "match": true,
+      "v2Prereqs": 203,
+      "v3Prereqs": 203,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 12,
+        "STC": 8,
+        "Shared": 66
+      },
+      "sourceBreakdown": {
+        "explicit": 20,
+        "figure": 0,
+        "module": 0,
+        "phase": 66
+      }
+    },
+    "TF": {
+      "v2Events": 124,
+      "v3Events": 124,
+      "match": true,
+      "v2Prereqs": 257,
+      "v3Prereqs": 257,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 41,
+        "STC": 29,
+        "Shared": 54
+      },
+      "sourceBreakdown": {
+        "explicit": 41,
+        "figure": 0,
+        "module": 29,
+        "phase": 54
+      }
+    },
+    "TL": {
+      "v2Events": 27,
+      "v3Events": 27,
+      "match": true,
+      "v2Prereqs": 28,
+      "v3Prereqs": 28,
+      "prereqMatch": true,
+      "courseBreakdown": {
+        "FTC": 0,
+        "STC": 0,
+        "Shared": 27
+      },
+      "sourceBreakdown": {
+        "explicit": 0,
+        "figure": 0,
+        "module": 0,
+        "phase": 27
+      }
+    }
+  },
+  "totals": {
+    "v2Events": 621,
+    "v3Events": 621,
+    "v2Prereqs": 1380,
+    "v3Prereqs": 1380
+  },
+  "courseBreakdown": {
+    "FTC": 292,
+    "STC": 133,
+    "Shared": 196
+  },
+  "sourceBreakdown": {
+    "explicit": 78,
+    "figure": 0,
+    "module": 315,
+    "phase": 228
+  },
+  "issues": [
+    {
+      "type": "unexpected_course",
+      "phase": "CF",
+      "message": "FTC-only phase has 5 STC events — check for explicit overrides"
+    },
+    {
+      "type": "unexpected_course",
+      "phase": "PF",
+      "message": "FTC-only phase has 1 STC events — check for explicit overrides"
+    }
+  ],
+  "dependencyGraph": {
+    "nodes": 621,
+    "edges": 1491,
+    "orphanPrereqs": 36,
+    "cycleDetected": true
+  }
+}

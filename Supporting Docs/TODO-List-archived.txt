@@ -1,0 +1,21 @@
+TODO List for Refinements:
+
+1.  [ ] **Fix Time Scale Labels**: Change column header time labels from "06, 09..." to "6, 9...".
+2.  [ ] **Integrate Time Scale**: Ensure time scale numbers are visually distinct but clearly inside the header cell (bottom aligned).
+3.  [ ] **Fix Row Backgrounds**: 
+    *   Remove background/border styling from the inner React component `div`.
+    *   Apply styling only to the outer Grid cell `div`.
+    *   Ensure inner `div` has `h-full` and `min-height` (calculated) to push the row height but expand to fill neighbors.
+4.  [ ] **Implement 2D Scroll with Sticky Headers**:
+    *   Set `body` to `overflow: hidden`.
+    *   Make the main container `h-screen` and `flex flex-col`.
+    *   Make the `.gantt-container` `overflow: auto` (handling both X and Y scroll).
+    *   Ensure headers stick to the top of `.gantt-container`.
+    *   Ensure name column sticks to the left of `.gantt-container`.
+
+[2026-02-05]
+- [DONE] Implement granular personnel filtering (Pivot Table style). (User Request)
+  - Added FilterModal component with search, toggle group, and select all/none.
+  - Updated App state to use `visiblePersonnel` (Set) as the source of truth for rows.
+  - Added "Filter" button to header and "Custom" logic to dropdown.
+  - Applied changes to both `index_format.html` (Local) and `index.html` (Prod).

@@ -1,0 +1,660 @@
+{
+  "sourceDocument": "MCG 25B",
+  "analyzedAt": "2026-02-22",
+  "method": "Claude Code visual analysis of rendered figure pages",
+  "stats": {
+    "totalFigures": 30,
+    "figuresByType": {
+      "course_overview": 8,
+      "dependency_flow": 19,
+      "organizational": 2,
+      "reference_table": 1
+    },
+    "totalDependencyEdges": 247,
+    "totalCourseAssignments": 156
+  },
+  "results": [
+    {
+      "figure": { "number": 1, "name": "School Goal" },
+      "page": 7,
+      "imageFile": "pages/page007_figure-1_School-Outcomes.png",
+      "classification": { "figureType": "organizational", "confidence": 0.95 },
+      "interpretation": {
+        "description": "The TLTI (Tester, Leader, Thinker, Innovator) four-pillar model showing the school goal and required competencies. Foundation is Operations and Engineering Expertise with attributes: Credible, Adaptable, Warfighter-Focused.",
+        "courseAssignments": [],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 2, "name": "Curriculum Organization" },
+      "page": 8,
+      "imageFile": "pages/page008_figure-2_All-students-complete-ancillary-training-at-the-be.png",
+      "classification": { "figureType": "organizational", "confidence": 0.95 },
+      "interpretation": {
+        "description": "High-level curriculum structure showing Mission at top, Vision, Staff Goal, then curriculum pillars: Test Leadership, Flight & Space Science, Mission Systems, with Data-Driven Test, Case Studies, and Test Foundations in the center. Research branches shown on right (Technology, Operations, Methodology).",
+        "courseAssignments": [],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 3, "name": "Course Overview" },
+      "page": 9,
+      "imageFile": "pages/page009_figure-3_Course-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 1.0 },
+      "interpretation": {
+        "description": "Master course overview showing all 9 phases organized by FTC/STC course assignment. Dark background = course-specific, light background = shared. Layout: AN/TL shared at top, CF (FTC) left and SO (STC) right, TF shared center, PF/FQ (FTC) bottom-left and AS (STC) bottom-right, SY shared at bottom.",
+        "courseAssignments": [
+          { "code": "AN 5000", "assignment": "Shared" },
+          { "code": "TF 5000", "assignment": "Shared" },
+          { "code": "TF 6000", "assignment": "Shared" },
+          { "code": "TF 7000", "assignment": "Shared" },
+          { "code": "TF 8000", "assignment": "Shared" },
+          { "code": "CF 5000", "assignment": "FTC" },
+          { "code": "CF 6000", "assignment": "FTC" },
+          { "code": "SO 6000", "assignment": "STC" },
+          { "code": "TF 5000", "assignment": "Shared" },
+          { "code": "TF 6000", "assignment": "Shared" },
+          { "code": "TF 7000", "assignment": "Shared" },
+          { "code": "TF 8000", "assignment": "Shared" },
+          { "code": "TF 9000", "assignment": "Shared" },
+          { "code": "PF 5000", "assignment": "FTC" },
+          { "code": "PF 6000", "assignment": "FTC" },
+          { "code": "PF 7000", "assignment": "FTC" },
+          { "code": "PF 8000", "assignment": "FTC" },
+          { "code": "FQ 6000", "assignment": "FTC" },
+          { "code": "FQ 7000", "assignment": "FTC" },
+          { "code": "FQ 8000", "assignment": "FTC" },
+          { "code": "FQ 9000", "assignment": "FTC" },
+          { "code": "AS 6000", "assignment": "STC" },
+          { "code": "AS 7000", "assignment": "STC" },
+          { "code": "AS 8000", "assignment": "STC" },
+          { "code": "AS 9000", "assignment": "STC" },
+          { "code": "SY 5000", "assignment": "Shared" },
+          { "code": "SY 6000", "assignment": "Shared" },
+          { "code": "SY 7000", "assignment": "Shared" },
+          { "code": "SY 8000", "assignment": "Shared" },
+          { "code": "SY 9000", "assignment": "Shared" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 4, "name": "Check Flight Overview" },
+      "page": 16,
+      "imageFile": "pages/page016_figure-4_Check-Flight-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Hierarchical overview of the Check Flight (CF) phase showing two main courses: CF 5000 Common Ground Training (3 modules: 5100 Life Support, 5200 Local Procedures, 5300 CRM) and CF 6000 Flight Training (7 modules: 6100 Airmanship, 6200 Glider, 6300 T-38, 6400 Learjet, 6500 C-12, 6600 F-16/Control Room, 6700 Formation).",
+        "courseAssignments": [
+          { "code": "CF 5000", "assignment": "Shared" },
+          { "code": "CF 5100", "assignment": "Shared" },
+          { "code": "CF 5200", "assignment": "Shared" },
+          { "code": "CF 5300", "assignment": "Shared" },
+          { "code": "CF 6000", "assignment": "FTC" },
+          { "code": "CF 6100", "assignment": "Shared" },
+          { "code": "CF 6200", "assignment": "Shared" },
+          { "code": "CF 6300", "assignment": "FTC" },
+          { "code": "CF 6400", "assignment": "FTC" },
+          { "code": "CF 6500", "assignment": "FTC" },
+          { "code": "CF 6600", "assignment": "FTC" },
+          { "code": "CF 6700", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 5, "name": "CF 6300 T-38 Training (P)" },
+      "page": 24,
+      "imageFile": "pages/page024_figure-5_CF-6300-T-38-Training-P.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow diagram for CF 6300 T-38 Training for Pilots. Chain: AN 5130A -> CF 6301G (ground school) -> CF 6301B (CBT) + CF 6302A (egress) -> CF 6303K (ejection sim gate with all CF 5000 prereqs) -> EP sim, exams -> T-38 sorties -> weapons fam -> crew solo and A-10 capstone.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "AN 5130A", "to": "CF 6301G", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6301G", "to": "CF 6301B", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6301G", "to": "CF 6302A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6301B", "to": "CF 6320A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6320A", "to": "CF 6303K", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6303K", "to": "CF 6305S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6303K", "to": "CF 6350E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 6303K", "to": "CF 6340E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5101H", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5110H", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5120H", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5130A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5140A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5201A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5230A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5240E", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5251H", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "CF 5301A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" },
+          { "from": "SY 7201A", "to": "CF 6300F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 5" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 6, "name": "CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC)" },
+      "page": 25,
+      "imageFile": "pages/page025_figure-6_CF-6300-T-38-Training-ABMCSOFTERPASTC.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow for CF 6300 T-38 Training for non-pilot positions. Similar to Figure 5 with position-specific additions: CF 5141A (ABM/FTE/STC), CF 6110F C-172 Airmanship (ABM/FTE), CF 6130A Aircraft Familiarization, modified exam paths with MA Closed Book and MSP Boldface.",
+        "courseAssignments": [
+          { "code": "CF 5141A", "assignment": "STC" }
+        ],
+        "dependencyEdges": [
+          { "from": "AN 5130A", "to": "CF 6301G", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 6" },
+          { "from": "CF 6301G", "to": "CF 6301B", "type": "sequence", "source": "figure", "sourceDetail": "Figure 6" },
+          { "from": "CF 6301G", "to": "CF 6302A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 6" },
+          { "from": "CF 5141A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 6" },
+          { "from": "CF 6110F", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 6" },
+          { "from": "CF 6130A", "to": "CF 6303K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 6" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 7, "name": "CF 6600 F-16 and Control Room Training (P)" },
+      "page": 32,
+      "imageFile": "pages/page032_figure-7_CF-6600-F-16-and-Control-Room-Training-P.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow for CF 6600 F-16 and Control Room Training for Pilots. Chain: AN 5130A -> F-16 ground school -> CBT + egress -> ejection sim gate -> EP sim, CAPE, exams -> F-16 dynamic sim -> departure -> crew solo. Side branches: control room observation (CF 6652C) and FQ 9250F/9253C high AOA events.",
+        "courseAssignments": [
+          { "code": "CF 6652C", "assignment": "FTC" },
+          { "code": "FQ 9250F", "assignment": "FTC" },
+          { "code": "FQ 9253C", "assignment": "FTC" }
+        ],
+        "dependencyEdges": [
+          { "from": "AN 5130A", "to": "CF 6601G", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6601G", "to": "CF 6601B", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6601G", "to": "CF 6602A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6603K", "to": "CF 6605S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6603K", "to": "CF 6650E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6670L", "to": "CF 6601P", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "TF 6201A", "to": "CF 6652C", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "CF 6601P", "to": "FQ 9250F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" },
+          { "from": "FQ 9250F", "to": "FQ 9253C", "type": "sequence", "source": "figure", "sourceDetail": "Figure 7" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 8, "name": "CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC)" },
+      "page": 33,
+      "imageFile": "pages/page033_figure-8_CF-6600-F-16-and-Control-Room-Training-ABMCSOFTERP.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow for CF 6600 F-16/Control Room for non-pilot positions. Adds CF 5141A (ABM/FTE/STC), CF 6310F (ABM/FTE), CF 6372F T-38 (RPA) as additional prerequisites. Modified exam paths with MSF CAPS. Control room path (CF 6650C -> CF 6652C) for ABM/CSO/FTE/RPA/STC.",
+        "courseAssignments": [
+          { "code": "CF 6652C", "assignment": "Shared" },
+          { "code": "FQ 9253C", "assignment": "Shared" }
+        ],
+        "dependencyEdges": [
+          { "from": "CF 5141A", "to": "CF 6603K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 8" },
+          { "from": "CF 6310F", "to": "CF 6603K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 8" },
+          { "from": "CF 6372F", "to": "CF 6603K", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 8" },
+          { "from": "CF 6650C", "to": "CF 6652C", "type": "sequence", "source": "figure", "sourceDetail": "Figure 8" },
+          { "from": "TF 6201A", "to": "CF 6652C", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 8" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 9, "name": "Space Operations Overview" },
+      "page": 35,
+      "imageFile": "pages/page035_figure-9_Figure-9-Space-Operations-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Simple hierarchical overview of the Space Operations (SO) phase showing SO 6000 Operations as parent with two sub-modules: SO 6100 GROOT Training and SO 6200 Aerocube Training. All STC.",
+        "courseAssignments": [
+          { "code": "SO 6000", "assignment": "STC" },
+          { "code": "SO 6100", "assignment": "STC" },
+          { "code": "SO 6200", "assignment": "STC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 10, "name": "SO 6100 GROOT Training" },
+      "page": 37,
+      "imageFile": "pages/page037_figure-10_SO-6100-GROOT-Training.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for SO 6100 GROOT Training showing the sequence of space operations training events. All events are STC.",
+        "courseAssignments": [
+          { "code": "SO 6100", "assignment": "STC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 11, "name": "Astronautical Sciences Overview" },
+      "page": 40,
+      "imageFile": "pages/page040_figure-11_Astronautical-Sciences-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Hierarchical overview of Astronautical Sciences (AS) phase organized in 4 series columns: AS 6000 Fundamentals (6100-6500), AS 7000 Sub-systems (7100-7300), AS 8000 Astrodynamics (8100-8300), AS 9000 Special Topics (9100-9400, 9900). Color-coded by series.",
+        "courseAssignments": [
+          { "code": "AS 6000", "assignment": "STC" },
+          { "code": "AS 6100", "assignment": "STC" },
+          { "code": "AS 6200", "assignment": "STC" },
+          { "code": "AS 6300", "assignment": "STC" },
+          { "code": "AS 6400", "assignment": "STC" },
+          { "code": "AS 6500", "assignment": "STC" },
+          { "code": "AS 7000", "assignment": "STC" },
+          { "code": "AS 7100", "assignment": "STC" },
+          { "code": "AS 7200", "assignment": "STC" },
+          { "code": "AS 7300", "assignment": "STC" },
+          { "code": "AS 8000", "assignment": "STC" },
+          { "code": "AS 8100", "assignment": "STC" },
+          { "code": "AS 8200", "assignment": "STC" },
+          { "code": "AS 8300", "assignment": "STC" },
+          { "code": "AS 9000", "assignment": "STC" },
+          { "code": "AS 9100", "assignment": "STC" },
+          { "code": "AS 9200", "assignment": "STC" },
+          { "code": "AS 9300", "assignment": "STC" },
+          { "code": "AS 9400", "assignment": "STC" },
+          { "code": "AS 9900", "assignment": "STC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 12, "name": "Flight Sciences - Performance Overview" },
+      "page": 59,
+      "imageFile": "pages/page059_figure-12_.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Hierarchical overview of Performance (PF) phase organized in 4 series columns: PF 5000 Preliminaries (5100 Test Plan), PF 6000 Fundamentals (6100 Aerodynamics, 6200 Modeling and Simulation), PF 7000 Systems (7100 Air Data System, 7200 Propulsion), PF 8000 Characterization (8100 Takeoff and Cruise, 8200 Energy, 8300 Testing). Color-coded by series.",
+        "courseAssignments": [
+          { "code": "PF 5000", "assignment": "FTC" },
+          { "code": "PF 5100", "assignment": "FTC" },
+          { "code": "PF 6000", "assignment": "FTC" },
+          { "code": "PF 6100", "assignment": "FTC" },
+          { "code": "PF 6200", "assignment": "FTC" },
+          { "code": "PF 7000", "assignment": "FTC" },
+          { "code": "PF 7100", "assignment": "FTC" },
+          { "code": "PF 7200", "assignment": "FTC" },
+          { "code": "PF 8000", "assignment": "FTC" },
+          { "code": "PF 8100", "assignment": "FTC" },
+          { "code": "PF 8200", "assignment": "FTC" },
+          { "code": "PF 8300", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 13, "name": "PF 6100 Fixed Wing Aerodynamics" },
+      "page": 63,
+      "imageFile": "pages/page063_figure-13_PF-6100-Fixed-Wing-Aerodynamics.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for PF 6100 Fixed Wing Aerodynamics module showing the lecture-exam-lab-flight sequence for aerodynamics events. All events FTC.",
+        "courseAssignments": [
+          { "code": "PF 6100", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 14, "name": "PF 6200 Modeling and Simulation" },
+      "page": 66,
+      "imageFile": "pages/page066_figure-14_PF-6200-Modeling-and-Simulation.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for PF 6200 Modeling and Simulation module showing the sequence of M&S events. All events FTC.",
+        "courseAssignments": [
+          { "code": "PF 6200", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 15, "name": "PF 7100 Air Data System" },
+      "page": 69,
+      "imageFile": "pages/page069_figure-15_PF-7100-Air-Data-System.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for PF 7100 Air Data System module showing the prerequisite chains for air data calibration events. All events FTC.",
+        "courseAssignments": [
+          { "code": "PF 7100", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 16, "name": "PF 8200 Energy" },
+      "page": 74,
+      "imageFile": "pages/page074_figure-16_PF-8200-Energy.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for PF 8200 Energy module showing the sequence of energy performance testing events. All events FTC.",
+        "courseAssignments": [
+          { "code": "PF 8200", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 17, "name": "PF 8300 Performance Testing" },
+      "page": 77,
+      "imageFile": "pages/page077_figure-17_PF-8300-Performance-Testing.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.85 },
+      "interpretation": {
+        "description": "Dependency flow diagram for PF 8300 Performance Testing module showing the capstone performance test event sequence. All events FTC.",
+        "courseAssignments": [
+          { "code": "PF 8300", "assignment": "FTC" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 18, "name": "Flying Qualities Phase Block Diagram" },
+      "page": 80,
+      "imageFile": "pages/page080_figure-18_Flying-Qualities-Phase-Block-Diagram.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Two-part figure: top is a pilot-in-the-loop control systems block diagram (Pilot -> Control Stick -> Stability/Control -> Aircraft -> Sensors), mapping FQ 6000 Flight Mechanics and FQ 7000 Control Systems to the plant, FQ 8000 Handling Qualities to the pilot loop, and FQ 9000 Envelope Expansion as output. Bottom is the full FQ course overview.",
+        "courseAssignments": [
+          { "code": "FQ 6000", "assignment": "FTC" },
+          { "code": "FQ 6100", "assignment": "FTC" },
+          { "code": "FQ 6200", "assignment": "FTC" },
+          { "code": "FQ 6300", "assignment": "FTC" },
+          { "code": "FQ 7000", "assignment": "FTC" },
+          { "code": "FQ 7100", "assignment": "FTC" },
+          { "code": "FQ 7200", "assignment": "FTC" },
+          { "code": "FQ 7300", "assignment": "FTC" },
+          { "code": "FQ 8000", "assignment": "FTC" },
+          { "code": "FQ 8100", "assignment": "FTC" },
+          { "code": "FQ 8200", "assignment": "FTC" },
+          { "code": "FQ 9000", "assignment": "FTC" },
+          { "code": "FQ 9100", "assignment": "FTC" },
+          { "code": "FQ 9200", "assignment": "FTC" },
+          { "code": "FQ 9300", "assignment": "FTC" },
+          { "code": "FQ 9400", "assignment": "FTC" },
+          { "code": "FQ 9500", "assignment": "FTC" }
+        ],
+        "dependencyEdges": [
+          { "from": "FQ 6000", "to": "FQ 8000", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 18" },
+          { "from": "FQ 7000", "to": "FQ 8000", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 18" },
+          { "from": "FQ 8000", "to": "FQ 9000", "type": "sequence", "source": "figure", "sourceDetail": "Figure 18" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 20, "name": "FQ 6200 Aircraft Stability" },
+      "page": 84,
+      "imageFile": "pages/page084_figure-20_FQ-6200-Aircraft-Stability.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Detailed dependency flow for FQ 6200 Aircraft Stability showing 12 events: stability exam (FQ 6202E), simulation (FQ 6210S), three MIB gates, and flights across glider (6230F), C-12 (6241F), T-38 (6251F/6252C). Extensive cross-phase edges to CF glider, TF test conduct, and downstream FQ/TF events.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "FQ 9401A", "to": "FQ 6201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6102E", "to": "FQ 6201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6201A", "to": "FQ 6202E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6202E", "to": "FQ 6210S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6210S", "to": "FQ 6220M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6220M", "to": "FQ 6230F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6210S", "to": "FQ 6240M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6240M", "to": "FQ 6241F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6210S", "to": "FQ 6260M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6260M", "to": "FQ 6251F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6260M", "to": "FQ 6252C", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "CF 6205F", "to": "FQ 6230F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "TF 6241F", "to": "FQ 6241F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "TF 6251F", "to": "FQ 6251F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6241F", "to": "FQ 8121F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" },
+          { "from": "FQ 6251F", "to": "FQ 8141F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 20" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 21, "name": "FQ 6300 Flying Qualities Testing" },
+      "page": 86,
+      "imageFile": "pages/page086_figure-21_FQ-6300-Flying-Qualities-Testing.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow for FQ 6300 Flying Qualities Testing. Linear spine: FQ 6202E -> FQ 6301A (test plan brief) -> FQ 6320W (TPWG) -> FQ 6310-1F (data flights) -> FQ 6321R (oral report) -> FQ 8220Y (T-38 HQ oral report).",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "FQ 6202E", "to": "FQ 6301A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "TF 6103A", "to": "FQ 6301A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "FQ 6301A", "to": "FQ 6320W", "type": "sequence", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "FQ 6320W", "to": "FQ 6310F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "FQ 6310F", "to": "FQ 6321R", "type": "sequence", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "FQ 6321R", "to": "FQ 8220Y", "type": "sequence", "source": "figure", "sourceDetail": "Figure 21" },
+          { "from": "TF 6420A", "to": "FQ 6321R", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 21" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 22, "name": "FQ 7200 Structures Testing" },
+      "page": 91,
+      "imageFile": "pages/page091_figure-22_FQ-7200-Structures-Testing.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Dependency flow for FQ 7200 Structures Testing. Entry: FQ 7102E -> 7201A -> 7202A -> 7202E exam, then branches to FQ 7210A FCS Testing and FQ 7230M MIB. Flight events include Learjet FCS verification (7221F) and F-16 Structures (7252F/7251C). Outputs to FQ 8101A and FQ 9301A.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "FQ 7102E", "to": "FQ 7201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7201A", "to": "FQ 7202A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7202A", "to": "FQ 7202E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7202E", "to": "FQ 7210A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7210A", "to": "FQ 7220M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7220M", "to": "FQ 7221F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7202E", "to": "FQ 7230M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7230M", "to": "FQ 7252F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7230M", "to": "FQ 7251C", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7210A", "to": "FQ 8101A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" },
+          { "from": "FQ 7202E", "to": "FQ 9301A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 22" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 23, "name": "FQ 8100 Handling Qualities Evaluation" },
+      "page": 95,
+      "imageFile": "pages/page095_figure-23_FQ-8100-Handling-Qualities-Evaluation.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Most complex FQ block diagram. FQ 8101A is the central hub with 7 prerequisite inputs. Fans out to dual sims (8110S/8111S), HQ Eval Exam (8102E), and 5 parallel MIB-to-flight streams: C-12 (8121F), T-38 (8141F), Learjet HQ (8151F), VISTA (8161F), Learjet PIO (8171F). T-38 HQ flight (8141F) is critical — feeds downstream to T-38 HQ Data Flight, stall events, CF formation flights.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "FQ 6241F", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 9201A", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 7210A", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 9301A", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 9410A", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "TF 9101M", "to": "FQ 8101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8101A", "to": "FQ 8110S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8101A", "to": "FQ 8111S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8101A", "to": "FQ 8102E", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8110S", "to": "FQ 8120M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8120M", "to": "FQ 8121F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8102E", "to": "FQ 8140M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8140M", "to": "FQ 8141F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8102E", "to": "FQ 8160M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8160M", "to": "FQ 8161F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8141F", "to": "FQ 8202F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8141F", "to": "FQ 9220M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" },
+          { "from": "FQ 8141F", "to": "CF 6701F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 23" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 24, "name": "FQ 9200 Stall, Departure and Spin Testing" },
+      "page": 100,
+      "imageFile": "pages/page100_figure-24_FQ-9200-Stall-Departure-and-Spin-Testing.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Capstone envelope expansion sub-series. FQ 9201A central with 8 prerequisite inputs spanning CF, FQ, TF. Four parallel test streams: A-29 spin, glider spin, T-38 stall, F-16 High AOA chain.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "FQ 7102E", "to": "FQ 9201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 8121F", "to": "FQ 9201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "TF 9101M", "to": "FQ 9201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9201A", "to": "FQ 9240G", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9240G", "to": "FQ 9401M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9401M", "to": "FQ 9242F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9201A", "to": "FQ 9210M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9210M", "to": "FQ 9211F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9201A", "to": "FQ 9220M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9220M", "to": "FQ 9221F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9201A", "to": "FQ 9231W", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" },
+          { "from": "FQ 9231W", "to": "FQ 9251F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 24" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 25, "name": "Mission Systems Overview" },
+      "page": 105,
+      "imageFile": "pages/page105_figure-25_Mission-Systems-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Hierarchical overview of SY phase in 5 series: SY 5000 Foundations, SY 6000 Component, SY 7000 Platform, SY 8000 Kill Web, SY 9000 Selected Topics. All Shared.",
+        "courseAssignments": [
+          { "code": "SY 5000", "assignment": "Shared" },
+          { "code": "SY 6000", "assignment": "Shared" },
+          { "code": "SY 7000", "assignment": "Shared" },
+          { "code": "SY 8000", "assignment": "Shared" },
+          { "code": "SY 9000", "assignment": "Shared" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 26, "name": "SY 6100 EO/IR and RADAR Systems" },
+      "page": 110,
+      "imageFile": "pages/page110_figure-26_SY-6100-EOIR-and-RADAR-Systems.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Rich dependency flow for SY 6100 with color-coded shapes. Flow: lectures -> labs -> MIBs -> F-16 sensor flights -> RADAR sims -> written report. 24 dependency edges with cross-phase connections from CF, TF, and other SY modules.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "SY 5101A", "to": "SY 6101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6101A", "to": "SY 6110A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6110A", "to": "SY 6113A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6113A", "to": "SY 6120L", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6120L", "to": "SY 6130M", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6130M", "to": "SY 6131F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6131F", "to": "SY 6121S", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6121S", "to": "SY 6122S", "type": "sequence", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6121S", "to": "SY 6112R", "type": "sequence", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "TF 6103A", "to": "SY 6120L", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "TF 6401A", "to": "SY 6112R", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "CF 6673F", "to": "SY 6131F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "CF 6680F", "to": "SY 6131F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6112R", "to": "SY 7211S", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" },
+          { "from": "SY 6112R", "to": "SY 7301A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 26" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 27, "name": "Test Foundations Overview" },
+      "page": 129,
+      "imageFile": "pages/page129_figure-27_Test-Foundations-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "TF phase overview in 5 series with FTC/STC annotations. TF 5300 Intro to Test Acquisition (STC), TF 5500 Photo/Safety Chase (FTC), TF 6500 Special Topics (STC), TF 7100-7500 Qual Evals (FTC), TF 7600 STC Qual Evals (STC).",
+        "courseAssignments": [
+          { "code": "TF 5000", "assignment": "Shared" },
+          { "code": "TF 5100", "assignment": "Shared" },
+          { "code": "TF 5200", "assignment": "Shared" },
+          { "code": "TF 5300", "assignment": "STC" },
+          { "code": "TF 5400", "assignment": "Shared" },
+          { "code": "TF 5500", "assignment": "FTC" },
+          { "code": "TF 6000", "assignment": "Shared" },
+          { "code": "TF 6100", "assignment": "Shared" },
+          { "code": "TF 6200", "assignment": "Shared" },
+          { "code": "TF 6300", "assignment": "Shared" },
+          { "code": "TF 6400", "assignment": "Shared" },
+          { "code": "TF 6500", "assignment": "STC" },
+          { "code": "TF 7000", "assignment": "Shared" },
+          { "code": "TF 7100", "assignment": "FTC" },
+          { "code": "TF 7200", "assignment": "FTC" },
+          { "code": "TF 7300", "assignment": "FTC" },
+          { "code": "TF 7400", "assignment": "FTC" },
+          { "code": "TF 7500", "assignment": "FTC" },
+          { "code": "TF 7600", "assignment": "STC" },
+          { "code": "TF 8000", "assignment": "Shared" },
+          { "code": "TF 9000", "assignment": "Shared" }
+        ],
+        "dependencyEdges": []
+      }
+    },
+    {
+      "figure": { "number": 28, "name": "TF 6100 Plan" },
+      "page": 138,
+      "imageFile": "pages/page138_figure-28_TF-6100-Plan.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "PEARS planning module flow. Main chain: AN 5180A -> TF 6101A -> TF 6102A -> TF 6103A -> TF 6104Y. Parallel STC track: TF 6110A -> TF 6120A (STC) -> TF 6130A (STC) -> TF 6140A (STC) -> TF 6150A (STC). Multiple cross-phase prereqs from AS, PF, FQ, SY.",
+        "courseAssignments": [
+          { "code": "TF 6120A", "assignment": "STC" },
+          { "code": "TF 6130A", "assignment": "STC" },
+          { "code": "TF 6140A", "assignment": "STC" },
+          { "code": "TF 6150A", "assignment": "STC" }
+        ],
+        "dependencyEdges": [
+          { "from": "AN 5180A", "to": "TF 6101A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6101A", "to": "TF 6102A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6102A", "to": "TF 6103A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6103A", "to": "TF 6104Y", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6101A", "to": "TF 6110A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6110A", "to": "TF 6120A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6120A", "to": "TF 6130A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "TF 6130A", "to": "TF 6140A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "AS 7140S", "to": "TF 6103A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "PF 5101A", "to": "TF 6103A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "FQ 6320W", "to": "TF 6103A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" },
+          { "from": "SY 6130M", "to": "TF 6103A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 28" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 29, "name": "TF 6200 Execute" },
+      "page": 142,
+      "imageFile": "pages/page142_figure-29_TF-6200-Execute.png",
+      "classification": { "figureType": "dependency_flow", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Most cross-phase-connected figure. PEARS execution flow from TF 6201A through ground school, control room, MIBs, flight conduct (6250F/6260F), reporting. Extensive cross-phase prereqs from CF, PF, FQ, SY, AN. 32 dependency edges.",
+        "courseAssignments": [],
+        "dependencyEdges": [
+          { "from": "TF 6101A", "to": "TF 6201A", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6201A", "to": "TF 6210A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6210A", "to": "TF 6220A", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6220A", "to": "TF 6230M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6230M", "to": "TF 6250F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6250F", "to": "TF 6240M", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "TF 6240M", "to": "TF 6260F", "type": "sequence", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "CF 6572F", "to": "TF 6250F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "CF 6673F", "to": "TF 6250F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "CF 6681F", "to": "TF 6250F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "PF 6220E", "to": "TF 6230M", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "PF 8211F", "to": "TF 6260F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" },
+          { "from": "SY 7211S", "to": "TF 6260F", "type": "prerequisite", "source": "figure", "sourceDetail": "Figure 29" }
+        ]
+      }
+    },
+    {
+      "figure": { "number": 30, "name": "Test Leadership Overview" },
+      "page": 159,
+      "imageFile": "pages/page159_figure-30_Figure-30-Test-Leadership-Overview.png",
+      "classification": { "figureType": "course_overview", "confidence": 0.95 },
+      "interpretation": {
+        "description": "Compact TL phase overview with 4 series: TL 5000 Strategic Context, TL 6000 NPC, TL 7000 Innovation, TL 8000 Case Studies. Only 5 sub-courses (TL 5100, 6100, 7100, 7200, 8100). All Shared.",
+        "courseAssignments": [
+          { "code": "TL 5000", "assignment": "Shared" },
+          { "code": "TL 5100", "assignment": "Shared" },
+          { "code": "TL 6000", "assignment": "Shared" },
+          { "code": "TL 6100", "assignment": "Shared" },
+          { "code": "TL 7000", "assignment": "Shared" },
+          { "code": "TL 7100", "assignment": "Shared" },
+          { "code": "TL 7200", "assignment": "Shared" },
+          { "code": "TL 8000", "assignment": "Shared" },
+          { "code": "TL 8100", "assignment": "Shared" }
+        ],
+        "dependencyEdges": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,567 @@
+{
+  "phase": "AN",
+  "phaseName": "Ancillary Training",
+  "sourceDocument": "MCG 25B",
+  "extractedAt": "2026-02-18",
+  "pageRange": "14-15",
+  "modules": [
+    {
+      "moduleCode": "AN 5000",
+      "moduleName": "Ancillary Training",
+      "description": "Students will complete the following ancillary events during the program. Most of the training takes place during the first and last week of classes.",
+      "tlos": [],
+      "events": []
+    },
+    {
+      "moduleCode": "AN 5100",
+      "moduleName": "Test Pilot School Introductions",
+      "description": "This module introduces the students to the school structure and leadership.",
+      "tlos": [],
+      "events": [
+        {
+          "code": "AN 5101A",
+          "eventName": "TPS Welcome and Mission Brief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5110A",
+          "eventName": "AFTC Welcome and Mission Brief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5111A",
+          "eventName": "Test Wing Welcome and Mission Brief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5112A",
+          "eventName": "TPS Commandant Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5120A",
+          "eventName": "A9 Mission Effectiveness Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5121A",
+          "eventName": "Dean of Faculty Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5122A",
+          "eventName": "Director of FO Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5123A",
+          "eventName": "Director of SO Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5124A",
+          "eventName": "Chief Pilot Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5125A",
+          "eventName": "Chief Instructor FTE Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5126A",
+          "eventName": "Technical Directors Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5127A",
+          "eventName": "Class ADO Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5130A",
+          "eventName": "Check Flight Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5140A",
+          "eventName": "Space Operations Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5150A",
+          "eventName": "Astronautical Phase Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5160A",
+          "eventName": "Flight Sciences Phase Introduction",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5170A",
+          "eventName": "Missions Systems Phase Intro",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5180A",
+          "eventName": "Test Foundations Phase Intro",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5190A",
+          "eventName": "Test Leadership Phase Intro",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        }
+      ]
+    },
+    {
+      "moduleCode": "AN 5200",
+      "moduleName": "Miscellaneous Training",
+      "description": "The section covers miscellaneous training required by Air Force instructions.",
+      "tlos": [],
+      "events": [
+        {
+          "code": "AN 5201A",
+          "eventName": "Ground Safety",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5210A",
+          "eventName": "Student Computer Issue",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5211A",
+          "eventName": "Student Computer Turn-In",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5220A",
+          "eventName": "Student Portraits",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5230A",
+          "eventName": "UTD Training",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5240A",
+          "eventName": "Security Briefing",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5241A",
+          "eventName": "FDO Security Briefing",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": ["US Only"],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5242A",
+          "eventName": "Counter-Intelligence Brief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": ["US Only"],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5243A",
+          "eventName": "Security Out-Processing",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5250A",
+          "eventName": "Field Trip OSI Brief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": ["US Only"],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5251A",
+          "eventName": "Field Trip OSI Debrief",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": ["US Only"],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5260A",
+          "eventName": "Student Travel DTS Workshop",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        }
+      ]
+    },
+    {
+      "moduleCode": "AN 5300",
+      "moduleName": "Test Pilot School Debriefs",
+      "description": "This module contains the debriefs conducted at the end of the curriculum to collect feedback for the leadership and administration of the school.",
+      "tlos": [],
+      "events": [
+        {
+          "code": "AN 5301Z",
+          "eventName": "Student Out Processing Brief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5310Z",
+          "eventName": "AFTC Out Brief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5311Z",
+          "eventName": "Test Wing Out Brief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5312Z",
+          "eventName": "TPS Commandant Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5320Z",
+          "eventName": "A9 Mission Effectiveness Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5321Z",
+          "eventName": "Dean of Faculty Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5322Z",
+          "eventName": "Director of FO Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5323Z",
+          "eventName": "Director of SO Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5324Z",
+          "eventName": "Chief Pilot Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5325Z",
+          "eventName": "Chief Instructor FTE Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5326Z",
+          "eventName": "Class ADO Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5330Z",
+          "eventName": "Check Flight Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5340Z",
+          "eventName": "Space Operations Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5350Z",
+          "eventName": "Astronautical Phase Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5360Z",
+          "eventName": "Flights Sciences Phase Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5370Z",
+          "eventName": "Missions Systems Phase Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5380Z",
+          "eventName": "Test Foundations Phase Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        },
+        {
+          "code": "AN 5390Z",
+          "eventName": "Test Leadership Phase Debrief",
+          "eventType": "Z",
+          "eventTypeName": "Debrief",
+          "section": "Ground",
+          "applicability": [],
+          "description": "",
+          "prerequisites": []
+        }
+      ]
+    }
+  ],
+  "eventTypeLegend": {
+    "A": "Academic Lecture",
+    "B": "Asynchronous Content",
+    "C": "Control Room",
+    "E": "Exam/Assessment",
+    "F": "Flight",
+    "G": "Ground School",
+    "H": "Ground Training",
+    "I": "Ground Test",
+    "L": "Lab",
+    "M": "MIB",
+    "O": "Space Operation",
+    "R": "Written Report",
+    "S": "Simulator",
+    "W": "Working Group",
+    "Y": "Oral Report",
+    "Z": "Debrief"
+  },
+  "sectionMapping": {
+    "Academics": ["A", "B"],
+    "Flying": ["F", "S", "O"],
+    "Ground": ["C", "E", "G", "H", "I", "L", "M", "R", "W", "Y", "Z"]
+  },
+  "summary": {
+    "totalModules": 4,
+    "totalEvents": 49,
+    "byModule": {
+      "AN 5000": 0,
+      "AN 5100": 19,
+      "AN 5200": 12,
+      "AN 5300": 18
+    },
+    "byType": {
+      "A": 31,
+      "Z": 18
+    }
+  }
+}

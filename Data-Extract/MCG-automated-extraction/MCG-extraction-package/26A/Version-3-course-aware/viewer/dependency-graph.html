@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCG 26A — Dependency Graph</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --border: #475569; --text: #e2e8f0; --text-dim: #94a3b8;
+    --accent: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+    --red: #f87171; --purple: #a78bfa; --cyan: #22d3ee;
+    --indigo: #818cf8; --orange: #fb923c; --pink: #f472b6;
+    --mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.5; overflow:hidden; height:100vh; display:flex; flex-direction:column; }
+
+  /* ─── Header ─────────────────────────────────────────────── */
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:8px 16px; z-index:100; flex-shrink:0; }
+  .header-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+  .header h1 { font-size:16px; font-weight:600; font-family:var(--mono); white-space:nowrap; }
+  .header-stats { font-size:11px; color:var(--text-dim); font-family:var(--mono); display:flex; gap:10px; flex-wrap:wrap; }
+  .header-stats .num { color:var(--accent); font-weight:600; }
+  .back-link { color:var(--accent); font-size:12px; font-family:var(--mono); text-decoration:none; }
+  .back-link:hover { text-decoration:underline; }
+
+  /* ─── Toolbar ────────────────────────────────────────────── */
+  .toolbar { display:flex; gap:8px; margin-top:6px; align-items:center; flex-wrap:wrap; }
+  .toolbar-group { display:flex; align-items:center; gap:3px; }
+  .toolbar-label { font-size:10px; color:var(--text-dim); font-family:var(--mono); text-transform:uppercase; font-weight:600; margin-right:2px; white-space:nowrap; }
+  .toolbar-sep { width:1px; height:20px; background:var(--border); margin:0 4px; flex-shrink:0; }
+
+  .btn { background:var(--surface2); border:1px solid var(--border); border-radius:5px; padding:3px 8px; color:var(--text-dim); font-size:11px; cursor:pointer; font-family:var(--mono); transition:all .15s; white-space:nowrap; }
+  .btn:hover { border-color:var(--accent); color:var(--text); }
+  .btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:600; }
+  .btn.active.ftc { background:var(--orange); border-color:var(--orange); }
+  .btn.active.stc { background:var(--purple); border-color:var(--purple); }
+  .btn.active.shared { background:var(--text-dim); border-color:var(--text-dim); color:var(--bg); }
+
+  .seg-group { display:flex; }
+  .seg-group .btn { border-radius:0; margin-left:-1px; }
+  .seg-group .btn:first-child { border-radius:5px 0 0 5px; margin-left:0; }
+  .seg-group .btn:last-child { border-radius:0 5px 5px 0; }
+
+  .search-input { background:var(--bg); border:1px solid var(--border); border-radius:5px; padding:3px 8px; color:var(--text); font-family:var(--mono); font-size:11px; width:180px; outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .search-input::placeholder { color:var(--text-dim); }
+
+  .zoom-controls { display:flex; gap:2px; }
+  .zoom-btn { width:26px; height:26px; display:flex; align-items:center; justify-content:center; background:var(--surface2); border:1px solid var(--border); border-radius:5px; color:var(--text-dim); font-size:14px; cursor:pointer; font-family:var(--mono); }
+  .zoom-btn:hover { border-color:var(--accent); color:var(--text); }
+
+  /* ─── Graph container ────────────────────────────────────── */
+  .graph-wrap { flex:1; position:relative; overflow:hidden; }
+  .graph-wrap svg { width:100%; height:100%; cursor:grab; }
+  .graph-wrap svg:active { cursor:grabbing; }
+  .graph-wrap svg text { user-select:none; }
+
+  /* ─── SVG node styles ────────────────────────────────────── */
+  .node-group { cursor:pointer; transition:opacity .2s; }
+  .node-group:hover .node-rect { stroke-width:3.5; filter:brightness(1.2); }
+  .node-group.selected .node-rect { stroke-width:4; filter:drop-shadow(0 0 8px currentColor); }
+  .node-group.highlighted-ancestor .node-rect { stroke-width:3; }
+  .node-group.highlighted-descendant .node-rect { stroke-width:3; }
+  .node-group.dimmed { opacity:0.08; pointer-events:none; }
+  .node-group.propagated .node-rect { stroke-dasharray:4,3; opacity:0.6; }
+
+  .edge-path { fill:none; transition:opacity .2s, stroke-width .2s; }
+  .edge-path.dimmed { opacity:0.03; }
+  .edge-path.highlighted-ancestor { stroke:var(--accent); stroke-width:2; opacity:1; stroke-dasharray:none; }
+  .edge-path.highlighted-descendant { stroke:var(--green); stroke-width:2; opacity:0.8; stroke-dasharray:none; }
+
+  /* ─── Swimlane labels ────────────────────────────────────── */
+  .swimlane-label { font-family:var(--mono); font-size:14px; font-weight:700; fill:var(--text-dim); opacity:0.5; }
+
+  /* ─── Tooltip ────────────────────────────────────────────── */
+  .tooltip { position:absolute; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:8px 12px; font-size:12px; pointer-events:none; z-index:200; max-width:320px; box-shadow:0 4px 12px rgba(0,0,0,0.5); display:none; }
+  .tooltip .tt-code { font-family:var(--mono); font-weight:700; color:var(--green); }
+  .tooltip .tt-name { color:var(--text); margin-top:2px; }
+  .tooltip .tt-meta { color:var(--text-dim); font-size:11px; font-family:var(--mono); margin-top:4px; display:flex; gap:8px; }
+
+  /* ─── Detail panel ───────────────────────────────────────── */
+  .detail-panel { position:absolute; top:0; right:0; width:340px; height:100%; background:var(--surface); border-left:1px solid var(--border); z-index:150; overflow-y:auto; transform:translateX(100%); transition:transform .2s ease; }
+  .detail-panel.open { transform:translateX(0); }
+  .detail-close { position:absolute; top:8px; right:8px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer; width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:4px; }
+  .detail-close:hover { background:var(--surface2); color:var(--text); }
+  .detail-content { padding:16px; }
+  .detail-header { margin-bottom:12px; }
+  .detail-code { font-family:var(--mono); font-size:16px; font-weight:700; color:var(--green); }
+  .detail-name { font-size:14px; margin-top:4px; }
+  .detail-badges { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+  .detail-badge { font-size:10px; font-family:var(--mono); padding:2px 8px; border-radius:4px; font-weight:700; }
+  .badge-ftc { background:rgba(251,146,60,0.2); color:var(--orange); }
+  .badge-stc { background:rgba(167,139,250,0.2); color:var(--purple); }
+  .badge-shared { background:rgba(148,163,184,0.15); color:var(--text-dim); }
+  .detail-desc { font-size:12px; color:var(--text-dim); line-height:1.6; margin:8px 0; padding:8px; background:var(--bg); border-radius:4px; }
+  .detail-section { margin-top:12px; }
+  .detail-section-title { font-size:11px; font-family:var(--mono); font-weight:600; color:var(--accent); margin-bottom:4px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .chain-item { font-size:12px; padding:3px 0; display:flex; align-items:center; gap:6px; cursor:pointer; }
+  .chain-item:hover { color:var(--accent); }
+  .chain-item .ci-code { font-family:var(--mono); font-weight:700; color:var(--green); min-width:72px; }
+  .chain-item .ci-name { color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+  .chain-item .ci-arrow { color:var(--text-dim); font-size:10px; }
+  .chain-count { font-size:11px; color:var(--text-dim); font-family:var(--mono); }
+
+  /* ─── Legend ──────────────────────────────────────────────── */
+  .legend { position:absolute; bottom:12px; left:12px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 14px; z-index:120; font-size:11px; max-width:300px; }
+  .legend-toggle { cursor:pointer; font-family:var(--mono); font-weight:600; color:var(--accent); font-size:11px; display:flex; align-items:center; gap:4px; }
+  .legend-body { display:none; margin-top:8px; }
+  .legend-body.open { display:block; }
+  .legend-row { display:flex; align-items:center; gap:6px; margin:3px 0; }
+  .legend-swatch { width:16px; height:10px; border-radius:2px; flex-shrink:0; }
+  .legend-line { width:20px; height:0; flex-shrink:0; }
+
+  /* ─── Loading / Error ────────────────────────────────────── */
+  .loading-screen { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:300; }
+  .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { margin-top:12px; color:var(--text-dim); font-family:var(--mono); font-size:13px; }
+  .error-box { background:rgba(248,113,113,0.1); border:1px solid var(--red); padding:16px; border-radius:8px; margin:24px; color:var(--red); font-family:var(--mono); }
+
+  ::-webkit-scrollbar { width:8px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--border); }
+</style>
+</head>
+<body>
+
+<!-- ─── Header ──────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-row">
+    <a class="back-link" href="index.html">&larr; Viewer</a>
+    <h1 id="title">MCG 26A — Dependency Graph</h1>
+    <div class="header-stats" id="stats"></div>
+  </div>
+  <div class="toolbar" id="toolbar">
+    <!-- Group mode -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">Layout:</span>
+      <div class="seg-group" id="group-mode">
+        <button class="btn active" data-mode="phase" onclick="setGroupMode('phase',this)">By Phase</button>
+        <button class="btn" data-mode="course" onclick="setGroupMode('course',this)">By Course</button>
+        <button class="btn" data-mode="type" onclick="setGroupMode('type',this)">By Type</button>
+      </div>
+    </div>
+    <div class="toolbar-sep"></div>
+
+    <!-- Phase filters -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">Phase:</span>
+      <span id="phase-btns"></span>
+    </div>
+    <div class="toolbar-sep"></div>
+
+    <!-- Course filters -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">Course:</span>
+      <span id="course-btns"></span>
+    </div>
+    <div class="toolbar-sep"></div>
+
+    <!-- Type filters -->
+    <div class="toolbar-group">
+      <span class="toolbar-label">Type:</span>
+      <span id="type-btns"></span>
+    </div>
+    <div class="toolbar-sep"></div>
+
+    <!-- Search -->
+    <input class="search-input" id="search" type="text" placeholder="Search events..." oninput="handleSearch(this.value)">
+    <div class="toolbar-sep"></div>
+
+    <!-- Zoom -->
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomIn()" title="Zoom in">+</button>
+      <button class="zoom-btn" onclick="zoomOut()" title="Zoom out">&minus;</button>
+      <button class="zoom-btn" onclick="fitToView()" title="Fit to view" style="font-size:11px;">Fit</button>
+      <button class="zoom-btn" onclick="resetView()" title="Reset view" style="font-size:11px;">1:1</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Graph area ──────────────────────────────────────────────── -->
+<div class="graph-wrap" id="graph-wrap">
+  <svg id="graph-svg">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--border)" />
+      </marker>
+      <marker id="arrow-ancestor" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent)" />
+      </marker>
+      <marker id="arrow-descendant" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--green)" />
+      </marker>
+    </defs>
+    <g id="svg-root"></g>
+  </svg>
+
+  <!-- Tooltip -->
+  <div class="tooltip" id="tooltip"></div>
+
+  <!-- Detail Panel -->
+  <div class="detail-panel" id="detail-panel">
+    <button class="detail-close" onclick="closeDetail()">&times;</button>
+    <div class="detail-content" id="detail-content"></div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend" id="legend">
+    <div class="legend-toggle" onclick="toggleLegend()">
+      <span id="legend-caret">&#9654;</span> Legend
+    </div>
+    <div class="legend-body" id="legend-body"></div>
+  </div>
+
+  <!-- Loading screen -->
+  <div class="loading-screen" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading dependency graph...</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// Constants
+// ═══════════════════════════════════════════════════════════════════
+const PHASES = ['AN','AS','CF','FQ','PF','SO','SY','TF'];
+
+const PHASE_COLORS = {
+  AN: '#38bdf8', CF: '#4ade80', TF: '#f87171', PF: '#fbbf24',
+  FQ: '#fb923c', AS: '#a78bfa', SO: '#22d3ee', SY: '#818cf8'
+};
+
+const PHASE_ORDER = { AN:0, CF:1, PF:2, TF:3, FQ:4, SO:5, SY:6, AS:7 };
+
+const TYPE_FILLS = {
+  F: 'rgba(74,222,128,0.15)',   S: 'rgba(251,191,36,0.15)',
+  A: 'rgba(129,140,248,0.15)',  E: 'rgba(251,191,36,0.15)',
+  M: 'rgba(248,113,113,0.15)',  C: 'rgba(34,211,238,0.15)',
+  H: 'rgba(167,139,250,0.15)',  L: 'rgba(34,211,238,0.12)',
+  Z: 'rgba(148,163,184,0.12)',  B: 'rgba(244,114,182,0.12)',
+  O: 'rgba(249,115,22,0.12)',   R: 'rgba(148,163,184,0.12)',
+  P: 'rgba(244,114,182,0.12)',  T: 'rgba(148,163,184,0.10)',
+  W: 'rgba(129,140,248,0.12)',  X: 'rgba(148,163,184,0.10)'
+};
+
+const TYPE_NAMES = {
+  F:'Flight', S:'Sim', A:'Academic', E:'Exam', M:'Mission',
+  C:'Control Room', H:'Ground', L:'Lab', Z:'Debrief', B:'Brief',
+  O:'Operational', R:'Review', P:'Planning', T:'Test', W:'Written', X:'Other'
+};
+
+const COURSE_COLORS = { FTC:'#fb923c', STC:'#a78bfa', Shared:'#94a3b8' };
+
+const NODE_W = 120, NODE_H = 36;
+
+// ═══════════════════════════════════════════════════════════════════
+// State
+// ═══════════════════════════════════════════════════════════════════
+let depGraph = null;            // raw JSON
+let phaseData = {};             // phase code -> phase JSON (for descriptions etc.)
+let nodeIndex = new Map();      // code -> merged node data
+let adjIn = new Map();          // code -> [{ from, to, scope, ... }]
+let adjOut = new Map();         // code -> [{ from, to, scope, ... }]
+let allEdges = [];              // filtered valid edges (no null from)
+
+let groupMode = 'phase';
+let activePhases = new Set(PHASES);
+let activeCourses = new Set(['FTC','STC','Shared']);
+let activeTypes = new Set();    // empty = all
+let searchTerm = '';
+let searchTimeout = null;
+
+let selectedCode = null;
+let ancestorSet = new Set();
+let descendantSet = new Set();
+let ancestorEdges = new Set();
+let descendantEdges = new Set();
+
+let visibleNodes = new Set();
+let propagatedNodes = new Set();
+
+// Layout positions: code -> { x, y }
+let nodePositions = new Map();
+let graphBounds = { x:0, y:0, w:1000, h:800 };
+
+// Pan/zoom state
+let vb = { x:0, y:0, w:1200, h:800 };
+let isPanning = false;
+let panStart = { x:0, y:0 };
+
+// ═══════════════════════════════════════════════════════════════════
+// Data Loading
+// ═══════════════════════════════════════════════════════════════════
+async function loadData() {
+  try {
+    // Load dependency graph — co-located copy in viewer/ is the primary source
+    const dgPaths = [
+      './dependency-graph.json',                              // co-located copy in viewer/
+      '../../dependency-graph.json',                          // served from 26A/ or higher
+      '/dependency-graph.json',                               // absolute from root
+    ];
+    let dgResp = null;
+    for (const path of dgPaths) {
+      try {
+        const r = await fetch(path);
+        if (r.ok) { dgResp = r; break; }
+      } catch(e) { /* try next */ }
+    }
+    if (!dgResp) throw new Error('Could not load dependency-graph.json — ensure it exists in the viewer/ directory');
+    depGraph = await dgResp.json();
+
+    // Load phase files — try viewer-relative then serve-root paths
+    const phaseResults = await Promise.all(
+      PHASES.map(async p => {
+        for (const base of ['../phase-', './phase-']) {
+          try {
+            const r = await fetch(`${base}${p}.json`);
+            if (r.ok) return r.json();
+          } catch(e) { /* try next */ }
+        }
+        console.warn(`Skipping phase-${p}.json (not found)`);
+        return null;
+      })
+    );
+    phaseResults.forEach(pd => {
+      if (pd) phaseData[pd.phase] = pd;
+    });
+
+    buildIndex();
+    initFilterUI();
+    computeVisible();
+    runLayout();
+    renderGraph();
+    updateStats();
+
+    document.getElementById('loading').style.display = 'none';
+    buildLegend();
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<div class="error-box">Error: ${e.message}<br><br>
+       Serve via HTTP from <code>Version-3-course-aware/</code>:<br>
+       <code>npx serve .</code><br>
+       then open <code>http://localhost:3000/viewer/dependency-graph.html</code></div>`;
+  }
+}
+
+function buildIndex() {
+  // Index nodes from dependency graph
+  for (const n of depGraph.nodes) {
+    nodeIndex.set(n.code, { ...n });
+    adjIn.set(n.code, []);
+    adjOut.set(n.code, []);
+  }
+
+  // Enrich from phase data (descriptions, applicability)
+  for (const [phaseCode, pd] of Object.entries(phaseData)) {
+    for (const mod of (pd.modules || [])) {
+      for (const ev of (mod.events || [])) {
+        if (nodeIndex.has(ev.code)) {
+          const n = nodeIndex.get(ev.code);
+          n.description = ev.description || '';
+          n.applicability = ev.applicabilityDetail || ev.applicability;
+          n.section = ev.section;
+          n.eventTypeName = ev.eventTypeName;
+          n.moduleName = mod.moduleName;
+          n.moduleCode = mod.moduleCode;
+          n.prerequisites = ev.prerequisites;
+        }
+      }
+    }
+  }
+
+  // Build adjacency from edges (skip nulls)
+  allEdges = depGraph.edges.filter(e => e.from && e.to && nodeIndex.has(e.from) && nodeIndex.has(e.to));
+  for (const e of allEdges) {
+    adjIn.get(e.to).push(e);
+    adjOut.get(e.from).push(e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Filtering
+// ═══════════════════════════════════════════════════════════════════
+function computeVisible() {
+  const directMatches = new Set();
+  const searchLower = searchTerm.toLowerCase();
+
+  for (const [code, node] of nodeIndex) {
+    // Phase filter
+    if (!activePhases.has(node.phase)) continue;
+    // Course filter
+    if (!activeCourses.has(node.courseAssignment)) continue;
+    // Type filter (empty = all)
+    if (activeTypes.size > 0 && !activeTypes.has(node.eventType)) continue;
+    // Search filter
+    if (searchTerm) {
+      const haystack = `${code} ${node.eventName} ${node.description || ''}`.toLowerCase();
+      if (!haystack.includes(searchLower)) continue;
+    }
+    directMatches.add(code);
+  }
+
+  // Ancestor propagation: BFS backward from each direct match
+  propagatedNodes = new Set();
+  const visited = new Set(directMatches);
+  const queue = [...directMatches];
+  while (queue.length) {
+    const cur = queue.shift();
+    for (const edge of (adjIn.get(cur) || [])) {
+      if (!visited.has(edge.from)) {
+        visited.add(edge.from);
+        propagatedNodes.add(edge.from);
+        queue.push(edge.from);
+      }
+    }
+  }
+
+  visibleNodes = new Set([...directMatches, ...propagatedNodes]);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Layout
+// ═══════════════════════════════════════════════════════════════════
+function runLayout() {
+  nodePositions = new Map();
+
+  if (groupMode === 'phase') {
+    layoutByPhase();
+  } else if (groupMode === 'course') {
+    layoutByCourse();
+  } else {
+    layoutByType();
+  }
+
+  // Compute bounds
+  let minX=Infinity, minY=Infinity, maxX=-Infinity, maxY=-Infinity;
+  for (const pos of nodePositions.values()) {
+    minX = Math.min(minX, pos.x - NODE_W/2);
+    minY = Math.min(minY, pos.y - NODE_H/2);
+    maxX = Math.max(maxX, pos.x + NODE_W/2);
+    maxY = Math.max(maxY, pos.y + NODE_H/2);
+  }
+  if (!isFinite(minX)) { minX=0; minY=0; maxX=1000; maxY=800; }
+  graphBounds = { x:minX-60, y:minY-60, w:maxX-minX+120, h:maxY-minY+120 };
+}
+
+function layoutByPhase() {
+  // Group visible nodes by phase
+  const phaseGroups = {};
+  for (const code of visibleNodes) {
+    const node = nodeIndex.get(code);
+    if (!phaseGroups[node.phase]) phaseGroups[node.phase] = [];
+    phaseGroups[node.phase].push(code);
+  }
+
+  // Sort phases by canonical order
+  const sortedPhases = Object.keys(phaseGroups).sort((a,b) => (PHASE_ORDER[a]||99)-(PHASE_ORDER[b]||99));
+
+  // Layout each phase column with dagre
+  let xOffset = 0;
+  const LANE_GAP = 80;
+  const LANE_PAD = 40;
+
+  for (const phase of sortedPhases) {
+    const codes = phaseGroups[phase];
+    const g = new dagre.graphlib.Graph();
+    g.setGraph({ rankdir:'TB', nodesep:12, ranksep:40, marginx:LANE_PAD, marginy:LANE_PAD });
+    g.setDefaultEdgeLabel(() => ({}));
+
+    for (const code of codes) {
+      g.setNode(code, { width:NODE_W, height:NODE_H });
+    }
+    // Add intra-phase edges
+    const codeSet = new Set(codes);
+    for (const code of codes) {
+      for (const edge of (adjOut.get(code) || [])) {
+        if (codeSet.has(edge.to)) {
+          g.setEdge(edge.from, edge.to);
+        }
+      }
+    }
+
+    dagre.layout(g);
+
+    // Apply positions with x offset
+    const laneW = g.graph().width || 200;
+    for (const code of codes) {
+      const nPos = g.node(code);
+      nodePositions.set(code, { x: xOffset + nPos.x, y: nPos.y, lanePhase: phase });
+    }
+    xOffset += laneW + LANE_GAP;
+  }
+}
+
+function layoutByCourse() {
+  // Three bands: FTC (top), Shared (middle), STC (bottom)
+  const courseGroups = { FTC:[], Shared:[], STC:[] };
+  for (const code of visibleNodes) {
+    const node = nodeIndex.get(code);
+    const c = node.courseAssignment || 'Shared';
+    (courseGroups[c] || courseGroups.Shared).push(code);
+  }
+
+  let yOffset = 0;
+  const BAND_GAP = 100;
+
+  for (const course of ['FTC','Shared','STC']) {
+    const codes = courseGroups[course];
+    if (!codes.length) continue;
+
+    const g = new dagre.graphlib.Graph();
+    g.setGraph({ rankdir:'LR', nodesep:14, ranksep:60, marginx:40, marginy:30 });
+    g.setDefaultEdgeLabel(() => ({}));
+
+    for (const code of codes) g.setNode(code, { width:NODE_W, height:NODE_H });
+    const codeSet = new Set(codes);
+    for (const code of codes) {
+      for (const edge of (adjOut.get(code) || [])) {
+        if (codeSet.has(edge.to)) g.setEdge(edge.from, edge.to);
+      }
+    }
+
+    dagre.layout(g);
+    const bandH = g.graph().height || 200;
+    for (const code of codes) {
+      const nPos = g.node(code);
+      nodePositions.set(code, { x: nPos.x, y: yOffset + nPos.y, laneCourse: course });
+    }
+    yOffset += bandH + BAND_GAP;
+  }
+}
+
+function layoutByType() {
+  // Group by type category
+  const typeGroups = {};
+  for (const code of visibleNodes) {
+    const node = nodeIndex.get(code);
+    const t = node.eventType || 'X';
+    if (!typeGroups[t]) typeGroups[t] = [];
+    typeGroups[t].push(code);
+  }
+
+  const typeOrder = ['F','S','A','E','M','C','H','L','Z','B','O','R','P','T','W','X'];
+  const sortedTypes = typeOrder.filter(t => typeGroups[t]);
+
+  let yOffset = 0;
+  const BAND_GAP = 80;
+
+  for (const type of sortedTypes) {
+    const codes = typeGroups[type];
+    const g = new dagre.graphlib.Graph();
+    g.setGraph({ rankdir:'LR', nodesep:14, ranksep:50, marginx:40, marginy:20 });
+    g.setDefaultEdgeLabel(() => ({}));
+
+    for (const code of codes) g.setNode(code, { width:NODE_W, height:NODE_H });
+    const codeSet = new Set(codes);
+    for (const code of codes) {
+      for (const edge of (adjOut.get(code) || [])) {
+        if (codeSet.has(edge.to)) g.setEdge(edge.from, edge.to);
+      }
+    }
+
+    dagre.layout(g);
+    const bandH = g.graph().height || 100;
+    for (const code of codes) {
+      const nPos = g.node(code);
+      nodePositions.set(code, { x: nPos.x, y: yOffset + nPos.y, laneType: type });
+    }
+    yOffset += bandH + BAND_GAP;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Rendering
+// ═══════════════════════════════════════════════════════════════════
+function renderGraph() {
+  const root = document.getElementById('svg-root');
+  const parts = [];
+
+  // Layer 1: Swimlane backgrounds
+  parts.push(renderSwimlanes());
+
+  // Layer 2: Edges
+  parts.push('<g class="edges-layer">');
+  const visSet = visibleNodes;
+  for (const edge of allEdges) {
+    if (!visSet.has(edge.from) || !visSet.has(edge.to)) continue;
+    const from = nodePositions.get(edge.from);
+    const to = nodePositions.get(edge.to);
+    if (!from || !to) continue;
+
+    const fromNode = nodeIndex.get(edge.from);
+    const toNode = nodeIndex.get(edge.to);
+    const isCross = fromNode.phase !== toNode.phase;
+    const edgeId = `${edge.from}|${edge.to}`;
+
+    // Compute curved path
+    const path = computeEdgePath(from, to);
+    const dashStyle = isCross ? 'stroke-dasharray="4,4"' : '';
+    const opacity = isCross ? 0.15 : 0.25;
+
+    parts.push(`<path class="edge-path" data-edge="${esc(edgeId)}" d="${path}" stroke="var(--border)" stroke-width="1" opacity="${opacity}" ${dashStyle} marker-end="url(#arrow)" />`);
+  }
+  parts.push('</g>');
+
+  // Layer 3: Nodes
+  parts.push('<g class="nodes-layer">');
+  for (const code of visibleNodes) {
+    const node = nodeIndex.get(code);
+    const pos = nodePositions.get(code);
+    if (!pos) continue;
+
+    const x = pos.x - NODE_W/2;
+    const y = pos.y - NODE_H/2;
+    const phaseColor = PHASE_COLORS[node.phase] || '#94a3b8';
+    const typeFill = TYPE_FILLS[node.eventType] || 'rgba(148,163,184,0.10)';
+    const courseColor = COURSE_COLORS[node.courseAssignment] || '#94a3b8';
+    const isPropagated = propagatedNodes.has(code);
+
+    parts.push(`<g class="node-group${isPropagated ? ' propagated' : ''}" data-code="${esc(code)}" transform="translate(${x},${y})"
+      onmouseenter="showTooltip(event,'${esc(code)}')" onmouseleave="hideTooltip()"
+      onclick="selectNode('${esc(code)}')">`);
+
+    // Background rect
+    parts.push(`<rect class="node-rect" width="${NODE_W}" height="${NODE_H}" rx="5" ry="5" fill="${typeFill}" stroke="${phaseColor}" stroke-width="2.5" />`);
+
+    // Event code text
+    const displayCode = code.length > 14 ? code.slice(0,13) + '…' : code;
+    parts.push(`<text x="${NODE_W/2}" y="${NODE_H/2 - 2}" text-anchor="middle" dominant-baseline="middle" fill="var(--text)" font-family="var(--mono)" font-size="10" font-weight="700">${esc(displayCode)}</text>`);
+
+    // Type badge (top-right)
+    if (node.eventType) {
+      parts.push(`<rect x="${NODE_W-18}" y="2" width="14" height="12" rx="2" fill="${typeFill}" stroke="${phaseColor}" stroke-width="0.5" />`);
+      parts.push(`<text x="${NODE_W-11}" y="9.5" text-anchor="middle" fill="var(--text-dim)" font-family="var(--mono)" font-size="8" font-weight="600">${node.eventType}</text>`);
+    }
+
+    // Course indicator stripe (bottom)
+    parts.push(`<rect x="4" y="${NODE_H-5}" width="${NODE_W-8}" height="3" rx="1.5" fill="${courseColor}" opacity="0.6" />`);
+
+    parts.push('</g>');
+  }
+  parts.push('</g>');
+
+  root.innerHTML = parts.join('');
+
+  // Fit to view on first render
+  fitToView();
+}
+
+function renderSwimlanes() {
+  const parts = ['<g class="swimlane-layer" opacity="0.3">'];
+
+  if (groupMode === 'phase') {
+    // Gather min/max per phase
+    const lanes = {};
+    for (const [code, pos] of nodePositions) {
+      const node = nodeIndex.get(code);
+      if (!lanes[node.phase]) lanes[node.phase] = { minX:Infinity, maxX:-Infinity, minY:Infinity, maxY:-Infinity };
+      const l = lanes[node.phase];
+      l.minX = Math.min(l.minX, pos.x - NODE_W/2);
+      l.maxX = Math.max(l.maxX, pos.x + NODE_W/2);
+      l.minY = Math.min(l.minY, pos.y - NODE_H/2);
+      l.maxY = Math.max(l.maxY, pos.y + NODE_H/2);
+    }
+    for (const [phase, l] of Object.entries(lanes)) {
+      const pad = 20;
+      const color = PHASE_COLORS[phase] || '#94a3b8';
+      parts.push(`<rect x="${l.minX-pad}" y="${l.minY-40}" width="${l.maxX-l.minX+pad*2}" height="${l.maxY-l.minY+pad+50}" rx="8" fill="${color}" opacity="0.04" stroke="${color}" stroke-width="1" stroke-opacity="0.15" />`);
+      parts.push(`<text class="swimlane-label" x="${(l.minX+l.maxX)/2}" y="${l.minY-22}" text-anchor="middle" fill="${color}">${phase}</text>`);
+    }
+  } else if (groupMode === 'course') {
+    const lanes = {};
+    for (const [code, pos] of nodePositions) {
+      const node = nodeIndex.get(code);
+      const c = node.courseAssignment || 'Shared';
+      if (!lanes[c]) lanes[c] = { minX:Infinity, maxX:-Infinity, minY:Infinity, maxY:-Infinity };
+      const l = lanes[c];
+      l.minX = Math.min(l.minX, pos.x - NODE_W/2);
+      l.maxX = Math.max(l.maxX, pos.x + NODE_W/2);
+      l.minY = Math.min(l.minY, pos.y - NODE_H/2);
+      l.maxY = Math.max(l.maxY, pos.y + NODE_H/2);
+    }
+    for (const [course, l] of Object.entries(lanes)) {
+      const pad = 20;
+      const color = COURSE_COLORS[course] || '#94a3b8';
+      parts.push(`<rect x="${l.minX-pad}" y="${l.minY-40}" width="${l.maxX-l.minX+pad*2}" height="${l.maxY-l.minY+pad+50}" rx="8" fill="${color}" opacity="0.04" stroke="${color}" stroke-width="1" stroke-opacity="0.15" />`);
+      parts.push(`<text class="swimlane-label" x="${l.minX-pad+10}" y="${l.minY-22}" fill="${color}">${course}</text>`);
+    }
+  } else {
+    const lanes = {};
+    for (const [code, pos] of nodePositions) {
+      const node = nodeIndex.get(code);
+      const t = node.eventType || 'X';
+      if (!lanes[t]) lanes[t] = { minX:Infinity, maxX:-Infinity, minY:Infinity, maxY:-Infinity };
+      const l = lanes[t];
+      l.minX = Math.min(l.minX, pos.x - NODE_W/2);
+      l.maxX = Math.max(l.maxX, pos.x + NODE_W/2);
+      l.minY = Math.min(l.minY, pos.y - NODE_H/2);
+      l.maxY = Math.max(l.maxY, pos.y + NODE_H/2);
+    }
+    for (const [type, l] of Object.entries(lanes)) {
+      const pad = 20;
+      const typeName = TYPE_NAMES[type] || type;
+      parts.push(`<rect x="${l.minX-pad}" y="${l.minY-40}" width="${l.maxX-l.minX+pad*2}" height="${l.maxY-l.minY+pad+50}" rx="8" fill="var(--text-dim)" opacity="0.03" stroke="var(--text-dim)" stroke-width="1" stroke-opacity="0.1" />`);
+      parts.push(`<text class="swimlane-label" x="${l.minX-pad+10}" y="${l.minY-22}" fill="var(--text-dim)">${type} — ${typeName}</text>`);
+    }
+  }
+
+  parts.push('</g>');
+  return parts.join('');
+}
+
+function computeEdgePath(from, to) {
+  if (groupMode === 'phase') {
+    // Phase mode: columns are left-to-right, nodes within column are top-to-bottom
+    const sameColumn = Math.abs(from.x - to.x) < NODE_W * 1.5;
+
+    if (sameColumn) {
+      // Intra-phase: connect bottom of from → top of to (vertical)
+      const bx1 = from.x, by1 = from.y + NODE_H/2;
+      const bx2 = to.x, by2 = to.y - NODE_H/2;
+      const cy = (by1 + by2) / 2;
+      return `M${bx1},${by1} C${bx1},${cy} ${bx2},${cy} ${bx2},${by2}`;
+    } else {
+      // Cross-phase: connect right side of from → left side of to (horizontal)
+      const x1 = from.x + NODE_W/2, y1 = from.y;
+      const x2 = to.x - NODE_W/2, y2 = to.y;
+      const cx = (x1 + x2) / 2;
+      return `M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`;
+    }
+  }
+
+  // Left-to-right for course/type layouts
+  const x1 = from.x + NODE_W/2, y1 = from.y;
+  const x2 = to.x - NODE_W/2, y2 = to.y;
+  const cx = (x1 + x2) / 2;
+  return `M${x1},${y1} C${cx},${y1} ${cx},${y2} ${x2},${y2}`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Interaction: Selection + Chain highlighting
+// ═══════════════════════════════════════════════════════════════════
+function selectNode(code) {
+  if (selectedCode === code) {
+    clearSelection();
+    return;
+  }
+
+  selectedCode = code;
+  ancestorSet = new Set();
+  descendantSet = new Set();
+  ancestorEdges = new Set();
+  descendantEdges = new Set();
+
+  // BFS ancestors
+  const aQueue = [code];
+  const aVisited = new Set([code]);
+  while (aQueue.length) {
+    const cur = aQueue.shift();
+    for (const edge of (adjIn.get(cur) || [])) {
+      ancestorEdges.add(`${edge.from}|${edge.to}`);
+      if (!aVisited.has(edge.from)) {
+        aVisited.add(edge.from);
+        ancestorSet.add(edge.from);
+        aQueue.push(edge.from);
+      }
+    }
+  }
+
+  // BFS descendants
+  const dQueue = [code];
+  const dVisited = new Set([code]);
+  while (dQueue.length) {
+    const cur = dQueue.shift();
+    for (const edge of (adjOut.get(cur) || [])) {
+      descendantEdges.add(`${edge.from}|${edge.to}`);
+      if (!dVisited.has(edge.to)) {
+        dVisited.add(edge.to);
+        descendantSet.add(edge.to);
+        dQueue.push(edge.to);
+      }
+    }
+  }
+
+  applyHighlighting();
+  showDetail(code);
+}
+
+function clearSelection() {
+  selectedCode = null;
+  ancestorSet = new Set();
+  descendantSet = new Set();
+  ancestorEdges = new Set();
+  descendantEdges = new Set();
+
+  // Remove all highlighting classes
+  document.querySelectorAll('.node-group').forEach(el => {
+    el.classList.remove('selected','highlighted-ancestor','highlighted-descendant','dimmed');
+  });
+  document.querySelectorAll('.edge-path').forEach(el => {
+    el.classList.remove('highlighted-ancestor','highlighted-descendant','dimmed');
+    el.removeAttribute('marker-end');
+    el.setAttribute('marker-end', 'url(#arrow)');
+  });
+  closeDetail();
+}
+
+function applyHighlighting() {
+  document.querySelectorAll('.node-group').forEach(el => {
+    const code = el.dataset.code;
+    el.classList.remove('selected','highlighted-ancestor','highlighted-descendant','dimmed');
+    if (code === selectedCode) {
+      el.classList.add('selected');
+    } else if (ancestorSet.has(code)) {
+      el.classList.add('highlighted-ancestor');
+    } else if (descendantSet.has(code)) {
+      el.classList.add('highlighted-descendant');
+    } else {
+      el.classList.add('dimmed');
+    }
+  });
+
+  document.querySelectorAll('.edge-path').forEach(el => {
+    const edgeId = el.dataset.edge;
+    el.classList.remove('highlighted-ancestor','highlighted-descendant','dimmed');
+    if (ancestorEdges.has(edgeId)) {
+      el.classList.add('highlighted-ancestor');
+      el.setAttribute('marker-end', 'url(#arrow-ancestor)');
+    } else if (descendantEdges.has(edgeId)) {
+      el.classList.add('highlighted-descendant');
+      el.setAttribute('marker-end', 'url(#arrow-descendant)');
+    } else {
+      el.classList.add('dimmed');
+      el.setAttribute('marker-end', 'url(#arrow)');
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Tooltip
+// ═══════════════════════════════════════════════════════════════════
+function showTooltip(event, code) {
+  const node = nodeIndex.get(code);
+  if (!node) return;
+  const tt = document.getElementById('tooltip');
+  const inDeg = (adjIn.get(code) || []).length;
+  const outDeg = (adjOut.get(code) || []).length;
+  const typeName = TYPE_NAMES[node.eventType] || node.eventType;
+
+  tt.innerHTML = `
+    <div class="tt-code">${esc(code)}</div>
+    <div class="tt-name">${esc(node.eventName)}</div>
+    <div class="tt-meta">
+      <span>${typeName}</span>
+      <span>${node.courseAssignment}</span>
+      <span>&larr;${inDeg} &rarr;${outDeg}</span>
+    </div>`;
+  tt.style.display = 'block';
+
+  // Position near mouse
+  const wrap = document.getElementById('graph-wrap');
+  const rect = wrap.getBoundingClientRect();
+  let tx = event.clientX - rect.left + 12;
+  let ty = event.clientY - rect.top + 12;
+  if (tx + 300 > rect.width) tx = event.clientX - rect.left - 300;
+  if (ty + 100 > rect.height) ty -= 80;
+  tt.style.left = tx + 'px';
+  tt.style.top = ty + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Detail Panel
+// ═══════════════════════════════════════════════════════════════════
+function showDetail(code) {
+  const node = nodeIndex.get(code);
+  if (!node) return;
+  const panel = document.getElementById('detail-panel');
+  const content = document.getElementById('detail-content');
+
+  const courseCls = node.courseAssignment === 'FTC' ? 'badge-ftc' : node.courseAssignment === 'STC' ? 'badge-stc' : 'badge-shared';
+  const typeName = TYPE_NAMES[node.eventType] || node.eventType;
+  const typeFill = TYPE_FILLS[node.eventType] || 'rgba(148,163,184,0.15)';
+
+  let html = `
+    <div class="detail-header">
+      <div class="detail-code">${esc(code)}</div>
+      <div class="detail-name">${esc(node.eventName)}</div>
+      <div class="detail-badges">
+        <span class="detail-badge ${courseCls}">${node.courseAssignment}</span>
+        <span class="detail-badge" style="background:${typeFill};color:var(--text)">${node.eventType} — ${typeName}</span>
+        <span class="detail-badge" style="border:1px solid ${PHASE_COLORS[node.phase] || '#94a3b8'};color:${PHASE_COLORS[node.phase] || '#94a3b8'}">${node.phase}</span>
+      </div>
+    </div>`;
+
+  if (node.description) {
+    html += `<div class="detail-desc">${esc(node.description)}</div>`;
+  }
+  if (node.moduleName) {
+    html += `<div style="font-size:11px;color:var(--text-dim);margin-bottom:8px;">Module: <span style="color:var(--accent);font-family:var(--mono)">${esc(node.moduleCode || '')}</span> ${esc(node.moduleName)}</div>`;
+  }
+
+  // Ancestors
+  const ancestors = [...ancestorSet].map(c => ({ code:c, ...nodeIndex.get(c) }))
+    .sort((a,b) => (PHASE_ORDER[a.phase]||99) - (PHASE_ORDER[b.phase]||99) || a.code.localeCompare(b.code));
+  html += `<div class="detail-section">
+    <div class="detail-section-title">Ancestors (Prerequisites) <span class="chain-count">${ancestors.length}</span></div>`;
+  if (ancestors.length) {
+    for (const a of ancestors.slice(0, 50)) {
+      html += `<div class="chain-item" onclick="navigateTo('${esc(a.code)}')">
+        <span class="ci-arrow" style="color:var(--accent)">&larr;</span>
+        <span class="ci-code">${esc(a.code)}</span>
+        <span class="ci-name">${esc(a.eventName)}</span>
+      </div>`;
+    }
+    if (ancestors.length > 50) html += `<div style="font-size:11px;color:var(--text-dim);padding:4px 0;">+${ancestors.length-50} more...</div>`;
+  } else {
+    html += `<div style="font-size:12px;color:var(--text-dim);padding:4px 0;font-style:italic;">No prerequisites</div>`;
+  }
+  html += '</div>';
+
+  // Descendants
+  const descendants = [...descendantSet].map(c => ({ code:c, ...nodeIndex.get(c) }))
+    .sort((a,b) => (PHASE_ORDER[a.phase]||99) - (PHASE_ORDER[b.phase]||99) || a.code.localeCompare(b.code));
+  html += `<div class="detail-section">
+    <div class="detail-section-title">Descendants (Dependents) <span class="chain-count">${descendants.length}</span></div>`;
+  if (descendants.length) {
+    for (const d of descendants.slice(0, 50)) {
+      html += `<div class="chain-item" onclick="navigateTo('${esc(d.code)}')">
+        <span class="ci-arrow" style="color:var(--green)">&rarr;</span>
+        <span class="ci-code">${esc(d.code)}</span>
+        <span class="ci-name">${esc(d.eventName)}</span>
+      </div>`;
+    }
+    if (descendants.length > 50) html += `<div style="font-size:11px;color:var(--text-dim);padding:4px 0;">+${descendants.length-50} more...</div>`;
+  } else {
+    html += `<div style="font-size:12px;color:var(--text-dim);padding:4px 0;font-style:italic;">No dependents</div>`;
+  }
+  html += '</div>';
+
+  // Direct prerequisites with scope info
+  const directPrereqs = (adjIn.get(code) || []);
+  if (directPrereqs.length) {
+    html += `<div class="detail-section">
+      <div class="detail-section-title">Direct Prerequisites <span class="chain-count">${directPrereqs.length}</span></div>`;
+    for (const edge of directPrereqs) {
+      const fromNode = nodeIndex.get(edge.from);
+      const scopeParts = [];
+      if (edge.scope) {
+        if (edge.scope.positions && edge.scope.positions[0] !== 'inherit') {
+          scopeParts.push(edge.scope.positions.join(', '));
+        }
+        if (edge.scope.courseType) scopeParts.push(edge.scope.courseType);
+      }
+      const scopeStr = scopeParts.length ? ` <span style="font-size:10px;color:var(--text-dim)">(${esc(scopeParts.join(' | '))})</span>` : '';
+      html += `<div class="chain-item" onclick="navigateTo('${esc(edge.from)}')">
+        <span class="ci-code">${esc(edge.from)}</span>
+        <span class="ci-name">${esc(fromNode?.eventName || '')}</span>
+        ${scopeStr}
+      </div>`;
+    }
+    html += '</div>';
+  }
+
+  // Direct dependents
+  const directDeps = (adjOut.get(code) || []);
+  if (directDeps.length) {
+    html += `<div class="detail-section">
+      <div class="detail-section-title">Direct Dependents <span class="chain-count">${directDeps.length}</span></div>`;
+    for (const edge of directDeps.slice(0, 30)) {
+      const toNode = nodeIndex.get(edge.to);
+      html += `<div class="chain-item" onclick="navigateTo('${esc(edge.to)}')">
+        <span class="ci-code">${esc(edge.to)}</span>
+        <span class="ci-name">${esc(toNode?.eventName || '')}</span>
+      </div>`;
+    }
+    if (directDeps.length > 30) html += `<div style="font-size:11px;color:var(--text-dim);padding:4px 0;">+${directDeps.length-30} more...</div>`;
+    html += '</div>';
+  }
+
+  content.innerHTML = html;
+  panel.classList.add('open');
+}
+
+function closeDetail() {
+  document.getElementById('detail-panel').classList.remove('open');
+}
+
+function navigateTo(code) {
+  if (!visibleNodes.has(code)) return;
+  selectNode(code);
+
+  // Pan to center on node
+  const pos = nodePositions.get(code);
+  if (pos) {
+    vb.x = pos.x - vb.w / 2;
+    vb.y = pos.y - vb.h / 2;
+    applyViewBox();
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Pan / Zoom
+// ═══════════════════════════════════════════════════════════════════
+function applyViewBox() {
+  const svg = document.getElementById('graph-svg');
+  svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+}
+
+function fitToView() {
+  const pad = 40;
+  vb.x = graphBounds.x - pad;
+  vb.y = graphBounds.y - pad;
+  vb.w = graphBounds.w + pad*2;
+  vb.h = graphBounds.h + pad*2;
+
+  // Maintain aspect ratio
+  const wrap = document.getElementById('graph-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const aspect = rect.width / rect.height;
+  const graphAspect = vb.w / vb.h;
+
+  if (graphAspect > aspect) {
+    // Graph is wider — expand height
+    const newH = vb.w / aspect;
+    vb.y -= (newH - vb.h) / 2;
+    vb.h = newH;
+  } else {
+    // Graph is taller — expand width
+    const newW = vb.h * aspect;
+    vb.x -= (newW - vb.w) / 2;
+    vb.w = newW;
+  }
+
+  applyViewBox();
+}
+
+function resetView() {
+  vb = { x: graphBounds.x, y: graphBounds.y, w: graphBounds.w, h: graphBounds.h };
+  applyViewBox();
+}
+
+function zoomIn() { zoomBy(0.8); }
+function zoomOut() { zoomBy(1.25); }
+
+function zoomBy(factor) {
+  const cx = vb.x + vb.w / 2;
+  const cy = vb.y + vb.h / 2;
+  vb.w *= factor;
+  vb.h *= factor;
+  vb.x = cx - vb.w / 2;
+  vb.y = cy - vb.h / 2;
+  applyViewBox();
+}
+
+function zoomToward(clientX, clientY, factor) {
+  const svg = document.getElementById('graph-svg');
+  const rect = svg.getBoundingClientRect();
+  const mx = (clientX - rect.left) / rect.width;
+  const my = (clientY - rect.top) / rect.height;
+
+  const svgX = vb.x + mx * vb.w;
+  const svgY = vb.y + my * vb.h;
+
+  vb.w *= factor;
+  vb.h *= factor;
+  vb.x = svgX - mx * vb.w;
+  vb.y = svgY - my * vb.h;
+  applyViewBox();
+}
+
+// Mouse events for pan/zoom
+(function initPanZoom() {
+  const svg = document.getElementById('graph-svg');
+
+  svg.addEventListener('wheel', e => {
+    e.preventDefault();
+    const factor = e.deltaY > 0 ? 1.1 : 0.9;
+    zoomToward(e.clientX, e.clientY, factor);
+  }, { passive: false });
+
+  svg.addEventListener('mousedown', e => {
+    if (e.target.closest('.node-group')) return;
+    isPanning = true;
+    panStart = { x: e.clientX, y: e.clientY };
+  });
+
+  window.addEventListener('mousemove', e => {
+    if (!isPanning) return;
+    const svg = document.getElementById('graph-svg');
+    const rect = svg.getBoundingClientRect();
+    const dx = (e.clientX - panStart.x) / rect.width * vb.w;
+    const dy = (e.clientY - panStart.y) / rect.height * vb.h;
+    vb.x -= dx;
+    vb.y -= dy;
+    panStart = { x: e.clientX, y: e.clientY };
+    applyViewBox();
+  });
+
+  window.addEventListener('mouseup', () => { isPanning = false; });
+})();
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  const PAN_STEP = vb.w * 0.1;
+  switch(e.key) {
+    case 'Escape': clearSelection(); break;
+    case 'ArrowLeft': vb.x -= PAN_STEP; applyViewBox(); break;
+    case 'ArrowRight': vb.x += PAN_STEP; applyViewBox(); break;
+    case 'ArrowUp': vb.y -= PAN_STEP; applyViewBox(); break;
+    case 'ArrowDown': vb.y += PAN_STEP; applyViewBox(); break;
+    case '+': case '=': zoomIn(); break;
+    case '-': zoomOut(); break;
+  }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// Filter UI
+// ═══════════════════════════════════════════════════════════════════
+function initFilterUI() {
+  // Phase buttons
+  const phaseContainer = document.getElementById('phase-btns');
+  let phaseHTML = '';
+  for (const p of PHASES) {
+    phaseHTML += `<button class="btn active" data-phase="${p}" onclick="togglePhase('${p}',this)" style="--phase-color:${PHASE_COLORS[p]}">${p}</button> `;
+  }
+  phaseContainer.innerHTML = phaseHTML;
+
+  // Course buttons
+  const courseContainer = document.getElementById('course-btns');
+  courseContainer.innerHTML = `
+    <button class="btn active ftc" data-course="FTC" onclick="toggleCourse('FTC',this)">FTC</button>
+    <button class="btn active stc" data-course="STC" onclick="toggleCourse('STC',this)">STC</button>
+    <button class="btn active shared" data-course="Shared" onclick="toggleCourse('Shared',this)">Shared</button>`;
+
+  // Type buttons — only show types present in data
+  const typeContainer = document.getElementById('type-btns');
+  const presentTypes = new Set();
+  for (const node of nodeIndex.values()) presentTypes.add(node.eventType);
+  const typeOrder = ['F','S','A','E','M','C','H','L','Z','B','O','R','P','T','W','X'];
+  let typeHTML = '';
+  for (const t of typeOrder) {
+    if (!presentTypes.has(t)) continue;
+    const name = TYPE_NAMES[t] || t;
+    typeHTML += `<button class="btn" data-type="${t}" onclick="toggleType('${t}',this)" title="${name}">${t}</button> `;
+  }
+  typeContainer.innerHTML = typeHTML;
+}
+
+function togglePhase(phase, btn) {
+  if (activePhases.has(phase)) {
+    activePhases.delete(phase);
+    btn.classList.remove('active');
+  } else {
+    activePhases.add(phase);
+    btn.classList.add('active');
+  }
+  rebuildGraph();
+}
+
+function toggleCourse(course, btn) {
+  if (activeCourses.has(course)) {
+    activeCourses.delete(course);
+    btn.classList.remove('active');
+  } else {
+    activeCourses.add(course);
+    btn.classList.add('active');
+  }
+  rebuildGraph();
+}
+
+function toggleType(type, btn) {
+  if (activeTypes.has(type)) {
+    activeTypes.delete(type);
+    btn.classList.remove('active');
+  } else {
+    activeTypes.add(type);
+    btn.classList.add('active');
+  }
+  rebuildGraph();
+}
+
+function setGroupMode(mode, btn) {
+  groupMode = mode;
+  document.querySelectorAll('#group-mode .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  rebuildGraph();
+}
+
+function handleSearch(value) {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    searchTerm = value.trim();
+    rebuildGraph();
+  }, 150);
+}
+
+function rebuildGraph() {
+  clearSelection();
+  computeVisible();
+  runLayout();
+  renderGraph();
+  updateStats();
+}
+
+function updateStats() {
+  const total = nodeIndex.size;
+  const visible = visibleNodes.size;
+  const edgeCount = allEdges.filter(e => visibleNodes.has(e.from) && visibleNodes.has(e.to)).length;
+  document.getElementById('stats').innerHTML =
+    `<span><span class="num">${visible}</span>/${total} nodes</span>` +
+    `<span><span class="num">${edgeCount}</span> edges</span>` +
+    `<span><span class="num">${propagatedNodes.size}</span> propagated</span>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Legend
+// ═══════════════════════════════════════════════════════════════════
+function buildLegend() {
+  const body = document.getElementById('legend-body');
+  let html = '<div style="margin-bottom:8px;font-weight:600;font-size:10px;color:var(--text-dim);font-family:var(--mono);text-transform:uppercase;">Phase Border Colors</div>';
+  for (const [phase, color] of Object.entries(PHASE_COLORS)) {
+    html += `<div class="legend-row"><div class="legend-swatch" style="background:${color};border:2px solid ${color}"></div><span style="color:var(--text-dim);font-family:var(--mono)">${phase}</span></div>`;
+  }
+
+  html += '<div style="margin:8px 0 4px;font-weight:600;font-size:10px;color:var(--text-dim);font-family:var(--mono);text-transform:uppercase;">Event Types (fill)</div>';
+  const shownTypes = ['F','S','A','E','M','C','H','L','Z'];
+  for (const t of shownTypes) {
+    const fill = TYPE_FILLS[t] || 'rgba(148,163,184,0.10)';
+    html += `<div class="legend-row"><div class="legend-swatch" style="background:${fill};border:1px solid var(--border)"></div><span style="color:var(--text-dim);font-family:var(--mono)">${t} — ${TYPE_NAMES[t] || t}</span></div>`;
+  }
+
+  html += '<div style="margin:8px 0 4px;font-weight:600;font-size:10px;color:var(--text-dim);font-family:var(--mono);text-transform:uppercase;">Course Stripe</div>';
+  for (const [course, color] of Object.entries(COURSE_COLORS)) {
+    html += `<div class="legend-row"><div class="legend-swatch" style="background:${color};height:4px;border-radius:2px"></div><span style="color:var(--text-dim);font-family:var(--mono)">${course}</span></div>`;
+  }
+
+  html += '<div style="margin:8px 0 4px;font-weight:600;font-size:10px;color:var(--text-dim);font-family:var(--mono);text-transform:uppercase;">Edges</div>';
+  html += `<div class="legend-row"><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--border)" stroke-width="1" /></svg><span style="color:var(--text-dim);font-family:var(--mono)">Same phase</span></div>`;
+  html += `<div class="legend-row"><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--border)" stroke-width="1" stroke-dasharray="4,4" /></svg><span style="color:var(--text-dim);font-family:var(--mono)">Cross phase</span></div>`;
+  html += `<div class="legend-row"><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--accent)" stroke-width="2" /></svg><span style="color:var(--text-dim);font-family:var(--mono)">Ancestor chain</span></div>`;
+  html += `<div class="legend-row"><svg width="22" height="10"><line x1="0" y1="5" x2="22" y2="5" stroke="var(--green)" stroke-width="2" /></svg><span style="color:var(--text-dim);font-family:var(--mono)">Descendant chain</span></div>`;
+
+  html += '<div style="margin:8px 0 4px;font-weight:600;font-size:10px;color:var(--text-dim);font-family:var(--mono);text-transform:uppercase;">Nodes</div>';
+  html += `<div class="legend-row"><div class="legend-swatch" style="border:2px dashed var(--border);background:none"></div><span style="color:var(--text-dim);font-family:var(--mono)">Propagated ancestor</span></div>`;
+
+  body.innerHTML = html;
+}
+
+function toggleLegend() {
+  const body = document.getElementById('legend-body');
+  const caret = document.getElementById('legend-caret');
+  body.classList.toggle('open');
+  caret.innerHTML = body.classList.contains('open') ? '&#9660;' : '&#9654;';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Utilities
+// ═══════════════════════════════════════════════════════════════════
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// Init
+// ═══════════════════════════════════════════════════════════════════
+loadData();
+</script>
+</body>
+</html>

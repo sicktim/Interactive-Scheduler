@@ -1,0 +1,84 @@
+{
+  "transformedAt": "2026-02-19T19:24:50.034Z",
+  "phases": {
+    "AN": {
+      "v1Events": 49,
+      "v2Events": 49,
+      "match": true,
+      "v1Prereqs": 0,
+      "v2Prereqs": 0,
+      "prereqMatch": true
+    },
+    "AS": {
+      "v1Events": 74,
+      "v2Events": 74,
+      "match": true,
+      "v1Prereqs": 93,
+      "v2Prereqs": 93,
+      "prereqMatch": true
+    },
+    "CF": {
+      "v1Events": 99,
+      "v2Events": 99,
+      "match": true,
+      "v1Prereqs": 351,
+      "v2Prereqs": 351,
+      "prereqMatch": true
+    },
+    "FQ": {
+      "v1Events": 91,
+      "v2Events": 91,
+      "match": true,
+      "v1Prereqs": 238,
+      "v2Prereqs": 238,
+      "prereqMatch": true
+    },
+    "PF": {
+      "v1Events": 55,
+      "v2Events": 55,
+      "match": true,
+      "v1Prereqs": 193,
+      "v2Prereqs": 193,
+      "prereqMatch": true
+    },
+    "SO": {
+      "v1Events": 16,
+      "v2Events": 16,
+      "match": true,
+      "v1Prereqs": 17,
+      "v2Prereqs": 17,
+      "prereqMatch": true
+    },
+    "SY": {
+      "v1Events": 86,
+      "v2Events": 86,
+      "match": true,
+      "v1Prereqs": 203,
+      "v2Prereqs": 203,
+      "prereqMatch": true
+    },
+    "TF": {
+      "v1Events": 124,
+      "v2Events": 124,
+      "match": true,
+      "v1Prereqs": 257,
+      "v2Prereqs": 257,
+      "prereqMatch": true
+    },
+    "TL": {
+      "v1Events": 27,
+      "v2Events": 27,
+      "match": true,
+      "v1Prereqs": 28,
+      "v2Prereqs": 28,
+      "prereqMatch": true
+    }
+  },
+  "totals": {
+    "v1Events": 621,
+    "v2Events": 621,
+    "v1Prereqs": 1380,
+    "v2Prereqs": 1380
+  },
+  "unmatchedNotes": []
+}

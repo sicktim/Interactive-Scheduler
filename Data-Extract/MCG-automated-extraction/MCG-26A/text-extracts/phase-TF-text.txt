@@ -1,0 +1,1204 @@
+===== PAGE 131 =====
+ 
+ 
+131 
+ 
+Test Foundations Phase 
+The Test Foundations (TF) phase is designed to equip students with the knowledge and skills 
+necessary to be successful aerospace testers, both at the day-to-day execution level as well as the holistic 
+test project level and beyond, providing a solid foundation as they enter the test community.  
+The curriculum begins with courses in basic Systems Engineering problem decomposition and an 
+introduction to Human Systems Integration, Test Acquisition, and Risk Management. During the Plan, 
+Execute, Analyze, Report, and Special Subjects (PEARS) module, students will participate in targeted 
+academic and flight events to learn foundational principles and context for performing test duties at 
+various stages in the lifecycle of a test program. During these events, students will learn and practice 
+many of the core competencies that will be expected of them post-graduation. The students then move on 
+to Qualitative Evaluations of various aircraft and space systems. The culminating educational event in 
+Test Foundations is the Test Management Project (TMP), which is a real-world test program that will be 
+planned, executed, and reported on by student teams. Finally, comprehensive written and oral exams will 
+allow students to demonstrate their mastery of the entire TPS curriculum and their readiness to be 
+technical leaders in the flight and space test community. Throughout the TF phase, students will also learn 
+where they fit within the greater acquisition enterprise and how their actions can influence the successful 
+development of combat capability. 
+References and Texts 
+The primary reference used for teaching will be the handouts (typically PowerPoint slides) developed 
+for each lesson. These slides can be found on the TPS curriculum portal under lessons indexed with the 
+TF prefix. Five texts have been made available to the students, and they should be considered the primary 
+Test Foundations texts: 
+ 
+1. Montgomery, Design and Analysis of Experiments, John Wiley and Sons, Inc, 7th/8th 
+Edition, 2009/2013. 
+2. Ott and Longnecker, An Introduction to Statistical Methods & Data Analysis, Cengage 
+Learning, 7th Edition, 2016. 
+Curriculum Organization and Learning Objectives 
+As shown in the figure below, the Test Foundations phase is organized into five major levels. Within 
+each level there is a set of topically arranged modules. The description of each event is found in the 
+sections below. 
+
+
+===== PAGE 132 =====
+ 
+ 
+132 
+ 
+ 
+Figure 28: Test Foundations Overview 
+
+
+===== PAGE 133 =====
+ 
+ 
+133 
+ 
+TF 5000 Foundations 
+(1 Semester Credit Hours) 
+The 5000-level course is designed to teach foundational materials that transcend discipline boundaries 
+and establish a fundamental mindset, a common lexicon, and a useful method for decomposing problems 
+and managing risk. These courses will also help students understand and be able to articulate the ways in 
+which they interact with real-world systems. 
+TF 5100 Systems Engineering 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the foundational Systems Engineering philosophy and principles that permeate the 
+test world. 
+TLO 2. Trace the use of Systems Engineering principles and tools during test efforts. 
+TLO 3. Explain the foundational systems mindset, common lexicon, theoretical-based methods, 
+tools, and approaches to decompose problems, formulate a plan, and execute smartly. 
+TLO 4. Apply the systems engineering approach to a notional system under development to include 
+system functional decomposition, requirements development, and physical and functional 
+models/architectures.  
+TLO 5. Apply systems thinking to develop a notional test scenario and a detailed test plan to 
+include a test hazard analysis. 
+ 
+TF 5101A Systems Engineering for Testers Lecture 
+TF 5102A Systems Modeling Architecture Lecture 
+TF 5103R Systems Engineering for Testers Project Written Report 
+TF 5104Z Systems Engineering for Testers Debrief 
+The first block will teach students the fundamentals of Systems Engineering and how it applies to 
+test. It covers complexity, systems theory, the scientific method, an abstract approach for decomposing 
+the modern battlespace into test requirements, and a process for generating data and reducing system risk. 
+The following blocks will then build on these modeling concepts and provide simple constructs for 
+modeling systems from function to form.  
+The written report provides an opportunity for the student to engage individually in Systems 
+Engineering artifact development and communicate their purpose and importance to complexity 
+management, test strategy development, and risk management using a notional system provided by the 
+instructor. This project consists of a short technical report on a notional complex system, providing an 
+opportunity for the student to demonstrate comprehension across a spectrum of Systems Engineering 
+artifacts. 
+Prerequisites:  
+AN 5180A Test Foundations Phase Intro 
+ 
+
+
+===== PAGE 134 =====
+ 
+ 
+134 
+ 
+TF 5200 Human Systems Integration 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain the foundational systems mindset, common lexicon, theoretically based methods, 
+tools, and approaches to decompose Human Systems Integration problems, formulate a 
+plan, and execute smartly.  
+TLO 2. Explain the complex human-system interface and the importance of design in terms of total 
+system performance.  
+TLO 3. Apply an appropriate design of experiments to test design configurations objectively to 
+produce the necessary evidence to support or decline various interfaces.  
+TLO 4. Apply qualitative and quantitative Human Systems Integration as a systems-based scientific 
+methodology in the flight test community. 
+ 
+TF 5201A Human Systems Integration Lecture 
+TF 5202S Model-Based Human Systems Integration Sim/Lab 
+TF 5203A Human Machine Interface Lecture 
+The first block introduces Human System Integration (HSI) as a systems-based scientific 
+methodology and highlights test considerations. It presents considerations for the human element cross-
+over into other all other disciplines. This block will introduce concepts of cognitive workload assessment 
+and conducting HSI evaluations of systems. This block will also introduce qualitative and quantitative 
+approaches to Human Systems Integration. 
+The Model-Based Human Systems Integration (MB HSI) sim/lab orients students to human systems 
+testing in a simulation environment. During a 1.5-hour test block, each student will receive a simulator 
+orientation and individual simulator tasks. Basic Performance Resource measures will be collected and 
+used in appropriate curriculum events for analysis. 
+The last block reviews aspects of the human role in the operations process and describes the role of 
+the TPS graduate in the Human Systems testing process. The block emphasizes space/aviation Human 
+Systems history as it relates to major aviation, military, and space developments. The topics covered 
+include control and display principles, along with cognitive workload assessment. Additionally, the last 
+block covers basic functionality and limitations of human sensation and perception, as well as 
+components of situation awareness, models of decision making, and case studies of both, mishaps and 
+recent real-world test programs involving Human Machine Interface. 
+Prerequisites:  
+AN 5180A Test Foundations Phase Intro 
+ 
+TF 5210L Anthropometric Measurements Lab 
+The objective of this lab is to introduce the student to the science of Anthropometry (the measurement 
+of human body dimensions). Anthropometric technicians will measure a variety of body dimensions for 
+each student. Those dimensions will be placed into a Human Systems computer database which describes 
+how students’ individual body dimensions compare to the historic US Air Force aircrew population. Each 
+student will be provided a copy of their anthropometric measurements and percentiles, which can be used 
+for future evaluations both at TPS and follow-on test assignments. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 135 =====
+ 
+ 
+135 
+ 
+TF 5230M Human Systems Evaluation MIB 
+TF 5231S Human Systems Evaluation Sim 
+TF 5232R Human Systems Evaluation Modified Technical Report 
+The purpose of the MIB is to orient students to the scope and expectations of the Human Systems 
+Evaluation Modified Technical Report and provide a dedicated opportunity for students to query the 
+instructor regarding details of the report. Expectations for the system under test, data collection methods, 
+and design of experiments guidelines will be provided. Students will work in groups to collect task 
+performance data, evaluate the system interface, and provide design change recommendations in the 
+technical report. 
+Prerequisites:  
+ 
+TF 5203A Human Machine Interface Lecture 
+TF 6430A Deficiency Reports Lecture 
+TF 7601A Wideband Global SATCOM (WGS) Intro (STC)  
+ 
+
+
+===== PAGE 136 =====
+ 
+ 
+136 
+ 
+TF 5300 Introduction to Test in Acquisition (STC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recognize the high-level policy documents as they apply to an Integrated Test Team (ITT). 
+TLO 2. Describe the purpose of the Integrated Test Team for a DAF acquisition program. 
+TLO 3. Practice oral presentation skills on an instructional topic. 
+TLO 4. Evaluate a Test & Evaluation Master Plan for a major capability acquisition in accordance 
+with the DOT&E TEMP Guidebook. 
+TLO 5. Integrate OSD and DAF guidance to develop a test strategy. 
+TLO 6. Explain terms and processes applicable to a TEMP for a major capability acquisition. 
+TLO 7. Recognize the high-level policy documents as they apply to an Integrated Test Team (ITT) 
+TLO 8. Describe the purpose of the Integrated Test Team for a DAF acquisition program 
+TLO 9. Practice oral presentation skills on an instructional topic 
+ 
+TF 5310M Test Policy Assignment Briefing (STC) 
+TF 5311Y Test Policy Oral Report (STC) 
+Students will conduct independent study using provided policy documents (DoD, DAF, and USSF 
+instructions and guidance) related to Test and Evaluation. Students will review, research, and present 
+relevant information to their classmates and instructors with a focus on their role in an Integrated Test 
+Team (ITT). Each student will be assigned a single document to research and work with a group to 
+develop a 45-minute oral presentation on the assigned document. 
+Prerequisites:  
+AN 5180A Test Foundations Phase Intro 
+ 
+TF 5320A Test and Evaluation Master Plan (TEMP) Development and Strategic Planning 
+(STC) 
+Students will be introduced to DAF and OSD guidance on development of test strategies and TEMPs. 
+This course will consist of a lecture, guided research using OSD or DAF-provided tools, case studies, and 
+a student project. Given actual acquisition program documents, students will review a TEMP from the 
+perspective of an oversight organization.  
+Prerequisites: 
+TF 5301A Introduction to Space Systems Testing (STC) 
+TF 5310Y Test Policy Oral Report (STC) 
+TF 6510A Joint Test and Evaluation (JT&E) (STC)  
+TL 5110A Operational Test 
+ 
+ 
+
+
+===== PAGE 137 =====
+ 
+ 
+137 
+ 
+TF 5400 Risk Management 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Negotiate complex systems modeling to support employing the Mission Risk Framework 
+TLO 2. Characterize complex systems and create appropriate models.  
+TLO 3. Summarize the appropriate limits and utility of legacy risk management rubrics.  
+TLO 4. Infer the implications of human decision fallibility and its implications to modeling risks.  
+ 
+TF 5401A Mission Risk Frameworks (MiRF) 
+This block introduces the framework which can be applied to complex systems and used for risk and 
+safety analysis. This framework will be used throughout the curriculum for modeling and assessing a 
+range of systems from simple to complex.  
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 5410A Test Safety Principles Lecture 
+TF 5411A Introduction to Test Safety (STC) 
+TF 5412A Introduction to Operational Risk Management (STC) 
+TF 5413A X-31 Guest Lecture (STC) 
+These blocks provide the basic knowledge of test safety and hazard/risk identification, to include 
+safety planning, Final Safety Review (FSR), test plan approval, test execution, and the project test plan 
+change process. Test safety processes will be reinforced through practical exercises throughout the 
+course. Students receive initial Project Safety Lead (PSL) qualifications upon completion of this course. 
+Prerequisites:  
+ 
+TF 5401A Mission Risk Frameworks (MiRF) 
+TF 6401A Test Reporting Lecture 
+ 
+TF 5420A Functional Mission Analysis (STC) 
+This course presents the Functional Mission Analysis, a hazard analysis technique based on an 
+extended model of mishap causation. Component failures, unsafe interactions, and social-technical 
+systems − or the combination of all three − can be analyzed as a whole. Case studies of applications to 
+past mishaps are presented. Students are led through applications to posed test projects to practice 
+Functional Mission Analysis application. 
+Prerequisites:  
+ 
+TF 5401A Mission Risk Frameworks (MiRF) 
+ 
+
+
+===== PAGE 138 =====
+ 
+ 
+138 
+ 
+TF 5500 Photo/Safety Chase (FTC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate the tenants of photo and safety chase. 
+ 
+TF 5501M Photo/Safety Chase Introduction and Familiarization MIB (ABM/CSO/P/FTE) 
+TF 5502F T-38 Photo/Safety Chase Familiarization (ABM/CSO/FTE) 
+TF 5503F T-38 Photo/Safety Chase Introduction (P) 
+The objective of this mission is to familiarize the student with differences in photo, safety, and area 
+chase. Students will practice or observe roles and responsibilities for a representative variety of chase 
+maneuvers from both the test aircraft and the chase aircraft. These roles include test/chase communication 
+and coordination, in the test role; precise flight test execution and management of chase, and in the chase 
+role; flying techniques for a variety of chase challenges. 
+Prerequisites: 
+CF 6370F T-38 Flight Training (ABM/CSO/FTE) [req’d for TF 5502F] 
+CF 6701F T-38 CF-Form (P) [req’d for TF 5503F] 
+ 
+TF 5510M C-12 Photo/Safety Chase MIB (RPA) 
+TF 5511F C-12 Photo/Safety Chase (RPA) 
+TF 5520F C-12 Photo/Safety Chase Target (optional for P/RPA) 
+The objective of this mission is for RPA student pilots to understand and apply procedures and 
+techniques for 2-ship maneuvering and photo/safety chase for UAV chase missions. Student pilots have 
+the optional opportunity to fly as target. 
+Prerequisites: 
+CF 6542F C-12 CF-3 (P, crew solo) [req’d for TF 5520F] 
+CF 6551F C-12 Flight Training (P, non-crew solo) [req’d for TF 5520F] 
+CF 6805F C-12 CF-5 Formation (RPA) [req’d for TF 5511F] 
+ 
+
+
+===== PAGE 139 =====
+ 
+ 
+139 
+ 
+TF 6000 Plan, Execute, Analyze, Report, Special Subjects (PEARS) 
+(3 Semester Credit Hours) 
+The 6000-level phase gives the student an understanding of the basic components involved with 
+planning, executing, analyzing, and reporting during a test program. Many practical aspects of the day-to-
+day life of an aerospace tester are covered in a variety of academic events. These courses address the 
+reality that a test professional may show up at any phase in the lifecycle of a test program, and it aims to 
+equip students to be useful test team members wherever they go. 
+  
+TF 6100 Plan 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain the basic "vocabulary" of the various phases of an aerospace test program, from 
+program initiation through final reporting. 
+TLO 2. Explain the expected actions within the test community at different points in a test 
+program, including the day-to-day responsibilities of an aerospace test professional. 
+TLO 3. Demonstrate effective and efficient planning and execution of a successful test. 
+TLO 4. Create the applicable data products to answer test objectives for a given system under test. 
+TLO 5. Create data-driven findings of a system under test to various stakeholders at the appropriate 
+level. 
+ 
+TF 6101A PEARS Introduction Lecture 
+TF 6102A Test Planning Lecture 
+TF 6103Y Test Planning Oral Report  
+TF 6104A Intro to Managing Tests Lecture 
+The first block introduces students to the basic components involved with planning, executing, 
+analyzing, and reporting during a test program. It provides context for the TF 6000 level of academics and 
+introduces some of the basic “vocabulary” of aerospace test programs.  
+The second block introduces students to the responsibilities of a tester, provides the context to help 
+them understand where developmental testing fits into the greater acquisition enterprise, and introduces 
+them to the processes which support test planning and execution. 
+The third block will introduce students to the basic format and development strategy for Air Force 
+Test Center (AFTC)-style test plans. It will explain the construct of specific and achievable objectives and 
+detail the sub-sections that are hallmarks of an executable plan that will answer the customer’s questions. 
+The oral report consists of a ten-minute group presentation that will take place a few days after the 
+Test Planning Lecture. Students will analyze a provided test vignette, identify requirements and test 
+objectives, develop a test methodology, identify a risk, and communicate their plan. 
+Prerequisites:  
+AN 5180A Test Foundations Phase Intro 
+ 
+TF 6110A Test Card Introduction Lecture 
+This block provides students with an overview of test card requirements, best practices for test card 
+layout, human factors design principles, techniques to optimize safety and data collection ability, and 
+examples of test cards from various test programs. 
+Prerequisites:  
+TF 6102A Test Planning Lecture 
+ 
+ 
+ 
+
+
+===== PAGE 140 =====
+ 
+ 
+140 
+ 
+TF 6120A Program Management Lecture 
+This block provides students with the basics of program management as applied to aerospace test and 
+discusses the theory and application of theory of constraints (TOC) at the Air Force Test Center. 
+Specifically, TOC is the method used to schedule projects within the constraints of available resources. 
+Real-world test programs will be presented highlighting the project scope, resources, and associated risks 
+(safety, technical, security, and programmatic). 
+Prerequisites:  
+ 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6130A Combat Test Framework Lecture (STC) 
+This block introduces students to the combat test framework which is intended to obtain combat 
+realistic data for a system under test. Students will learn to leverage system decomposition, the integrated 
+evaluation framework, and realistic threat-based combat scenarios to develop test events that produce 
+combat relevant data. 
+Prerequisites:  
+ 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6140A Operational Test (OT) Planning and Execution (STC) 
+TF 6141A USSF Integrated Testing (STC) 
+This block introduces students to formal Operational Test (OT) in the context of fielding new 
+capabilities. An overview of the US laws governing OT and independent operational assessments will be 
+presented. OT objectives and test considerations will be compared with those of Developmental Test 
+(DT). Key OT terminology such as Effectiveness and Suitability will be presented, in addition to the 
+different OT organizations and considerations for integrated testing will be discussed. 
+Prerequisites:  
+ 
+TF 5320A Test and Evaluation Master Plan (TEMP) Development (STC) 
+TF 6101A PEARS Introduction Lecture  
+TL 5110A Operational Test 
+ 
+
+
+===== PAGE 141 =====
+ 
+ 
+141 
+ 
+ 
+Figure 29: TF 6100 Plan 
+
+
+===== PAGE 142 =====
+ 
+ 
+142 
+ 
+TF 6200 Execute 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain the expected actions within the test community at different points in a test 
+program, including the day-to-day responsibilities of an aerospace test professional 
+TLO 2. Demonstrate effective and efficient planning and execution of a successful test. 
+ 
+TF 6201A Test Conduct Lecture 
+TF 6202B Performance Test Conduct Lecture 
+This course introduces students to the fundamentals of test control and conduct and familiarizes them 
+with content of AFTCI 99-105, Test Control and Conduct. It emphasizes the elements required for safe 
+and efficient test control and conduct to include required personnel, mission preparation, test card 
+generation, communications plans, execution techniques, and post-test debrief.  
+Prerequisites: 
+PF 8202E Energy Exam [req’d for TF 6202B] 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6210A Time Safety Margin Lecture (FTC) 
+This lesson introduces students to Time Safety Margin (TSM) calculations, demonstrates how TSM 
+can be utilized for safe test execution, and equips the students to be able to plan their own TSMs. 
+Prerequisites: 
+TF 6201A Test Conduct Lecture 
+  
+TF 6220M Control Room Test Conduct Primer MIB (ABM/FTE/STC) 
+TF 6221C Control Room Test Conduct Primer (ABM/FTE/STC) 
+The MIB presents a flight test scenario composed of various flying qualities and mission system test 
+points. System requirements, test objectives, and measures of performance from the provided test plan are 
+presented to introduce students to an example of decomposing system requirements into test objectives 
+and data requirements used to develop the appropriate FTT or test methodology. The mission profile, 
+communication plan, limits, and control room screens are also reviewed. Utilizing the controlled 
+environment afforded with a simulator, a mock flight test is conducted from the control room. Students 
+are familiarized with the radio procedures and control room environment and are given the opportunity to 
+practice control of a test mission to include basic test point pacing, data monitoring, and maneuver 
+feedback. CSO, P, and RPA students have the option to sit in and observe the event. 
+Prerequisites: 
+CF 6620B Control Room Ground School (ABM/CSO/FTE/RPA/STC) 
+CF 6621C Control Room Familiarization [req’d for TF 6231C] 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 143 =====
+ 
+ 
+143 
+ 
+TF 6230M F-16/Control Room Test Conduct Intro MIB 
+TF 6231C F-16/Control Room Test Conduct Intro (ABM/FTE execute, CSO/P/RPA 
+observe) 
+TF 6232F F-16/Control Room Test Conduct Intro Flight (optional flight for CSO/P/RPA) 
+TF 6233C Sim/Control Room Test Conduct Intro (STC) 
+Utilizing flight test techniques derived from propulsion testing, students are introduced to the 
+methods for conducting a test from a remote telemetry control room. This event builds on the control 
+room resources introduced in CF 6621C Control Room Familiarization and concepts for control room 
+operations introduced in TF 6221C Control Room Test Conduct Primer. This event also increases the 
+complexity of test conduct with active test control and the real-world “fog and friction” associated with 
+actual flight test. 
+Prerequisites: 
+CF 6673F F-16 CF-4 (P, crew solo) [req’d for TF 6232F] 
+CF 6680F F-16 Flight Training (ABM/CSO/FTE/RPA) [req’d for TF 6232F] 
+CF 6681F F-16 Flight Training (P, non-crew solo) [req’d for TF 6232F] 
+TF 6220M Control Room Test Conduct Primer MIB (ABM/FTE/STC) 
+TF 6221C Control Room Test Conduct Primer (ABM/FTE/STC) [req’d for TF 6231C] 
+ 
+TF 6240M C-12 Airborne Test Conduct Intro MIB 
+TF 6241F C-12 Airborne Test Conduct Intro (FTC) 
+TF 6242F C-12 Airborne Test Conduct Intro (STC) 
+The MIB gives students information on test conduct techniques, test team coordination, and in-flight 
+data collection. It also highlights mission events for a C-12 Airborne Test Conduct Intro flight that 
+introduces FTC students to directing a test mission as a participating entity not in control of the vehicle 
+flightpath. During the flight, an instructor will demonstrate test conduct techniques for a ride-along test 
+collecting data from systems independent of the C-12 during a concurrent flight test of C-12 performance 
+FTTs. Instruction will be provided on data collection techniques, test team communication, and the 
+importance of understanding test execution pacing and timing. 
+STC students will ride-along an airborne event which will be accomplished during existing FTC C-12 
+events when a C-12 IP is required, not including practical events (see list below). The MIB gives STC 
+students information on airborne test conduct techniques, test team coordination, and in-flight data 
+collection. For the event, students will conduct ride-along evaluation of a Time Space Position 
+Instrumentation (TSPI) system. Students are provided with MPG/Test Plan/Test Matrix and are required 
+to create test cards, evaluation methods, and track test matrix completion as a team. Instruction will be 
+provided on data collection and analysis techniques for TSPI systems and a description of the flight test 
+techniques that will occur during the ride-along events. Sorties that can be used for ride-along 
+include:  TF 6241F C-12 Airborne Test Conduct Intro, PF 8211F C-12 Level Accel/Turn Perf Flight, PF 
+8302F C-12 Autopilot Flight Control System Flight, TF 6251F C-12 Intermediate Airborne Test Conduct, 
+FQ 6241F C-12 S 
+Prerequisites: 
+CF 6503S C-12 Cockpit Familiarization (ABM/FTE/STC) [req’d for TF 6241F] 
+CF 6542F C-12 CF-3 (P, crew solo) [req’d for TF 6241F]  
+CF 6550F C-12 Flight Training (ABM/CSO/FTE) [req’d for TF 6241F] 
+CF 6551F C-12 Flight Training (P, non-crew solo) [req’d for TF 6241F]  
+CF 6803F C-12 CF-3 (RPA) [req’d for TF 6241F] 
+TF 6220M Control Room Test Conduct Primer MIB (ABM/FTE/STC) 
+TF 6221C Control Room Test Conduct Primer (ABM/FTE/STC) [req’d for TF 6241F]  
+TF 6267F Glider Low Lift/Drag (L/D) Follow-Up Exercise (STC) [req’d for TF 6242F]  
+ 
+
+
+===== PAGE 144 =====
+ 
+ 
+144 
+ 
+ 
+TF 6250M C-12 Intermediate Airborne Test Conduct MIB (FTC) 
+TF 6251F C-12 Intermediate Airborne Test Conduct (FTC) 
+A C-12 based event in which students will work in pairs to plan, execute, and debrief a successful 
+test. Students will be responsible for all aspects of the test, from mission profile development and flight 
+card generation to timeline adherence and real-time decision-making during execution based on provided 
+mission priorities. During debrief, students will rate maneuver data quality, discuss lessons learned, and 
+present flight test results using provided performance analysis tools.  
+Prerequisites: 
+TF 6202B Performance Test Conduct Lecture 
+TF 6240M C-12 Airborne Test Conduct Intro MIB 
+TF 6241F C-12 Airborne Test Conduct Intro [req’d for TF 6251F] 
+PF 8241F Data Group Level Accel/Turn Perf Data Flights 2 [req’d for TF 6251F] 
+ 
+TF 6260A Air Vehicle Aerodynamics Lecture (STC) 
+TF 6261A Pitot-Statics Lecture (STC) 
+TF 6262A Low L/D Guest Lecture (STC) 
+TF 6263M Glider Low Lift/Drag (L/D) Exercise MIB (STC) 
+TF 6264F Glider Low Lift/Drag (L/D) Exercise (STC) 
+TF 6265R Glider Low Lift/Drag (L/D) Exercise Report (STC) 
+TF 6266M Glider Low Lift/Drag (L/D) Follow-Up Exercise MIB (STC) 
+TF 6267F Glider Low Lift/Drag (L/D) Follow-Up Exercise (STC) 
+TF 6268R Glider Low Lift/Drag (L/D) Follow-Up Exercise Report (STC) 
+The aerodynamics lesson describes the four basic forces of flight, Bernoulli’s Theory and Newton’s 
+Laws, how a wing makes lift, critical angle of attack and stalls, how center of gravity affects aircraft 
+stability, and why an aircraft turns. The pitot statics lesson describes the basic concepts of a pitot-static 
+system and associated instruments, common sources of error in pitot-static measurements, error sources to 
+data accuracy, and the relationship of data accuracy to test and evaluation results. The Low L/D guest 
+lecture will provide students with background and lessons learned in developing and executing the low 
+L/D profile in the T-38 aircraft and an opportunity to interact with an experienced T&E professional. 
+The glider exercise consists of multiple lessons to prepare the class to execute a limited scope test, 
+analyze the results and report on those results. The purpose of the exercise is to reinforce the preceding 
+classroom lessons and introduce students to the dynamics of testing in a controlled environment with 
+coaching from instructors. Student teams will need to operate in an unfamiliar environment and under 
+significant time constraints. Students will prepare a limited scope test plan and submit it for approval 
+prior to execution of the events. Students have the option to fly with an instructor on at least one data 
+collection. Data from each will be compiled into a shared set of test data for the class. The exercise will 
+include a risk assessment workshop (1.5 hr.) and Test Plan review (1.5 hr.). The last block will expose the 
+student to test conduct in a unique environment while exploring additional concepts. 
+Prerequisites: 
+CF 5120H Local Area Survival [req’d for TF 6264F] 
+CF 5130A Physiological Effects [req’d for TF 6264F] 
+CF 5141A Introduction to Emergency Procedures (ABM/FTE/STC) [req’d for TF 6264F] 
+CF 5210A Flight Safety Brief [req’d for TF 6264F] 
+CF 5220A Local Area Orientation Briefing [req’d for TF 6264F] 
+CF 5301A Crew Resource Management [req’d for TF 6264F] 
+TF 6202B Performance Test Conduct Lecture  
+TF 6404Z Test Reporting Feedback [req’d for TF 6263M] 
+
+
+===== PAGE 145 =====
+ 
+ 
+145 
+ 
+TF 6410B Technical Reports [req’d for TF 6263M] 
+ 
+TF 6270B T-38 Low L/D Flight/Control Room MIB (STC) 
+TF 6271C T-38 Low L/D Control Room (select STC) 
+TF 6272F T-38 Low L/D Flight (select STC)  
+The T-38 Low L/D Flight/Control Room event will entail STC students executing the T-38 Low L/D 
+profile in the aircraft and/or the control room. Provided mission materials (MPG and test cards) will detail 
+the event and tie aircraft modeling to glide performance. Control room screens will demonstrate how 
+aircraft modeling and predictions can be applied to real-time monitoring. Pre-recorded T-38 control room 
+data will be available for mission playback for scheduling scenarios where a telemetry-capable T-38 is 
+not available. 
+Prerequisites: 
+CF 5101H Emergency Parachute Training [req’d for TF 6272F] 
+CF 5110H Life Support Equipment Training [req’d for TF 6272F] 
+CF 5140A Ejection Decision Making [req’d for TF 6272F] 
+CF 6304S T-38 Cockpit Familiarization (ABM/CSO/FTE/RPA/STC) [req’d for TF 6272F]  
+TF 6233C Sim/Control Room Test Conduct Intro (STC) [req’d for TF 6272F] 
+TF 6267F Glider Low Lift/Drag (L/D) Follow-Up Exercise (STC) 
+ 
+TF 6280A Secure Flight Test – Special Topics Lecture (US Only) 
+This block discusses test security considerations and presents some useful techniques for dealing with 
+sensitive tests. 
+Prerequisites: 
+TF 6201A Test Conduct Lecture
+
+
+===== PAGE 146 =====
+ 
+ 
+146 
+ 
+ 
+Figure 30: TF 6200 Execute 
+
+
+===== PAGE 147 =====
+ 
+ 
+147 
+ 
+TF 6300 Analyze 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Apply statistical techniques. 
+ 
+TF 6301A Statistics for Testers Lecture 
+TF 6302Y Statistics for Testers Oral Report 
+This block will teach students how to use statistical techniques to extract information from test data. 
+Specifically, the role that statistics can play in the test process is discussed. The following basic concepts 
+are explained: variability, random sampling, designed experiments, mechanistic versus empirical models, 
+enumerative versus analytic studies, and finally sample mean and variance versus population mean and 
+variance. This block also teaches students to compute various statistics, display results, and interpret 
+them. It covers the basics of probability distributions and how to use them. Finally, students will be able 
+to apply the following basic statistical techniques to test problems: hypothesis tests, linear regression, 
+confidence intervals, and prediction intervals. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6310A Statistics Based Test Design Lecture 
+TF 6311Y Statistics Based Test Design Oral Report 
+TF 6312Z Statistics Based Test Design Debrief 
+Building on the statistics learned and reviewed in TF 6301A, this block will teach students how to 
+apply statistical and constrained optimization methods to designing statistically defensible tests while 
+meeting programmatic constraints such as test hours, instrumentation costs, and total budget. The general 
+concept of Design of Experiments (DOE) is derived using optimization theory and applied to the concept 
+of designing a constrained test program that can answer the customer’s questions in a statistically 
+defensible manner.  
+Prerequisites: 
+TF 6301A Statistics for Testers Lecture 
+ 
+TF 6320A Data Presentation Lecture 
+This block covers techniques for presenting data in a variety of media to communicate a clear 
+message to the intended audience. Methods of presenting data in a visible, clear, and convincing manner 
+are covered along with common presentation pitfalls. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+
+
+===== PAGE 148 =====
+ 
+ 
+148 
+ 
+TF 6400 Report 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Create the applicable data products to answer test objectives for a given system under test. 
+TLO 2. Create data-driven findings of a system under test to various stakeholders at the appropriate 
+level. 
+ 
+TF 6401A Test Reporting Lecture 
+TF 6402R Test Reporting Written Report - Individual 
+TF 6403R Test Reporting Written Report - Group 
+TF 6404Z Test Reporting Feedback 
+This block introduces students to the concept of test reporting; specifically, why they write reports 
+and where reports fit into the overall test process. It introduces the various types of reports in the test 
+world and lists the reports that students will produce during the curriculum. Students will write an 
+individual report using sample aircraft data and receive feedback. Students will also work in a group to 
+collect data, analyze data, write a report, and receive report feedback. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture  
+TF 6320A Data Presentation Lecture [req’d for TF 6402R] 
+ 
+TF 6410B Technical Reports 
+This course teaches students how to communicate test results in an efficient manner that meets the 
+user’s need. It emphasizes how to organize and support technical discussions. It explains how to write 
+technical reports and provides examples of different styles/formats. 
+Prerequisites: 
+TF 6320A Data Presentation Lecture 
+ 
+TF 6420A Oral Reporting Lecture 
+This block introduces techniques for reporting on test data in an oral presentation. Common 
+PowerPoint tips and pitfalls are discussed. 
+Prerequisites: 
+TF 6401A Test Reporting Lecture 
+ 
+TF 6430B Deficiency Reports Lecture 
+This block introduces students to deficiency reports, specifically what they are, who can submit them, 
+how they are written, and how they are handled by the test organization, the program office, AFMC, and 
+the contractor once they are written. 
+Prerequisites: 
+TF 6401A Test Reporting Lecture 
+ 
+
+
+===== PAGE 149 =====
+ 
+ 
+149 
+ 
+TF 6500 Special Topics 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall critical elements of special test foundations topics. 
+ 
+TF 6501A Space Acquisition and Test Lecture (STC) 
+TF 6502A Space Acquisition and Test Lecture (US Only STC) 
+This block introduces students to space acquisition/test and identifies the similarities and differences 
+between space and air vehicle test. The student is introduced to the space environment, systems, missions, 
+organizations, acquisition, and test. The block includes a discussion of space policy guidance and specific 
+discussions of space developmental and operational test, including examples and real-world vignettes. 
+This block also introduces classified space systems with a discussion of real-world acquisition and test 
+considerations for such systems.  
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture  
+ 
+TF 6510A Joint Test and Evaluation (JT&E) (STC) 
+This is a two day-long guided exercise provided by the Air Force Joint Test Program Office. The 
+students will exercise the process that rapidly provides non-materiel solutions to identified operational 
+deficiencies. The course will review operational test definitions such as Critical Operational Issues (COI), 
+System Under Test (SUT), and Tactics, Techniques and Procedures (TTP), and Measures of 
+Effectiveness/Suitability (MOE/MOS). The students will be posed with operational deficiencies and will 
+generate a COI, and associated MOEs/MOSs. The students will develop an execution/data plan for a “test 
+event” of a non-materiel solution (TTP). They will analyze the results and report on the findings. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6520A All Weather Testing Lecture 
+This block teaches students why all-weather testing is done, what the major objectives are, where 
+these tests are conducted, and how to plan and execute an all-weather test. 
+Prerequisites:  
+ 
+TF 6101A PEARS Introduction Lecture 
+ 
+
+
+===== PAGE 150 =====
+ 
+ 
+150 
+ 
+ TF 7000 Qualitative Evaluations 
+(3 Semester Credit Hours) 
+The Qualitative Evaluation (qual eval, QE) program is designed to build a strong and broad 
+foundation of experience for test aircrew through exposure to different aircraft, systems, and missions 
+using a variety of military and civilian platforms. This program will reinforce the TPS curriculum through 
+application of theory, test techniques, analysis, and reporting. It will expose TPS students to a variety of 
+aircraft performance, flying qualities, and systems characteristics while increasing confidence in their 
+ability to handle new test situations in a systematic and logical manner using a buildup approach. 
+TF 7100 Graded Qualitative Evaluations 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden through exposure to multiple platforms.  
+TLO 2. Prioritize collection of appropriate, mission-relevant data which will answer evaluation 
+objectives during planning and execution of single-sortie qualitative evaluations in 
+unfamiliar platforms.  
+TLO 3. Interpret qualitative evaluation results in the context of system requirements and the 
+platforms’ intended mission through limited-scope written reports. 
+ 
+TF 7101A Qual Eval Program Intro Lecture 
+TF 7102A Contractor Interaction Lecture 
+Students are introduced to the purpose of qualitative evaluations. Techniques are presented to help the 
+students make the most of every qual eval, and specific safety considerations are introduced. The lesson 
+emphasizes techniques on how to properly report on their flight and gives guidelines for the graded qual 
+eval flights. Since many of the qual eval instructor pilots will be contractors, students are reminded of the 
+sensitivities faced when dealing with contractors and are instructed on the proper way to interface with 
+them. 
+Prerequisites: 
+AN 5121A Dean of Faculty Introduction 
+ 
+TF 7110M Graded Qual Eval 1 MIB 
+TF 7111G Graded Qual Eval 1 Ground School 
+TF 7112F Graded Qual Eval 1 Flight 
+TF 7113R Graded Qual Eval 1 Report 
+For each of the three graded qual eval flights, an MIB will introduce the aircraft and the mission for 
+which it will be evaluated. The instructor pilot will provide ground school academics covering the major 
+systems of the subject aircraft as well as any required briefing items and aircraft handling techniques. 
+Following each qual eval flight, students will write a qual eval report documenting their flight and 
+evaluating the aircraft for use in a particular mission. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7112F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7112F] 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 151 =====
+ 
+ 
+151 
+ 
+ 
+TF 7120M Graded Qual Eval 2 MIB 
+TF 7121G Graded Qual Eval 2 Ground School 
+TF 7122F Graded Qual Eval 2 Flight 
+TF 7123R Graded Qual Eval 2 Report 
+This is the second graded qual eval. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7122F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7122F] 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7130M Graded Qual Eval 3 MIB 
+TF 7131G Graded Qual Eval 3 Ground School 
+TF 7132F Graded Qual Eval 3 Flight 
+TF 7133R Graded Qual Eval 3 Report 
+This is the third graded qual eval. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7132F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7132F] 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+
+
+===== PAGE 152 =====
+ 
+ 
+152 
+ 
+TF 7200 Experience Broadening Qualitative Evaluation 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+ 
+TF 7201M Experience Broadening Qual Eval MIB 
+TF 7210-15G Experience Broadening Qual Eval Ground School 1-6 
+TF 7220-25F Experience Broadening Qual Eval Flight 1-6 
+Additional unique aircraft will be brought in and flown to expand the students’ experience base. Like 
+the graded qual evals, some aircraft brought in will have a short MIB highlighting the aircraft and the 
+mission for which it should be evaluated, and the contractor will provide the appropriate ground school. 
+However, no report is required following the flight. The single digit indicates required prerequisites for 
+the ground school and flights (e.g., 7210G is required before 7220F, 7211G is required before 7221F). 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7230G C-17 Experience Broadening Qual Eval Ground School (FTC) 
+TF 7231F C-17 Experience Broadening Qual Eval Flight (FTC) 
+The ground school will cover the required areas of operation for students to evaluate the C-17 in 
+groups. There is no reporting requirement for this flight. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7240S Heavy Aircraft Sim Evals (FTC) 
+Utilizing high-fidelity simulators, students will be exposed to two modern heavy aircraft of different 
+designs to compare different design philosophies. In addition to experiencing test operations in a large 
+aircraft, students will perform high-risk large aircraft ground/flight test techniques that cannot be 
+performed inflight at TPS due to safety and aircraft availability considerations. 
+Prerequisites: 
+FQ 9101A Failure Modes Testing Lecture 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7250G Navy TPS Fixed Wing Qual Eval Ground School (FTC) 
+TF 7251F Navy TPS Fixed Wing Qual Eval Flight (FTC) 
+During a visit to the US Navy Test Pilot School (USNTPS), experience broadening non-graded qual 
+evals may include an F/A-18 out-of-control flight demonstration (when available), a single-engine tail 
+dragger for pilots, and/or a T-6B for non-pilots. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+
+
+===== PAGE 153 =====
+ 
+ 
+153 
+ 
+TF 7300 Rotary Wing (FTC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall the performance, flying qualities, and systems characteristics for rotary wing 
+aircraft. 
+ 
+TF 7301M Intro to Rotary Wing Flight MIB (FTC) 
+TF 7302G Intro to Rotary Wing Ground School (FTC) 
+TF 7303F Intro to Rotary Wing Flight (FTC) 
+This MIB will outline the learning objectives of flying rotary wing aircraft and basic warnings and 
+limitations students can expect. The ground school will cover basic rotary wing flight dynamics and the 
+different controls involved in flying helicopters to prepare students for their introductory flight. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7310G Advanced Rotary Wing Qual Eval Ground School (FTC) 
+TF 7311F Advanced Rotary Wing Qual Eval Flight (FTC) 
+Students will be exposed to rotary wing flight test techniques during their visit to Capstone field trip. 
+All related ground school and academics will take place at the host location. This experience broadening 
+non-graded qual eval will expose the students to unique rotary wing flight characteristics and flight test 
+techniques.  
+Prerequisites: 
+TF 7301M Intro to Rotary Wing Flight MIB (FTC) 
+ 
+
+
+===== PAGE 154 =====
+ 
+ 
+154 
+ 
+TF 7400 Additional Broadeners (FTC) 
+Terminal Learning Objectives: 
+During completion of this Module, students will be able to: 
+TLO 1. View real-world test execution events.  
+ 
+TF 7401C Real-World Control Room Observation (US Only) (FTC) 
+Students will observe a real-world flight test mission control room to provide them with a better 
+perspective of real-world control room operations. The event will also help students better visualize the 
+roles and responsibilities that they may have post-graduation.  
+Prerequisites: 
+TF 6280A Secure Flight Test – Special Topics Lecture (US Only) [req’d for US Only Control Rooms 
+with Special Access Programs] 
+ 
+
+
+===== PAGE 155 =====
+ 
+ 
+155 
+ 
+TF 7500 Capstone Qualitative Evaluation 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+TLO 2. Prioritize collection of appropriate, mission-relevant data which will answer evaluation 
+objectives during planning and execution of single-sortie qualitative evaluations in 
+unfamiliar platforms.  
+TLO 3. Interpret qualitative evaluation results in the context of system requirements and the 
+platforms’ intended mission through a limited-scope oral report. 
+ 
+TF 7501M Capstone Qual Eval MIB 
+TF 7502R Capstone Qual Eval Test Plan 
+TF 7503F Capstone Qual Eval Flight 
+TF 7504Y Capstone Qual Eval Oral Report 
+The student team will develop a test plan to evaluate an unfamiliar aircraft in a scenario that the 
+students develop. Students will deconstruct the scenario into relevant qual eval test objectives and 
+appropriate test techniques for obtaining the qualitative and quantitative data necessary to inform the test 
+objectives. In addition to the test plan, test cards will also be submitted for staff monitor review. 
+Upon returning from their capstone qual eval, students will present their findings in a brief oral report 
+to the school. Students in the junior class observe the oral report. 
+This event provides students with the opportunity to demonstrate their ability to plan, execute, and 
+deliver an oral report on a qualitative evaluation of an unfamiliar aircraft. The student will fly a single 
+qual eval sortie at the capstone host location to collect data for the report.  
+Prerequisites: 
+TF 7113R Graded Qual Eval 1 Report 
+ 
+
+
+===== PAGE 156 =====
+ 
+ 
+156 
+ 
+TF 7600 STC Qualitative Evaluation (STC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+ 
+TF 7601A Wideband Global SATCOM (WGS) Intro (STC)  
+This lesson is a precursor to the TF 5230M Human Systems Evaluation MIB. It provides 
+familiarization with the WGS Technical Orders and other engineering documentation students will be 
+interacting with during the exercise. 
+Prerequisites: 
+AN 5121A Dean of Faculty Introduction 
+ 
+ 
+
+
+===== PAGE 157 =====
+ 
+ 
+157 
+ 
+TF 8000 Test Management Project 
+(4 Semester Credit Hours) 
+Test Management Projects (TMPs) are customer sponsored real-world test projects which are 
+performed by the USAF TPS students with guidance from the TPS staff. Students are divided into test 
+teams with approximately 4-6 individuals to a team. The customer provides the research concept or item 
+to be tested, and the students design the plan to test the system under test. TPS students collect the test 
+data, reduce the data, conduct data analysis, and provide a written and oral test report for the customer at 
+the end of the process. 
+TF 8100 TMP Planning 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Construct a real-world test program and collaborate with key stakeholders through the full 
+lifecycle – from test concept through final report and presentation of the results.  
+TLO 2. Design a test to answer a customer's needs and modify their approach throughout the 
+lifecycle of the program to address test program objectives.  
+ 
+TF 8101A TMP Assignments and Intro Lecture 
+TF 8102W TMP Resources Workshop 
+TF 8103W TMP Core Team Meeting 
+TF 8104W TMP Test Plan Working Group 1  
+TF 8105W TMP Test Plan Working Group 2 
+TF 8106R TMP Test Plan and Safety Package 
+TF 8107W TMP Technical Review Board/Safety Review Board 
+TF 8108Y TMP Test Approval Briefing 
+During the TMP Assignments and Introduction Lecture, students will be presented with their assigned 
+TMP groups. A basic overview of the 412 Test Wing Program Management process, expectations and 
+timelines for the TMP process, and differences between the USAF TPS TMP process and 412 TW 
+process will be presented. 
+During the Resources Workshop, each student team will meet with the USAF TPS Program 
+Managers, TMP Director, and their Staff Advisors to discuss their specific programmatic requirements 
+and resources. Students will be instructed to draft a 412 TW Test Concept Document (TCD), identifying 
+their TMP's overall objectives, any aircraft or pod modifications required, and support required from 
+other organizations such as logistics, ranges, instrumentation, environmental, frequency management, 
+and/or maintenance. The TCD will be required for TF 8103W. 
+Prior to the Core Team Meeting, the student teams will send their TCDs to the USAF TPS A5 TMP 
+Program Manager and TMP Director, who will review the TCDs for any final edits. The A5 Program 
+Manager will formally begin the 412 TW PID/SOC process by distributing the TCDs to the 412 TW 
+POCs and non-AFTC organizations identified by each student team and requesting a JON. During the 
+Core Team Meeting, the student teams will present their TCDs to the respective organizations, allowing 
+the organizations an opportunity to either concur or non-concur with the support being requested. 
+During the TMP planning process, students will have two test plan working groups (TPWGs) to assist 
+them with drafting their test plan, safety plan, execution schedule, and any additional documentation as 
+required by their TMP. The first TPWG will focus on defining the general test objectives (GTOs), 
+specific test objectives (STOs), measures of performance (MOPs), and any outstanding technical planning 
+discussions that will feed directly into their test plan development. 
+
+
+===== PAGE 158 =====
+ 
+ 
+158 
+ 
+For the second TPWG, the TMP Director, Staff Advisors, and assigned Unit Test Safety Officer will 
+review the updated draft test and safety plans. The focus will be on ensuring the team's test plan 
+objectives, methodologies, and data analysis plans are well-constructed, and that the safety plan identifies 
+and mitigates all risks associated with executing the test plan. Upon conclusion of the second TPWG, 
+student teams will be able to incorporate feedback to have a finalized test plan and safety plan ready to 
+submit to the technical and safety review boards. 
+Graded test plans and safety plans will be submitted to the TPS-led Technical Review Board and the 
+412 TW SET-led Safety Review Board. 
+The purpose of the Technical Review Board (TRB) is to have the student teams present their TMP 
+test plans to the USAF TPS Technical Director (or delegate) and other appointed TRB members, to 
+defend that the test plan is technically adequate, and answer the proposed TMP research question and 
+customer's need. The TRB chair will provide a letter of technical adequacy to the Technical Execution 
+Authority (TEA)/TPS Commandant. 
+The Safety Review Board (SRB), led by a representative of the 412 TW Test Safety Office, is 
+composed of a panel of Independent Operational Reviewers, Technical Experts, TPS Chief UTSO, 
+assigned TMP UTSO, and potentially STARCOM DEL 12 Safety Officers. The purpose of the SRB is to 
+provide a safety review and risk assessment of the finalized safety plan, which will be presented to the 
+TEA/TPS Commandant. 
+Upon completion of both the TRB and SRB, the students will document and correct any action items 
+prior to proceeding with their request for test execution approval. 
+Prerequisites: 
+AN 5180A Test Foundations Phase Intro 
+TF 5410A Test Safety Principles Lecture [req’d for TF 8104W] 
+TF 6104A Intro to Managing Tests Lecture [req’d for TF 8104W] 
+ 
+ 
+
+
+===== PAGE 159 =====
+ 
+ 
+159 
+ 
+TF 8200 TMP Execution 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Execute their TMP data flights/test events, in accordance with their approved test and 
+safety plans. 
+ 
+TF 8201F TMP Data Flights/Events 
+The purpose of the test missions is to collect data in accordance with the test plan and safety package 
+to answer the customer’s questions. 
+Prerequisites: 
+TF 8108Y TMP Test Approval Briefing 
+ 
+
+
+===== PAGE 160 =====
+ 
+ 
+160 
+ 
+TF 8300 TMP Reporting 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Brief their peers and TPS Staff on their planned TMP test objectives, test execution 
+schedule, and expected test results. 
+TLO 2. Brief their peers, TPS Staff, and base leadership on their test execution, data results, and 
+any constraints or limitations that occurred during execution. 
+TLO 3. Author a technical information memorandum that identifies the data collected, analysis 
+methods, and data-driven conclusions and recommendations. 
+ 
+TF 8301Y TMP Program Assessment Review 1 
+TF 8302W TMP Pre-Writers Meeting 
+TF 8303Y TMP Program Assessment Review 2 
+TF 8304W TMP Data Working Group 
+TF 8305W TMP Report Coordination Meeting 
+TF 8306R TMP Final Written Report (TIM) 
+TF 8307Y TMP Final Oral Report 
+The purpose of the first Program Assessment Review (PAR) is for each student TMP team to present 
+their planned test objectives, test methodology, test schedule, and expected test results to their peers and 
+TPS staff. 
+The purpose of the Pre-Writers meeting is to brief students on the reporting expectations for their 
+TMP, instruct them on how to write a TPS technical information memorandum (TIM), and to highlight 
+the differences between the USAF TPS TMP TIM versus the 412 TW Technical Report. Upon conclusion 
+of this meeting, student teams will be able to develop their draft TIMs.  
+The second Program Assessment Review is intended to have the student teams brief their peers and 
+TPS Staff on what occurred during their two-week TMP execution window. This will include the actual 
+test execution schedule, preliminary status of data analysis, completion status of the test objectives and 
+measures of performance, and any constraints or limitations that affected execution.  
+The TMP Data Working Group is a post-execution, one-hour meeting with the student teams, TMP 
+Director, Staff Advisor, and appropriate operations/technical experts to discuss data collected, analysis 
+progress and way forward, and the anticipated scope of results and conclusions before completion of the 
+final draft report for the TMP Report Coordination Meeting.  
+The Report Coordination Meeting is a graded event for TMPs, equivalent to the 412 TW "murder 
+board." The purpose of this meeting is to review the students' TIMs by conducting a line-by-line review, 
+and discuss action items and comments required prior to submitting the final report for approval and 
+signature by the TPS commandant and Technical Directors.  
+The final signed and approved TMP TIM is an official USAF TPS document that will be submitted to 
+the TMP customers. Depending on the distribution statement and classification of the TIM, the TIM may 
+be submitted for Public Release Approval and stored in the Defense Technical Information Center and/or 
+412 TW Technical Library.  
+The TMP final oral report is a graded 45-minute presentation by each of the student teams to brief 
+their peers, AFTC, STARCOM, 412 TW, Delta 12, senior base leadership, and/or key stakeholders on 
+their TMP results.  
+Prerequisites: 
+TF 8107W TMP Technical Review Board/Safety Review Board 
+TF 8201F TMP Data Flights/Events [req’d for 8302W] 
+ 
+
+
+===== PAGE 161 =====
+ 
+ 
+161 
+ 
+TF 9000 Comprehensive Exams 
+(6 Semester Credit Hours) 
+The Comprehensive Exams are major assessments which evaluate individual student knowledge and 
+practical applications of what they have learned throughout the year. 
+TF 9100 Comprehensive Exams 
+ 
+TF 9101M Comprehensive Written Exam MIB 
+TF 9102E Comprehensive Written Exam 
+Students will be tested on major concepts from the USAF Test Pilot School curriculum: domain 
+sciences and mission systems. The comprehensive written exam will be conducted once the foundational 
+classroom academics have been presented in each of the sciences. 
+Prerequisites: 
+AS 7110A Satellite Attitude Estimation & Control 
+AS 7120A Satellite Power Subsystems 
+AS 7301A Space Propulsion  
+AS 8210A RPO Path Controllers   
+AS 8301A Advanced Kalman Filter and Relative Navigation  
+FQ 8102E Handling Qualities Evaluation Exam 
+FQ 9101A Failure Modes Testing Lecture 
+FQ 9202E Stall, Departure and Spin Testing Exam 
+FQ 9301A Stores Certification Lecture 
+FQ 9411E First Flight and Envelope Expansion Exam 
+PF 6241R Model Validation Report 
+PF 8351Y Performance Phase Final Test Oral Report 
+SY 8501E Kill Web Mission Systems End-of-Course 
+ 
+TF 9110M Comprehensive Oral Exam MIB 
+TF 9111E Comprehensive Oral Exam 
+Students will be evaluated on their ability to: 1) analyze a test scenario and clearly identify proper 
+objectives that trace to data elements required to meet those objectives; 2) clearly identify the primary 
+safety, security, technical, and programmatic risks; 3) demonstrate a clear understanding of the 
+fundamental engineering principles related to test, translating program objectives and data requirements 
+into proper test techniques and/or procedures; 4) translate test techniques and procedures into correct 
+instrumentation and resource requirements; 5) demonstrate proper Test Judgement; and 6) effectively 
+communicate and defend the test program and adapt it to unexpected circumstances. Students will think 
+critically and apply skills and knowledge gained throughout the year to develop a plan for evaluating a 
+system. Students must consider program requirements, test objectives, data requirements, test techniques, 
+resources, and risks while properly scoping the test campaign with appropriate technical and safety 
+buildup. Students must effectively communicate and defend their plan to a review board comprised of 
+USAF Test Pilot School instructors. 
+Prerequisites: 
+FQ 9502S Sim Flying Qualities Practical Exam (ABM/CSO/RPA) [req’d for TF 9111E] 
+FQ 9511F T-38 Flying Qualities Practical Exam (P) [req’d for TF 9111E] 
+FQ 9512C T-38 Flying Qualities Practical Control Room (FTE) [req’d for TF 9111E] 
+SY 7503F MQ-9 Systems Practical Exam (ABM/CSO/RPA, select FTE/P) [req’d for TF 9111E] 
+SY 7511F F-16 Systems Practical Exam Flight (P) [req’d for TF 9111E] 
+SY 7512C F-16 Systems Practical Exam Control Room (FTE) [req’d for TF 9111E] 
+SY 7521O Space Systems Practical (STC) [req’d for TF 9111E] 
+
+
+===== PAGE 162 =====
+ 
+ 
+162 
+ 
+TF 5103R Systems Engineering for Testers Project Written Report 
+TF 5201A Human Systems Integration Lecture 
+TF 9102E Comprehensive Written Exam 
+TL 5101A Week 1 Class 1 
+TL 5110A Operational Test 
+TL 6101A Negotiation, Persuasion, & Communication (NPC) Course 
+TL 7101A Innovation Course 
+TL 8101A Case Study Seminars 
+ 

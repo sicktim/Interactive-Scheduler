@@ -1,0 +1,2512 @@
+{
+  "sheets": {
+    "FLYING QUALITIES": {
+      "note": "Older format - superseded by FQ sheet for 25A",
+      "events": [
+        {
+          "eventCode": "FQ 6331S",
+          "missionName": "FQ SIM",
+          "missionDetails": null,
+          "aircraftType": [
+            "FQ Sim"
+          ],
+          "config": [
+            "TPS"
+          ],
+          "duration": 2.5,
+          "crew": [
+            "INSTRUCTOR",
+            "W/STUD PILOT",
+            "OR RPA AND FTE/CSO"
+          ],
+          "notes": [
+            "Cotting or Elliott + 2 Stud"
+          ],
+          "prerequisites": [
+            "AIRCRAFT STABILITY LECTURE"
+          ],
+          "sourceRows": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "eventCode": "FQ 8131S",
+          "missionName": "HQ SIM I",
+          "missionDetails": null,
+          "aircraftType": null,
+          "config": [
+            "TPS"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "INSTRUCTOR",
+            "W/1 STUD"
+          ],
+          "notes": [
+            "Cotting or Elliott + 1 Stud",
+            "Email Appointment: jay.kemper@calspan.com"
+          ],
+          "prerequisites": [
+            "HQ SIM 1 AND 2 MIB"
+          ],
+          "sourceRows": [
+            6,
+            7,
+            8
+          ]
+        },
+        {
+          "eventCode": "FQ 8132S",
+          "missionName": "HQ SIM II",
+          "missionDetails": null,
+          "aircraftType": null,
+          "config": [
+            "TPS"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "INSTRUCTOR",
+            "W/STUD PILOT",
+            "OR RPA AND FTE/CSO"
+          ],
+          "notes": [
+            "INSTRUCTORS IDENTIFIED BY FQ MASTER INSTRUCTOR",
+            "Email Appointment: jay.kemper@calspan.com"
+          ],
+          "prerequisites": [
+            "HQ SIM I"
+          ],
+          "sourceRows": [
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 7561F",
+            "FQ 7561CE",
+            "FQ 7561DP"
+          ],
+          "missionName": "LCO (Back-up)",
+          "missionDetails": [
+            "LCO (Back-up)",
+            "F-16",
+            "TEST LOAD CONFIG"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "SIPF FCL,",
+            "FULL/EMPTY/FULL",
+            "WG TNKS ON STA 4 & 6, BLOCKED NO FEED NO READ",
+            "LAU-129 STA 1 & 9/AIM-9L STA 1 & 9/MAU-12S",
+            "STA 3 & 7/BDU 56 STA 3 & 7, AFT BALLAST REMOVED, CONFIG TL"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT or RPA or CSO",
+            "TC: FTE",
+            "SC: STUD PILOT or RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SIPF TM, ACQGEN, MSN FREQ, IFTE/FTE/P IN TM ROOM TC/SC",
+            "(TC: STUD FTE / SC: STUD PILOT, RPA or CSO)"
+          ],
+          "prerequisites": [
+            "LCO MIB"
+          ],
+          "sourceRows": [
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ]
+        },
+        {
+          "eventCode": "FQ 6371X",
+          "missionName": "Ramp Tour",
+          "missionDetails": null,
+          "aircraftType": null,
+          "config": null,
+          "duration": null,
+          "crew": null,
+          "notes": null,
+          "prerequisites": [
+            "MIL-STD-1797 & Bare Airframe Flying Qual Lecture"
+          ],
+          "sourceRows": [
+            19
+          ]
+        },
+        {
+          "eventCode": "FQ 6351F",
+          "missionName": "VSS LONG DEMO",
+          "missionDetails": [
+            "VSS LONG DEMO",
+            "LJ-24"
+          ],
+          "aircraftType": [
+            "LJ-24"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "IP w/",
+            "STUD PILOT, RPA or CSO",
+            "FTE optional"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "PILOT PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "VSS INTRO & LONG DEMO MIB",
+            "FQ SIM"
+          ],
+          "sourceRows": [
+            23,
+            24,
+            25,
+            26
+          ]
+        },
+        {
+          "eventCode": "FQ 6352F",
+          "missionName": "VSS LAT/DIR DEMO",
+          "missionDetails": [
+            "VSS LAT/DIR DEMO",
+            "LJ-24"
+          ],
+          "aircraftType": [
+            "LJ-24"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "IP w/",
+            "STUD PILOT, RPA or CSO",
+            "FTE optional"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "PILOT PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "VSS LAT/DIR MIB",
+            "VSS Long Demo"
+          ],
+          "sourceRows": [
+            27,
+            28,
+            29,
+            30
+          ]
+        },
+        {
+          "eventCode": "FQ 6353FE",
+          "missionName": "VSS DEMO (E)",
+          "missionDetails": [
+            "VSS DEMO (E)",
+            "LJ-24"
+          ],
+          "aircraftType": [
+            "LJ-24"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "IP w/",
+            "STUD FTE"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "FTE/NAV PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "VSS INTRO & LONG DEMO MIB",
+            "FQ SIM",
+            "VSS LAT/DIR MIB",
+            "LJ-24/25 VSS Long Demo"
+          ],
+          "sourceRows": [
+            31,
+            32,
+            33,
+            34
+          ]
+        },
+        {
+          "eventCode": "FQ 6553F",
+          "missionName": "DYNAMICS DEMO",
+          "missionDetails": [
+            "DYNAMICS DEMO",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/STUD",
+            "STUD PILOT, RPA, CSO or FTE"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "BLACK MTN-SSC/SUPERSONIC CORRIDOR @ 38K",
+            "Pilots require both Long Demo and Lat/Dir in C-12 OR LJ        FTEs require some type of Long Demo and Lat/Dir in any combination of LJ or C-12",
+            "IP MUST BE MISSION QUAL FQ CURRENT"
+          ],
+          "prerequisites": [
+            "LJ-24/25 VSS Lat/Dir Demo",
+            "C-12 Longitudinal Demo",
+            "C-12 Lat/Dir Demo",
+            "T-38 Dynamics Demo ( MIB )"
+          ],
+          "sourceRows": [
+            35,
+            36,
+            37,
+            38
+          ]
+        },
+        {
+          "eventCode": "FQ 6551F",
+          "missionName": "LONGITUDINAL DEMO",
+          "missionDetails": [
+            "LONGITUDINAL DEMO",
+            "C-12"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": null,
+          "duration": 2.3,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT or RPA",
+            "w/ FTE or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "DAS REQUIRED, 2800 LBS OF FUEL",
+            "NO ERCC"
+          ],
+          "prerequisites": [
+            "C-12 LONGITUDINAL DEMO MIB",
+            "FQ SIM"
+          ],
+          "sourceRows": [
+            40,
+            41,
+            42,
+            43
+          ]
+        },
+        {
+          "eventCode": "FQ 6751F",
+          "missionName": "LONGITUDINAL DATA",
+          "missionDetails": [
+            "LONGITUDINAL DATA",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": [
+            "DAS SIPF",
+            "DAS REQ",
+            "(YAPS NOT REQ)"
+          ],
+          "duration": "ASD",
+          "crew": [
+            "STUD PILOT w/",
+            "FTE or CSO",
+            "RPA flies Data Flt w/IP",
+            "CSO flies as ENG"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "GOAL OF 2 DUTY DAYS BETWEEN DATA RIDES",
+            "AIRCREW FAXES FORM F TO WT & BAL SHOP - EACH FLT"
+          ],
+          "prerequisites": [
+            "VSS LONG DEMO or",
+            "C-12 Longitudinal Demo",
+            "T-38 DYNAMICS DEMO",
+            "FQ Test Plan Brief (5 days prior to flight)"
+          ],
+          "sourceRows": [
+            44,
+            45,
+            46,
+            47,
+            48
+          ]
+        },
+        {
+          "eventCode": "FQ 6552F",
+          "missionName": "LAT/DIR DEMO",
+          "missionDetails": [
+            "LAT/DIR DEMO",
+            "C-12"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": null,
+          "duration": 2.3,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT and",
+            "FTE, RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "DAS REQUIRED, 2800 LBS OF FUEL",
+            "NO ERCC"
+          ],
+          "prerequisites": [
+            "C-12 LAT/DIR MIB",
+            "FQ Sim",
+            "C-12 Longitudinal Demo"
+          ],
+          "sourceRows": [
+            49,
+            50,
+            51,
+            52
+          ]
+        },
+        {
+          "eventCode": "FQ 6752F",
+          "missionName": "LAT/DIR DATA",
+          "missionDetails": [
+            "LAT/DIR DATA",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": [
+            "DAS SIPF",
+            "YAPS BOOM"
+          ],
+          "duration": "ASD",
+          "crew": [
+            "STUD PILOT w/",
+            "FTE, CSO",
+            "RPA flies Data Flt w/IP/ CSO flies as ENG"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "GOAL OF 2 DUTY DAYS BETWEEN DATA RIDES.",
+            "AIRCREW FAXES FORM F TO WT & BAL SHOP - EACH FLT"
+          ],
+          "prerequisites": [
+            "VSS LAT/DIR DEMO",
+            "T-38 LONG DATA",
+            "C-12 LAT/DIR DEMO",
+            "T-38 Lateral-Directional Data (Plan)"
+          ],
+          "sourceRows": [
+            53,
+            54,
+            55,
+            56
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8753FP",
+            "FQ 8753R"
+          ],
+          "missionName": "HQ DEMO",
+          "missionDetails": [
+            "HQ DEMO",
+            "T-38",
+            "TARGET",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT, RPA or CSO",
+            "IP w/",
+            "STUD PILOT, RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "BRIEF 2+00 W/T-38 TARGET  MISSION FREQ",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "T-38 HQ Demo MIB",
+            "F-16/T-38 P/S CHASE",
+            "HQ SIM I and HQ SIM II"
+          ],
+          "sourceRows": [
+            57,
+            58,
+            59,
+            60,
+            61
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8155F",
+            "FQ 8155R"
+          ],
+          "missionName": "HQ DEMO",
+          "missionDetails": [
+            "HQ DEMO",
+            "F-16",
+            "TARGET",
+            "T-38"
+          ],
+          "aircraftType": [
+            "F-16",
+            "T-38"
+          ],
+          "config": [
+            "FCL OR FWT"
+          ],
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT, RPA or CSO",
+            "IP or QUALED STUD SOLO w/",
+            "STUD PILOT, RPA, CSO or ENG"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "MSN FREQ.  WORKING RADAR & AVTR.",
+            "CONFIGURATION CAT 1 ONLY.",
+            "2+30 Brief",
+            "STUD PILOT MUST BE TARGET QUAL TO FLY CREW SOLO"
+          ],
+          "prerequisites": [
+            "T-38 HQ DEMO",
+            "F-16 HQ DEMO MIB"
+          ],
+          "sourceRows": [
+            62,
+            63,
+            64,
+            65,
+            66
+          ]
+        },
+        {
+          "eventCode": "FQ 8755FE",
+          "missionName": "HQ/STALL DEMO FTE",
+          "missionDetails": [
+            "HQ/STALL DEMO FTE",
+            "T-38",
+            "HQ/STALL DEMO FTE",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/FTE",
+            "GRAD IP w/FTE"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "DO NOT USE A/C 197 OR 140",
+            "INSTRUCTOR MUST BE HQ AND STALL QUALIFIED.",
+            "NOTE: FTE/NAV WILL FLY IN FORMATION, MSN FREQ."
+          ],
+          "prerequisites": [
+            "STALL DEMO MIB",
+            "HQ DEMO MIB",
+            "T-38 P/S CHASE FAM"
+          ],
+          "sourceRows": [
+            68,
+            69,
+            70,
+            71
+          ]
+        },
+        {
+          "eventCode": "FQ 8754FP",
+          "missionName": "STALL DEMO",
+          "missionDetails": [
+            "STALL DEMO",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT, RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "INSTRUCTOR MUST BE HQ AND STALL QUALIFIED.",
+            "DO NOT USE A/C 197 OR 140"
+          ],
+          "prerequisites": [
+            "STALL DEMO MIB"
+          ],
+          "sourceRows": [
+            73,
+            74,
+            75
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8756F",
+            "FQ 8756R"
+          ],
+          "missionName": "HQ DATA",
+          "missionDetails": [
+            "HQ DATA",
+            "T-38",
+            "TARGET",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": [
+            "HAND HELD DATA"
+          ],
+          "duration": "ASD",
+          "crew": [
+            "STUD PILOT w/FTE or CSO",
+            "RPA must fly with IP",
+            "(Crew solo Target ok, but IP must be in formation)",
+            "IP w/",
+            "STUD PILOT, RPA, or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "MINIMUM OF 2 DUTY DAYS BETWEEN DATA RIDES.",
+            "USE FQ TEST PLAN DATA GROUPS"
+          ],
+          "prerequisites": [
+            "T-38 HQ TEST PLAN BRIEF (5 days prior to flight)",
+            "T-38 LAT/DIR DATA",
+            "T-38 HQ DEMO"
+          ],
+          "sourceRows": [
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85
+          ]
+        },
+        {
+          "eventCode": "FQ 9959FP",
+          "missionName": "FQ Practical Exam",
+          "missionDetails": [
+            "FQ Practical Exam",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "USE DESIGNATED GRADERS.",
+            "DO NOT USE A/C 197 OR 140"
+          ],
+          "prerequisites": [
+            "FQ Practical Exam MIB",
+            "HQ/STALL DATA"
+          ],
+          "sourceRows": [
+            86,
+            87,
+            88
+          ]
+        },
+        {
+          "eventCode": "FQ 9958SB",
+          "missionName": "SIM FQ Practical Exam",
+          "missionDetails": [
+            "SIM FQ Practical Exam",
+            "FQ SIM"
+          ],
+          "aircraftType": [
+            "FQ Sim"
+          ],
+          "config": null,
+          "duration": null,
+          "crew": [
+            "GRAD IP w/",
+            "CSO or RPA"
+          ],
+          "notes": [
+            "Email Appointment: jay.kemper@calspan.com"
+          ],
+          "prerequisites": null,
+          "sourceRows": [
+            89,
+            90,
+            91,
+            92
+          ]
+        },
+        {
+          "eventCode": "FQ 9752E/N",
+          "missionName": "DEPARTURE DEMO (FTE/CSO)",
+          "missionDetails": [
+            "DEPARTURE DEMO (FTE/CSO)",
+            "F-16"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "FCL"
+          ],
+          "duration": 1.2,
+          "crew": [
+            "GRAD IP HI AOA QUAL w/",
+            "STUD FTE/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "ANY HI AOA CAPABLE AIRCRAFT, SPIN AREA, MSN FREQ."
+          ],
+          "prerequisites": [
+            "DEPARTURE DEMO MIB"
+          ],
+          "sourceRows": [
+            93,
+            94,
+            95,
+            96
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9761FP",
+            "FQ 9761SP",
+            "FQ 9761C",
+            "FQ 9761D",
+            "FQ 9761SP",
+            "FQ 9761SF"
+          ],
+          "missionName": "DEPARTURE DEMO",
+          "missionDetails": [
+            "DEPARTURE DEMO",
+            "F-16 (Back-up)",
+            "Desired, not required",
+            "DEPARTURE DEMO UTD",
+            "UTD",
+            "DEPARTURE DEMO SIM",
+            "FS SIM"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "DAS SIPF",
+            "FCL",
+            "NO BLOCK 40 FOR PILOTS",
+            "(SIM)"
+          ],
+          "duration": 1.3,
+          "crew": [
+            "GRAD IP HI AOA QUAL w/",
+            "STUD PILOT/RPA",
+            "TM ROOM:",
+            "IFTE and 2xSTUD FTE",
+            "(FTE/CSO/RPA optional)",
+            "GRAD IP HI AOA QUAL w/",
+            "2 STUD PILOT/RPA",
+            "(FTE/CSO/RPA optional)",
+            "GRAD IP HI AOA QUAL w/",
+            "STUD PILOT/RPA",
+            "TM ROOM:",
+            "IFTE and 2x STUD FTE/CSO",
+            "(RPA Optional)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "HI AOA CAPABLE A/C; BALLAST; SIPF; TM; ACQGEN;",
+            "MSN FREQ; SPIN AREA, GRAD FTE W/2 FTE'S FOR",
+            "TEST CONDUCTOR AND STRIP CHART",
+            "NOTE:  PILOTS TC/SC (TEAMS DESIRED)",
+            "ASSIGNED BY FQ BRANCH.  Backup to FQ 9761SF",
+            "2+30 BRIEF",
+            "2 STUD PILOTS w/ 1 IP",
+            "1.0 Brief, 1.0 Sim, 1.0 Debrief",
+            "NOTE:  PILOTS TC/SC (TEAMS DESIRED)",
+            "2 FTE'S FOR TEST CONDUCTOR AND STRIP CHART"
+          ],
+          "prerequisites": [
+            "DEPARTURE DEMO MIB",
+            "DEPARTURE DEMO E/N FOR FTE",
+            "(DEP DEMO E/N not req for SC)",
+            "DEPARTURE DEMO MIB",
+            "DEPARTURE DEMO MIB",
+            "DEPARTURE DEMO UTD (Pilots/RPA)",
+            "DEPARTURE DEMO (FTE/CSO)"
+          ],
+          "sourceRows": [
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9762FP",
+            "FQ 9762C",
+            "FQ 9762D"
+          ],
+          "missionName": "DEPARTURE DATA",
+          "missionDetails": [
+            "DEPARTURE DATA",
+            "F-16",
+            "T-38"
+          ],
+          "aircraftType": [
+            "F-16",
+            "T-38"
+          ],
+          "config": [
+            "DAS SIPF",
+            "FCL EMPTY&BLOCKED",
+            "AIM-9 STA 1&2",
+            "NO BLOCK 40",
+            "TACAN"
+          ],
+          "duration": 1.2,
+          "crew": [
+            "HI AOA TEST IP w/",
+            "STUD PILOT, RPA OPTIONAL",
+            "(depending on background) (NO CSO)",
+            "TM ROOM:",
+            "1 STUD FTE  AS TC w/ HI AOA IFTE",
+            "1 STUDENT SC (FTE/RPA/CSO optional)",
+            "IP/STUD PILOT",
+            "FTE OR NAV OR STUD SOLO",
+            "--IF QUALIFIED"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SPIN AREA, DAS SIPF, ACQGEN, UHF, TM AND VHF",
+            "FCL, LAUNCHER ON STATION 1, 2, 8 & 9, AIM-9L STATIONS 1&2",
+            "BALLAST, BLOCK 30 REQUIRED, CONFIG 143B",
+            "TC/SC TEAMS REQUIRED",
+            "NOTE:  PILOTS SC/TC TEAMS (REQUIRED) ASSIGNED BY FQ BRANCH",
+            "NOTE:  SCHEDULED DATA SORTIE 3 CALENDAR DAYS AFTER",
+            "THE MIB.",
+            "2+30 BRIEF WITH CHASE  (CHASE NOT REQUIRED)"
+          ],
+          "prerequisites": [
+            "DEPARTURE DATA MIB",
+            "DEPARTURE DEMO",
+            "FTE: DEPARTURE DEMO TC/SC"
+          ],
+          "sourceRows": [
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 7562F",
+            "FQ 7562C",
+            "FQ 7562D"
+          ],
+          "missionName": "STRUCTURAL LOADS (Back-up)",
+          "missionDetails": [
+            "STRUCTURAL LOADS (Back-up)",
+            "F-16",
+            "(Back-up)",
+            "(Back-up)"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "DAS SIPF, FCL"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT/RPA",
+            "CONTROL ROOM:",
+            "GRAD IFTE w/FTE",
+            "CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SIPF, TM, ACQGEN, MSN FREQ.  NOTE: USE DESIGNATED IFTE",
+            "GRADERS.  SCHEDULE P/FTE TEAMS AS DESIGNATED BY FQ",
+            "BRANCH CHIEF. DO NOT DOUBLE BRIEF CHECK FOR UA.",
+            "5 HRS BETWEEN TAKEOFFS WHEN USING SAME IP OR IFTE FOR 2 MISSIONS"
+          ],
+          "prerequisites": [
+            "STRUCTURES MIB",
+            "LCO"
+          ],
+          "sourceRows": [
+            125,
+            126,
+            127,
+            128,
+            129,
+            130
+          ]
+        },
+        {
+          "eventCode": "FQ 8951F",
+          "missionName": "HQ DEMO I",
+          "missionDetails": [
+            "HQ DEMO I",
+            "NF-16D"
+          ],
+          "aircraftType": [
+            "NF-16D"
+          ],
+          "config": [
+            "FCL"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "VISTA IP w/",
+            "STUD PILOT, FTE, RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "HQ DEMO MIB"
+          ],
+          "sourceRows": [
+            132,
+            133,
+            134
+          ]
+        },
+        {
+          "eventCode": "FQ 8952F",
+          "missionName": "HQ DEMO II",
+          "missionDetails": [
+            "HQ DEMO II",
+            "NF-16D"
+          ],
+          "aircraftType": [
+            "NF-16D"
+          ],
+          "config": [
+            "FCL"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "VISTA IP w/",
+            "STUD PILOT, RPA"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "HQ DEMO I",
+            "HQ DEMO II MIB"
+          ],
+          "sourceRows": [
+            136,
+            137,
+            138
+          ]
+        },
+        {
+          "eventCode": "FQ 8953F",
+          "missionName": "CLASS III HQ DEMO",
+          "missionDetails": [
+            "CLASS III HQ DEMO",
+            "KC-135"
+          ],
+          "aircraftType": [
+            "KC-135"
+          ],
+          "config": [
+            "FUEL 70K",
+            "CAN ACCEPT 65-105",
+            "FUEL LOAD FOR 320",
+            "50-70K FOR 7980"
+          ],
+          "duration": 3.0,
+          "crew": [
+            "GRAD IP w/",
+            "2 STUD PLT and",
+            "2 FTE/RPA/CSO and",
+            "QUAL BOOM/ENG CREWMEMBER"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "(OPTIONAL-ISABELLA TRACK,  SIMULATED",
+            "HOOKUP, CENTER TANKER TEST BOOMER REQUIRED.",
+            "45 MINUTE CT 1+15 MINUTE AFTER TAKEOFF)",
+            "2+30 BRIEF",
+            "5489 REQUIRED"
+          ],
+          "prerequisites": [
+            "CLASS III HQ DEMO MIB",
+            "TANKER GROUND SCHOOL",
+            "HQ SIM II"
+          ],
+          "sourceRows": [
+            140,
+            141,
+            142,
+            143,
+            144,
+            145
+          ]
+        },
+        {
+          "eventCode": "FQ 6354F",
+          "missionName": "GLIDER FQ DEMO",
+          "missionDetails": [
+            "GLIDER FQ DEMO",
+            "GROB, L23"
+          ],
+          "aircraftType": [
+            "Grob",
+            "L23"
+          ],
+          "config": null,
+          "duration": null,
+          "crew": [
+            "GLIDER IP w/",
+            "STUD PILOT, FTE, RPA or CSO"
+          ],
+          "notes": [
+            "CALL GLIDER PORT @  661-822-5267.  CLSD TUESDAYS.",
+            "2 STUDS PER INSTRUCTOR.  2 IP W/4 STUDS DESIRABLE."
+          ],
+          "prerequisites": [
+            "GLIDER FQ DEMO MIB",
+            "FQ SIM"
+          ],
+          "sourceRows": [
+            146,
+            147,
+            148
+          ]
+        },
+        {
+          "eventCode": "FQ 9552F",
+          "missionName": "ENGINE OUT DEMO",
+          "missionDetails": [
+            "ENGINE OUT DEMO",
+            "KC-135"
+          ],
+          "aircraftType": [
+            "KC-135"
+          ],
+          "config": [
+            "FUEL 60K"
+          ],
+          "duration": 3.5,
+          "crew": [
+            "GRAD IP w/",
+            "2 STUD PILOT  and",
+            "2 FTE/RPA/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "NOTE:  E-MODEL MAX FUEL LOAD IS 50K",
+            "2+30 BRIEF    (TROUT ACCEPTABLE)",
+            "5489  REQUIRED"
+          ],
+          "prerequisites": [
+            "T-38 LAT/DIR DATA",
+            "KC-135 ENGINE OUT MIB",
+            "KC-135 GROUND SCHOOL"
+          ],
+          "sourceRows": [
+            149,
+            150,
+            151,
+            152
+          ]
+        },
+        {
+          "eventCode": "FQ 9551F",
+          "missionName": "C-12 (BACK-UP)",
+          "missionDetails": [
+            "C-12",
+            "(BACK-UP)"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": [
+            "DAS SIPF REQ"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT and",
+            "FTE/RPA/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "FUEL LOAD MAIN TANKS (2400-2500)"
+          ],
+          "prerequisites": [
+            "C-12 ENGINE OUT MIB"
+          ],
+          "sourceRows": [
+            153,
+            154,
+            155
+          ]
+        },
+        {
+          "eventCode": "FQ 9351FA",
+          "missionName": "CFP/ASYM STORES DEMO",
+          "missionDetails": [
+            "CFP/ASYM STORES DEMO",
+            "F-15",
+            "GLIDER SPIN"
+          ],
+          "aircraftType": [
+            "F-15"
+          ],
+          "config": [
+            "FULL TANK STA 8",
+            "NO PYLONS",
+            "CONFIG 901"
+          ],
+          "duration": 1.1,
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT, RPA or CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P, SSC",
+            "BLACK MTN-SSC/SUPERSONIC CORRIDOR.  2+30 BRIEF."
+          ],
+          "prerequisites": [
+            "GROUND SCHOOL",
+            "CFP/ASYM STORES MIB",
+            "QUAL EVAL DEMO",
+            "T-38 LAT/DIR DATA"
+          ],
+          "sourceRows": [
+            156,
+            157,
+            158,
+            159,
+            160
+          ]
+        },
+        {
+          "eventCode": "FQ 9751F",
+          "missionName": "GLIDER SPIN",
+          "missionDetails": [
+            "GLIDER SPIN",
+            "ASK"
+          ],
+          "aircraftType": [
+            "ASK"
+          ],
+          "config": null,
+          "duration": null,
+          "crew": [
+            "GLIDER IP w/",
+            "STUD PILOT, FTE, RPA or CSO"
+          ],
+          "notes": [
+            "2 STUD PER IP.  CALL GLIDER PORT @ (661) 822-5267.",
+            "CLOSED TUESDAYS.  GLIDER SPIN MIB INSTRUCTOR WILL PROVIDE STUD WEIGHTS."
+          ],
+          "prerequisites": [
+            "GLIDER SPIN MIB"
+          ],
+          "sourceRows": [
+            161,
+            162
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9957TE",
+            "FQ 9957FD",
+            "FQ 9957R"
+          ],
+          "missionName": "T-1 FIRST FLIGHT Practical Exam",
+          "missionDetails": [
+            "T-1 FIRST FLIGHT Practical Exam",
+            "FIRST FLIGHT Practical Exam",
+            "C-12",
+            "CHASE",
+            "C12"
+          ],
+          "aircraftType": [
+            "T-1",
+            "C-12"
+          ],
+          "config": [
+            "STANDARD FUEL LOAD",
+            "STANDARD FUEL LOAD"
+          ],
+          "duration": "ASD",
+          "crew": [
+            "GRAD IP w/",
+            "STUD PILOT and STUD FTE",
+            "INSTRUCTOR FTE",
+            "IP W/",
+            "STUD PILOT or TWO STAFF MPS"
+          ],
+          "notes": [
+            "NOTE: SCHEDULE 1 DAY PRIOR TO MISSION",
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "UHF AND VHF MISSION FREQ",
+            "NOTE: USE DESIGNATED GRADERS",
+            "TEAMS DESIGNATED BY BRANCH CHIEF",
+            "NOTE:  SCHEDULE MISSION 5 CALENDAR DAYS AFTER MIB",
+            "DO NOT USE A STUD WHO HAS NOT FLOWN THIS Practical Exam",
+            "C-12 OR OTHER SUITABLE SLOW SPEED CHASE (NASA)"
+          ],
+          "prerequisites": [
+            "C-12 FIRST FLGHT CHECK MIB",
+            "T38 HQ/STALL DATA",
+            "DEPARTURE DEMO/W CONTROL ROOM",
+            "STRUCTURES CONTROL ROOM (FTE)",
+            "FIRST FLIGHT T-1",
+            "FIRST FLT Practical Exam"
+          ],
+          "sourceRows": [
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175
+          ]
+        },
+        {
+          "eventCode": "FQ 8531S",
+          "missionName": "HQ Project Sim",
+          "missionDetails": null,
+          "aircraftType": null,
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "FQ INSTRUCTOR W/",
+            "GROUP (IDENTIFIED BY",
+            "FQ BRANCH)"
+          ],
+          "notes": [
+            "SIM LOCATED IN TPS"
+          ],
+          "prerequisites": [
+            "HQ PROJECT PREDICTIONS ORAL REPORT",
+            "SIMS PRECEED ONE ANOTHER",
+            "STEP 1, 2, 3, 4,"
+          ],
+          "sourceRows": [
+            176,
+            177,
+            178,
+            179
+          ]
+        },
+        {
+          "eventCode": "FQ 7641G",
+          "missionName": "Control System",
+          "missionDetails": [
+            "Control System",
+            "Ground Test"
+          ],
+          "aircraftType": null,
+          "config": null,
+          "duration": 3.0,
+          "crew": [
+            "FQ INSTRUCTOR W/",
+            "GROUP (IDENTIFIED BY",
+            "FQ BRANCH)"
+          ],
+          "notes": [
+            "LJ-24 IN HANGAR WITH GROUND STATION"
+          ],
+          "prerequisites": [
+            "HQ PROJ GRND TEST GTT"
+          ],
+          "sourceRows": [
+            180,
+            181,
+            182
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8551FD",
+            "FQ 8551R"
+          ],
+          "missionName": "HQ Project Flight #1",
+          "missionDetails": [
+            "HQ Project Flight #1",
+            "LJ-24 OR LJ-25",
+            "CHASE",
+            "C-12"
+          ],
+          "aircraftType": [
+            "LJ-24/LJ-25",
+            "C-12"
+          ],
+          "config": [
+            "UHF/VHF",
+            "VHF BELOW 130"
+          ],
+          "duration": 1.8,
+          "crew": [
+            "IP w/",
+            "STUD PILOT or RPA and",
+            "FTE or CSO",
+            "IP w/",
+            "STUD PILOT or TWO STAFF MPS"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "STUD GROUP IDENTIFIED BY BRANCH CHIEF",
+            "DO NOT DOUBLE TURN STUDS  (NEED TO DEBRIEF)"
+          ],
+          "prerequisites": [
+            "HQ PROJECT MIB"
+          ],
+          "sourceRows": [
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190
+          ]
+        },
+        {
+          "eventCode": "FQ 8552F",
+          "missionName": "HQ Project Flight #2",
+          "missionDetails": [
+            "HQ Project Flight #2",
+            "LJ-24 OR LJ-25"
+          ],
+          "aircraftType": [
+            "LJ-24/LJ-25"
+          ],
+          "config": [
+            "UHF"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "IP w/",
+            "2 STUD PILOTs or RPA (treated as pilot)"
+          ],
+          "notes": [
+            "ANY 2 STUD PILOTS (or RPA treated as pilot)"
+          ],
+          "prerequisites": [
+            "HQ PROJECT FLIGHT #1",
+            "HQ PROJ 2 MIB"
+          ],
+          "sourceRows": [
+            192,
+            193,
+            194
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 7564F",
+            "FQ 7564CE",
+            "FQ 7564D"
+          ],
+          "missionName": "Structural Envelope",
+          "missionDetails": [
+            "Structural Envelope",
+            "Expansion Flight",
+            "(replaces LCO and Structures)"
+          ],
+          "aircraftType": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP w/STUD PIOLOT OR RPA",
+            "GRAD IFTE w/FTE",
+            "CSO"
+          ],
+          "notes": null,
+          "prerequisites": null,
+          "sourceRows": [
+            196,
+            197,
+            198,
+            199,
+            200
+          ]
+        }
+      ],
+      "summary": {
+        "totalEvents": 38
+      }
+    },
+    "FQ": {
+      "note": "Class 25A updated version - authoritative",
+      "events": [
+        {
+          "eventCode": "FQ 6331S",
+          "missionName": "FQ Sim",
+          "missionDetails": [
+            "FQ Sim",
+            "FS Sim"
+          ],
+          "aircraftType": [
+            "FQ Sim",
+            "FS Sim"
+          ],
+          "config": [
+            "FS Sim A/B with FQ Sim running",
+            "IADS attached"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "2 Studs (1 P/RPA and 1 FTE/CSO) + 1 Instructor",
+            "FTE/CSO repeat to complete all P/RPA",
+            "Instructor can teach just pilot - prior notice required"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan,com to schedule sim"
+          ],
+          "prerequisites": [
+            "Hour 4 of FQ 6311A Aircraft Stability"
+          ],
+          "sourceRows": [
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "eventCode": "FQ 6351FA",
+          "missionName": "Learjet Long Stability Flight",
+          "missionDetails": [
+            "Learjet Long Stability Flight",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "1 P/RPA + 1 Calspan Learjet IP",
+            "FTE/CSO opt ride along"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAE-ATCAA, BAW, I, O, S, P",
+            "PILOT PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "FQ 6351A Learjet VSS Intro MIB",
+            "FQ 6311A Aircraft Stability Lecture",
+            "TF 6351F C-12 Airborne Test Conduct Intro"
+          ],
+          "sourceRows": [
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "eventCode": "FQ 6352FA",
+          "missionName": "Learjet Lat-Dir Stability Flight",
+          "missionDetails": [
+            "Learjet Lat-Dir Stability Flight",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "1 P/RPA + 1 Calspan Learjet IP",
+            "FTE/CSO opt ride along"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAE-ATCAA, BAW, I, O, S, P",
+            "PILOT PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "FQ 6351A Learjet VSS Intro MIB",
+            "FQ 6311A Aircraft Stability Lecture",
+            "TF 6351F C-12 Airborne Test Conduct Intro"
+          ],
+          "sourceRows": [
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "eventCode": "FQ 6353FN",
+          "missionName": "Learjet Combined Long/Lat-Dir",
+          "missionDetails": [
+            "Learjet Combined Long/Lat-Dir",
+            "Stability Flight",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "1 FTE/CSO + 1 Calspan Learjet IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAE-ATCAA, BAW, I, O, S, P",
+            "FTE PROFILE",
+            "(SCHEDULE UHF MSN FREQ)"
+          ],
+          "prerequisites": [
+            "FQ 6351A Learjet VSS Intro MIB",
+            "FQ 6311A Aircraft Stability Lecture",
+            "TF 6351F C-12 Airborne Test Conduct Intro"
+          ],
+          "sourceRows": [
+            15,
+            16,
+            17
+          ]
+        },
+        {
+          "eventCode": "FQ 6354F",
+          "missionName": "Glider Flying Qualities Flight",
+          "missionDetails": [
+            "Glider Flying Qualities Flight",
+            "Grob 103",
+            "DG 1000S"
+          ],
+          "aircraftType": [
+            "Grob 103",
+            "DG 1000S"
+          ],
+          "config": [
+            "Grob 103",
+            "DG 1000S",
+            "ASK (backup)"
+          ],
+          "duration": null,
+          "crew": [
+            "2 Studs + Glider IP"
+          ],
+          "notes": [
+            "CALL GLIDER PORT @  661-822-5267.  CLSD TUESDAYS",
+            "2 STUDS PER INSTRUCTOR.  2 IP W/4 STUDS DESIRABLE."
+          ],
+          "prerequisites": [
+            "FQ 6311A Aircraft Stability"
+          ],
+          "sourceRows": [
+            19,
+            20,
+            21
+          ]
+        },
+        {
+          "eventCode": "FQ 6551F",
+          "missionName": "C-12 Static Stability Sortie",
+          "missionDetails": [
+            "C-12 Static Stability Sortie",
+            "C-12"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": null,
+          "duration": 2.5,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "DAS REQUIRED",
+            "NO ERCC"
+          ],
+          "prerequisites": [
+            "FQ 66311A Aircraft Stability",
+            "FQ 6551A C-12 Static Stability Flight MIB"
+          ],
+          "sourceRows": [
+            23,
+            24,
+            25
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 6553FH",
+            "FQ 6553CE"
+          ],
+          "missionName": "T-38 Dynamics Flight",
+          "missionDetails": [
+            "T-38 Dynamics Flight",
+            "T-38",
+            "CR"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "1 Stud (P/RPA/CSO) + IP",
+            "CR: TC (Stud FTE), DE (Stud FTE) + IFTE (+ P/RPA/CSO observe)",
+            "Student FTEs each do half of sortie as TC and DE",
+            "Student P/RPA/CSO observe if available"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "BLACK MTN-SSC/SUPERSONIC CORRIDOR @ 38K",
+            "IP MUST BE MISSION QUAL FQ CURRENT",
+            "Plan 2 hour brief start time if scheduled with a control room",
+            "SIPF, TM, ACQGEN, MSN FREQ."
+          ],
+          "prerequisites": [
+            "FQ 66311A Aircraft Stability",
+            "FQ 6553A T-38 Dynamics Flight MIB"
+          ],
+          "sourceRows": [
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 6751F",
+            "FQ6751CE"
+          ],
+          "missionName": "T-38 FQ Test Plan Data Flights",
+          "missionDetails": [
+            "T-38 FQ Test Plan Data Flights",
+            "T-38",
+            "CR"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": [
+            "DAS SIPF",
+            "YAPS BOOM",
+            "DAS Required",
+            "Control Room Desired"
+          ],
+          "duration": 1.1,
+          "crew": [
+            "1 Stud Pilot + 1 Stud FTE/CSO (crew solo) or",
+            "1 Stud RPA (rear cockpit) + IP",
+            "2 flights per stud pilot",
+            "Studs assigned by FQ Data Group",
+            "CR: TC (1 Stud FTE), DE (1 Stud P/RPA/CSO) Team Decision"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "AIRCREW FAXES FORM F TO WT & BAL SHOP - EACH FLT",
+            "GOAL OF 2 DUTY DAYS BETWEEN DATA RIDES",
+            "SIPF, TM, ACQGEN, MSN FREQ."
+          ],
+          "prerequisites": [
+            "FQ 6553FH T-38 Dynamics Flight / FQ 6553CE T-38 Dynamics Control Room",
+            "FQ 6701A  T38 FQ TP  (13 business days prior 1st flt)",
+            "FQ 6751TG FQ Test TPWG (5 business days prior to flt)",
+            "FQ 6751FD 5 business days after FQ 6751TG FQ Test TPWG",
+            "Complete NLT 1 month after curriculum break"
+          ],
+          "sourceRows": [
+            32,
+            33,
+            34,
+            35,
+            36
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 7553FH",
+            "FQ 7553CE"
+          ],
+          "missionName": "F-16 Structures Envelope Expansion",
+          "missionDetails": [
+            "F-16 Structures Envelope Expansion",
+            "F-16",
+            "CR"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "DAS SIPF, FWT",
+            "Control Room"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "F-16: 1 Stud (P/RPA/CSO) + IP",
+            "CR: TC (1 Stud FTE), DE (1 Stud FTE) + 1 IFTE",
+            "Student P/RPA/CSO observe if available; CR desired not required for RPA/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SIPF, TM, ACQGEN, MSN FREQ.",
+            "DO NOT DOUBLE BRIEF"
+          ],
+          "prerequisites": [
+            "FQ 7553A F-16 Structures Env Expansion MIB",
+            "FQ 7513E Structures Exam",
+            "FQ 6553CE T-38 Dynamics Control Room OR",
+            "TF 6361CE  F-16 Propulsion Intro [req’d for FQ 7553A] AND\nPF 8357CE F-16/T-38 Turn Perf Control Room",
+            "Complete before TMP"
+          ],
+          "sourceRows": [
+            37,
+            38,
+            39,
+            40,
+            41
+          ]
+        },
+        {
+          "eventCode": "FQ 7641G",
+          "missionName": "Learjet FCS Verification Ground Test",
+          "missionDetails": [
+            "Learjet FCS Verification Ground Test",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "6 Studs + 1 Instructor + 1 Calspan Engineer"
+          ],
+          "notes": [
+            "Learjet in hangar with ground station, Calspan needs 24hrs prior to",
+            "configure, and Learjet does not fly on days it is configured for",
+            "ground station."
+          ],
+          "prerequisites": [
+            "FQ 7641A Learjet FCS Verification Flight MIB"
+          ],
+          "sourceRows": [
+            42,
+            43,
+            44
+          ]
+        },
+        {
+          "eventCode": "FQ 8131S",
+          "missionName": "HQ Sim I",
+          "missionDetails": [
+            "HQ Sim I",
+            "FS Sim"
+          ],
+          "aircraftType": [
+            "FS Sim"
+          ],
+          "config": [
+            "FS Sim A or B, Handling Qualities Sim I"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "1 Stud + 1 Instructor"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan,com to schedule sim."
+          ],
+          "prerequisites": [
+            "Complete prior to curriculum break"
+          ],
+          "sourceRows": [
+            46,
+            47,
+            48
+          ]
+        },
+        {
+          "eventCode": "FQ8132S",
+          "missionName": "HQ Sim II",
+          "missionDetails": [
+            "HQ Sim II",
+            "FS Sim"
+          ],
+          "aircraftType": [
+            "FS Sim"
+          ],
+          "config": [
+            "FS Sim A or B, Handling Qualities Sim II"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO) + 1 Instructor"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan,com to schedule sim."
+          ],
+          "prerequisites": [
+            "FQ8131S"
+          ],
+          "sourceRows": [
+            49,
+            50
+          ]
+        },
+        {
+          "eventCode": "FQ 8133S",
+          "missionName": "PIO Sim",
+          "missionDetails": [
+            "PIO Sim",
+            "FS Sim"
+          ],
+          "aircraftType": [
+            "FS Sim"
+          ],
+          "config": [
+            "FS Sim A or B, PIO Sim"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO) + 1 Instructor",
+            "(Pilots req, FTE/CSO position not required if repeating)"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan,com to schedule sim."
+          ],
+          "prerequisites": [
+            "FQ 8131S HQ Sim 1",
+            "Complete prior to curriculum break"
+          ],
+          "sourceRows": [
+            52,
+            53,
+            54
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8155FA",
+            "FQ 8155R"
+          ],
+          "missionName": "F-16 HQ Flight",
+          "missionDetails": [
+            "F-16 HQ Flight",
+            "F-16",
+            "Target",
+            "T-38"
+          ],
+          "aircraftType": [
+            "F-16",
+            "T-38"
+          ],
+          "config": [
+            "FCL or FWT"
+          ],
+          "duration": 1.1,
+          "crew": [
+            "1 Stud P/RPA + IP",
+            "1 Stud Pilot + IP or 1 Stud (rear cockpit) + IP or",
+            "crew solo IF Stud Pilot is Target qualified",
+            "opt for all studs"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "MSN FREQ.  WORKING RADAR & AVTR",
+            "CONFIGURATION CAT 1 ONLY",
+            "BRIEF 2+30"
+          ],
+          "prerequisites": [
+            "FQ 8155A F-16 HQ Flight MIB",
+            "FQ 8133S PIO SIM",
+            "FQ 8753F",
+            "Complete 1 month after curriculum break"
+          ],
+          "sourceRows": [
+            55,
+            56,
+            57,
+            58,
+            59,
+            60
+          ]
+        },
+        {
+          "eventCode": "FQ 8153F",
+          "missionName": "Learjet HQ  Flight",
+          "missionDetails": [
+            "Learjet HQ  Flight",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "2 Studs (P/RPA+ FTE/CSO) + Learjet IP +",
+            "Calspan Engineer"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAE-ATCAA, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "FQ8153A",
+            "FQ 8131S HQ Sim 1"
+          ],
+          "sourceRows": [
+            61,
+            62
+          ]
+        },
+        {
+          "eventCode": "FQ 8154FA",
+          "missionName": "Learjet PIO Flight",
+          "missionDetails": [
+            "Learjet PIO Flight",
+            "Learjet VSS"
+          ],
+          "aircraftType": [
+            "Learjet"
+          ],
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "2 Stud Pilots/RPA + Learjet IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAE-ATCAA, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "FQ8154A",
+            "FQ 8133S PIO Sim"
+          ],
+          "sourceRows": [
+            64,
+            65
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8753FA",
+            "FQ 8753R"
+          ],
+          "missionName": "T-38 HQ Flight",
+          "missionDetails": [
+            "T-38 HQ Flight",
+            "T-38",
+            "Target",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "1 Stud P/RPA + IP",
+            "1 Stud P/RPA + IP",
+            "Opt for all studs"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "T-38 TARGET  MISSION FREQ",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "FQ 8133S PIO Sim",
+            "FQ 8753A T-38 HQ Flight MIB",
+            "CF 6551 T-38 Chase Fam"
+          ],
+          "sourceRows": [
+            67,
+            68,
+            69,
+            70,
+            71
+          ]
+        },
+        {
+          "eventCode": "FQ 8754FP",
+          "missionName": "T-38 Stall Flight",
+          "missionDetails": [
+            "T-38 Stall Flight",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "1 Stud P + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "INSTRUCTOR MUST BE HQ AND STALL QUALIFIED."
+          ],
+          "prerequisites": [
+            "FQ 8754A T-38 Stall Flight MIB",
+            "FQ9711A"
+          ],
+          "sourceRows": [
+            73,
+            74
+          ]
+        },
+        {
+          "eventCode": "FQ 8755FJ",
+          "missionName": "T-38 Combined HQ/Stall Flight",
+          "missionDetails": [
+            "T-38 Combined HQ/Stall Flight",
+            "2x T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "1 Stud FTE/CSO + 1 IP",
+            "1 Stud FTE/CSO + 1 IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "INSTRUCTOR MUST BE HQ AND STALL QUALIFIED.",
+            "Formation required. Students accomplish both test and target roles."
+          ],
+          "prerequisites": [
+            "FQ 8133S  PIO Sim",
+            "FQ 8753A T-38 HQ Flight MIB",
+            "FQ 8754A T-38 Stall Flight MIB"
+          ],
+          "sourceRows": [
+            76,
+            77,
+            78
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 8756F",
+            "FQ 8756R"
+          ],
+          "missionName": "T-38 HQ Test Plan Data Flight",
+          "missionDetails": [
+            "T-38 HQ Test Plan Data Flight",
+            "T-38",
+            "Target",
+            "T-38"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "2 Studs (P + FTE/CSO)",
+            "1 Stud RPA (rear cockpit) + IP",
+            "FQ data group pairs required",
+            "1 Stud + IP or Stud crew solo with IP in formation",
+            "or solo IP",
+            "opt for all studs"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "MINIMUM OF 2 DUTY DAYS BETWEEN DATA RIDES.",
+            "Minimum of 5 Duty Days between MIB and Flight"
+          ],
+          "prerequisites": [
+            "FQ 6751F T-38 FQ Test Plan Data Flight",
+            "FQ 8133S PIO Sim",
+            "FQ 8753FA T-38 HQ Flight (P/RPA)",
+            "FQ 8755FN T-38 Combined HQ/Stall Flight (FTE/CSO)",
+            "FQ 8756A T-38 HQ Test Plan Part 2 (6 days prior to 1st flt)",
+            "Complete prior to TMP"
+          ],
+          "sourceRows": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87
+          ]
+        },
+        {
+          "eventCode": "FQ 8951F",
+          "missionName": "VISTA HQ Flight 1",
+          "missionDetails": [
+            "VISTA HQ Flight 1",
+            "VISTA"
+          ],
+          "aircraftType": [
+            "VISTA"
+          ],
+          "config": [
+            "FCL"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "1 Stud + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "FQ 8133S PIO Sim",
+            "FQ 9851A VISTA HQ Flight MIB"
+          ],
+          "sourceRows": [
+            88,
+            89
+          ]
+        },
+        {
+          "eventCode": "FQ 8952FA",
+          "missionName": "VISTA HQ Flight 2",
+          "missionDetails": [
+            "VISTA HQ Flight 2",
+            "VISTA"
+          ],
+          "aircraftType": [
+            "VISTA"
+          ],
+          "config": [
+            "FCL"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "1 Stud P/RPA + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "FQ 9851F VISTA HQ Flight"
+          ],
+          "sourceRows": [
+            91,
+            92
+          ]
+        },
+        {
+          "eventCode": "FQ 8953F",
+          "missionName": "KC-135 Class III Aircraft HQ Flight",
+          "missionDetails": [
+            "KC-135 Class III Aircraft HQ Flight",
+            "KC-135"
+          ],
+          "aircraftType": [
+            "KC-135"
+          ],
+          "config": [
+            "FUEL 70K",
+            "CAN ACCEPT 65-105K FUEL FOR 320",
+            "50-70K FUEL LOAD FOR 7980"
+          ],
+          "duration": 3.0,
+          "crew": [
+            "4 Studs (2 Pilots + 2 FTE/CSO/RPA) + IP +",
+            "QUAL BOOM/ENG CREWMEMBER"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "(OPT: ISABELLA TRACK, SIMULATED HOOKUP, CENTER",
+            "TANKER TEST BOOM REQUIRED. 45 MINUTE CT 1+15 MIN",
+            "AFTER TAKEOFF.)",
+            "BRIEF 2+30",
+            "5489 REQUIRED"
+          ],
+          "prerequisites": [
+            "FQ 8133S PIO Sim",
+            "FQ 8953A KC-135 Aircraft HQ Flight MIB",
+            "FQ 8953B KC-135 Aircraft HQ Flight Ground School"
+          ],
+          "sourceRows": [
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ]
+        },
+        {
+          "eventCode": "FQ 8954F",
+          "missionName": "C-12 Multi Engine Handling Qualities Flight",
+          "missionDetails": [
+            "C-12 Multi Engine Handling Qualities Flight",
+            "C-12 Multi Engine Handling Qualities Flight"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": [
+            "DAS SIPF"
+          ],
+          "duration": 2.5,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO) + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "DAS REQUIRED"
+          ],
+          "prerequisites": [
+            "FQ8131S HQ Sim I",
+            "FQ9711A Stall, Dep, Spin Class",
+            "FQ8954A C-12 Multi Engine HQ MIB"
+          ],
+          "sourceRows": [
+            100,
+            101,
+            102
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9151F",
+            "FQ 9151R"
+          ],
+          "missionName": "C-12 First Flight",
+          "missionDetails": [
+            "C-12 First Flight",
+            "C-12",
+            "Chase",
+            "C-12",
+            "NASA"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO) + IP + IFTE",
+            "2 Qualified Pilots",
+            "(or 1 Qualified Pilot and a Stud P/RPA Pilot)",
+            "Highly desired, not required"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "UHF AND VHF MISSION FREQ",
+            "Any slow speed chase acceptable"
+          ],
+          "prerequisites": [
+            "NET 3 days after FQ 9151T C-12 First Flight FRR"
+          ],
+          "sourceRows": [
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111
+          ]
+        },
+        {
+          "eventCode": "FQ 9551F",
+          "missionName": "C-12 Engine Out Testing Flight",
+          "missionDetails": [
+            "C-12 Engine Out Testing Flight",
+            "C-12"
+          ],
+          "aircraftType": [
+            "C-12"
+          ],
+          "config": [
+            "DAS SIPF REQ"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "2 Studs (P/RPA + FTE/CSO) + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "FUEL LOAD MAIN TANKS (2400-2500 LBS)",
+            "This event is the backup if the KC-135 is not available."
+          ],
+          "prerequisites": [
+            "FQ 9511A Failure Modes Testing Lecture",
+            "FQ 9551A C-12 Engine Out Testing MIB"
+          ],
+          "sourceRows": [
+            112,
+            113,
+            114
+          ]
+        },
+        {
+          "eventCode": "FQ 9552F",
+          "missionName": "KC-135 Engine Out Testing Flight",
+          "missionDetails": [
+            "KC-135 Engine Out Testing Flight",
+            "KC-135"
+          ],
+          "aircraftType": [
+            "KC-135"
+          ],
+          "config": [
+            "FUEL 60K"
+          ],
+          "duration": 3.5,
+          "crew": [
+            "4 Studs (2 P/RPA + 2 FTE/CSO) + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "NOTE:  E-MODEL MAX FUEL LOAD IS 50K",
+            "BRIEF 2+30, 5489 REQUIRED"
+          ],
+          "prerequisites": [
+            "FQ 9511A Failure Modes Testing Lecture",
+            "FQ 9552A KC-135 Engine Out Flight MIB",
+            "FQ 8953B KC-135 Aircraft HQ Flight Ground School"
+          ],
+          "sourceRows": [
+            115,
+            116,
+            117
+          ]
+        },
+        {
+          "eventCode": "FQ 9751F",
+          "missionName": "Glider Spin Flight",
+          "missionDetails": [
+            "Glider Spin Flight",
+            "ASK"
+          ],
+          "aircraftType": [
+            "ASK"
+          ],
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "2 Studs + Glider IP"
+          ],
+          "notes": [
+            "2 STUD PER IP.  CALL GLIDER PORT @ (661) 822-5267.",
+            "CLOSED TUESDAYS.  GLIDER SPIN MIB INSTRUCTOR WILL"
+          ],
+          "prerequisites": [
+            "FQ 9751A Glider Spin MIB"
+          ],
+          "sourceRows": [
+            118,
+            119
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9775FH",
+            "FQ 9775CE"
+          ],
+          "missionName": "F-16 High AOA Env Exp Data Flight",
+          "missionDetails": [
+            "F-16 High AOA Env Exp Data Flight",
+            "F-16",
+            "CR"
+          ],
+          "aircraftType": [
+            "F-16"
+          ],
+          "config": [
+            "DAS SIPF",
+            "FCL",
+            "LAUNCHER ON STATION 1, 2, 8 & 9",
+            "AIM-9L STATIONS 1&2",
+            "BALLAST, BLOCK 30 REQUIRED,",
+            "CONFIG 143B"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "F-16: P/RPA/CSO + HI AOA TEST IP",
+            "CR: TC ( Stud FTE), DE (Stud FTE) + IFTE",
+            "All studs must be in same FS Data Group, FTE desired for",
+            "2nd stud"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SPIN AREA, ACQGEN, UHF, TM AND VHF",
+            "SIPF, TM, ACQGEN, MSN FREQ.",
+            "All P/RPA/CSO in each FS Data Group get 1 flight",
+            "DO NOT DOUBLE BRIEF"
+          ],
+          "prerequisites": [
+            "NET 2 days after FQ 9775SG F-16 High AOA EE Rehearsal Sim",
+            "FQ 9711E Stall, Departure and Spin Exam AND",
+            "FQ 6553CE T-38 Dynamics Control Room   OR",
+            "TF 6361CE  F-16 Propulsion Intro   AND",
+            "PF 8357CE F-16/T-38 Turn Perf Control Room"
+          ],
+          "sourceRows": [
+            120,
+            121,
+            122,
+            123,
+            124,
+            125
+          ]
+        },
+        {
+          "eventCode": "FQ 9958SB",
+          "missionName": "Sim FQ Practical Exam",
+          "missionDetails": [
+            "Sim FQ Practical Exam",
+            "FS Sim"
+          ],
+          "aircraftType": [
+            "FS Sim"
+          ],
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "1 Stud RPA/CSO + IP"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan.com to schedule sim."
+          ],
+          "prerequisites": [
+            "FQ6751WG FQ Written Report AND",
+            "FQ8756YG T38 PRR Oral report OR FQ9775YG F16 H AoA Oral",
+            "NET 5 days after FQ 9958AR Sim FQ Practical Exam MIB"
+          ],
+          "sourceRows": [
+            126,
+            127,
+            128,
+            129
+          ]
+        },
+        {
+          "eventCode": [
+            "FQ 9959FP",
+            "FQ 9959CE"
+          ],
+          "missionName": "T-38 FQ Practical Exam",
+          "missionDetails": [
+            "T-38 FQ Practical Exam",
+            "T-38",
+            "CR"
+          ],
+          "aircraftType": [
+            "T-38"
+          ],
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "T38: P + IP",
+            "TM Capable",
+            "CR: TC (Stud FTE) + IFTE + DE (Staff TE)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "SIPF, TM, ACQGEN, MSN FREQ."
+          ],
+          "prerequisites": [
+            "FQ 7553FH/CE F-16 Structures EE AND",
+            "FQ6751WG FQ Written Report AND",
+            "FQ8756YG T38 PRR Oral report",
+            "NET 5 days after FQ 9959AP T-38 FQ Practical Exam MIB",
+            "Changes/Additions"
+          ],
+          "sourceRows": [
+            130,
+            131,
+            132,
+            133,
+            134,
+            135
+          ]
+        }
+      ],
+      "summary": {
+        "totalEvents": 31
+      }
+    }
+  },
+  "classCode": "25A",
+  "extractedAt": "2026-02-19"
+}

@@ -1,0 +1,151 @@
+===== PAGE 38 =====
+ 
+38 
+ 
+Space Operations Training 
+The prerequisite Space Operations Training (SO) phase prepares all students to safely serve as 
+crewmembers on curriculum space systems. STC students are provided hands-on experience as system 
+operators and crew commanders on Aerocube and GROOT. All students receive exposure to basic 
+satellite operations. The SO Training phase also provides familiarization training designed to prepare 
+students for specific curriculum test events including anomaly recovery. It should be noted that this phase 
+is under heavy development and may be modified based on the available assets at the time of instruction. 
+Faculty Contact Information 
+The faculty for this phase consists primarily of the Director of Space Operations, and the Chief 
+Technician for the various space systems. 
+Notional Breakdown of Grades 
+The Space Operations Training phase provides the training and qualification necessary to start the 
+related academic content. Although most events in the SO Training phase are graded, these grades are 
+only used to document that the student has achieved the required learning objectives and proficiency 
+levels. Failure to achieve the required proficiency level would normally prevent the student from 
+progressing in the curriculum and necessitate removal from the course. There are no semester hours 
+associated with this Phase. SO grades do not factor into GPA, but with very few exceptions all events must 
+be completed or passed to complete the USAF TPS course. 
+References and Texts 
+Most courses will be taught in class from PowerPoint presentations. These presentations will 
+generally be available to the students on the TPS curriculum portal. The SO phase is based almost entirely 
+on space system engineering documents and training slides. Most references will be available on-line 
+through the Curriculum Portal. 
+Phase Organization and Learning Objectives 
+Achievement of a required skill may be evaluated through formal proficiency testing, face-to-face 
+evaluation, and simulator or flight grades. Students do not receive formal qualification in any event or 
+space system but there are numerous events that must be successfully completed to pass the SO phase and 
+continue into the curriculum. An overview can be seen in Figure 10. 
+ 
+ 
+Figure 10: Space Operations Overview 
+
+
+===== PAGE 39 =====
+ 
+39 
+ 
+SO 6000 Operations Training 
+(0 Semester Credit Hours) 
+This course provides the space operations training necessary to prepare all students for safely and 
+effectively executing and participating in curriculum events.  
+SO 6100 GROOT Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate necessary skills as satellite system operators and crew commanders and gain 
+exposure to satellite operations and data collection tasks. 
+TLO 2. Recall tenants of nominal and anomalous satellite operations. 
+ 
+SO 6101A GROOT Training Brief 
+SO 6102A GROOT Maneuver Academics 
+SO 6103A GROOT Robotics Academics 
+An overview of the GROOT system and its operation are provided. Maneuver academics introduces 
+the student to mission planning, briefing, execution, and debrief (PBED) of two satellites operating near 
+each other to students with limited satellite operations and rendezvous and proximity operations (RPO) 
+experience. Robotics academics reinforces PBED and continues to build basic satellite ops knowledge 
+and skills.  
+Prerequisites: 
+AN 5140A Space Operations Introduction 
+ 
+SO 6110S GROOT Maneuver Operations 
+The profiles for this simulator event are structured to familiarize students with manual and automatic 
+translation and rotation of the GROOT vehicle.  
+Prerequisites: 
+SO 6102A GROOT Maneuver Academics 
+ 
+SO 6120S GROOT Robotics Operations 
+The profiles for this simulator event are structured to familiarize students with the various operational 
+modes of the robotic arm, to demonstrate successful grapple, and to demonstrate various impedances to 
+successful grapple. 
+Prerequisites: 
+SO 6103A GROOT Robotics Academics 
+SO 6110S GROOT Maneuver Operations 
+ 
+SO 6130-2S GROOT Supervised Exploration and Check-ride Prep SO-1-3 
+These simulator sessions are structured to allow students to explore the GROOT simulator, develop 
+proficiency with CRM, maneuver, and robotics operations. Students will use these sessions to develop 
+their check-ride profiles. 
+Prerequisites: 
+SO 6120S GROOT Robotics Operations 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 40 =====
+ 
+40 
+ 
+SO 6140S GROOT Check-ride 
+Students will demonstrate proficiency on manual and automatic maneuver and robotic operations. 
+Prerequisites: 
+SO 6132S GROOT Supervised Exploration and Check-ride Prep SO-3 
+ 
+Figure 11: SO 6100 GROOT Training 
+
+
+===== PAGE 41 =====
+ 
+41 
+ 
+SO 6200 Aerocube Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate skills as satellite system operators and crew commanders and gain exposure 
+to satellite operations and data collection tasks. 
+TLO 2. Recall tenants of nominal and anomalous satellite operations. 
+ 
+SO 6201A Ops 101 Training 
+Students are introduced to roles and responsibilities, battle rhythm, flight safety and best practices for 
+Aerocube satellite operations. 
+Prerequisites: 
+AN 5140A Space Operations Introduction 
+ 
+SO 6210A Aerocube Training 
+Students are introduced to the Aerocube space segment, satellite modes, vehicle commanding, 
+telemetry, orbit, and attitude. Students are also provided an overview of the Aerocube ground segment, 
+stations and tools 
+Prerequisites: 
+SO 6201A Ops 101 Training 
+ 
+SO 6220H SOCR Display Familiarization 
+This event is designed to introduce students to the display layout for Aerocube operations. Students 
+will learn how to configure the operator and crew commander terminals and discuss how each element 
+supports operations. 
+Prerequisites: 
+SO 6210A Aerocube Training 
+ 
+SO 6230E SOCR Display Exam 
+SO 6231O Aerocube Contact Demo 
+Students will complete an examination to configure the display and explain operational relevance of 
+each window. Scheduled concurrently with SO 6231O Contact Demo. Students will learn to build 
+commands, pass plans, and how to run a nominal Aerocube satellite contact. Students must pass their 
+exam to proceed into the contact demo 
+Prerequisites: 
+SO 6220H Aerocube Display Familiarization 
+ 
+SO 6240O Aerocube First Contact 
+SO 6241O Aerocube Crew Solo 
+This event is designed to allow students to serve as operator and then crew commander on a live 
+satellite contact. Students will perform nominal crew operations on Aerocube without supervising 
+instructor input. 
+ 
+Prerequisites: 
+SO 6231O Aerocube Contact Demo 
+ 

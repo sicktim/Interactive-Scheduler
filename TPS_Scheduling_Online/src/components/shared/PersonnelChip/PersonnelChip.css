@@ -1,0 +1,73 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.58rem;
+  font-weight: 500;
+  cursor: grab;
+  user-select: none;
+  white-space: nowrap;
+  line-height: 1.3;
+  position: relative;
+  transition: transform 0.1s, box-shadow 0.1s;
+  z-index: 10;
+}
+
+.chip:hover {
+  filter: brightness(1.25);
+  box-shadow: var(--shadow-chip-hover);
+}
+
+.chip:active { cursor: grabbing; }
+
+.chip-remove {
+  cursor: pointer;
+  font-size: 0.5rem;
+  opacity: 0.4;
+  margin-left: 1px;
+}
+.chip-remove:hover { opacity: 1; color: var(--chip-remove-hover); }
+
+.chip-conflict {
+  outline: 2px solid var(--color-warning-text);
+  outline-offset: -1px;
+  box-shadow: var(--conflict-glow-strong);
+  animation: conflict-pulse 2s ease-in-out infinite;
+}
+
+@keyframes conflict-pulse {
+  0%, 100% {
+    outline-color: var(--conflict-outline-strong);
+    box-shadow: var(--conflict-glow-strong);
+  }
+  50% {
+    outline-color: var(--conflict-outline-weak);
+    box-shadow: var(--conflict-glow-weak);
+  }
+}
+
+.conflict-icon {
+  color: var(--color-warning-text);
+  font-size: 0.55rem;
+  font-weight: 700;
+}
+
+.picker-chip { cursor: grab; }
+
+.picker-chip.busy::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--chip-busy-dot);
+}
+
+.picker-chip.unavailable {
+  opacity: 0.3;
+  filter: grayscale(0.8);
+}

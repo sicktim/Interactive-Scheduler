@@ -1,0 +1,132 @@
+{
+  "sourceDocument": "MCG 26A",
+  "extractedAt": "2026-02-22",
+  "schemaVersion": 3,
+  "pdfTruncation": {
+    "note": "PDF is truncated at page 146. Missing: TF 7000-9000 (~16 pages), TL phase entirely (~8 pages), Appendices.",
+    "missingPhases": [
+      "TL"
+    ],
+    "missingModules": [
+      "TF 7000",
+      "TF 8000",
+      "TF 9000"
+    ],
+    "estimatedMissingEvents": "~40-65"
+  },
+  "phases": {
+    "AN": {
+      "events": 49,
+      "prereqs": 0,
+      "ftc": 0,
+      "stc": 0,
+      "shared": 49
+    },
+    "AS": {
+      "events": 84,
+      "prereqs": 103,
+      "ftc": 0,
+      "stc": 84,
+      "shared": 0
+    },
+    "CF": {
+      "events": 97,
+      "prereqs": 350,
+      "ftc": 94,
+      "stc": 3,
+      "shared": 0
+    },
+    "FQ": {
+      "events": 95,
+      "prereqs": 183,
+      "ftc": 95,
+      "stc": 0,
+      "shared": 0
+    },
+    "PF": {
+      "events": 57,
+      "prereqs": 210,
+      "ftc": 56,
+      "stc": 1,
+      "shared": 0
+    },
+    "SO": {
+      "events": 16,
+      "prereqs": 17,
+      "ftc": 0,
+      "stc": 16,
+      "shared": 0
+    },
+    "SY": {
+      "events": 96,
+      "prereqs": 239,
+      "ftc": 14,
+      "stc": 10,
+      "shared": 72
+    },
+    "TF": {
+      "events": 62,
+      "prereqs": 146,
+      "ftc": 4,
+      "stc": 26,
+      "shared": 32
+    }
+  },
+  "totals": {
+    "events": 556,
+    "prerequisites": 1248,
+    "dependencyEdges": 1248,
+    "courseBreakdown": {
+      "FTC": 263,
+      "STC": 140,
+      "Shared": 153
+    }
+  },
+  "validation": {
+    "countIntegrity": "PASS",
+    "countDetails": "V1=556 V2=556 V3=556 events, V1=1248 V2=1248 V3=1248 prereqs",
+    "uniqueEventCodes": 556,
+    "duplicateEventCodes": 0,
+    "courseAssignment": "PASS",
+    "courseAssignmentDetails": "All 556 events have non-null courseAssignment",
+    "dependencyGraph": "PASS_WITH_NOTES",
+    "unmatchedNotes": [],
+    "orphanPrereqs": 71,
+    "orphanPrereqDetails": {
+      "total": 71,
+      "uniqueCodes": 12,
+      "breakdown": {
+        "TF_truncated": [
+          "TF 6320A",
+          "TF 6401A",
+          "TF 6420A",
+          "TF 6404Z",
+          "TF 6410B",
+          "TF 6430A",
+          "TF 7601A",
+          "TF 5301A",
+          "TF 5310Y",
+          "TF 6510A"
+        ],
+        "TL_missing": [
+          "TL 5110A"
+        ],
+        "null_code": 1
+      },
+      "explanation": "All orphans are references to events in truncated/missing sections of the PDF"
+    },
+    "cycleDetected": true,
+    "issues": [
+      {
+        "type": "unexpected_course",
+        "phase": "CF",
+        "message": "FTC-only phase has 3 STC events — check for explicit overrides"
+      },
+      {
+        "type": "unexpected_course",
+        "phase": "PF",
+        "message": "FTC-only phase has 1 STC events — check for explicit overrides"
+      }
+    ]
+  }
+}

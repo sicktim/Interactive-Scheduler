@@ -1,0 +1,678 @@
+===== PAGE 15 =====
+ 
+15 
+ 
+Check Flight Training 
+The prerequisite Check Flight (CF) Training prepares FTC and STC students to safely serve as crewmembers in 
+curriculum aircraft and spacecraft. Test pilot students are qualified as crew solo aircraft commanders in selected 
+curriculum aircraft, including the T-38, the C-12, or F-16 for pilots assigned to one of those performance data groups. 
+Additionally, select pilots will also receive crew solo qualification in the SGS 2-33 Glider. Pilots receive a familiarization 
+sortie in the F-16 and/or C-12 if they are not in one of those data groups. ABMs, CSOs, and FTEs are provided hands-on 
+experience as aircrew members in the C-172 through the Airmanship curriculum. ABMs, CSOs, and FTEs are introduced 
+to advanced aircraft operations and data collection tasks through data aircraft familiarization sorties in the T-38, C-12, F-
+16, and Gliders. RPA pilots accomplish a cross section of sorties in the C-172, T-38, C-12, F-16, and Gliders to develop 
+basic proficiency in manned aircraft operations and provide curriculum aircraft familiarization. ABMs, CSOs, and RPA 
+pilots will also receive a crew solo qualification in the ground control station of the LJ-25. All FTC students receive 
+exposure to formation flight. The CF Training phase also provides familiarization training designed to prepare students for 
+specific curriculum flight test sorties including familiarization with F-16 characteristics during departures from controlled 
+flight. STC students will receive a limited exposure to a selection of the curriculum aircraft and receive the requisite 
+ground training for those aircraft. 
+Faculty Contact Information 
+The faculty for this phase consists primarily of the Chief Test Pilot, Director of Flight Operations, Training Officer, 
+and the Chief Pilots for the various aircraft. 
+Note on Grades 
+The CF Training phase provides the training and qualification necessary to start the related academic content. 
+Although most events in the CF phase are graded, these grades are only used to document that the student has achieved 
+the required learning objectives and proficiency levels. Failure to achieve the required proficiency level would normally 
+prevent the student from progressing in the curriculum and necessitate removal from the course. There are no semester 
+hours associated with this Phase. CF grades do not factor into GPA, but with very few exceptions all events must be 
+completed or passed to complete the USAF TPS course. 
+References and Texts 
+Most courses will be taught in class from PowerPoint presentations. These presentations will generally be available to 
+the students on the TPS curriculum portal. The CF phase is based almost entirely on aircraft flight manuals, Air Force 
+Instructions, and local area procedures (including relevant FAA policies). Most references will be available on-line either 
+through the Curriculum Portal or Center Ops Online (COOL). If the student has access to an “Electronic Flight Bag” 
+(EFB) digital notepad, most documents will be available there as well. 
+Phase Organization and Learning Objectives 
+The CF Phase is organized into 2 major courses: CF 5000 Common Ground Training and CF 6000 Flight Training. 
+Achievement of a required skill may be evaluated through formal proficiency testing, face-to-face evaluation, and 
+simulator or flight grades. Students do not receive formal qualification (i.e. a “Form 8” or check ride) in any event or 
+aircraft but there are numerous events that must be successfully completed to pass the CF phase and continue into the 
+curriculum. An overview can be seen in Figure 4. 
+
+
+===== PAGE 16 =====
+ 
+16 
+ 
+ 
+ 
+ 
+ 
+Figure 4: Check Flight Overview 
+
+
+===== PAGE 17 =====
+ 
+17 
+ 
+CF 5000 Common Ground Training 
+(0 Semester Credit Hours) 
+This course provides the ground training required for students to enter flight training. 
+CF 5100 Life Support Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. The student will complete AFI-required ground training and introductory ground training applicable to all 
+TPS flying. 
+ 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+These classes are AFI-mandated training and are provided by 412th Operations Group trainers to meet AFI standards.  
+Prerequisites: 
+AN 5130A Check Flight Introduction [req’d for all] 
+ 
+CF 5140A Ejection Decision Making  
+CF 5141A Introduction to Emergency Procedures (ABM/FTE/STC) 
+An introduction to handling emergencies in the cockpit of an aircraft. Students will develop an appreciation for the 
+complexities and additional burdens levied on aircrew during an emergency and understand how to properly assist during 
+one. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+
+
+===== PAGE 18 =====
+ 
+18 
+ 
+CF 5200 Local Procedures 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. The student will understand how to correctly operate the DAS in all curriculum aircraft. 
+ 
+CF 5201A SARM In-Processing 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+Flight records briefing and in-processing. Students are introduced to safety privilege as well as safety reporting and 
+mishap requirements. Training on local area procedures. 
+Prerequisites: 
+AN 5130A Check Flight Introduction [req’d for all] 
+ 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5231Z Electronic Flight Bag Turn-In (FTC) 
+Issue and training for electronic flight bags (EFB). Time allocated at the end of the TPS to turn in individually issued 
+EFBs. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+Mandatory testing for aircraft operators. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 5250A DAS Academics 
+CF 5251H DAS Planeside Academics  
+Classroom and planeside instruction on the operation of the Data Acquisition Systems (DAS) installed in each 
+curriculum aircraft. 
+Prerequisites: 
+AN 5130A Check Flight Introduction  
+ 
+
+
+===== PAGE 19 =====
+ 
+19 
+ 
+CF 5300 Crew Resource Management 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. The student will recall the concepts associated with crew resource management.  
+ 
+CF 5301A Crew Resource Management 
+This block is required by AFI and prepares all students for safe and effective operation as a flight crew or test team, 
+including in the control room. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+
+
+===== PAGE 20 =====
+ 
+20 
+ 
+CF 6000 Flight Training 
+(0 Semester Credit Hours) 
+This course provides the flight training necessary to prepare all students for safely and effectively executing and 
+participating in curriculum sorties. 
+CF 6100 Airmanship Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the airmanship & mission planning fundamentals required for safe, disciplined, and effective 
+mission participation. 
+TLO 2. Demonstrate fundamental aircraft handling & systems management proficiency. 
+TLO 3. Utilize CRM principles. 
+TLO 4. Develop a structured planning and briefing methodology. 
+ 
+CF 6101A Airmanship Intro (ABM/CSO/FTE/RPA) 
+CF 6102A Airmanship Lecture (ABM/FTE) 
+CF 6103G C-172 Ground School (ABM/CSO/FTE/RPA) 
+The airmanship lecture introduces and reinforces basic aircraft concepts to students with limited aviation experience. 
+The purpose is to build basic airmanship knowledge and skills required for students at TPS.  
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 6110-4F C-172 Airmanship FA-1-5 (ABM/FTE) 
+The profiles for the flights are structured to start with the most basic aviation skills and subsequently build in 
+complexity. The purpose of these hours is to expose the student to various aviation concepts common to ordinary flight. 
+There is no requirement for these students to demonstrate solo proficiency in any maneuver. 
+Prerequisites: 
+CF 6103G C-172 Ground School (ABM/CSO/FTE/RPA) 
+ 
+CF 6120-1F C-172 Airmanship CA-1-2 (CSO) 
+Due to their previous aviation experience, CSO students will only receive 1-2 airmanship flights that consist of a 
+compilation of the contact and instrument tasks from CF 6110-14F. 
+Prerequisites: 
+CF 6103G C-172 Ground School (ABM/CSO/FTE/RPA) 
+ 
+CF 6130A Curriculum Aircraft Familiarization (ABM/CSO/FTE/RPA) 
+This block covers a basic overview of the aircraft familiarization flights each ABM, CSO, FTE, and RPA student will 
+have in the C-12, T-38, and F-16. 
+Prerequisites: 
+AN 5130A Check Flight Introduction  
+ 
+
+
+===== PAGE 21 =====
+ 
+21 
+ 
+CF 6200 Glider Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall key elements of high L/D aircraft operation and energy management.  
+ 
+CF 6201M Glider Familiarization and Solo MIB (FTC) 
+CF 6202-3F Glider Familiarization (ABM/CSO/FTE/select P/RPA) 
+The purpose of the glider familiarization flights is to become familiar with glider (high L/D) flying while observing 
+and practicing energy management. All students will receive at least two glider flights. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 6210-5F Glider Familiarization and Solo (select P) 
+Time, weather, and proficiency allowing, select pilots will complete a familiarization and solo flight profile. 
+Prerequisites: 
+CF 6201M Glider Familiarization and Solo MIB (FTC)  
+ 
+
+
+===== PAGE 22 =====
+ 
+22 
+ 
+CF 6300 T-38 Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate proficiency in T-38 operations. 
+ 
+CF 6301G T-38 Systems Refresher/Ground School 
+CF 6302A T-38 Egress Academics 
+CF 6303S T-38 Egress 
+CF 6304S T-38 Cockpit Familiarization (ABM/CSO/FTE/RPA/STC) 
+CF 6305S T-38 Cockpit Procedures Training (P) 
+The T-38 ground school will include an introduction to the T-38 check flight phase and instruction on T-38 systems to 
+include electrical abnormalities, avionics, engines, flight controls, and hydraulics. Training covers safety equipment and 
+egress procedures using either a training device or aircraft. The purpose of cockpit familiarization and procedures training 
+is to familiarize the student with T-38 mission preparation, aircraft procedures, operations limits, and emergency 
+procedures. Training occurs at the aircraft. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 6310B T-38 Ground School CBT (FTC) 
+A complement to the T-38 Ground School, the self-paced Computer Based Training is to be accomplished in the 
+student’s own time. Topics include a systems overview, electrical, controls and displays, fuel system, air conditioning and 
+pressurization. 
+Prerequisites: 
+CF 6301G T-38 Systems Refresher/Ground School 
+ 
+CF 6320A T-38 Compressor Stall Prevention (FTC) 
+Training on the procedures and techniques necessary to reduce the probability of a compressor stall and flameout 
+while operating the T-38. 
+Prerequisites: 
+CF 6301G T-38 Systems Refresher/Ground School 
+ 
+CF 6330E T-38 Pilot Open Book Test (P) 
+CF 6340E T-38 Pilot Closed Book Exam (CSO/P/RPA) 
+CF 6341E T-38 NRA Closed Book Exam (ABM/FTE) 
+CF 6350E T-38 Pilot Boldface (P) 
+CF 6351E T-38 Mission Support Boldface (ABM/CSO/FTE/RPA) 
+This testing includes the standard testing required in the AFI 11-2ftv2. 
+Prerequisites: 
+AN 5130A Check Flight Introduction [req’d for all] 
+ 
+CF 6360-2F T-38 CF-1-3 (P) 
+The objective of the T-38 check flights is to familiarize the student with T-38 aircraft operating procedures, AFTC 
+local operations procedures, and primary divert base procedures. TPS students that meet the requirements of these blocks 
+will be certified “crew solo”.  
+Prerequisites: 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5140A Ejection Decision Making 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+
+
+===== PAGE 23 =====
+ 
+23 
+ 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics  
+CF 5301A Crew Resource Management 
+CF 6305S T-38 Cockpit Procedures Training (P) 
+CF 6310B T-38 Ground School CBT (FTC) 
+CF 6320A T-38 Compressor Stall Prevention (FTC) 
+CF 6330E T-38 Pilot Open Book Test (P) 
+CF 6340E T-38 Pilot Closed Book Exam (CSO/P/RPA) 
+CF 6350E T-38 Pilot Boldface (P) 
+ 
+CF 6370F T-38 Flight Training (ABM/CSO/FTE) 
+The objective of the T-38 training flight is to introduce students to T-38 procedures, system operations, and checklist 
+compliance. Students will become familiar with local flight and training operations as well apply basic aerodynamic 
+principles during their sortie. 
+Prerequisites: 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5140A Ejection Decision Making 
+CF 5141A Introduction to Emergency Procedures (ABM/FTE/STC) 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics  
+CF 5301A Crew Resource Management 
+CF 6110F C-172 Airmanship FA-1 (ABM/FTE) 
+CF 6130A Curriculum Aircraft Familiarization (ABM/CSO/FTE/RPA) 
+CF 6304S T-38 Cockpit Familiarization (ABM/CSO/FTE/RPA/STC) 
+CF 6310B T-38 Ground School CBT (FTC) 
+CF 6320A T-38 Compressor Stall Prevention (FTC) 
+CF 6340E T-38 Pilot Closed Book Exam (CSO/P/RPA) 
+CF 6341E T-38 NRA Closed Book Exam (ABM/FTE) 
+CF 6351E T-38 Mission Support Boldface (ABM/CSO/FTE/RPA) 
+ 
+
+
+===== PAGE 24 =====
+ 
+24 
+ 
+Figure 5: CF 6300 T-38 Training (P) 
+
+
+===== PAGE 25 =====
+ 
+25 
+ 
+ 
+Figure 6: CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC) 
+
+
+===== PAGE 26 =====
+ 
+26 
+ 
+CF 6400 Calspan Variable Stability System Learjet Training 
+Following completion of the phase, students will be cleared “crew solo” in the ground control station. 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate proficiency in Learjet operations. 
+ 
+CF 6401G Calspan Variable Stability System Learjet Ground School (ABM/CSO/RPA) 
+CF 6402-3F Learjet CF-1-2 (ABM/CSO/RPA) 
+Introduces Calspan’s Variable Stability System Learjet. The ground school will cover basic operating 
+procedures, limits, and safety/egress. The objective of the Learjet check flights is to provide working 
+knowledge of the Learjet Ground Control Station. This training is for students in the Learjet data group 
+and will consist of two flights operated from the ground control station. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+CF 6621C Control Room Familiarization 
+ 
+CF 6410F Learjet Orientation (ABM/CSO/RPA) 
+Each student will also fly one flight onboard the Calspan Learjet for orientation with the VSS system. 
+This can be completed in conjunction with CF 6402-3F.  
+Prerequisites: 
+CF 6401G Calspan Variable Stability System Learjet Ground School (ABM/CSO/RPA) 
+
+
+===== PAGE 27 =====
+ 
+27 
+ 
+CF 6500 C-12 Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate proficiency in C-12 operations. 
+ 
+CF 6501G C-12 Ground School 
+CF 6502S C-12 Egress 
+CF 6503S C-12 Cockpit Familiarization (ABM/FTE/STC) 
+CF 6504S C-12 Cockpit Procedures Training (CSO/RPA) 
+CF 6505S C-12 Cockpit Procedures Training (P) 
+Classroom instruction on the operation of major sub-systems in the C-12, basic emergency 
+procedures, crew coordination responsibilities in the aircraft, and an introduction to C-12 performance 
+takeoff data. Egress training covers safety equipment and egress procedures. The purpose of cockpit 
+familiarization and procedures training is to familiarize the student with C-12 mission at the aircraft. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 6510E C-12 Open Book Exam (P, crew solo) 
+CF 6520E C-12 Pilot Closed Book Exam (P, crew solo) 
+CF 6521E C-12 MA Closed Book Exam (ABM/CSO/FTE/P, non-crew solo/RPA) 
+CF 6530E C-12 Pilot Boldface (CSO/P/RPA) 
+Testing conducted concurrently with T-38 testing. 
+Prerequisites: 
+AN 5130A Check Flight Introduction [req’d for all] 
+ 
+CF 6540-2F C-12 CF-1-3 (P, crew solo) 
+The purpose of the C-12 check flights is to familiarize the student with C-12 aircraft operating 
+procedures, local orientation of R-2515, and an orientation of the Edwards and Palmdale patterns. These 
+blocks include three sorties for pilots only in the C-12 data group. TPS students that complete the 
+blocks will be certified “crew solo” in the C-12.  
+Prerequisites: 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics  
+CF 5301A Crew Resource Management 
+CF 6505S C-12 Cockpit Procedures Training (P) 
+CF 6510E C-12 Open Book Exam (P, crew solo) 
+CF 6520E C-12 Pilot Closed Book Exam (P, crew solo) 
+CF 6530E C-12 Pilot Boldface (CSO/P/RPA) 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 28 =====
+ 
+28 
+ 
+CF 6550F C-12 Flight Training (ABM/CSO/FTE) 
+CF 6551F C-12 Flight Training (P, non-crew solo) 
+The objective of the C-12 training flights is to introduce students to C-12 procedures, system 
+operations, and checklist compliance. Students will become familiar with local flight and training 
+operations as well as learn to calculate basic aircraft TOLD.  
+Prerequisites: 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5141A Introduction to Emergency Procedures (ABM/FTE/STC) 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics 
+CF 5301A Crew Resource Management 
+CF 6110F C-172 Airmanship FA-1 (ABM/FTE) 
+CF 6130A Curriculum Aircraft Familiarization (ABM/CSO/FTE/RPA) 
+CF 6503S C-12 Cockpit Familiarization (ABM/FTE/STC) 
+CF 6504S C-12 Cockpit Procedures Training (CSO/RPA) 
+CF 6505S C-12 Cockpit Procedures Training (P) 
+CF 6521E C-12 MA Closed Book Exam (ABM/CSO/FTE/P, non-crew solo/RPA) 
+CF 6530E C-12 Pilot Boldface (CSO/P/RPA) 
+ 
+
+
+===== PAGE 29 =====
+ 
+29 
+ 
+CF 6600 F-16 and Control Room Training  
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate proficiency in F-16 operations. 
+TLO 2. Demonstrate proficiency in control room operations. 
+      
+CF 6601G F-16 Ground School (FTC) 
+CF 6602A F-16 Egress Academics (FTC) 
+CF 6603S F-16 Egress (FTC) 
+CF 6604S F-16 Cockpit Familiarization (ABM/CSO/FTE/RPA) 
+CF 6605S F-16 Cockpit Procedures Training (P) 
+Classroom instruction introducing the F-16 check flight training requirements, a systems overview, 
+and a detailed look at normal and emergency procedures. The academics also provide control room 
+interaction training requirements, control room role in systems monitoring, and how the control room 
+interacts during emergency procedures. Egress covers instruction on safety equipment and egress 
+procedures. On aircraft/trainer training covering safety equipment and egress procedures.  
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+ 
+CF 6610S F-16 Emergency Procedures Simulator (FTC) 
+This simulator is executed by pilot students to practice emergency procedures but will be observed by 
+all other students for awareness.  
+Prerequisites: 
+CF 6604S F-16 Cockpit Familiarization (ABM/CSO/FTE/RPA) 
+CF 6605S F-16 Cockpit Procedures Training (P) 
+ 
+CF 6620B Control Room Ground School 
+CF 6621C Control Room Familiarization 
+CF 6622C Control Room Observation (CSO/P/RPA) 
+The asynchronous block introduces students to basic control room operations and presents the 
+IADS® analysis software to the students. In addition to providing principles for good control room screen 
+design, the block introduces the major capabilities of the IADS software as well as techniques to confirm 
+proper system operation prior to mission start. Students will learn how to create real-time analysis 
+windows in IADS, how to display data effectively, how to insert event markers and use test points to take 
+notes, and how to use inherent IADS capabilities to streamline real-time execution. 
+The objective of the Control Room Familiarization is to introduce the student to control room 
+operations in a mission playback environment. The control room observation can be conducted along with 
+any other curriculum control room event using live aircraft. 
+Prerequisites: 
+AN 5130A Check Flight Introduction 
+TF 6201A Test Conduct Lecture 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 30 =====
+ 
+30 
+ 
+CF 6630E F-16 Open Book Exam (P, crew solo) 
+CF 6640E F-16 Pilot/WSO Closed Book Exam (P, crew solo) 
+CF 6641E F-16 MA Closed Book Exam (ABM/CSO/FTE/P, non-crew solo/RPA) 
+CF 6650E F-16 Pilot (TPS Stud Only) CAPS (P) 
+CF 6651E F-16 WSO & MSF CAPS (ABM/CSO/FTE/RPA) 
+Testing conducted concurrently with T-38 closed book testing. 
+Prerequisites: 
+CF 6601G F-16 Ground School (FTC) [req’d for all] 
+ 
+CF 6660S F-16 Emergency Procedures Checkout (P, crew solo) 
+This simulator ensures the student can adequately respond to emergency procedures during crew solo 
+operations prior to their final CF flight. 
+ 
+Prerequisites: 
+CF 6672F F-16 CF-3 (P) 
+ 
+CF 6670-3F F-16 CF-1-4 (P, crew solo) 
+The purpose of the F-16 check flights is to familiarize the student with F-16 aircraft operating 
+procedures, handling qualities, maneuvers, simulated flameout patterns, and operational limitations. 
+Students will also have a working knowledge of the local complex and airspace. The blocks include four 
+sorties for F-16 data group pilots only. TPS students that meet the requirements on all four sorties will 
+be certified “crew solo” in the F-16. 
+Prerequisites: 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5140A Ejection Decision Making 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics 
+CF 5301A Crew Resource Management 
+CF 6610S F-16 Emergency Procedures Simulator (FTC) 
+CF 6630E F-16 Open Book Exam (P, crew solo) 
+CF 6640E F-16 Pilot/WSO Closed Book Exam (P, crew solo) 
+CF 6650E F-16 Pilot (TPS Stud Only) CAPS (P) 
+CF 6660S F-16 Emergency Procedures Checkout (P, crew solo) [req’d for CF 6673F] 
+ 
+CF 6680F F-16 Flight Training (ABM/CSO/FTE/RPA) 
+CF 6681F F-16 Flight Training (P, non-crew solo) 
+The objective of the F-16 training flight is to introduce non-pilot students to F-16 procedures, system 
+operations, and checklist compliance. Students will become familiar with local flight and training 
+operations as well as observe basic aerodynamic principles during their sortie. Non-data group pilots will 
+receive the F-16 Training Flight to introduce F-16 procedures, systems operations, and checklist 
+compliance. The purpose of the training flight for student pilots, not in the F-16 group, is to provide a 
+limited scope orientation flight to help prepare them for future flights on one of the main curriculum 
+platforms. 
+
+
+===== PAGE 31 =====
+ 
+31 
+ 
+Prerequisites: 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5140A Ejection Decision Making 
+CF 5141A Introduction to Emergency Procedures (ABM/FTE/STC) 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics 
+CF 5301A Crew Resource Management 
+CF 6370F T-38 Flight Training (ABM/CSO/FTE) 
+CF 6604S F-16 Cockpit Familiarization (ABM/CSO/FTE/RPA) 
+CF 6610S F-16 Emergency Procedures Simulator (FTC) [req’d for P] 
+CF 6641E F-16 MA Closed Book Exam (ABM/CSO/FTE/P, non-crew solo/RPA) 
+CF 6650E F-16 Pilot (TPS Stud Only) CAPS (P) 
+CF 6651E F-16 WSO & MSF CAPS (ABM/CSO/FTE/RPA)  
+CF 6804F T-38 CF-4 (RPA) 
+ 
+
+
+===== PAGE 32 =====
+ 
+32 
+ 
+Figure 7: CF 6600 F-16 and Control Room Training (P) 
+
+
+===== PAGE 33 =====
+ 
+33 
+ 
+ 
+ 
+Figure 8: CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC) 
+
+
+===== PAGE 34 =====
+ 
+34 
+ 
+CF 6700 Formation Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Demonstrate proficiency in formation flight. 
+ 
+CF 6701F T-38 CF-Form (P) 
+These events orient the students with formation flying and prepare them for curriculum events 
+required chase and target support. 
+Prerequisites: 
+CF 6362F T-38 CF-3 (P) 
+ 
+
+
+===== PAGE 35 =====
+ 
+35 
+ 
+CF 6800 RPA Pilot Training 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1: Adapt to piloting high performance aircraft. 
+TLO 2: Demonstrate partial proficiency in C-12 & T-38 operations. 
+ 
+CF 6801-2F C-172 CF-1-2 (RPA) 
+Due to their previous aviation experience, RPA pilot students will only receive 1-2 C-172 flights that 
+consist of a compilation of the contact and instrument tasks from CF 6110-4F. Emphasis will be placed 
+on improving manned aircraft piloting skills. 
+Prerequisites 
+CF 6103G C-172 Ground School (ABM/CSO/FTE/RPA) 
+ 
+CF 6803F C-12 CF-3 (RPA) 
+Single ship C-12 flight designed as a progressive buildup in manned aircraft piloting skills. This flight 
+is accomplished after the C-172 flight(s). Also, this flight introduces to the student C-12 flight operations. 
+Prerequisites 
+CF 5120H Local Area Survival 
+CF 5130A Physiological Effects 
+CF 5210A Flight Safety Brief 
+CF 5220A Local Area Orientation Briefing 
+CF 5230A Electronic Flight Bag Training (FTC) 
+CF 5240E Marshalling Exam (CSO/P/RPA) 
+CF 5251H DAS Planeside Academics 
+CF 5301A Crew Resource Management 
+CF 6130A Curriculum Aircraft Familiarization (ABM/CSO/FTE/RPA) 
+CF 6504S C-12 Cockpit Procedures Training (CSO/RPA) 
+CF 6521E C-12 MA Closed Book Exam (ABM/CSO/FTE/P, non-crew solo/RPA) 
+CF 6530E C-12 Pilot Boldface (CSO/P/RPA) 
+CF 6801F C-172 CF-1 (RPA) 
+ 
+CF 6804F T-38 CF-4 (RPA) 
+Single ship T-38 flight designed as a progressive buildup in manned aircraft piloting skills. This flight 
+is accomplished after the CF-3 C-12 Training Flight. Also, this flight introduces the student to T-38 flight 
+operations. 
+Prerequisites 
+CF 5101H Emergency Parachute Training 
+CF 5110H Life Support Equipment Training 
+CF 5140A Ejection Decision Making 
+CF 6304S T-38 Cockpit Familiarization (ABM/CSO/FTE/RPA/STC) 
+CF 6310B T-38 Ground School CBT (FTC) 
+CF 6320A T-38 Compressor Stall Prevention (FTC) 
+CF 6340E T-38 Pilot Closed Book Exam (CSO/P/RPA) 
+CF 6351E T-38 Mission Support Boldface (ABM/CSO/FTE/RPA) 
+CF 6803F C-12 CF-3 (RPA) 
+ 
+ 
+ 
+
+
+===== PAGE 36 =====
+ 
+36 
+ 
+CF 6805F C-12 CF-5 Formation (RPA) 
+Formation C-12 flight designed as a progressive buildup in manned aircraft piloting skills. This flight 
+is accomplished after CF-3 or CF-5. 
+Prerequisites 
+CF 6803F C-12 CF-3 (RPA) 
+ 
+CF 6806F T-38 CF-6 Formation (RPA) 
+Formation T-38 flight designed as a progressive buildup in manned aircraft piloting skills. This flight 
+is accomplished after CF-4 and may be accomplished prior to CF-5. 
+Prerequisites 
+CF 6804F T-38 CF-4 (RPA)
+
+
+===== PAGE 37 =====
+ 
+37 
+ 
+Figure 9: CF 6800 RPA Pilot Training 

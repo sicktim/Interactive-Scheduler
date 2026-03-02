@@ -1,0 +1,141 @@
+/* ─── App Layout Grid ─── */
+.app-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app-header {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-surface);
+  backdrop-filter: blur(var(--surface-blur));
+  -webkit-backdrop-filter: blur(var(--surface-blur));
+  z-index: 50;
+}
+
+.scheduler-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+}
+
+.scheduler-subtitle {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.conflict-count-text {
+  color: var(--color-danger);
+  margin-left: 8px;
+}
+
+.saved-indicator {
+  font-size: 0.55rem;
+  color: var(--saved-color);
+  opacity: 0;
+  transition: opacity 0.3s;
+  margin-left: 8px;
+  font-weight: 400;
+}
+.saved-indicator.show { opacity: 1; }
+
+/* ─── View Tabs ─── */
+.view-tabs {
+  display: flex;
+  background: var(--bg-tab-group);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.view-tab {
+  padding: 4px 12px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.view-tab:hover { color: var(--text-secondary); }
+.view-tab.active { background: var(--accent-blue); color: white; }
+
+/* ─── Day Tabs ─── */
+.day-tabs { display: flex; gap: 2px; }
+
+.day-tab {
+  padding: 3px 10px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+.day-tab:hover { color: var(--text-secondary); background: var(--bg-hover-strong); }
+.day-tab.today { color: var(--accent-blue); border-bottom: 2px solid var(--accent-blue); }
+
+/* ─── Filter Button ─── */
+.filter-btn {
+  padding: 4px 12px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  border: 1px solid var(--border-btn);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover { background: var(--bg-hover-strong); border-color: var(--border-color); }
+
+.refresh-btn {
+  border-color: var(--refresh-border);
+  color: var(--refresh-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.refresh-btn-sub {
+  font-size: 0.45rem;
+  color: var(--refresh-sub-color);
+  font-weight: 400;
+}
+
+/* ─── Focus Toggle ─── */
+.focus-toggle-btn {
+  padding: 3px 10px;
+  font-size: 0.55rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.focus-toggle-btn.on { background: var(--accent-blue-bg); color: var(--accent-blue-text); border-color: var(--accent-blue-border); }
+.focus-toggle-btn.off { background: var(--bg-hover); color: var(--text-muted); border-color: var(--border-faint); }
+
+/* ─── Timeline Area ─── */
+.timeline-area {
+  grid-column: 1;
+  grid-row: 2;
+  overflow: auto;
+}
+
+/* ─── Rainbow Area ─── */
+.rainbow-area {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}

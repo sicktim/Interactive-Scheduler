@@ -1,0 +1,752 @@
+===== PAGE 42 =====
+ 
+42 
+ 
+Test and Evaluation Curriculum  
+The following sections contain descriptions for all courses and events for the Astronautical Sciences 
+Phase (STC Only), Flight Sciences Phases (FTC Only), Mission Systems Phase, Test Foundations Phase, 
+and Test Leadership Phase.  
+Astronautical Sciences Phase 
+In this phase, students will develop a deeper understanding of the technical and engineering aspects 
+and the considerations for T&E of space systems. Initial material will provide a baseline understanding of 
+T&E considerations for space systems and will build during the second half of the module which will 
+provide a greater level of detailed astronautical knowledge. A portion of the second half of this phase will 
+be taught by instructors from the USAFA Astronautics Department. Case studies and guest lectures and 
+homework assignments will reinforce material presented in the lectures. Concepts are further reinforced 
+with a practical exercise conducted with rockets in which a test event is planned, executed, and reported 
+on by the student with coaching from instructors. Additional hands-on events will include multiple lab, 
+FlatSat, and on-orbit exercises. An overview can be seen in Figure 12, where the 6000 level course may 
+be considered Fundamentals, while the 7000 level course include the systems needed, and the 8000 level 
+incudes advanced graduate treatments. Meanwhile, the 9000 level includes classified content, Practitioner 
+content and trial versions of candidate new courses. 
+ 
+References 
+The following textbooks and policy documents are either required or recommended for completion of 
+this phase and provided by USAF TPS: 
+1. Sellers, et al., Understanding Space: An Introduction to Astronautics, 4th ed., Space Technology 
+Series, 2014. 
+2. Wertz & Larson, Space Mission Analysis & Design, 3rd ed., Space Technology Library, 1999.  
+3. Vallado, Fundamentals of Astrodynamics and Applications, 3rd ed., Space Technology Library, 
+2007. 
+4. Corda, Introduction to Aerospace Engineering with a Flight Test Perspective, Wiley, 2017. 
+5. DODI 5000.89_DAFI 99-103 Capabilities-Based Test and Evaluation 
+6. DAFMAN 63-119 Mission-Oriented Test Readiness Certification 
+7. AFI 16-1001 Verification, Validation and Accreditation (VV&A) 
+8. DOD Cybersecurity T&E Guidebook 
+9. SSC Threat Test Guidance v1.1 (CUI—restricted access) 
+10. Luscher AF, Forsgren R. Seven axioms of good engineering: Development of a case study-based 
+course for NASA ASEE Annual Conference and Exposition, Conference Proceedings. 2016. 
+11. Bate, Mueller, White, Fundamentals of Astrodynamics, 2nd Edition., 2020 
+12. Robert E. McShea, Test and Evaluation of Aircraft Avionics and Weapon Systems, SciTech 
+Publishing, 2010 
+13. Myron Kayton & Walter R. Fried, Avionics Navigation Systems, 2nd Edition, John Wiley & 
+Sons, 1997 
+14. George W. Stimson, Introduction to Airborne RADAR, 3rd Edition, SciTech Publishing, 2014 
+15. David Adamy, EW101 – A First Course in Electronic Warfare, Artech House, 2001 
+16. Michael Kanaan, T-Minus AI, BenBella Books, Inc., 2020 
+17. Gerald C. Holst, Testing and Evaluation of Infrared Imaging Systems, 3rd Edition, SPIE Press, 
+2008. 
+18. Paul G. Fahlstrom & Thomas J. Gleason, Introduction to UAV Systems, 3rd Edition, UAV 
+Systems, 2009. 
+19. David Adamy, Practical Communication Theory, Lynx Publishing, 1994. 
+
+
+===== PAGE 43 =====
+ 
+43 
+ 
+20. Montgomery, Design and Analysis of Experiments, John Wiley and Sons, Inc, 7th/8th Edition, 
+2009/2013. 
+21. Montgomery, Runger, Hubele, Engineering Statistics, John Wiley and Sons, Inc, 5th Edition, 
+2011. 
+22. M. Anderson and P. Whitsomb, DOE Simplified, Productivity Press, 2nd Edition, 2007. 
+23. Ramsey and Schafer, Statistical Sleuth: A Course in Methods of Data, Cengage Learning, 2nd/3rd 
+Edition, 2002/2013. 
+24. Ramsey and Schafer, Statistical Sleuth: Solutions Manual Methods of Data Analysis, Duxbury 
+Thomson Learning, 2nd/3rd Edition, 2002/2013. 
+25. Wie, B. Space Vehicle Dynamics and Control, 1st Ed. AIAA Education Series, Reston, USA 
+1998.  
+26. Gruntman, M. Fundamentals of Space Missions: Problems with Solutions, Interstellar Trail Press, 
+Seabrook, USA 2022. 
+ 
+ 
+Figure 12: Astronautical Sciences Overview 
+
+
+===== PAGE 44 =====
+ 
+44 
+ 
+AS 6000 Fundamentals 
+(4 Semester Credit Hours) 
+This 6000-level course gives the student an understanding of orbital motion in inertial and relative 
+frames. Students learn how to generate orbit states and design orbit maneuvers based on an understanding 
+of orbital mechanics and astrodynamics. Students will also learn about satellite sub-systems and the 
+underlying physics that supports their function. 
+AS 6100 MATLAB Primer 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall the basics of MATLAB including declaring variables, simple arithmetic operations, 
+vectors and arrays, loops, functions, and plotting. 
+ 
+AS 6101B MATLAB Primer 
+This event completed prior to arrival at the school gives the student the necessary skills using 
+MATLAB for the following modules within the course. 
+Prerequisites: 
+TPS Enrollment 
+ 
+
+
+===== PAGE 45 =====
+ 
+45 
+ 
+AS 6200 Inertial Orbits 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Use the basic vocabulary of orbits to describe a satellite’s motion through space. 
+TLO 2. Transform satellite position between a variety of inertial and relative coordinate frames. 
+TLO 3. Propagate orbits over time to estimate the future position of a satellite.  
+TLO 4. Complete multi-step calculations to complete an orbit transfer in inertial space and assess 
+the pros and cons of different typed of transfer maneuvers. 
+TLO 5. Understand the maneuver primitives associated with satellite motion in relative space. 
+ 
+AS 6201A The Space Environment Lecture 
+AS 6202W The Space Environment Assessment 
+AS 6203Z The Space Environment Debrief 
+This block includes the definition of space, basic physics of space, the natural space environment, the 
+man-made space environment, the physical laws that govern the movement of an orbital body, Kepler’s 
+Laws, Newton’s Laws, Universal Laws of Gravity, and movement in orbits, solar winds and other effects 
+on space craft. The lecture is followed by a series of case studies of issues/failures of satellites 
+encountered due to the Space Environment related to the environment in practical situations. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction  
+ 
+AS 6210A Inertial Orbits Lecture 
+AS 6211E Inertial Orbits Exam 
+AS 6212Z Inertial Orbits Debrief 
+These lectures cover Inertial Orbits with topics in Orbit Basics, Classical Orbital Elements, Orbit 
+Regimes, Sidereal & Solar Time Comparison, Perturbations, Maneuver Forensics as related to 
+Perturbations, Ground Traces, Orbital Coordinate Frames, and Time Systems. Students will be expected 
+to perform hand calculations related to the topics presented, create their own tools to perform repeated 
+calculations, and will be assigned homework and projects to reinforce concepts presented in block. 
+Students will utilize Systems Tool Kit Software & www.usspacetraining.com as learning aids in 
+visualizing concepts and for use in assigned projects. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction  
+AS 6101B MATLAB Primer 
+ 
+AS 6220A Aerocube Ephemeris Update Lecture 
+AS 6221O Aerocube Ephemeris Update Assessment  
+AS 6222Z Aerocube Ephemeris Update Debrief 
+Students will perform an ephemeris update on the Aerocube satellite and assess the difference 
+between the off-board observed state and the on-board propagated state. 
+Prerequisites: 
+AS 6210A Inertial Orbits Lecture 
+SO 6241O Aerocube Crew Solo  
+ 
+
+
+===== PAGE 46 =====
+ 
+46 
+ 
+AS 6300 Maneuver Design 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Use the basic vocabulary of orbits to describe a satellite’s motion through space. 
+TLO 2. Transform satellite position between a variety of inertial and relative coordinate frames. 
+TLO 3. Propagate orbits over time to estimate the future position of a satellite.  
+TLO 4. Complete multi-step calculations to complete an orbit transfer in inertial space and assess 
+the pros and cons of different typed of transfer maneuvers. 
+TLO 5. Understand the maneuver primitives associated with satellite motion in relative space. 
+ 
+AS 6301A Inertial Maneuver Design Lecture 
+AS 6302E Inertial Maneuver Design Assessment 
+AS 6303Z Inertial Maneuver Design Debrief 
+These blocks cover Inertial Maneuvers with topics including Orbit Velocity, Hohmann Transfer, 
+Plane Changes, Combined Maneuvers, Launch & Transfer Maneuvers to GEO orbits, Station-keeping, 
+Re-location, Lambert Transfers, and Mission aspects of orbit maneuvering. Students will be expected to 
+perform hand calculations related to the topics presented, build on their own tools to perform repeated 
+calculations, and will be assigned homework and projects to reinforce concepts presented in block. 
+Students will utilize excel tools, Systems Tool Kit Software & www.usspacetraining.com as aids in 
+visualizing concepts and for use in assigned projects 
+Prerequisites: 
+AS 6210A Inertial Orbits Lecture 
+ 
+
+
+===== PAGE 47 =====
+ 
+47 
+ 
+AS 6400 Orbit Estimation 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Use the basic vocabulary of orbits to describe a satellite’s motion through space. 
+TLO 2. Transform satellite position between a variety of inertial and relative coordinate frames. 
+TLO 3. Describe Kalmann filters and use them in Space Domain Awareness (SDA) applications. 
+TLO 4. Describe the components of an attitude control subsystem and explain their interactions. 
+TLO 5. Calculate satellite attitude using quaternions. 
+ 
+AS 6401A Inertial Orbit Estimation Lecture 
+AS 6402E Inertial Orbit Estimation Assessment 
+AS 6403Z Inertial Orbit Estimation Debrief 
+This section covers Initial Orbit Determination with topics including Orbit Determination approaches, 
+Initial Orbit Determination and Batch processing. Students will utilize excel tools and Systems Tool Kit 
+Software & www.usspacetraining.com as aids in visualizing concepts. Students will execute an orbital 
+determination project using MATLAB. A test covering the Inertial Orbit Material will be administered to 
+confirm comprehension of the material. 
+Prerequisites: 
+AS 6301A Inertial Maneuver Design Lecture 
+ 
+AS 6410A State Estimation Exercise Lecture 
+AS 6411L State Estimation Exercise Assessment 
+This exercise is the integration event for Estimation and Kalman Filtering. Students will be given a 
+scenario to evaluate the relative navigation system with multiple Kalman filter settings for a new satellite 
+capable of rendezvous and proximity operations. Students will be given a test plan and measures to 
+execute within the WebTools simulator and evaluate their system using a series of pre-planned test 
+maneuvers. Students must apply knowledge gained during the Test Foundations series to plan, execute, 
+analyze, and report on test results. After executing a series of test points, the test team will have to 
+mission plan a new test point to utilize the remaining available velocity of the satellite within the 
+simulator to get a more complete data set on one of the Kalman filters. Upon completion of their test 
+points, students will complete and turn in a limited scope report based on the test data. 
+Prerequisites: 
+AS 6402E Inertial Orbit Estimation Assessment 
+ 
+
+
+===== PAGE 48 =====
+ 
+48 
+ 
+AS 6500 Cis-Lunar Orbits 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Use the basic vocabulary of orbits to describe a satellite’s motion through space. 
+TLO 2. Transform satellite position between a variety of inertial and relative coordinate frames. 
+TLO 3. Propagate orbits over time to estimate the future position of a satellite. 
+TLO 4. Complete multi-step calculations to complete an orbit transfer in inertial space and assess 
+the pros and cons of different types of transfer maneuvers. 
+TLO 5. Understand the maneuver primitives associated with satellite motion in relative space 
+TLO 6. Plan Rendezvous and Proximity Operations (RPO) with consideration for mission 
+objectives, sun angles, and safety of flight 
+TLO 7. Describe how control systems are used in relative flight and manipulate controller settings 
+to optimize performance based on mission type 
+TLO 8. Calculate satellite attitude using quaternions.  
+ 
+AS 6501A Cis-Lunar Orbits Lecture 
+AS 6502E Cis-Lunar Orbits Assessment 
+AS 6503Z Cis-Lunar Orbits Debrief 
+These blocks continue to build upon the previous material and focus on the topic of Circular 
+Restricted Three Body Problems (CR3BP). Students will be expected to perform hand calculations related 
+to the topics presented and will be assigned homework to reinforce concepts presented in block. 
+Prerequisites: 
+AS 6402E Inertial Orbit Estimation Assessment 
+ 
+ 
+
+
+===== PAGE 49 =====
+ 
+49 
+ 
+AS 6600 Data-Driven Control 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Understand the use of different control methods and their applications. 
+TLO 2. Understand the use of different simulations and their applications. 
+TLO 3. Understand different data collection methods and their applications. 
+TLO 4. Evaluate the “sim to real gap” for a given scenario. 
+TLO 5. Create hazard and risk mitigation strategies for various autonomy scenarios. 
+TLO 6. Apply control methods to different applications. 
+TLO 7. Analyze robustness methods and training tools for their accuracy and proper information. 
+TLO 8. Analyze methods for testing autonomous systems. 
+ 
+AS 6601A Data-Driven Analysis and Control for Domain Sciences Lecture 
+AS 6602E Data-Driven Analysis and Control for Domain Sciences Exam 
+AS 6603Z Data-Driven Analysis and Control for Domain Sciences Debrief 
+This block will cover advanced Data-Driven control techniques. It includes a broad scope of topics 
+that build an understanding of aspects to consider when testing an autonomy-based system.  Topics 
+include identifying and analyzing different types of control systems and when to apply them, describing 
+different categories of data and proper methods for their analysis, describing different forms and fidelity 
+of simulation and their application, analyzing the use of Monte Carlo testing to include its advantages and 
+pitfalls, and identifying key issues to consider when building up to and executing flight tests. It is taught 
+consecutively with FQ 7300 Data-Driven Control. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+ 
+
+
+===== PAGE 50 =====
+ 
+50 
+ 
+AS 7000 Satellite Sub-systems 
+(3 Semester Credit Hours) 
+This 7000-level course gives the student an understanding of satellite sub-systems and the underlying 
+physics that supports their function.  
+AS 7100 Satellite Sub-systems 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the overall function and flow of a satellite propulsion system and calculate thrust 
+using the rocket equation. 
+TLO 2. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to describe how control systems are used in relative flight and manipulate 
+controller settings to optimize performance based on mission type. 
+TLO 3. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to describe the components of an attitude control subsystem and explain 
+their interactions. 
+TLO 4. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to calculate satellite attitude using quaternions. 
+TLO 5. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to describe the components of an attitude control subsystem and explain 
+their interactions. 
+TLO 6. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to calculate satellite attitude using quaternions. 
+TLO 7. Describe how control systems are used in relative flight and use data driven test and AI to 
+analyze and evaluate test data to formulate conclusions and recommendations to manipulate 
+controller settings to optimize performance based on mission type 
+TLO 8. Use data driven test and AI to analyze and evaluate test data to formulate conclusions and 
+recommendations to calculate satellite attitude using quaternions. 
+TLO 9. Evaluate the mass properties of the System Under Test 
+TLO 10. Evaluate the power generation and distribution system as it is defined within the designed 
+reference orbit 
+TLO 11. Evaluate the thermal management system of the system under test within the designed 
+reference orbit 
+TLO 12. Construct a model for Orbital Average Power and a Designed Reference Orbit Thermal 
+Budget 
+TLO 13. Provide an overview of the assembly, integration, characterization of subsystems, and 
+mission testing conducted prior to launch. 
+TLO 14. Report characterization, evaluation, and recommendations of lab events in a technical test 
+report deliverable for each lab session. 
+ 
+AS 7101A Satellite Systems Review Lecture 
+AS 7102E Assessments 
+AS 7103L Lab 
+AS 7104Z Debrief 
+These blocks review common spacecraft systems, the systems engineering process that influences 
+design decisions and design budgets. An overview of each major subsystem, EPS, Structure, Command 
+and Data Handling System, thermal management and Attitude Determination and Control System. 
+Students will be introduced to the EyasSat laboratory training model in preparation for labs. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+
+
+===== PAGE 51 =====
+ 
+51 
+ 
+ 
+AS 7110A Satellite Attitude Dynamics, Estimation, and Control Lecture 
+AS 7111E Satellite Attitude Dynamics, Estimation, and Control Assessments 
+AS 7112L Satellite Attitude Dynamics, Estimation, and Control Lab 
+AS 7113Z Satellite Attitude Dynamics, Estimation, and Control Debrief 
+These blocks elaborate on nonlinear (and linearized) motion state dynamics (including autogenetic 
+gravity center location); nonlinear state estimation; and nonlinear and linear state control (e.g. disturbance 
+rejection). 
+Lectures include time propagation of Euler’s coupled, nonlinear moment equations relative to inertial 
+reference frames and expressed in coordinates of the body reference frame. Luenberger observers are 
+introduced as one option for nonlinear state estimation. Nonlinear feedforward control is introduced with 
+dynamic inversion for feedback, optionally augmented by linear state feedback control.  
+Structural dynamics are taught in the context of controlling highly flexible space robotics with hands-
+on elaboration on the robotic on-orbit trainer during AS 7140S GROOT Handling Qualities. These 
+lectures can take place before or after AS 7150O. 
+The lab provides additional details into attitude estimation and control design considerations, 
+reference frames, Euler angles & quaternions, coordinate frame rotations, attitude sensor types / design, 
+and an introduction to attitude control. Students will be expected to perform hand calculations related to 
+the topics presented and create their own tools to perform repeated calculations. This lab provides hands-
+on experience using the Aerocube satellite system of the material learned in AS 7110A Satellite Attitude 
+Estimation & Control. 
+Prerequisites: 
+AS 7101A Satellite Systems Review 
+ 
+AS 7120A Satellite Power Subsystems 
+This lecture provides additional details into Power Subsystem architecture, details on solar panels, 
+battery design, power distribution, conditioning & fusing, fault design, and power balance analysis. 
+Students will work on a project with a provided excel tool for determining operations design to ensure 
+positive energy balance for a CubeSat. 
+Prerequisites: 
+AS 7101A Satellite Systems Review 
+ 
+AS 7130L Satellite Systems Labs 
+Students will conduct multiple lab exercises using the EyasSat small satellite model aligned to the 
+various satellite subsystems including the EPS, Structure, GNC and CDH. Basic tests will be conducted 
+to familiarize students with the subsystems and determine if the EyasSat meets specified requirements. 
+Prerequisites: 
+AS 6402E Inertial Orbit Estimation Assessment 
+ 
+AS 7140S GROOT Handling Qualities 
+Students will assess the handling qualities of the GROOT satellite in a variety of configurations and 
+analyze the platform’s stability in translational and rotational maneuver. Students will assess the handling 
+qualities of the GROOT satellite including ability to perform the mission it was designed for. This 
+exercise will require students to apply knowledge gained during the Test Foundations series to plan, 
+execute, analyze, and report on their test results. 
+Prerequisites: 
+AS 6402E Inertial Orbit Estimation Assessment 
+SO 6140S GROOT Check-ride 
+
+
+===== PAGE 52 =====
+ 
+52 
+ 
+TF 6102A Test Planning Lecture 
+TF 6201A Test Conduct Lecture 
+TF 6320A Data Presentation Lecture 
+TF 6401A Test Reporting Lecture 
+ 
+AS 7150O Aerocube Attitude Testing 
+Students will plan a series of passes to assess the Aerocube ADCS. Students will use their test results 
+to develop an updated moment of inertia matrix for the satellite.  
+Prerequisites: 
+AS 6402E Inertial Orbit Estimation Assessment  
+SO 6241O Aerocube Crew Solo 
+ 
+AS 7160A Structural Dynamics and CG Auto-location 
+Students will learn loads analysis for single degree of freedom systems; attitude trajectories; issues 
+we create; deterministic artificial intelligence; exact linear parameterization vs. linearization; mass 
+moments of inertia (matrix/tensor); feedback control and observers: and linear and nonlinear motion state 
+observers. A 2-body mini-Groot example will be offered leading to understandings of structural filtering 
+and culminating in a computation lab assignment: an n-body mini-Groot control with Bandpass + Notch 
+and trajectory shaping. The culminating hands–on activity includes application to GROOT.  
+Prerequisites: 
+AS 7150O Aerocube Attitude Testing  
+ 
+
+
+===== PAGE 53 =====
+ 
+53 
+ 
+AS 7200 Satellite Testing 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall concepts associated with satellite testing.  
+ 
+AS 7201A Satellite Pre-Launch Testing Lectures 
+AS 7202E Satellite Pre-Launch Testing Assessment 
+AS 7203Z Satellite Pre-Launch Testing Debrief 
+This block provides an overview of typical satellite test campaign prior to launch, including test 
+progression during assembly and integration, environmental tests, and mission testing.  
+Prerequisites: 
+AS 7101A Satellite Systems Review 
+ 
+AS 7210A Satellite “Bus” Launch and Early Orbit Period Lecture 
+AS 7211E Satellite “Bus” Launch and Early Orbit Period Assessment 
+AS 7212Z Satellite “Bus” Launch and Early Orbit Period Debrief 
+This block provides an overview of typical initial satellite testing after launch, with examples of 
+failures, setting priorities for test to minimize probability of failure, insertion orbit considerations, 
+timelines and challenges to timelines like space weather. 
+Prerequisites: 
+AS 7101A Satellite Systems Review 
+ 
+
+
+===== PAGE 54 =====
+ 
+54 
+ 
+AS 7300 Space Propulsion 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Describe the overall function and flow of a satellite propulsion system and calculate thrust 
+using the rocket equation. 
+TLO 2. Describe the components of an attitude control subsystem and explain their interactions. 
+TLO 3. Provide an overview of the assembly, integration, environmental, and mission testing 
+conducted prior to launch. 
+TLO 4. Explain the check-out process for satellite bus components during Launch & Early Orbit 
+Period (LEOPS)  
+TLO 5. Describe the overall function and flow of a satellite propulsion system and calculate thrust 
+using the rocket equation. 
+ 
+AS 7301A Space Propulsion Lecture 
+AS 7302L Rocket Test Lab Tour 
+AS 7303E Space Propulsion Assessment 
+AS 7304Z Space Propulsion Debrief 
+This lecture describes propulsion basics, including the thrust equation, specific impulse and 
+efficiency, the basic properties of a rocket nozzle, solid fueled rockets, liquid propellant rockets, 
+advantages and disadvantages of different fuels, and briefly discusses some rocket testing requirements. 
+Additionally, on-orbit propulsion systems, including function, limitations, and applications will be 
+discussed. Concepts are reinforced with a tour of the AFRL rocket test facilities at Edwards AFB. 
+Students will develop background knowledge to perform basic calculations of rocket/thruster 
+performance. 
+Prerequisite: 
+AS 7101A Satellite Systems Review 
+ 
+AS 7310A Rocket Sim Assignment Brief 
+AS 7311M Rocket Test Flight MIB 
+AS 7312H Rocket Telemetry Familiarization 
+AS 7313F Rocket Thrust Stand and Familiarization Launch 
+AS 7314W Rocket Test Plan Review 
+AS 7315F Rocket Test Flight 
+AS 7316R Rocket Test Flight V&V Report 
+Demonstrate and practice test planning, conduct and reporting for V&V of a rocket trajectory 
+simulation. Students will evaluate a simulation developed by another student group through ground and 
+open-air test using representative model rockets. Students will assemble model rockets and integrate 
+instrumentation systems. Students will develop a test plan, execute test event(s) and report on results. 
+Prerequisite: 
+AS 7301A Space Propulsion Lecture 
+PF 6201A Model and Simulation Lecture  
+ 
+
+
+===== PAGE 55 =====
+ 
+55 
+ 
+AS 8000 Astrodynamics 
+(2 Semester Credit Hours) 
+This 8000-level course gives the student an understanding of orbital motion in relative space. 
+Students learn how to manipulate orbits and plan rendezvous and proximity maneuvers based on an 
+understanding of orbital mechanics and astrodynamics.  
+AS 8100 Relative Orbits 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Understand the relative frames and the equations of motion which govern satellite motion 
+in relative space. 
+TLO 2. Understand types of relative orbits, their mission effectiveness and safety of flight for each 
+type. 
+TLO 3. Plan various relative orbit missions to understand the effectiveness of different relative 
+orbit types. 
+TLO 4. Describe the maneuver primitives associated with satellite motion in relative space. 
+TLO 5. Design Rendezvous and Proximity Operations (RPO) with consideration for mission 
+objectives, sun angles, and safety of flight. 
+ 
+AS 8101A Relative Orbits Lecture 
+AS 8102E Relative Orbits Assessment 
+AS 8103Z Relative Orbits Debrief 
+Lectures cover Relative Orbits with topics including an Introduction to Relative Orbit Dynamics, 
+Clohessey-Wiltshire-Hills Equations, Relative Orbit Mission Approaches, Proximity Operations & 
+Waypoint Planning, and Time references and Sun Angle considerations. Students will utilize excel tools, 
+www.usspacetraining.com and will be expected to build on their own tools to perform repeated 
+calculations. 
+Prerequisites: 
+AS 6501A Cis-Lunar Orbits Lecture 
+ 
+AS 8110A RPO Mission Trajectory Design Lecture 
+AS 8111Y RPO Mission Trajectory Design Oral Report 
+AS 8112Z RPO Mission Trajectory Design Debrief 
+This practical is the synthesis event for proximity operations. Students will be given a series of test 
+cases and will use the building blocks from AS 8110A to develop trajectories that achieve these 
+objectives. The final assessment will be to present trajectory courses of action. 
+Prerequisites: 
+AS 8101A Relative Orbits Lecture 
+ 
+
+
+===== PAGE 56 =====
+ 
+56 
+ 
+AS 8200 RPO Path Planning 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Understand the maneuver primitives associated with satellite motion in relative space. 
+TLO 2. Plan Rendezvous and Proximity Operations (RPO) with consideration for mission 
+objectives, sun angles, and safety of flight. 
+TLO 3. Describe how control systems are used in relative flight and manipulate controller settings 
+to optimize performance based on mission type. 
+TLO 4. Describe Kalmann filters and use them in Space Domain Awareness (SDA) applications. 
+ 
+AS 8201A Rendezvous & Proximity Ops Planning Lecture 
+AS 8202E Rendezvous & Proximity Ops Planning Assessment 
+AS 8203Z Rendezvous & Proximity Ops Planning Debrief 
+Lectures cover Rendezvous and Proximity Operations Planning with topics including Rendezvous 
+Approach Considerations, Inertial Orbit Maneuver sequences to setup Rendezvous, and Proximity 
+Operation Mission Planning. Students will utilize excel tools, www.usspacetraining.com and will be 
+expected to build on their own tools to perform repeated calculations. 
+Prerequisites: 
+AS 8110A RPO Mission Trajectory Design Lecture 
+ 
+AS 8210A RPO Path Controllers Lecture 
+AS 8211E RPO Path Controllers Assessment 
+AS 8212Z RPO Path Controllers Debrief 
+The lecture will cover RPO Controllers with topics including Controller Concepts, Time-Based RPO 
+Controllers and Event-Based RPO Controllers. Students will utilize excel tools and 
+www.usspacetraining.com. Projects will include using excel tools to determine appropriate controller 
+settings and then the simulator to introduce how controllers are used in flight missions. A test or larger 
+project will be administered covering the last three topics on Relative Orbits to assess student 
+comprehension. 
+Prerequisites: 
+AS 8201A Rendezvous & Proximity Ops Planning Lecture 
+ 
+
+
+===== PAGE 57 =====
+ 
+57 
+ 
+AS 8300 RPO Navigation 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Understand how measurement type and uncertainty affect the accuracy of our state 
+estimate and how we characterize the “goodness” of our estimate. 
+TLO 2. Understand the use of Kalman filters to estimate the relative state of a vehicle performing 
+an RPO. 
+ 
+AS 8301A Advanced Kalman Filter and Relative Navigation Lecture 
+AS 8302E Advanced Kalman Filter and Relative Navigation Assessment 
+AS 8303Z Advanced Kalman Filter and Relative Navigation Debrief 
+This course will teach students advanced Kalman Filtering and relative navigation for space 
+applications. Students will develop an understanding between sensor performance measures and Kalman 
+filter performance with appropriate test measures. The students will also gain an understanding of how 
+RPO profiles and maneuvers affect state estimates and ability to assess a Rel Nav system. Students will 
+gain hands on experience with the simulator on www.usspacetraining.com to demonstrate key concepts 
+and prepare them for estimation testing and the subsequent estimation exercise 
+Prerequisites: 
+AS 8201A Rendezvous & Proximity Ops Planning Lecture 
+ 
+AS 8310A Estimation Exercise Lecture 
+AS 8311E Estimation Exercise Assessment 
+The students will be given a test plan and measures to execute within the Webtools simulator. 
+Students will evaluate their system in the simulator using a series of pre-planned test maneuvers. This 
+exercise will also require students to apply knowledge gained during the Test Foundations series to plan, 
+execute, analyze, and report on their test results. After executing a series of test points, the test team will 
+have to mission plan a new test point to utilize the remaining delta-v on the satellite within the simulator 
+to get a more complete data set on one of the Kalman filters. Upon completion of their test points, 
+students will complete and turn in a limited scope report based on the test data. This exercise is the 
+integration event for Estimation and Kalman filtering. Students will be given a scenario to evaluate the 
+relative navigation system w/multiple Kalman filter settings for a new RPO-capable satellite. 
+Prerequisites: 
+AS 8301A Advanced Kalman Filter and Relative Navigation Lecture 
+ 
+
+
+===== PAGE 58 =====
+ 
+58 
+ 
+AS 9000 Threats & Special Topics 
+(1 Semester Credit Hours) 
+This 9000-level course provides classified discussions of threats to systems on orbit, independent 
+study, and other special topics.  
+AS 9100 Advanced Topics 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Perform a threat surface analysis for a satellite system.  
+TLO 2. Develop a campaign to test countermeasures, and tactics, techniques and procedures (TTP) 
+designed to mitigate against a threat. 
+ 
+AS 9101A Advanced Topics in Astronautical Sciences Lecture 
+Directed advanced study in Astronautical Engineering on a subject of mutual interest to student and 
+staff member. May be repeated for credit with a different topic. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+AS 9110A Independent Study in Astronautical Sciences 
+AS 9111R Independent Study in Astronautical Sciences Report 
+Individual study and research supervised by a faculty/staff member. Topic established with the 
+department head. Final report.  
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+AS 9120A Hypersonic Aerodynamics 
+This course is intended to provide students with a foundational understanding of the unique 
+aerodynamic principles, thermal challenges, and vehicle dynamics associated with atmospheric re-entry 
+from orbit.  
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+AS 9130A Re-entry Navigation and Low L/D Flight 
+This course is intended to provide an understanding of the specific GNC challenges of guiding a low-
+maneuverability vehicle to a precise atmospheric interface point.  
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+AS 9140A Space Domain Awareness (SDA) 
+This course is intended to equip students with a comprehensive understanding of the space 
+environment, threats, and the systems used to maintain awareness.  
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+
+
+===== PAGE 59 =====
+ 
+59 
+ 
+AS 9200 Space Threats 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall critical concepts of space threats.  
+ 
+AS 9201A Threats to Space Systems Lecture 
+AS 9202E Threats to Space Systems Assessment 
+AS 9203Z Threats to Space Systems Debrief 
+Lectures cover the five major threat threads of Co-orbital Anti-Satellites (ASAT), direct ascent 
+ASAT, Directed Energy Weapons (DEW), Cyber Attack, and Ground Infrastructure Attack. This course 
+will consist of a series of classified lectures and will discuss adversary threats with the potential to restrict 
+US freedom of action in space and disrupt, deny, degrade, and destroy space assets providing critical 
+capabilities to the warfighter. Synthesis event where students will perform a threat surface analysis of a 
+space system against a specific threat thread and brief it to the block. Students will be assessed on their 
+threat analysis and presentation. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+AS 9210L Threat Workshops 
+This workshop is the synthesis event where students will perform a threat surface analysis of a space 
+system against a specific threat thread and brief it to the block. Students will be assessed on their threat 
+analysis and presentation. 
+Prerequisites: 
+AS 9201A Threats to Space Systems Lecture 
+ 
+
+
+===== PAGE 60 =====
+ 
+60 
+ 
+AS 9300 Weapon System Evaluation 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Explain how the WSEP is applied to Space Programs. 
+ 
+AS 9301A Weapons System Evaluation Program (WSEP) Guest Lecture (US Only) 
+This lesson will be taught at the TS/SCI level. A guest lecturer will discuss the Weapons System 
+Evaluation Program as it relates to space programs. The lesson will discuss the creation and development 
+of the program, and some of the challenges and successes. 
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+
+
+===== PAGE 61 =====
+ 
+61 
+ 
+AS 9400 Classified Topics 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Discuss information from classified programs and describe how lessons learned relate to 
+inertial and relative orbit courseware. 
+ 
+AS 9401A Classified Topics (US Only) 
+These lectures will cover Classified Topics with a session at the conclusion of the Inertial Orbit topics 
+and a session at the end of the Relative Orbit topics. Students will be able to share their experiences from 
+prior classified programs and will be introduced to several topics including information on our recent 
+adversary activities in space, and lessons learned from recent US activities.  
+Prerequisites: 
+AN 5150A Astronautical Phase Introduction 
+ 
+
+
+===== PAGE 62 =====
+ 
+62 
+ 
+AS 9900 Distinguished Guest Lectures 
+Terminal Learning Objectives:  
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall critical information passed on from various guest lectures. 
+ 
+AS 9901A Space Shuttle Proximity Maneuvering - Guest Lecture   
+This lecture will be taught in an unclassified setting as a guest lecture and will provide a description 
+of the rendezvous process and issues associated with close proximity maneuvering with another orbiting 
+object. This includes the description of the space shuttle aircraft and MIR, the role of the space shuttle 
+pilot in rendezvous and close proximity maneuvering, and provides essential lessons learned from 
+extended close proximity operations. 
+Prerequisites: 
+AS 8201A Rendezvous & Proximity Ops Planning Lecture 
+ 

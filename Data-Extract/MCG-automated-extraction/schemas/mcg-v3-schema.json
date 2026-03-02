@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mcg-v3-schema",
+  "title": "MCG V3 Extraction Schema",
+  "description": "Master Curriculum Guide extraction format with FTC/STC course assignments, figure references, dependency graph edges, and scheduling metadata.",
+  "type": "object",
+
+  "properties": {
+    "schemaVersion": { "const": 3 },
+    "phase": {
+      "type": "string",
+      "description": "Two-letter phase code (AN, AS, CF, FQ, PF, SO, SY, TF, TL)"
+    },
+    "phaseName": { "type": "string" },
+    "courseAssignment": {
+      "type": "string",
+      "enum": ["FTC", "STC", "Shared"],
+      "description": "Phase-level course assignment from Course Overview figure"
+    },
+    "sourceDocument": {
+      "type": "string",
+      "description": "MCG class identifier (e.g., 'MCG 25B')"
+    },
+    "extractedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "transformedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "pageRange": {
+      "type": "object",
+      "properties": {
+        "start": { "type": "integer" },
+        "end": { "type": "integer" }
+      },
+      "description": "PDF page range for this phase"
+    },
+
+    "figures": {
+      "type": "array",
+      "description": "Figures extracted from this phase's pages",
+      "items": {
+        "$ref": "#/$defs/Figure"
+      }
+    },
+
+    "modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/Module"
+      }
+    },
+
+    "summary": {
+      "$ref": "#/$defs/PhaseSummary"
+    }
+  },
+
+  "required": ["schemaVersion", "phase", "phaseName", "courseAssignment", "sourceDocument", "extractedAt", "modules"],
+
+  "$defs": {
+
+    "Figure": {
+      "type": "object",
+      "properties": {
+        "figureNumber": { "type": ["integer", "string"] },
+        "figureName": { "type": "string" },
+        "pageNumber": { "type": "integer" },
+        "imageFile": {
+          "type": "string",
+          "description": "Relative path to extracted image (e.g., 'images/figure-03-course-overview.png')"
+        },
+        "figureType": {
+          "type": "string",
+          "enum": ["course_overview", "dependency_flow", "event_sequence", "schedule_timeline", "organizational", "reference_table", "other"],
+          "description": "Classified figure type from AI analysis"
+        },
+        "interpretation": {
+          "type": "object",
+          "description": "AI-interpreted structured data from the figure",
+          "properties": {
+            "description": { "type": "string" },
+            "extractedData": {
+              "type": "object",
+              "description": "Structured data extracted from the figure (schema varies by figureType)"
+            },
+            "dependencyEdges": {
+              "type": "array",
+              "description": "Dependency relationships visible in the figure",
+              "items": {
+                "$ref": "#/$defs/DependencyEdge"
+              }
+            },
+            "courseAssignments": {
+              "type": "array",
+              "description": "Course (FTC/STC) assignments visible in the figure",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "code": { "type": "string" },
+                  "assignment": { "type": "string", "enum": ["FTC", "STC", "Shared"] }
+                }
+              }
+            }
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "AI confidence in the interpretation (0-1)"
+        }
+      },
+      "required": ["figureNumber", "figureName", "pageNumber", "figureType"]
+    },
+
+    "DependencyEdge": {
+      "type": "object",
+      "description": "A directed dependency between two events or modules",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source event/module code (must be completed first)"
+        },
+        "to": {
+          "type": "string",
+          "description": "Target event/module code (depends on 'from')"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["prerequisite", "corequisite", "recommended", "sequence"],
+          "description": "Nature of the dependency"
+        },
+        "scope": {
+          "type": "object",
+          "description": "Who this dependency applies to",
+          "properties": {
+            "positions": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "courseType": {
+              "type": ["string", "null"],
+              "enum": ["FTC", "STC", null]
+            }
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["text", "figure", "inferred"],
+          "description": "Where this dependency was identified"
+        },
+        "sourceDetail": {
+          "type": "string",
+          "description": "Figure number or text location where this was found"
+        }
+      },
+      "required": ["from", "to", "type", "source"]
+    },
+
+    "Module": {
+      "type": "object",
+      "properties": {
+        "moduleCode": { "type": "string" },
+        "moduleName": { "type": "string" },
+        "parentCourse": {
+          "type": ["string", "null"],
+          "description": "Parent course name if module is nested under a course header"
+        },
+        "courseAssignment": {
+          "type": "string",
+          "enum": ["FTC", "STC", "Shared"],
+          "description": "Module-level course assignment (may differ from phase level for Shared phases)"
+        },
+        "tlos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Terminal Learning Objectives for this module"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Event"
+          }
+        }
+      },
+      "required": ["moduleCode", "moduleName", "courseAssignment", "events"]
+    },
+
+    "Event": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Event code (e.g., 'CF 5101H')"
+        },
+        "eventName": { "type": "string" },
+        "eventType": {
+          "type": "string",
+          "description": "Single-letter type code (A, C, E, F, L, M, P, R, S, T, W, X, Z)"
+        },
+        "eventTypeName": { "type": "string" },
+        "section": {
+          "type": "string",
+          "description": "Section grouping (Academics, Flying, Simulation, Ground, Lab, Operations)"
+        },
+        "courseAssignment": {
+          "type": "string",
+          "enum": ["FTC", "STC", "Shared"],
+          "description": "Effective course assignment for this event. Resolved from: explicit applicability > module > phase."
+        },
+        "courseAssignmentSource": {
+          "type": "string",
+          "enum": ["explicit", "module", "phase", "figure"],
+          "description": "How the courseAssignment was determined"
+        },
+        "applicability": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Raw applicability tags from PDF (preserved from V1)"
+        },
+        "applicabilityDetail": {
+          "$ref": "#/$defs/ApplicabilityDetail"
+        },
+        "description": { "type": "string" },
+        "duration": {
+          "type": ["object", "null"],
+          "description": "Event duration if specified in the MCG",
+          "properties": {
+            "hours": { "type": "number" },
+            "format": { "type": "string" }
+          }
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Prerequisite"
+          }
+        },
+        "schedulingNotes": {
+          "type": ["string", "null"],
+          "description": "Any scheduling-relevant notes (timing windows, sequencing, etc.)"
+        }
+      },
+      "required": ["code", "eventName", "eventType", "courseAssignment", "description", "prerequisites"]
+    },
+
+    "ApplicabilityDetail": {
+      "type": "object",
+      "properties": {
+        "positions": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["P", "FTE", "CSO", "ABM", "RPA"] },
+          "description": "Which student positions this event applies to"
+        },
+        "courseType": {
+          "type": ["string", "null"],
+          "enum": ["FTC", "STC", null],
+          "description": "Explicit course type from applicability text (not inherited)"
+        },
+        "clearance": {
+          "type": ["string", "null"],
+          "enum": ["US_only", "non_US_only", null]
+        }
+      }
+    },
+
+    "Prerequisite": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "requiredFor": { "type": ["string", "null"] },
+        "scope": {
+          "$ref": "#/$defs/PrerequisiteScope"
+        },
+        "alternative": {
+          "type": ["object", "null"],
+          "properties": {
+            "altCode": { "type": "string" },
+            "relationship": { "type": "string", "enum": ["or"] },
+            "groupId": { "type": "string" }
+          }
+        },
+        "partialCompletion": { "type": ["string", "null"] },
+        "isExternal": { "type": "boolean" },
+        "externalPhase": { "type": ["string", "null"] },
+        "errata": { "type": ["string", "null"] },
+        "originalNotes": { "type": ["string", "null"] }
+      },
+      "required": ["code", "name", "scope"]
+    },
+
+    "PrerequisiteScope": {
+      "type": "object",
+      "properties": {
+        "positions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "'inherit' = same as event, 'all' = all positions, or specific list"
+        },
+        "pilotType": {
+          "type": ["string", "null"],
+          "enum": ["crew_solo", "non_crew_solo", "select", null]
+        },
+        "crewSoloAircraft": {
+          "type": ["string", "null"]
+        },
+        "dataGroup": {
+          "type": ["string", "null"]
+        },
+        "clearance": {
+          "type": ["string", "null"]
+        },
+        "timingConstraint": {
+          "type": ["string", "null"],
+          "description": "Timing constraint like '+5 days'"
+        }
+      },
+      "required": ["positions"]
+    },
+
+    "PhaseSummary": {
+      "type": "object",
+      "properties": {
+        "totalModules": { "type": "integer" },
+        "totalEvents": { "type": "integer" },
+        "totalPrerequisites": { "type": "integer" },
+        "eventsByType": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        },
+        "eventsByCourse": {
+          "type": "object",
+          "properties": {
+            "FTC": { "type": "integer" },
+            "STC": { "type": "integer" },
+            "Shared": { "type": "integer" }
+          }
+        },
+        "figureCount": { "type": "integer" },
+        "dependencyEdgeCount": { "type": "integer" }
+      }
+    }
+  }
+}

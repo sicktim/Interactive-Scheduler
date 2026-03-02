@@ -1,0 +1,523 @@
+{
+  "sheet": "TF",
+  "classCode": "25A",
+  "extractedAt": "2026-02-19",
+  "sections": [
+    {
+      "name": "Human Systems Integration",
+      "events": [
+        {
+          "eventCode": "TF 5311S",
+          "missionName": "Human Systems Integration Sim/Lab",
+          "missionSubtitle": "TPS HSI Lab",
+          "section": "Human Systems Integration",
+          "aircraftType": null,
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "2 Stud + Instructor",
+            "Instructor: Williamson/Fromm"
+          ],
+          "notes": [
+            "Can schedule up to two students in 1.5 hr blocks",
+            "Brief is included in total mission time.",
+            "Complete within 2 weeks of TF 5310A Human Systems Integration Lecture"
+          ],
+          "prerequisites": [
+            "TF 5310A Human Systems Integration Lecture"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "eventCode": "TF 5321L",
+          "missionName": "Anthro Measurements Lab",
+          "section": "Human Systems Integration",
+          "aircraftType": null,
+          "config": null,
+          "duration": 0.5,
+          "crew": [
+            "All Studs"
+          ],
+          "notes": [
+            "BLDG 1609.  POST DIRECTIONS FOR STUDENTS.  ATHLETIC ATTIRE.",
+            "POC:   PATRICK MARTIN 7-4299 OR PAUL ROBINSON 7-0009",
+            "SEND E-MAIL W/STUD NAMES AND TIMES TO PATRICK OR PAUL",
+            "USE JON 998TPS00"
+          ],
+          "prerequisites": [
+            "TF 5310A Human Systems Integration Lecture"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Test Conduct",
+      "events": [
+        {
+          "eventCode": "TF 6331SE",
+          "missionName": "Sim/CR Test Conduct Primer",
+          "missionSubtitle": "FS Sim AND CR",
+          "section": "Test Conduct",
+          "aircraftType": null,
+          "config": [
+            "HQ SIM A or B",
+            "Ctrl Room A or B",
+            "(NOT CR C)"
+          ],
+          "duration": 3.0,
+          "crew": [
+            "CR IFTE (\"TC Primer\") +",
+            "Sim Pilot (\"TC Primer IP\")",
+            "1 FTC FTE",
+            "1 STC STUD AS DE if avail"
+          ],
+          "notes": [
+            "Brief is included in total mission time (1 hr brf, 1 hour flight, 1 hr debrief)",
+            "Adding a 2nd student adds 2 hrs (2 studs in 5 hrs w/ double brief)",
+            "(AF pilot not req'd. SIM instructor pilots are usually IFTEs as well)"
+          ],
+          "prerequisites": [
+            "TF 6310A Test Conduct Lecture",
+            "TF 6311A CR and IADS Lecture",
+            "CF 6703CE F-16 Control Room Familiarization (FTE)"
+          ],
+          "lox": [
+            "CR",
+            "Ground"
+          ],
+          "aircrewQuals": [
+            "TC Primer",
+            "TC Primer IP"
+          ],
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            10,
+            11,
+            12,
+            13
+          ]
+        },
+        {
+          "eventCode": "TF 6351F",
+          "missionName": "C-12 Airborne Test Conduct Intro",
+          "missionSubtitle": "C-12",
+          "section": "Test Conduct",
+          "aircraftType": "C-12",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "2 Stud (P/RPA + FTE/CSO) + IP + IFTE"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "BRIEF 2+00.",
+            "(STD FUEL LOAD)"
+          ],
+          "prerequisites": [
+            "TF 6331SE Sim/CR Test Conduct Primer (FTE)",
+            "CF 6552FP C-12 CF-2 (crew solo P)",
+            "CF 6652FR C-12 CF-3 (RPA)",
+            "CF 6554FN/FP C-12 Training Flt (FTE/CSO/non-crew solo P)"
+          ],
+          "lox": [
+            "C-12",
+            "USAF TPS TE NAV WSO"
+          ],
+          "aircrewQuals": [
+            "TF-Perf",
+            "C-12, TF-Perf"
+          ],
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": "DAS",
+          "sourceRows": [
+            15,
+            16,
+            17,
+            18
+          ]
+        },
+        {
+          "eventCode": "TF 6359F",
+          "missionName": "C-12 Intermediate Airborne",
+          "missionSubtitle": "Test Conduct | C-12",
+          "section": "Test Conduct",
+          "aircraftType": "C-12",
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "2 Stud (P/RPA + FTE/CSO) + IP + IFTE",
+            "Teams assigned by TF Branch"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, P",
+            "See TF for team pairings (will NOT be same pairings as practical exam)",
+            "CSO functions as a TC for this event.",
+            "Assign RPA with FTE from C-12 Data Group",
+            "Assign CSO with Pilot from C-12 Data Group"
+          ],
+          "prerequisites": [
+            "TF 6314A Performance Test Conduct Lecture",
+            "TF 6359A C-12 Intermediate Airborne TC MIB",
+            "PF 8355F Data Group Level Accel/Sawtooth Climb Data Flight 1",
+            "PF 8358F Data Group Turn Perf Data Flight 1"
+          ],
+          "lox": [
+            "C-12",
+            "USAF TPS TE NAV WSO"
+          ],
+          "aircrewQuals": [
+            "TF-Perf",
+            "C-12, TF-Perf"
+          ],
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": "DAS",
+          "sourceRows": [
+            22,
+            23,
+            24,
+            25,
+            26
+          ]
+        },
+        {
+          "eventCode": "TF 6361C",
+          "missionName": "F-16 Control Room Test Conduct Intro",
+          "missionSubtitle": "F-16",
+          "section": "Test Conduct",
+          "aircraftType": "F-16",
+          "config": [
+            "FCL (PREFER)",
+            "FWT ACCEPTABLE",
+            "(No A/C w/ Tgt Pod)"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "GRAD IP",
+            "Control Rm:  IFTE w/ 2 STUD FTEs",
+            "(P/CSO/RPA observe)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P, SSC",
+            "DAS SIPF, ACQGEN, UHF & TM FREQS",
+            "SUPERSONIC CORRIDOR @ 50K, HUD, VIDEO, GROUND PWR CART",
+            "Brief 2+30 prior"
+          ],
+          "prerequisites": [
+            "TF 6331SE Sim/CR Test Conduct Primer (FTE)",
+            "CF 6755FJ F-16 Flight Training (FTE)"
+          ],
+          "lox": [
+            "F-16",
+            "CR"
+          ],
+          "aircrewQuals": [
+            "MQ Prop",
+            "CR TC Intro"
+          ],
+          "aircraftRequiredCape": "DAS Data, DAS HUD",
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            28,
+            29,
+            30,
+            31,
+            32
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Graded Qual Eval",
+      "events": [
+        {
+          "eventCode": "TF 7151F",
+          "missionName": "Graded Qual Eval 1 Flight",
+          "missionSubtitle": "(T-6SNJ - Set by TF)",
+          "section": "Graded Qual Eval",
+          "aircraftType": "T-6/SNJ",
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "1 Stud + Contractor Pilot"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "2+00 DOUBLE BRIEF"
+          ],
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 7101A Contractor Interaction Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "MIB",
+            "Ground School",
+            "FQ 6351FA Learjet Long Stability Flight (P/RPA) AND FQ 6352FA Learjet Lat-Dir Stability Flight (P/RPA)",
+            "OR FQ 6353FN Learjet Combined Long/Lat-Dir Flight (FTE/CSO) OR FQ 6551F C-12 Static Stability Flight"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42
+          ]
+        },
+        {
+          "eventCode": "TF 7152F",
+          "missionName": "Graded Qual Eval 2 Flight",
+          "missionSubtitle": "(L-29 - Set by TF)",
+          "section": "Graded Qual Eval",
+          "aircraftType": "L-29",
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "1 Studs + Contractor Pilot",
+            "(Two-ship flights highly desired)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 7101A Contractor Interaction Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "MIB",
+            "Ground School",
+            "FQ 6351FA Learjet Long Stability Flight (P/RPA) AND FQ 6352FA Learjet Lat-Dir Stability Flight (P/RPA)",
+            "OR FQ 6353FN Learjet Combined Long/Lat-Dir Flight (FTE/CSO) OR FQ 6551F C-12 Static Stability Flight"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49
+          ]
+        },
+        {
+          "eventCode": "TF 7153F",
+          "missionName": "Graded Qual Eval 3 Flight",
+          "missionSubtitle": "(F-15E/F-18 - Set by TF)",
+          "section": "Graded Qual Eval",
+          "aircraftType": [
+            "F-15E",
+            "F-18"
+          ],
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "1 Stud + IP"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P"
+          ],
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 7101A Contractor Interaction Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "MIB",
+            "Ground School",
+            "FQ 6351FA Learjet Long Stability Flight (P/RPA) AND FQ 6352FA Learjet Lat-Dir Stability Flight (P/RPA)",
+            "OR FQ 6353FN Learjet Combined Long/Lat-Dir Flight (FTE/CSO) OR FQ 6551F C-12 Static Stability Flight"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Experience Broadening",
+      "events": [
+        {
+          "eventCode": "TF 7351F - thru TF 7356F",
+          "missionName": "Experience Broadening Qual Eval 1-6 Flt",
+          "missionSubtitle": "(TBD - Set by TF)",
+          "section": "Experience Broadening",
+          "aircraftType": null,
+          "config": null,
+          "duration": "ASD",
+          "crew": [
+            "? Stud(s) + IP/Contractor Pilot",
+            "(Heavy A/C may have multiple studs)"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "L-39: ≤ 230 lbs nude weight (ejection seat limit)"
+          ],
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 7101A Contractor Interaction Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "TF 7351A-7356A Experience Broadening Qual Eval 1-6 MIB",
+            "TF 7351B-7356B Experience Broadening Qual Eval 1-6 Ground School"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            57,
+            58,
+            59,
+            60,
+            61
+          ]
+        },
+        {
+          "eventCode": "TF 7357F",
+          "missionName": "C-17 Experience Broadening Qual Eval Flt",
+          "missionSubtitle": "C-17",
+          "section": "Experience Broadening",
+          "aircraftType": "C-17",
+          "config": null,
+          "duration": null,
+          "crew": null,
+          "notes": null,
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "TF 7357A C-17 Exp Broadening Qual MIB",
+            "TF 7357B C-17 Exp Broadening Qual Ground School"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            62,
+            63,
+            64,
+            65
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rotary Wing",
+      "events": [
+        {
+          "eventCode": "TF 7550F",
+          "missionName": "Intro to Rotary Wing Flight",
+          "missionSubtitle": "R-44",
+          "section": "Rotary Wing",
+          "aircraftType": "R-44",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "2 Stud + Contractor Pilot"
+          ],
+          "notes": [
+            "AIRSPACE:  R15",
+            "≤400 lbs combined student weight desired for full flight profile",
+            "500 lbs absolute maximum combined student weight"
+          ],
+          "prerequisites": [
+            "TF 7100A Qual Eval Program Intro Lecture",
+            "TF 7101A Contractor Interaction Lecture",
+            "TF 5340A Human Machine Interface Lecture",
+            "TF 7550A Intro to Rotary Wing MIB",
+            "TF 7550B Intro to Rotary Wing Ground School"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            66,
+            67,
+            68,
+            69,
+            70
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Control Room Observation",
+      "events": [
+        {
+          "eventCode": "TF 7760O",
+          "missionName": "US Only Real-World Control Room Obsv",
+          "missionSubtitle": "(Control Room)",
+          "section": "Control Room Observation",
+          "aircraftType": null,
+          "config": null,
+          "duration": "TBD",
+          "crew": [
+            "All Stud FTE",
+            "Available P/RPA/CSO"
+          ],
+          "notes": [
+            "Coordinated by TF/Systems. US only, offsite, 1 event"
+          ],
+          "prerequisites": [
+            "TF 6313AU US Only Secure Flight Test Lecture"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            71,
+            72
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalEvents": 13,
+    "totalSections": 6,
+    "aircraftTypes": [
+      "C-12",
+      "C-17",
+      "F-15E",
+      "F-16",
+      "F-18",
+      "L-29",
+      "R-44",
+      "T-6/SNJ"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+.app-root {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-primary);
+}

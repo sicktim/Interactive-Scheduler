@@ -1,0 +1,130 @@
+===== PAGE 14 =====
+ 
+14 
+ 
+Preparatory Training 
+The section outlines the introduction and debrief events which explain the structure and context of the curriculum to 
+new students and gather their feedback for following classes at the end of the program. Additionally, this section outlines 
+the required training needed for the test and evaluation curriculum.  
+Ancillary Training 
+AN 5000 Ancillary Training 
+Students will complete the following ancillary events during the program. Most of the training takes place during the 
+first and last week of classes. 
+AN 5100 Test Pilot School Introductions 
+This module introduces the students to the school structure and leadership.  
+ 
+AN 5101A 
+TPS Welcome and Mission Brief 
+AN 5126A 
+Technical Directors Introduction 
+AN 5110A 
+AFTC Welcome and Mission Brief 
+AN 5127A 
+Class ADO Introduction 
+AN 5111A 
+Test Wing Welcome and Mission Brief 
+AN 5130A 
+Check Flight Introduction 
+AN 5112A 
+TPS Commandant Introduction 
+AN 5140A 
+Space Operations Introduction 
+AN 5120A 
+A9 Mission Effectiveness Introduction 
+AN 5150A 
+Astronautical Phase Introduction 
+AN 5121A 
+Dean of Faculty Introduction 
+AN 5160A 
+Flight Sciences Phase Introduction 
+AN 5122A 
+Director of FO Introduction 
+AN 5170A 
+Missions Systems Phase Intro 
+AN 5123A 
+Director of SO Introduction 
+AN 5180A 
+Test Foundations Phase Intro 
+AN 5124A 
+Chief Pilot Introduction 
+AN 5190A 
+Test Leadership Phase Intro 
+AN 5125A 
+Chief Instructor FTE Introduction 
+ 
+ 
+ 
+AN 5200 Miscellaneous Training 
+The section covers miscellaneous training required by Air Force instructions.  
+ 
+AN 5201A 
+Ground Safety 
+AN 5241A 
+FDO Security Briefing (US Only) 
+AN 5210A 
+Student Computer Issue 
+AN 5242A 
+Counter-Intelligence Brief (US Only) 
+AN 5211A 
+Student Computer Turn-In 
+AN 5243A 
+Security Out-Processing 
+AN 5220A 
+Student Portraits 
+AN 5250A 
+Field Trip OSI Brief (US Only) 
+AN 5230A 
+UTD Training 
+AN 5251A 
+Field Trip OSI Debrief (US Only) 
+AN 5240A 
+Security Briefing 
+AN 5260A 
+Student Travel DTS Workshop 
+ 
+AN 5300 Test Pilot School Debriefs 
+This module contains the debriefs conducted at the end of the curriculum to collect feedback for the leadership and 
+administration of the school. 
+ 
+AN 5301Z 
+Student Out Processing Brief 
+AN 5325Z 
+Chief Instructor FTE Debrief 
+AN 5310Z 
+AFTC Out Brief 
+AN 5326Z 
+Class ADO Debrief 
+AN 5311Z 
+Test Wing Out Brief 
+AN 5330Z 
+Check Flight Debrief 
+AN 5312Z 
+TPS Commandant Debrief 
+AN 5340Z 
+Space Operations Debrief 
+AN 5320Z 
+A9 Mission Effectiveness Debrief 
+AN 5350Z 
+Astronautical Phase Debrief 
+AN 5321Z 
+Dean of Faculty Debrief 
+AN 5360Z 
+Flights Sciences Phase Debrief 
+AN 5322Z 
+Director of FO Debrief 
+AN 5370Z 
+Missions Systems Phase Debrief 
+AN 5323Z 
+Director of SO Debrief 
+AN 5380Z 
+Test Foundations Phase Debrief 
+AN 5324Z 
+Chief Pilot Debrief 
+AN 5390Z 
+Test Leadership Phase Debrief 
+ 
+ 
+ 
+ 
+ 
+ 

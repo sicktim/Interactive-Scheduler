@@ -1,0 +1,1629 @@
+{
+  "sourceDocument": "MCG 25B.pdf",
+  "extractedAt": "2026-02-22T15:37:02.381287",
+  "stats": {
+    "totalEmbeddedImages": 61,
+    "totalFigureCaptions": 64,
+    "totalTableCaptions": 1,
+    "totalRenderedPages": 32
+  },
+  "figureCaptions": [
+    {
+      "type": "figure",
+      "number": "1",
+      "name": "School Goal ......................................................................................................................................... 7",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "2",
+      "name": "Curriculum Organization ..................................................................................................................... 8",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "3",
+      "name": "Course Overview ................................................................................................................................. 9",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "4",
+      "name": "Check Flight Overview ...................................................................................................................... 16",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "5",
+      "name": "CF 6300 T-38 Training (P) ................................................................................................................ 24",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "6",
+      "name": "CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC) ....................................................................... 25",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "7",
+      "name": "CF 6600 F-16 and Control Room Training (P) ................................................................................. 32",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "8",
+      "name": "CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC) ........................................ 33",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "9",
+      "name": "Space Operations Overview .............................................................................................................. 35",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "10",
+      "name": "SO 6100 GROOT Training .............................................................................................................. 37",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "11",
+      "name": "Astronautical Sciences Overview .................................................................................................... 40",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "12",
+      "name": "Flight Sciences – Performance Overview ........................................................................................ 59",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "13",
+      "name": "PF 6100 Fixed Wing Aerodynamics ................................................................................................ 63",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "14",
+      "name": "PF 6200 Modeling and Simulation .................................................................................................. 66",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "15",
+      "name": "PF 7100 Air Data System ................................................................................................................ 69",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "16",
+      "name": "PF 8200 Energy ............................................................................................................................... 74",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "17",
+      "name": "PF 8300 Performance Testing ......................................................................................................... 77",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "18",
+      "name": "Flying Qualities Phase Block Diagram ............................................................................................ 80",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "19",
+      "name": "Flight Sciences – Flying Qualities Overview .................................................................................. 80",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "20",
+      "name": "FQ 6200 Aircraft Stability ............................................................................................................... 84",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "21",
+      "name": "FQ 6300 Flying Qualities Testing ................................................................................................... 86",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "22",
+      "name": "FQ 7200 Structures Testing ............................................................................................................. 91",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "23",
+      "name": "FQ 8100 Handling Qualities Evaluation .......................................................................................... 95",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "24",
+      "name": "FQ 9200 Stall, Departure and Spin Testing ................................................................................... 100",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "25",
+      "name": "Mission Systems Overview ........................................................................................................... 105",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "26",
+      "name": "SY 6100 EO/IR and RADAR Systems .......................................................................................... 110",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "27",
+      "name": "Test Foundations Overview ........................................................................................................... 129",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "28",
+      "name": "TF 6100 Plan ................................................................................................................................. 138",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "29",
+      "name": "TF 6200 Execute ............................................................................................................................ 142",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "30",
+      "name": "Test Leadership Overview ............................................................................................................. 159",
+      "page": 5
+    },
+    {
+      "type": "figure",
+      "number": "1",
+      "name": "School Outcomes",
+      "page": 7
+    },
+    {
+      "type": "figure",
+      "number": "1",
+      "name": "School Goal",
+      "page": 7
+    },
+    {
+      "type": "figure",
+      "number": "2",
+      "name": "All students complete ancillary training at the beginning of the curriculum followed by the applicable",
+      "page": 8
+    },
+    {
+      "type": "figure",
+      "number": "2",
+      "name": "Curriculum Organization",
+      "page": 8
+    },
+    {
+      "type": "figure",
+      "number": "3",
+      "name": "Course Overview",
+      "page": 9
+    },
+    {
+      "type": "table",
+      "number": "1",
+      "name": "Course Numbering Convention",
+      "page": 11
+    },
+    {
+      "type": "figure",
+      "number": "4",
+      "name": "Check Flight Overview",
+      "page": 16
+    },
+    {
+      "type": "figure",
+      "number": "5",
+      "name": "CF 6300 T-38 Training (P)",
+      "page": 24
+    },
+    {
+      "type": "figure",
+      "number": "6",
+      "name": "CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC)",
+      "page": 25
+    },
+    {
+      "type": "figure",
+      "number": "7",
+      "name": "CF 6600 F-16 and Control Room Training (P)",
+      "page": 32
+    },
+    {
+      "type": "figure",
+      "number": "8",
+      "name": "CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC)",
+      "page": 33
+    },
+    {
+      "type": "figure",
+      "number": "9",
+      "name": "Figure 9: Space Operations Overview",
+      "page": 35
+    },
+    {
+      "type": "figure",
+      "number": "10",
+      "name": "SO 6100 GROOT Training",
+      "page": 37
+    },
+    {
+      "type": "figure",
+      "number": "11",
+      "name": "Astronautical Sciences Overview",
+      "page": 40
+    },
+    {
+      "type": "figure",
+      "number": "12",
+      "name": ".",
+      "page": 59
+    },
+    {
+      "type": "figure",
+      "number": "12",
+      "name": "Flight Sciences – Performance Overview",
+      "page": 59
+    },
+    {
+      "type": "figure",
+      "number": "13",
+      "name": "PF 6100 Fixed Wing Aerodynamics",
+      "page": 63
+    },
+    {
+      "type": "figure",
+      "number": "14",
+      "name": "PF 6200 Modeling and Simulation",
+      "page": 66
+    },
+    {
+      "type": "figure",
+      "number": "15",
+      "name": "PF 7100 Air Data System",
+      "page": 69
+    },
+    {
+      "type": "figure",
+      "number": "16",
+      "name": "PF 8200 Energy",
+      "page": 74
+    },
+    {
+      "type": "figure",
+      "number": "17",
+      "name": "PF 8300 Performance Testing",
+      "page": 77
+    },
+    {
+      "type": "figure",
+      "number": "18",
+      "name": "The following section will present a brief description of",
+      "page": 79
+    },
+    {
+      "type": "figure",
+      "number": "18",
+      "name": "Flying Qualities Phase Block Diagram",
+      "page": 80
+    },
+    {
+      "type": "figure",
+      "number": "19",
+      "name": "Flight Sciences – Flying Qualities Overview",
+      "page": 80
+    },
+    {
+      "type": "figure",
+      "number": "20",
+      "name": "FQ 6200 Aircraft Stability",
+      "page": 84
+    },
+    {
+      "type": "figure",
+      "number": "21",
+      "name": "FQ 6300 Flying Qualities Testing",
+      "page": 86
+    },
+    {
+      "type": "figure",
+      "number": "22",
+      "name": "FQ 7200 Structures Testing",
+      "page": 91
+    },
+    {
+      "type": "figure",
+      "number": "23",
+      "name": "FQ 8100 Handling Qualities Evaluation",
+      "page": 95
+    },
+    {
+      "type": "figure",
+      "number": "24",
+      "name": "FQ 9200 Stall, Departure and Spin Testing",
+      "page": 100
+    },
+    {
+      "type": "figure",
+      "number": "25",
+      "name": "Mission Systems Overview",
+      "page": 105
+    },
+    {
+      "type": "figure",
+      "number": "26",
+      "name": "SY 6100 EO/IR and RADAR Systems",
+      "page": 110
+    },
+    {
+      "type": "figure",
+      "number": "27",
+      "name": "Test Foundations Overview",
+      "page": 129
+    },
+    {
+      "type": "figure",
+      "number": "28",
+      "name": "TF 6100 Plan",
+      "page": 138
+    },
+    {
+      "type": "figure",
+      "number": "29",
+      "name": "TF 6200 Execute",
+      "page": 142
+    },
+    {
+      "type": "figure",
+      "number": "30",
+      "name": "Figure 30: Test Leadership Overview",
+      "page": 159
+    }
+  ],
+  "embeddedImages": [
+    {
+      "type": "embedded",
+      "file": "embedded/page001_img00_190x185.jpeg",
+      "page": 1,
+      "xref": 8804,
+      "width": 190,
+      "height": 185,
+      "format": "jpeg",
+      "sizeBytes": 15423
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page001_img01_184x180.jpeg",
+      "page": 1,
+      "xref": 8806,
+      "width": 184,
+      "height": 180,
+      "format": "jpeg",
+      "sizeBytes": 13792
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page007_img00_715x530.jpeg",
+      "page": 7,
+      "xref": 26,
+      "width": 715,
+      "height": 530,
+      "format": "jpeg",
+      "sizeBytes": 55753
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page007_img01_976x81.png",
+      "page": 7,
+      "xref": 28,
+      "width": 976,
+      "height": 81,
+      "format": "png",
+      "sizeBytes": 331
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page008_img00_529x654.jpeg",
+      "page": 8,
+      "xref": 33,
+      "width": 529,
+      "height": 654,
+      "format": "jpeg",
+      "sizeBytes": 71833
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page008_img01_1212x95.png",
+      "page": 8,
+      "xref": 35,
+      "width": 1212,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 436
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page009_img00_2433x2093.png",
+      "page": 9,
+      "xref": 41,
+      "width": 2433,
+      "height": 2093,
+      "format": "png",
+      "sizeBytes": 141351
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page009_img01_1693x95.png",
+      "page": 9,
+      "xref": 43,
+      "width": 1693,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 569
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page016_img00_971x1633.png",
+      "page": 16,
+      "xref": 63,
+      "width": 971,
+      "height": 1633,
+      "format": "png",
+      "sizeBytes": 475458
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page016_img01_1530x106.png",
+      "page": 16,
+      "xref": 65,
+      "width": 1530,
+      "height": 106,
+      "format": "png",
+      "sizeBytes": 572
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page024_img00_2645x2151.png",
+      "page": 24,
+      "xref": 82,
+      "width": 2645,
+      "height": 2151,
+      "format": "png",
+      "sizeBytes": 1399463
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page024_img01_1956x95.png",
+      "page": 24,
+      "xref": 84,
+      "width": 1956,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 641
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page025_img00_2754x2559.png",
+      "page": 25,
+      "xref": 87,
+      "width": 2754,
+      "height": 2559,
+      "format": "png",
+      "sizeBytes": 1320486
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page025_img01_1585x95.png",
+      "page": 25,
+      "xref": 89,
+      "width": 1585,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 539
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page032_img00_2662x2567.png",
+      "page": 32,
+      "xref": 104,
+      "width": 2662,
+      "height": 2567,
+      "format": "png",
+      "sizeBytes": 1914432
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page032_img01_2246x121.png",
+      "page": 32,
+      "xref": 106,
+      "width": 2246,
+      "height": 121,
+      "format": "png",
+      "sizeBytes": 891
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page033_img00_3021x2573.png",
+      "page": 33,
+      "xref": 109,
+      "width": 3021,
+      "height": 2573,
+      "format": "png",
+      "sizeBytes": 1639232
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page033_img01_2250x95.png",
+      "page": 33,
+      "xref": 111,
+      "width": 2250,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 722
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page035_img00_495x735.png",
+      "page": 35,
+      "xref": 116,
+      "width": 495,
+      "height": 735,
+      "format": "png",
+      "sizeBytes": 132048
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page035_img01_841x95.png",
+      "page": 35,
+      "xref": 118,
+      "width": 841,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 333
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page037_img00_2041x1215.png",
+      "page": 37,
+      "xref": 124,
+      "width": 2041,
+      "height": 1215,
+      "format": "png",
+      "sizeBytes": 714458
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page037_img01_2174x95.png",
+      "page": 37,
+      "xref": 126,
+      "width": 2174,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 701
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page040_img00_1924x1256.png",
+      "page": 40,
+      "xref": 134,
+      "width": 1924,
+      "height": 1256,
+      "format": "png",
+      "sizeBytes": 818095
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page040_img01_2071x103.png",
+      "page": 40,
+      "xref": 136,
+      "width": 2071,
+      "height": 103,
+      "format": "png",
+      "sizeBytes": 721
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page059_img00_1924x909.png",
+      "page": 59,
+      "xref": 175,
+      "width": 1924,
+      "height": 909,
+      "format": "png",
+      "sizeBytes": 467175
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page059_img01_1707x95.png",
+      "page": 59,
+      "xref": 177,
+      "width": 1707,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 570
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page063_img00_2636x1165.png",
+      "page": 63,
+      "xref": 187,
+      "width": 2636,
+      "height": 1165,
+      "format": "png",
+      "sizeBytes": 834419
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page063_img01_3162x144.png",
+      "page": 63,
+      "xref": 189,
+      "width": 3162,
+      "height": 144,
+      "format": "png",
+      "sizeBytes": 1424
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page066_img00_3048x2095.png",
+      "page": 66,
+      "xref": 196,
+      "width": 3048,
+      "height": 2095,
+      "format": "png",
+      "sizeBytes": 1045225
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page066_img01_2574x94.png",
+      "page": 66,
+      "xref": 198,
+      "width": 2574,
+      "height": 94,
+      "format": "png",
+      "sizeBytes": 804
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page069_img00_2640x1181.png",
+      "page": 69,
+      "xref": 205,
+      "width": 2640,
+      "height": 1181,
+      "format": "png",
+      "sizeBytes": 877019
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page069_img01_2330x86.png",
+      "page": 69,
+      "xref": 207,
+      "width": 2330,
+      "height": 86,
+      "format": "png",
+      "sizeBytes": 683
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page074_img00_2683x1423.png",
+      "page": 74,
+      "xref": 218,
+      "width": 2683,
+      "height": 1423,
+      "format": "png",
+      "sizeBytes": 1231486
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page074_img01_2939x89.png",
+      "page": 74,
+      "xref": 220,
+      "width": 2939,
+      "height": 89,
+      "format": "png",
+      "sizeBytes": 861
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page077_img00_2643x878.png",
+      "page": 77,
+      "xref": 227,
+      "width": 2643,
+      "height": 878,
+      "format": "png",
+      "sizeBytes": 610084
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page077_img01_2701x95.png",
+      "page": 77,
+      "xref": 229,
+      "width": 2701,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 846
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page080_img00_682x334.jpeg",
+      "page": 80,
+      "xref": 237,
+      "width": 682,
+      "height": 334,
+      "format": "jpeg",
+      "sizeBytes": 40548
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page080_img01_1646x95.png",
+      "page": 80,
+      "xref": 239,
+      "width": 1646,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 556
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page080_img02_1927x1292.png",
+      "page": 80,
+      "xref": 240,
+      "width": 1927,
+      "height": 1292,
+      "format": "png",
+      "sizeBytes": 816541
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page084_img00_2635x1692.png",
+      "page": 84,
+      "xref": 249,
+      "width": 2635,
+      "height": 1692,
+      "format": "png",
+      "sizeBytes": 1268184
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page084_img01_2783x108.png",
+      "page": 84,
+      "xref": 251,
+      "width": 2783,
+      "height": 108,
+      "format": "png",
+      "sizeBytes": 975
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page086_img00_2730x999.png",
+      "page": 86,
+      "xref": 256,
+      "width": 2730,
+      "height": 999,
+      "format": "png",
+      "sizeBytes": 438279
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page086_img01_2997x89.png",
+      "page": 86,
+      "xref": 258,
+      "width": 2997,
+      "height": 89,
+      "format": "png",
+      "sizeBytes": 875
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page091_img00_2917x1407.png",
+      "page": 91,
+      "xref": 269,
+      "width": 2917,
+      "height": 1407,
+      "format": "png",
+      "sizeBytes": 823011
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page091_img01_2793x95.png",
+      "page": 91,
+      "xref": 271,
+      "width": 2793,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 872
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page095_img00_2645x1711.png",
+      "page": 95,
+      "xref": 280,
+      "width": 2645,
+      "height": 1711,
+      "format": "png",
+      "sizeBytes": 1302582
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page095_img01_3047x106.png",
+      "page": 95,
+      "xref": 282,
+      "width": 3047,
+      "height": 106,
+      "format": "png",
+      "sizeBytes": 1038
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page100_img00_2641x1613.png",
+      "page": 100,
+      "xref": 293,
+      "width": 2641,
+      "height": 1613,
+      "format": "png",
+      "sizeBytes": 1441953
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page100_img01_2790x94.png",
+      "page": 100,
+      "xref": 295,
+      "width": 2790,
+      "height": 94,
+      "format": "png",
+      "sizeBytes": 862
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page105_img00_2400x1325.png",
+      "page": 105,
+      "xref": 306,
+      "width": 2400,
+      "height": 1325,
+      "format": "png",
+      "sizeBytes": 981363
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page105_img01_1467x88.png",
+      "page": 105,
+      "xref": 308,
+      "width": 1467,
+      "height": 88,
+      "format": "png",
+      "sizeBytes": 476
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page110_img00_2638x1451.png",
+      "page": 110,
+      "xref": 320,
+      "width": 2638,
+      "height": 1451,
+      "format": "png",
+      "sizeBytes": 1002736
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page110_img01_2701x104.png",
+      "page": 110,
+      "xref": 322,
+      "width": 2701,
+      "height": 104,
+      "format": "png",
+      "sizeBytes": 918
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page129_img00_2400x1697.png",
+      "page": 129,
+      "xref": 364,
+      "width": 2400,
+      "height": 1697,
+      "format": "png",
+      "sizeBytes": 1040480
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page129_img01_2624x95.png",
+      "page": 129,
+      "xref": 366,
+      "width": 2624,
+      "height": 95,
+      "format": "png",
+      "sizeBytes": 825
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page138_img00_2722x1856.png",
+      "page": 138,
+      "xref": 389,
+      "width": 2722,
+      "height": 1856,
+      "format": "png",
+      "sizeBytes": 813079
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page138_img01_2802x108.png",
+      "page": 138,
+      "xref": 391,
+      "width": 2802,
+      "height": 108,
+      "format": "png",
+      "sizeBytes": 981
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page142_img00_3272x2259.png",
+      "page": 142,
+      "xref": 400,
+      "width": 3272,
+      "height": 2259,
+      "format": "png",
+      "sizeBytes": 2121506
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page142_img01_2707x100.png",
+      "page": 142,
+      "xref": 402,
+      "width": 2707,
+      "height": 100,
+      "format": "png",
+      "sizeBytes": 888
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page159_img00_2565x1035.png",
+      "page": 159,
+      "xref": 437,
+      "width": 2565,
+      "height": 1035,
+      "format": "png",
+      "sizeBytes": 561159
+    },
+    {
+      "type": "embedded",
+      "file": "embedded/page159_img01_2099x110.png",
+      "page": 159,
+      "xref": 439,
+      "width": 2099,
+      "height": 110,
+      "format": "png",
+      "sizeBytes": 772
+    }
+  ],
+  "renderedPages": [
+    {
+      "file": "pages/page005_figure-1_School-Goal--7.png",
+      "page": 5,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "1",
+          "name": "School Goal ......................................................................................................................................... 7"
+        },
+        {
+          "type": "figure",
+          "number": "2",
+          "name": "Curriculum Organization ..................................................................................................................... 8"
+        },
+        {
+          "type": "figure",
+          "number": "3",
+          "name": "Course Overview ................................................................................................................................. 9"
+        },
+        {
+          "type": "figure",
+          "number": "4",
+          "name": "Check Flight Overview ...................................................................................................................... 16"
+        },
+        {
+          "type": "figure",
+          "number": "5",
+          "name": "CF 6300 T-38 Training (P) ................................................................................................................ 24"
+        },
+        {
+          "type": "figure",
+          "number": "6",
+          "name": "CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC) ....................................................................... 25"
+        },
+        {
+          "type": "figure",
+          "number": "7",
+          "name": "CF 6600 F-16 and Control Room Training (P) ................................................................................. 32"
+        },
+        {
+          "type": "figure",
+          "number": "8",
+          "name": "CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC) ........................................ 33"
+        },
+        {
+          "type": "figure",
+          "number": "9",
+          "name": "Space Operations Overview .............................................................................................................. 35"
+        },
+        {
+          "type": "figure",
+          "number": "10",
+          "name": "SO 6100 GROOT Training .............................................................................................................. 37"
+        },
+        {
+          "type": "figure",
+          "number": "11",
+          "name": "Astronautical Sciences Overview .................................................................................................... 40"
+        },
+        {
+          "type": "figure",
+          "number": "12",
+          "name": "Flight Sciences – Performance Overview ........................................................................................ 59"
+        },
+        {
+          "type": "figure",
+          "number": "13",
+          "name": "PF 6100 Fixed Wing Aerodynamics ................................................................................................ 63"
+        },
+        {
+          "type": "figure",
+          "number": "14",
+          "name": "PF 6200 Modeling and Simulation .................................................................................................. 66"
+        },
+        {
+          "type": "figure",
+          "number": "15",
+          "name": "PF 7100 Air Data System ................................................................................................................ 69"
+        },
+        {
+          "type": "figure",
+          "number": "16",
+          "name": "PF 8200 Energy ............................................................................................................................... 74"
+        },
+        {
+          "type": "figure",
+          "number": "17",
+          "name": "PF 8300 Performance Testing ......................................................................................................... 77"
+        },
+        {
+          "type": "figure",
+          "number": "18",
+          "name": "Flying Qualities Phase Block Diagram ............................................................................................ 80"
+        },
+        {
+          "type": "figure",
+          "number": "19",
+          "name": "Flight Sciences – Flying Qualities Overview .................................................................................. 80"
+        },
+        {
+          "type": "figure",
+          "number": "20",
+          "name": "FQ 6200 Aircraft Stability ............................................................................................................... 84"
+        },
+        {
+          "type": "figure",
+          "number": "21",
+          "name": "FQ 6300 Flying Qualities Testing ................................................................................................... 86"
+        },
+        {
+          "type": "figure",
+          "number": "22",
+          "name": "FQ 7200 Structures Testing ............................................................................................................. 91"
+        },
+        {
+          "type": "figure",
+          "number": "23",
+          "name": "FQ 8100 Handling Qualities Evaluation .......................................................................................... 95"
+        },
+        {
+          "type": "figure",
+          "number": "24",
+          "name": "FQ 9200 Stall, Departure and Spin Testing ................................................................................... 100"
+        },
+        {
+          "type": "figure",
+          "number": "25",
+          "name": "Mission Systems Overview ........................................................................................................... 105"
+        },
+        {
+          "type": "figure",
+          "number": "26",
+          "name": "SY 6100 EO/IR and RADAR Systems .......................................................................................... 110"
+        },
+        {
+          "type": "figure",
+          "number": "27",
+          "name": "Test Foundations Overview ........................................................................................................... 129"
+        },
+        {
+          "type": "figure",
+          "number": "28",
+          "name": "TF 6100 Plan ................................................................................................................................. 138"
+        },
+        {
+          "type": "figure",
+          "number": "29",
+          "name": "TF 6200 Execute ............................................................................................................................ 142"
+        },
+        {
+          "type": "figure",
+          "number": "30",
+          "name": "Test Leadership Overview ............................................................................................................. 159"
+        }
+      ]
+    },
+    {
+      "file": "pages/page007_figure-1_School-Outcomes.png",
+      "page": 7,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "1",
+          "name": "School Outcomes"
+        },
+        {
+          "type": "figure",
+          "number": "1",
+          "name": "School Goal"
+        }
+      ]
+    },
+    {
+      "file": "pages/page008_figure-2_All-students-complete-ancillary-training-at-the-be.png",
+      "page": 8,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "2",
+          "name": "All students complete ancillary training at the beginning of the curriculum followed by the applicable"
+        },
+        {
+          "type": "figure",
+          "number": "2",
+          "name": "Curriculum Organization"
+        }
+      ]
+    },
+    {
+      "file": "pages/page009_figure-3_Course-Overview.png",
+      "page": 9,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "3",
+          "name": "Course Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page011_table-1_Course-Numbering-Convention.png",
+      "page": 11,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "table",
+          "number": "1",
+          "name": "Course Numbering Convention"
+        }
+      ]
+    },
+    {
+      "file": "pages/page016_figure-4_Check-Flight-Overview.png",
+      "page": 16,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "4",
+          "name": "Check Flight Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page024_figure-5_CF-6300-T-38-Training-P.png",
+      "page": 24,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "5",
+          "name": "CF 6300 T-38 Training (P)"
+        }
+      ]
+    },
+    {
+      "file": "pages/page025_figure-6_CF-6300-T-38-Training-ABMCSOFTERPASTC.png",
+      "page": 25,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "6",
+          "name": "CF 6300 T-38 Training (ABM/CSO/FTE/RPA/STC)"
+        }
+      ]
+    },
+    {
+      "file": "pages/page032_figure-7_CF-6600-F-16-and-Control-Room-Training-P.png",
+      "page": 32,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "7",
+          "name": "CF 6600 F-16 and Control Room Training (P)"
+        }
+      ]
+    },
+    {
+      "file": "pages/page033_figure-8_CF-6600-F-16-and-Control-Room-Training-ABMCSOFTERP.png",
+      "page": 33,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "8",
+          "name": "CF 6600 F-16 and Control Room Training (ABM/CSO/FTE/RPA/STC)"
+        }
+      ]
+    },
+    {
+      "file": "pages/page035_figure-9_Figure-9-Space-Operations-Overview.png",
+      "page": 35,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "9",
+          "name": "Figure 9: Space Operations Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page037_figure-10_SO-6100-GROOT-Training.png",
+      "page": 37,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "10",
+          "name": "SO 6100 GROOT Training"
+        }
+      ]
+    },
+    {
+      "file": "pages/page040_figure-11_Astronautical-Sciences-Overview.png",
+      "page": 40,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "11",
+          "name": "Astronautical Sciences Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page059_figure-12_.png",
+      "page": 59,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "12",
+          "name": "."
+        },
+        {
+          "type": "figure",
+          "number": "12",
+          "name": "Flight Sciences – Performance Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page063_figure-13_PF-6100-Fixed-Wing-Aerodynamics.png",
+      "page": 63,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "13",
+          "name": "PF 6100 Fixed Wing Aerodynamics"
+        }
+      ]
+    },
+    {
+      "file": "pages/page066_figure-14_PF-6200-Modeling-and-Simulation.png",
+      "page": 66,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "14",
+          "name": "PF 6200 Modeling and Simulation"
+        }
+      ]
+    },
+    {
+      "file": "pages/page069_figure-15_PF-7100-Air-Data-System.png",
+      "page": 69,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "15",
+          "name": "PF 7100 Air Data System"
+        }
+      ]
+    },
+    {
+      "file": "pages/page074_figure-16_PF-8200-Energy.png",
+      "page": 74,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "16",
+          "name": "PF 8200 Energy"
+        }
+      ]
+    },
+    {
+      "file": "pages/page077_figure-17_PF-8300-Performance-Testing.png",
+      "page": 77,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "17",
+          "name": "PF 8300 Performance Testing"
+        }
+      ]
+    },
+    {
+      "file": "pages/page079_figure-18_The-following-section-will-present-a-brief-descrip.png",
+      "page": 79,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "18",
+          "name": "The following section will present a brief description of"
+        }
+      ]
+    },
+    {
+      "file": "pages/page080_figure-18_Flying-Qualities-Phase-Block-Diagram.png",
+      "page": 80,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "18",
+          "name": "Flying Qualities Phase Block Diagram"
+        },
+        {
+          "type": "figure",
+          "number": "19",
+          "name": "Flight Sciences – Flying Qualities Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page084_figure-20_FQ-6200-Aircraft-Stability.png",
+      "page": 84,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "20",
+          "name": "FQ 6200 Aircraft Stability"
+        }
+      ]
+    },
+    {
+      "file": "pages/page086_figure-21_FQ-6300-Flying-Qualities-Testing.png",
+      "page": 86,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "21",
+          "name": "FQ 6300 Flying Qualities Testing"
+        }
+      ]
+    },
+    {
+      "file": "pages/page091_figure-22_FQ-7200-Structures-Testing.png",
+      "page": 91,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "22",
+          "name": "FQ 7200 Structures Testing"
+        }
+      ]
+    },
+    {
+      "file": "pages/page095_figure-23_FQ-8100-Handling-Qualities-Evaluation.png",
+      "page": 95,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "23",
+          "name": "FQ 8100 Handling Qualities Evaluation"
+        }
+      ]
+    },
+    {
+      "file": "pages/page100_figure-24_FQ-9200-Stall-Departure-and-Spin-Testing.png",
+      "page": 100,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "24",
+          "name": "FQ 9200 Stall, Departure and Spin Testing"
+        }
+      ]
+    },
+    {
+      "file": "pages/page105_figure-25_Mission-Systems-Overview.png",
+      "page": 105,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "25",
+          "name": "Mission Systems Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page110_figure-26_SY-6100-EOIR-and-RADAR-Systems.png",
+      "page": 110,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "26",
+          "name": "SY 6100 EO/IR and RADAR Systems"
+        }
+      ]
+    },
+    {
+      "file": "pages/page129_figure-27_Test-Foundations-Overview.png",
+      "page": 129,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "27",
+          "name": "Test Foundations Overview"
+        }
+      ]
+    },
+    {
+      "file": "pages/page138_figure-28_TF-6100-Plan.png",
+      "page": 138,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "28",
+          "name": "TF 6100 Plan"
+        }
+      ]
+    },
+    {
+      "file": "pages/page142_figure-29_TF-6200-Execute.png",
+      "page": 142,
+      "width": 2200,
+      "height": 1700,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "29",
+          "name": "TF 6200 Execute"
+        }
+      ]
+    },
+    {
+      "file": "pages/page159_figure-30_Figure-30-Test-Leadership-Overview.png",
+      "page": 159,
+      "width": 1700,
+      "height": 2200,
+      "dpi": 200,
+      "figures": [
+        {
+          "type": "figure",
+          "number": "30",
+          "name": "Figure 30: Test Leadership Overview"
+        }
+      ]
+    }
+  ]
+}

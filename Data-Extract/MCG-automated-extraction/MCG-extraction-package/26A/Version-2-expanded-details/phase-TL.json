@@ -1,0 +1,1488 @@
+{
+  "phase": "TL",
+  "phaseName": "Test Leadership",
+  "sourceDocument": "MCG 26A",
+  "extractedAt": "2026-02-22",
+  "courseAssignment": "Shared",
+  "pageRange": {
+    "start": 163,
+    "end": 170
+  },
+  "modules": [
+    {
+      "moduleCode": "TL 5000",
+      "moduleName": "Strategic Context",
+      "description": "This course provides an overview of the strategic context of test and evaluation, including the role of the US military in the global security environment, the importance of test and evaluation in supporting military operations, and the key stakeholders and organizations involved in the test and evaluation process. Students will learn about the unique strategic contexts of various Combatant Commands (COCOMs) and their implications for test and evaluation, as well as the technological capabilities and limitations of US and adversary forces. The course will also cover the basics of the DoD acquisition system and the role of test and evaluation in supporting the development and fielding of new military systems.",
+      "creditHours": 0,
+      "tlos": [],
+      "events": []
+    },
+    {
+      "moduleCode": "TL 5100",
+      "moduleName": "Strategic Context",
+      "parentCourse": "TL 5000",
+      "description": null,
+      "tlos": [
+        "TLO 1. Describe how S&T works with the Test Enterprise.",
+        "TLO 2. Identify the primary missions of S&T organizations like AFRL and DARPA in the context of defense innovation.",
+        "TLO 3. Recognize and explain the unique strategic contexts of various COCOMs and their implications for test and evaluation.",
+        "TLO 4. Describe the key components and processes of the DoD acquisition system, including the roles and responsibilities of various stakeholders, and explain how they impact test and evaluation activities.",
+        "TLO 5. Compare and contrast the technological capabilities and limitations of US and adversary forces.",
+        "TLO 6. Describe the basic security protocols for testing sensitive technologies.",
+        "TLO 7. Identify the security boundaries and program objectives of the TPS SAP baseline.",
+        "TLO 8. Define key Operational Test terminology, including Operational Effectiveness and Suitability.",
+        "TLO 9. Differentiate between the objectives of Developmental Test (DT) and Operational Test (OT)."
+      ],
+      "events": [
+        {
+          "code": "TL 5101A",
+          "eventName": "Intro to Science and Technology (S&T)",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This section explores the ecosystem of defense innovation, focusing on the critical transition of technology from the laboratory to the warfighter (\"crossing the Valley of Death\"). Students will examine the specific roles and missions of key S&T organizations, such as the Air Force Research Lab (AFRL) and the Defense Advanced Research Projects Agency (DARPA). The course also investigates the impact of disruptive emerging technologies—such as Collaborative Combat Aircraft (CCAs) and Long Range Kill Chains (LRKC)—on future test ranges and methodologies.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 5102A",
+          "eventName": "Combatant Command Perspectives",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This block provides a comparative analysis of the strategic environments facing major geographic and functional Combatant Commands, with specific focus on EUCOM, INDOPACOM, SPACECOM, and CYBERCOM. Students will investigate how the unique geopolitical landscapes, physical environments, and adversary capabilities within each Area of Responsibility (AOR) drive specific requirements for system performance and test evaluation.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 5103A",
+          "eventName": "Intro to Acquisition",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This course section provides a foundational understanding of the Department of Defense acquisition framework. It covers the interaction between the Joint Capabilities Integration and Development System (JCIDS), the Defense Acquisition System, and the Planning, Programming, Budgeting, and Execution (PPBE) process. Special emphasis is placed on the \"V-model\" of systems engineering and the Tester's role in influencing requirements early in the lifecycle to ensure programs are structurally sound for eventual fielding.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 5104A",
+          "eventName": "Intelligence Briefs",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This module addresses the critical intersection of intelligence, security, and test execution. Students will receive necessary security indoctrination and gain insight into the capabilities of national intelligence assets. This will include briefs to cover technological capabilities and limitations of US and adversary forces.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 5105A",
+          "eventName": "Special Access Program (SAP) Briefs",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This section includes the formal indoctrination to the TPS Special Access Program (SAP) student baseline. Students will complete mandatory security training and receive detailed overviews of each program within the baseline to ensure full compliance and situational awareness for subsequent secure curriculum events.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 5110A",
+          "eventName": "Introduction to Operational Test",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This block introduces students to formal Operational Test (OT) in the context of fielding new capabilities. An overview of the US laws governing OT and independent operational assessments will be presented. OT objectives and test considerations will be compared with those of Developmental Test (DT). Key OT terminology such as Effectiveness and Suitability will be presented, in addition to the different OT organizations and considerations for integrated testing will be discussed.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        }
+      ]
+    },
+    {
+      "moduleCode": "TL 6000",
+      "moduleName": "Negotiation, Persuasion, & Communication (NPC)",
+      "description": "This course focuses on the skills and knowledge required to negotiate, persuade, and communicate effectively in a test and evaluation context. Students will learn about the principles and practices of negotiation, including the seven elements of negotiation, the negotiator's toolbox, and the psychology of persuasion. The course will also cover the importance of effective communication in test and evaluation, including critical communication skills, group negotiations, and negotiating remotely.",
+      "creditHours": 1,
+      "tlos": [],
+      "events": []
+    },
+    {
+      "moduleCode": "TL 6100",
+      "moduleName": "Negotiation, Persuasion, & Communication (NPC)",
+      "parentCourse": "TL 6000",
+      "description": null,
+      "tlos": [
+        "TLO 1. Apply effective negotiation strategies to resolve test-related conflicts and achieve mutually beneficial outcomes.",
+        "TLO 2. Develop persuasive communication skills to influence stakeholders and advocate for test priorities, resources, and requirements.",
+        "TLO 3. Analyze the interests, needs, and motivations of various test stakeholders, including government agencies, contractors, and military personnel, to inform negotiation and persuasion approaches"
+      ],
+      "events": [
+        {
+          "code": "TL 6101A",
+          "eventName": "Negotiation, Persuasion, & Communication (NPC) Course",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This is a week-long block taught by instructors outside of TPS. Through a combination of lectures, discussions, and exercises, students will develop the skills and confidence needed to negotiate and communicate effectively with stakeholders, including program offices, contractors, and military personnel.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 6102Y",
+          "eventName": "Oral Report",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "This is a week-long block taught by instructors outside of TPS. Through a combination of lectures, discussions, and exercises, students will develop the skills and confidence needed to negotiate and communicate effectively with stakeholders, including program offices, contractors, and military personnel.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        }
+      ]
+    },
+    {
+      "moduleCode": "TL 7000",
+      "moduleName": "Innovation",
+      "description": "This course is designed to help students develop the skills and knowledge required to innovate and improve test and evaluation processes and systems. Students will learn about the principles and practices of innovation, including design thinking, lean startup, and agile methodologies. The course will cover the importance of innovation in test and evaluation, including the need for continuous improvement and the role of innovation in supporting the development and fielding of new military systems. This course also introduces the students to data-driven testing which is built upon in other phases.",
+      "creditHours": 2,
+      "tlos": [],
+      "events": []
+    },
+    {
+      "moduleCode": "TL 7100",
+      "moduleName": "Innovation",
+      "parentCourse": "TL 7000",
+      "description": null,
+      "tlos": [
+        "TLO 1. Apply innovation frameworks to develop and pitch innovative solutions that address complex test and evaluation challenges.",
+        "TLO 2. Utilize innovation processes and strategies to design and develop new test methods, tools, and technologies that improve test efficiency, effectiveness, and quality.",
+        "TLO 3. Collaborate with peers and instructors to refine and iterate on innovation projects.",
+        "TLO 4. Demonstrate the ability to adapt and pivot in response to changing conditions and requirements."
+      ],
+      "events": [
+        {
+          "code": "TL 7101A",
+          "eventName": "Innovation Course",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This is a week-long innovation block taught by instructors out of TPS. Through a combination of lectures, discussions, and exercises, students will develop the skills and knowledge needed to apply innovation principles and practices to real-world test and evaluation challenges.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 7102Y",
+          "eventName": "Student Team Presentations in Class",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "This is a week-long innovation block taught by instructors out of TPS. Through a combination of lectures, discussions, and exercises, students will develop the skills and knowledge needed to apply innovation principles and practices to real-world test and evaluation challenges.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 7103Y",
+          "eventName": "Pitch Day Presentation",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "This is a week-long innovation block taught by instructors out of TPS. Through a combination of lectures, discussions, and exercises, students will develop the skills and knowledge needed to apply innovation principles and practices to real-world test and evaluation challenges.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        }
+      ]
+    },
+    {
+      "moduleCode": "TL 7200",
+      "moduleName": "Data-Driven Test Introduction",
+      "parentCourse": "TL 7000",
+      "description": null,
+      "tlos": [
+        "TLO 1. Apply fundamental Python programming concepts (variables, data types, logic, loops, and functions) to solve structured coding problems.",
+        "TLO 2. Apply common Python libraries to import and manipulate data, establishing a software foundation for subsequent coursework in robotic perception, planning, and control.",
+        "TLO 3. Explain fundamental AI/ML concepts, the components of an AI pipeline, and the role of data-driven methodologies in modern test and evaluation.",
+        "TLO 4. Discuss the importance of verification, validation, and explainability (V&V/X) for AI-enabled systems and summarize the ethical considerations relevant to military applications.",
+        "TLO 5. Apply data preprocessing techniques to structure and prepare a sample dataset for model training.",
+        "TLO 6. Implement a basic machine learning model within a hands-on lab environment and demonstrate the process of testing its performance against defined metrics.",
+        "TLO 7. Identify real-world applications of AI/ML technologies presented during industry tours and relate them to potential military use cases.",
+        "TLO 8. Describe the practical challenges and opportunities of technology implementation as observed in operational environments at various technology companies."
+      ],
+      "events": [
+        {
+          "code": "TL 7201B",
+          "eventName": "Intro to Computer Science",
+          "eventType": "B",
+          "eventTypeName": "Asynchronous Content",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This block provides some basic computer programming skills required for the rest of the curriculum. These prerequisite courses will introduce you to the basics of coding in Python including basic arithmetic, data types, functions, logic, loops and working with popular external libraires. Learning these basics will enable you to complete hands on assignments in robotic perception, planning, and control. This block will also provide a foundation to understand the software driving modern air and space technologies.",
+          "prerequisites": [
+            {
+              "code": null,
+              "name": "TPS Enrollment",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": "General enrollment prerequisite, not a specific event code",
+              "originalNotes": "General enrollment prerequisite, not a specific event code"
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 7210A",
+          "eventName": "Data Driven Test Primer",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "This block provides an overview of data-driven testing methods and outlines the journey to academia during the AI & Emerging Technology Trip.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            },
+            {
+              "code": "TL 7201B",
+              "name": "Intro to Computer Science",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 7220A",
+          "eventName": "AI & Emerging Technology Trip",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "The students will participate in a 2-week trip to MIT or Standford which will provide a detailed overview of Data-Driven Test techniques and visits to industry. This immersive trip, a collaboration between the USAF Test Pilot School and a leading academic institution like MIT or Stanford, provides students with a comprehensive introduction to Artificial Intelligence (AI) and Machine Learning (ML) for test and evaluation. The trip consists of academic instruction from university faculty on core topics, including AI fundamentals, data management, compute infrastructure, multimodal AI, and cybersecurity. A significant portion of the trip is dedicated to hands-on application through lab work, culminating in a capstone challenge. The experience is further enhanced by immersing students in the practical application of AI through tours of local technology companies and defense-focused labs, reinforcing the real-world relevance of the concepts learned. The overall goal is to equip future test professionals with the foundational knowledge and practical skills to design, evaluate, and implement AI/ML systems in complex operational environments.",
+          "prerequisites": [
+            {
+              "code": "TL 7210A",
+              "name": "Data-Driven Test Primer",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 7220Y",
+          "eventName": "AI & Emerging Technology Trip Summary Presentation",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "The students will participate in a 2-week trip to MIT or Standford which will provide a detailed overview of Data-Driven Test techniques and visits to industry. This immersive trip, a collaboration between the USAF Test Pilot School and a leading academic institution like MIT or Stanford, provides students with a comprehensive introduction to Artificial Intelligence (AI) and Machine Learning (ML) for test and evaluation. The trip consists of academic instruction from university faculty on core topics, including AI fundamentals, data management, compute infrastructure, multimodal AI, and cybersecurity. A significant portion of the trip is dedicated to hands-on application through lab work, culminating in a capstone challenge. The experience is further enhanced by immersing students in the practical application of AI through tours of local technology companies and defense-focused labs, reinforcing the real-world relevance of the concepts learned. The overall goal is to equip future test professionals with the foundational knowledge and practical skills to design, evaluate, and implement AI/ML systems in complex operational environments.",
+          "prerequisites": [
+            {
+              "code": "TL 7210A",
+              "name": "Data-Driven Test Primer",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        }
+      ]
+    },
+    {
+      "moduleCode": "TL 8000",
+      "moduleName": "Case Studies",
+      "description": "This course provides students with the opportunity to analyze and discuss real-world case studies of test and evaluation programs, including the successes and challenges faced by these programs. Students will learn about the key stakeholders, organizations, and processes involved in test and evaluation, as well as the importance of effective leadership, communication, and collaboration in supporting the success of these programs.",
+      "creditHours": 1,
+      "tlos": [],
+      "events": []
+    },
+    {
+      "moduleCode": "TL 8100",
+      "moduleName": "Case Studies",
+      "parentCourse": "TL 8000",
+      "description": null,
+      "tlos": [
+        "TLO 1. Identify and describe the roles, interests, and perspectives of various stakeholders involved in test and acquisition programs, including program offices, requirements, operational test, developmental test, contractors, and other relevant entities.",
+        "TLO 2. Analyze and discuss the strategic and operational contexts of specific test and acquisition programs, including the impact of technological advancements, budget constraints, and changing operational requirements on program decisions and outcomes.",
+        "TLO 3. Evaluate programmatic risk management approaches and perspectives and discuss the implications of risk management decisions on test and acquisition outcomes.",
+        "TLO 4. Extract lessons learned from case studies of various test and acquisition programs to develop a deeper understanding of the complexities and challenges of test leadership and to inform future decision-making.",
+        "TLO 5. Make and defend recommendations for improving test and acquisition programs, including the identification of opportunities for innovation, the mitigation of risks, and the optimization of resources."
+      ],
+      "events": [
+        {
+          "code": "TL 8101A",
+          "eventName": "Case Study Seminar 1",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Eight full day Case Study Seminars occur at a rate of about once a month. Students will develop the skills and knowledge needed to apply the lessons learned from these case studies to real-world test and evaluation challenges, including the ability to analyze complex problems, identify key issues and opportunities, and develop effective solutions.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8102Y",
+          "eventName": "Case Study Report 1",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Eight full day Case Study Seminars occur at a rate of about once a month. Students will develop the skills and knowledge needed to apply the lessons learned from these case studies to real-world test and evaluation challenges, including the ability to analyze complex problems, identify key issues and opportunities, and develop effective solutions.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8110A",
+          "eventName": "Case Study Seminar 2",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 2 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8111Y",
+          "eventName": "Case Study Report 2",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 2 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8120A",
+          "eventName": "Case Study Seminar 3",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 3 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8121Y",
+          "eventName": "Case Study Report 3",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 3 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8130A",
+          "eventName": "Case Study Seminar 4",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 4 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8131Y",
+          "eventName": "Case Study Report 4",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 4 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8140A",
+          "eventName": "Case Study Seminar 5",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 5 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8141Y",
+          "eventName": "Case Study Report 5",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 5 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8150A",
+          "eventName": "Case Study Seminar 6",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 6 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8151Y",
+          "eventName": "Case Study Report 6",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 6 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8160A",
+          "eventName": "Case Study Seminar 7",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 7 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8161Y",
+          "eventName": "Case Study Report 7",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 7 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8170A",
+          "eventName": "Case Study Seminar 8",
+          "eventType": "A",
+          "eventTypeName": "Academic Lecture",
+          "section": "Academics",
+          "applicability": [],
+          "description": "Case Study Seminar 8 of 8. Full day seminar occurring approximately once a month.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8110-70A (Seminar 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        },
+        {
+          "code": "TL 8171Y",
+          "eventName": "Case Study Report 8",
+          "eventType": "Y",
+          "eventTypeName": "Oral Report",
+          "section": "Ground",
+          "applicability": [],
+          "description": "Case Study Report 8 of 8.",
+          "prerequisites": [
+            {
+              "code": "AN 5190A",
+              "name": "Test Leadership Phase Intro",
+              "requiredFor": null,
+              "scope": {
+                "positions": [
+                  "inherit"
+                ],
+                "pilotType": null,
+                "crewSoloAircraft": null,
+                "dataGroup": null,
+                "clearance": null
+              },
+              "alternative": null,
+              "partialCompletion": null,
+              "isExternal": false,
+              "externalPhase": null,
+              "errata": null,
+              "originalNotes": null
+            }
+          ],
+          "rangeNotation": "TL 8111-71Y (Report 2-8)",
+          "applicabilityDetail": {
+            "positions": [
+              "P",
+              "FTE",
+              "CSO",
+              "ABM",
+              "RPA"
+            ],
+            "courseType": null,
+            "clearance": null
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalModules": 9,
+    "totalEvents": 31,
+    "totalPrerequisites": 32,
+    "eventsByType": {
+      "A": 18,
+      "B": 1,
+      "Y": 12
+    },
+    "v2Stats": {
+      "totalPrereqs": 32,
+      "scopeBreakdown": {
+        "inherit": 32,
+        "all": 0,
+        "positionSpecific": 0
+      },
+      "positionFrequency": {},
+      "crewSoloPrereqs": 0,
+      "dataGroupPrereqs": 0,
+      "alternativePrereqs": 0,
+      "alternativeGroups": [],
+      "externalPrereqs": 0,
+      "errataCount": 1,
+      "partialCompletionCount": 0
+    }
+  },
+  "schemaVersion": 2,
+  "transformedAt": "2026-02-27"
+}

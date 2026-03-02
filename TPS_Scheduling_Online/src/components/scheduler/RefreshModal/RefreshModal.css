@@ -1,0 +1,60 @@
+.refresh-modal-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  margin-bottom: 16px;
+}
+
+.refresh-modal-desc {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.refresh-modal-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.refresh-option {
+  padding: 12px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.refresh-option-quick {
+  background: var(--refresh-quick-bg);
+  border: 1px solid var(--refresh-quick-border);
+}
+
+.refresh-option-full {
+  background: var(--refresh-full-bg);
+  border: 1px solid var(--refresh-full-border);
+}
+
+.refresh-option-title {
+  font-weight: 700;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+}
+.refresh-option-title.quick { color: var(--refresh-quick-text); }
+.refresh-option-title.full { color: var(--refresh-full-text); }
+
+.refresh-option-desc {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+}
+
+.refresh-cancel {
+  margin-top: 12px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--border-btn);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.6rem;
+  width: 100%;
+}

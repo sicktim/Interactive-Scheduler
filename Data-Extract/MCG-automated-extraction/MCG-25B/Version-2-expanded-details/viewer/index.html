@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCG 25B Curriculum Viewer</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --border: #475569; --text: #e2e8f0; --text-dim: #94a3b8;
+    --accent: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+    --red: #f87171; --purple: #a78bfa; --cyan: #22d3ee;
+    --indigo: #818cf8; --orange: #fb923c; --pink: #f472b6;
+    --mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.5; }
+
+  /* Header */
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 24px; position:sticky; top:0; z-index:100; }
+  .header h1 { font-size:18px; font-weight:600; font-family:var(--mono); }
+  .header-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .header-stats { font-size:12px; color:var(--text-dim); font-family:var(--mono); }
+  .header-stats span { margin-right:12px; }
+  .header-stats .num { color:var(--accent); font-weight:600; }
+
+  /* Search */
+  .search-bar { display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap; }
+  .search-input { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 12px; color:var(--text); font-family:var(--mono); font-size:13px; width:320px; outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .search-input::placeholder { color:var(--text-dim); }
+  .filter-btn { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:4px 10px; color:var(--text-dim); font-size:12px; cursor:pointer; font-family:var(--mono); transition:all .15s; }
+  .filter-btn:hover { border-color:var(--accent); color:var(--text); }
+  .filter-btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:600; }
+  .filter-group { display:flex; align-items:center; gap:4px; }
+  .filter-group-label { font-size:10px; color:var(--text-dim); font-family:var(--mono); text-transform:uppercase; font-weight:600; margin-right:2px; }
+
+  /* Content */
+  .content { max-width:1200px; margin:0 auto; padding:16px 24px 80px; }
+
+  /* Phase */
+  .phase { margin-bottom:16px; }
+  .phase-header { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; user-select:none; transition:background .15s; }
+  .phase-header:hover { background:var(--surface2); }
+  .phase-code { font-family:var(--mono); font-weight:700; font-size:15px; color:var(--accent); min-width:32px; }
+  .phase-name { font-weight:600; flex:1; }
+  .phase-count { font-size:12px; color:var(--text-dim); font-family:var(--mono); }
+  .phase-body { padding-left:8px; }
+
+  /* Module */
+  .module { margin:6px 0 6px 12px; }
+  .module-header { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(56,189,248,0.06); border-left:3px solid var(--accent); border-radius:0 6px 6px 0; cursor:pointer; user-select:none; transition:background .15s; }
+  .module-header:hover { background:rgba(56,189,248,0.12); }
+  .module-code { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:600; }
+  .module-name { font-size:13px; flex:1; }
+  .module-count { font-size:11px; color:var(--text-dim); font-family:var(--mono); }
+  .module-body { padding-left:12px; }
+  .tlo { font-size:12px; color:var(--text-dim); padding:2px 0 2px 24px; font-style:italic; }
+
+  /* Caret */
+  .caret { display:inline-block; width:16px; text-align:center; font-size:12px; color:var(--text-dim); transition:transform .2s; flex-shrink:0; }
+  .caret.open { transform:rotate(90deg); }
+
+  /* Event */
+  .event { margin:4px 0 4px 16px; border:1px solid var(--border); border-radius:6px; background:var(--surface); overflow:hidden; }
+  .event.search-match { border-color:var(--amber); box-shadow:0 0 0 1px var(--amber); }
+  .event-header { display:flex; align-items:center; gap:8px; padding:8px 12px; cursor:pointer; user-select:none; transition:background .15s; }
+  .event-header:hover { background:var(--surface2); }
+  .event-code { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--green); min-width:80px; }
+  .event-name { font-size:13px; flex:1; font-weight:500; }
+  .event-type-badge { font-size:10px; font-family:var(--mono); padding:2px 6px; border-radius:4px; font-weight:600; text-transform:uppercase; flex-shrink:0; }
+  .type-A { background:rgba(129,140,248,0.2); color:var(--indigo); }
+  .type-F { background:rgba(74,222,128,0.2); color:var(--green); }
+  .type-S { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .type-M { background:rgba(248,113,113,0.2); color:var(--red); }
+  .type-H { background:rgba(167,139,250,0.2); color:var(--purple); }
+  .type-C { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .type-O { background:rgba(249,115,22,0.2); color:var(--orange); }
+  .type-B { background:rgba(244,114,182,0.2); color:var(--pink); }
+  .type-R { background:rgba(148,163,184,0.2); color:var(--text-dim); }
+  .type-E { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .section-badge { font-size:10px; color:var(--text-dim); font-family:var(--mono); padding:2px 6px; background:var(--bg); border-radius:4px; flex-shrink:0; }
+
+  /* Event body */
+  .event-body { border-top:1px solid var(--border); padding:10px 14px; }
+  .event-description { font-size:12px; color:var(--text-dim); margin-bottom:10px; line-height:1.6; }
+
+  /* Applicability row */
+  .app-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+  .app-label { font-size:11px; color:var(--text-dim); font-family:var(--mono); min-width:90px; text-transform:uppercase; font-weight:600; }
+  .app-chip { display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-family:var(--mono); font-weight:600; padding:2px 8px; border-radius:4px; min-width:42px; text-align:center; }
+  .app-chip.active { background:rgba(74,222,128,0.2); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+  .app-chip.inactive { background:rgba(148,163,184,0.08); color:var(--text-dim); border:1px solid rgba(148,163,184,0.15); opacity:0.4; }
+  .course-tag { font-size:11px; font-family:var(--mono); padding:2px 8px; border-radius:4px; font-weight:600; }
+  .course-ftc { background:rgba(167,139,250,0.2); color:var(--purple); }
+  .course-stc { background:rgba(251,146,60,0.2); color:var(--orange); }
+  .clearance-tag { font-size:11px; font-family:var(--mono); padding:2px 8px; border-radius:4px; font-weight:600; background:rgba(248,113,113,0.2); color:var(--red); }
+
+  /* Prerequisites section */
+  .prereqs-toggle { display:flex; align-items:center; gap:6px; padding:6px 0; cursor:pointer; user-select:none; font-size:12px; color:var(--text-dim); font-family:var(--mono); }
+  .prereqs-toggle:hover { color:var(--text); }
+  .prereqs-count { color:var(--accent); font-weight:600; }
+  .prereqs-list { padding:0; }
+
+  /* Single prerequisite */
+  .prereq { padding:8px 12px; margin:4px 0; background:var(--bg); border-radius:6px; border-left:3px solid var(--border); }
+  .prereq.external { border-left-color:var(--indigo); }
+  .prereq.has-alt { border-left-color:var(--amber); }
+  .prereq.has-errata { border-left-color:var(--red); }
+  .prereq.has-partial { border-left-color:var(--cyan); }
+  .prereq-top { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .prereq-code { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--green); }
+  .prereq-code.no-code { color:var(--text-dim); font-style:italic; }
+  .prereq-name { font-size:12px; flex:1; }
+  .prereq-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+  .prereq-tag { font-size:10px; font-family:var(--mono); padding:1px 6px; border-radius:3px; font-weight:600; }
+  .tag-inherit { background:rgba(148,163,184,0.15); color:var(--text-dim); }
+  .tag-all { background:rgba(74,222,128,0.15); color:var(--green); }
+  .tag-position { background:rgba(56,189,248,0.15); color:var(--accent); }
+  .tag-crew-solo { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .tag-data-group { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .tag-external { background:rgba(129,140,248,0.2); color:var(--indigo); }
+  .tag-alt { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .tag-partial { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .tag-errata { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag-clearance { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag-timing { background:rgba(167,139,250,0.15); color:var(--purple); }
+
+  /* Scope applicability row in prereqs */
+  .scope-app { display:flex; align-items:center; gap:4px; margin-top:4px; }
+  .scope-app .app-chip { font-size:10px; padding:1px 6px; min-width:36px; }
+
+  /* Errata/notes display */
+  .errata-text { font-size:11px; color:var(--red); font-style:italic; margin-top:4px; padding:4px 8px; background:rgba(248,113,113,0.06); border-radius:4px; }
+  .original-notes { font-size:11px; color:var(--text-dim); font-style:italic; margin-top:2px; }
+  .original-notes::before { content:'Notes: '; font-weight:600; }
+
+  /* Alt display */
+  .alt-info { font-size:11px; margin-top:4px; padding:4px 8px; background:rgba(251,191,36,0.06); border-radius:4px; color:var(--amber); }
+  .alt-info .alt-code { font-family:var(--mono); font-weight:700; }
+
+  /* Collapsible */
+  .collapsible { display:none; }
+  .collapsible.open { display:block; }
+
+  /* Loading / Error */
+  .loading { text-align:center; padding:60px; color:var(--text-dim); font-family:var(--mono); }
+  .loading .spinner { display:inline-block; width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:12px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .error { background:rgba(248,113,113,0.1); border:1px solid var(--red); padding:16px; border-radius:8px; margin:24px; color:var(--red); font-family:var(--mono); }
+
+  /* Expand All / Collapse All */
+  .expand-controls { display:flex; gap:8px; }
+  .expand-btn { background:none; border:1px solid var(--border); border-radius:4px; padding:3px 10px; color:var(--text-dim); font-size:11px; cursor:pointer; font-family:var(--mono); }
+  .expand-btn:hover { border-color:var(--accent); color:var(--text); }
+
+  /* No events */
+  .no-events { font-size:12px; color:var(--text-dim); padding:4px 24px; font-style:italic; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:8px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <h1>MCG 25B Curriculum Viewer</h1>
+    <div class="header-stats" id="stats"></div>
+    <div class="expand-controls">
+      <button class="expand-btn" onclick="expandAll()">Expand All</button>
+      <button class="expand-btn" onclick="collapseAll()">Collapse All</button>
+    </div>
+  </div>
+  <div class="search-bar">
+    <input class="search-input" id="search" type="text" placeholder="Search events, codes, descriptions..." oninput="handleSearch(this.value)">
+    <div class="filter-group"><span class="filter-group-label">Phase:</span><span id="phase-filters"></span></div>
+    <div class="filter-group"><span class="filter-group-label">Position:</span><span id="position-filters"></span></div>
+  </div>
+</div>
+
+<div class="content" id="content">
+  <div class="loading"><div class="spinner"></div><br>Loading MCG 25B phases...</div>
+</div>
+
+<script>
+const PHASES = ['AN','AS','CF','FQ','PF','SO','SY','TF','TL'];
+const ALL_POSITIONS = ['P','FTE','CSO','ABM','RPA'];
+let allPhases = [];
+let activePhaseFilters = new Set(PHASES);
+let activePositionFilters = new Set(); // empty = show all (no filtering)
+let searchTerm = '';
+
+async function loadData() {
+  try {
+    const results = await Promise.all(
+      PHASES.map(p => fetch(`../phase-${p}.json`).then(r => {
+        if (!r.ok) throw new Error(`Failed to load phase-${p}.json`);
+        return r.json();
+      }))
+    );
+    allPhases = results;
+    renderStats();
+    renderFilters();
+    renderAll();
+  } catch (e) {
+    document.getElementById('content').innerHTML =
+      `<div class="error">Error loading data: ${e.message}<br><br>
+       Make sure you're serving this from a local HTTP server:<br>
+       <code>cd Version-2-expanded-details && npx serve .</code><br>
+       or <code>python -m http.server 8080</code> from the Version-2-expanded-details directory,<br>
+       then open <code>http://localhost:8080/viewer/</code></div>`;
+  }
+}
+
+function renderStats() {
+  let events = 0, prereqs = 0, modules = 0;
+  allPhases.forEach(p => {
+    (p.modules || []).forEach(m => {
+      modules++;
+      (m.events || []).forEach(ev => {
+        events++;
+        prereqs += (ev.prerequisites || []).length;
+      });
+    });
+  });
+  document.getElementById('stats').innerHTML =
+    `<span><span class="num">${allPhases.length}</span> phases</span>` +
+    `<span><span class="num">${modules}</span> modules</span>` +
+    `<span><span class="num">${events}</span> events</span>` +
+    `<span><span class="num">${prereqs}</span> prerequisites</span>`;
+}
+
+function renderFilters() {
+  document.getElementById('phase-filters').innerHTML = PHASES.map(p =>
+    `<button class="filter-btn active" onclick="togglePhaseFilter('${p}',this)">${p}</button>`
+  ).join('');
+
+  document.getElementById('position-filters').innerHTML = ALL_POSITIONS.map(p =>
+    `<button class="filter-btn" onclick="togglePositionFilter('${p}',this)">${p}</button>`
+  ).join('');
+}
+
+function togglePhaseFilter(p, btn) {
+  if (activePhaseFilters.has(p)) { activePhaseFilters.delete(p); btn.classList.remove('active'); }
+  else { activePhaseFilters.add(p); btn.classList.add('active'); }
+  renderAll();
+}
+
+function togglePositionFilter(p, btn) {
+  if (activePositionFilters.has(p)) { activePositionFilters.delete(p); btn.classList.remove('active'); }
+  else { activePositionFilters.add(p); btn.classList.add('active'); }
+  renderAll();
+}
+
+function handleSearch(val) {
+  searchTerm = val.toLowerCase().trim();
+  renderAll();
+}
+
+function matchesPositionFilters(ev) {
+  if (activePositionFilters.size === 0) return true;
+  const detail = ev.applicabilityDetail;
+  if (!detail) return true;
+  for (const pos of activePositionFilters) {
+    if (detail.positions.includes(pos)) return true;
+  }
+  return false;
+}
+
+function matchesAllFilters(ev) {
+  return matchesPositionFilters(ev) && matchesSearch(ev);
+}
+
+function matchesSearch(ev) {
+  if (!searchTerm) return true;
+  const s = searchTerm;
+  return (ev.code && ev.code.toLowerCase().includes(s)) ||
+    (ev.eventName && ev.eventName.toLowerCase().includes(s)) ||
+    (ev.description && ev.description.toLowerCase().includes(s)) ||
+    (ev.prerequisites || []).some(pr =>
+      (pr.code && pr.code.toLowerCase().includes(s)) ||
+      (pr.name && pr.name.toLowerCase().includes(s))
+    );
+}
+
+function renderAll() {
+  const container = document.getElementById('content');
+  let html = '';
+
+  allPhases.forEach((phase, pi) => {
+    if (!activePhaseFilters.has(phase.phase)) return;
+
+    const isFiltering = activePositionFilters.size > 0;
+    const filteredEvents = [];
+    (phase.modules || []).forEach(m => (m.events || []).forEach(ev => {
+      if (matchesAllFilters(ev)) filteredEvents.push(ev);
+    }));
+    const totalEvents = (phase.modules || []).reduce((s,m) => s + (m.events||[]).length, 0);
+    if (filteredEvents.length === 0 && (isFiltering || searchTerm)) return;
+
+    const isOpen = searchTerm ? true : false;
+    const countLabel = isFiltering
+      ? `${filteredEvents.length} / ${totalEvents} events`
+      : `${totalEvents} events`;
+
+    html += `<div class="phase">`;
+    html += `<div class="phase-header" onclick="toggle(this)">
+      <span class="caret${isOpen ? ' open' : ''}">&#9654;</span>
+      <span class="phase-code">${phase.phase}</span>
+      <span class="phase-name">${esc(phase.phaseName)}</span>
+      <span class="phase-count">${countLabel}</span>
+    </div>`;
+    html += `<div class="collapsible phase-body${isOpen ? ' open' : ''}">`;
+
+    (phase.modules || []).forEach((mod, mi) => {
+      const modEvents = (mod.events || []).filter(ev => matchesAllFilters(ev));
+      if (modEvents.length === 0 && (isFiltering || searchTerm)) return;
+
+      const modOpen = searchTerm ? true : false;
+      html += `<div class="module">`;
+      html += `<div class="module-header" onclick="toggle(this)">
+        <span class="caret${modOpen ? ' open' : ''}">&#9654;</span>
+        <span class="module-code">${esc(mod.moduleCode)}</span>
+        <span class="module-name">${esc(mod.moduleName)}${mod.parentCourse ? ' <span style="color:var(--text-dim);font-size:11px">(' + esc(mod.parentCourse) + ')</span>' : ''}</span>
+        <span class="module-count">${isFiltering ? modEvents.length + ' / ' + (mod.events||[]).length : (mod.events||[]).length} events</span>
+      </div>`;
+      html += `<div class="collapsible module-body${modOpen ? ' open' : ''}">`;
+
+      // TLOs
+      if (mod.tlos && mod.tlos.length > 0) {
+        mod.tlos.forEach(t => { html += `<div class="tlo">${esc(t)}</div>`; });
+      }
+
+      (mod.events || []).forEach(ev => {
+        if (!matchesAllFilters(ev)) return;
+        const isMatch = searchTerm && matchesSearch(ev);
+
+        html += renderEvent(ev, isMatch);
+      });
+
+      if ((mod.events || []).length === 0) {
+        html += `<div class="no-events">No events in this module</div>`;
+      }
+
+      html += `</div></div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  if (!html) {
+    html = '<div class="loading" style="color:var(--text-dim)">No matching events found</div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function renderEvent(ev, isMatch) {
+  const prereqs = ev.prerequisites || [];
+  let h = '';
+  h += `<div class="event${isMatch ? ' search-match' : ''}">`;
+
+  // Event header
+  h += `<div class="event-header" onclick="toggle(this)">`;
+  h += `<span class="caret">&#9654;</span>`;
+  h += `<span class="event-code">${esc(ev.code)}</span>`;
+  h += `<span class="event-name">${esc(ev.eventName)}</span>`;
+  h += `<span class="event-type-badge type-${ev.eventType}">${ev.eventType} ${esc(ev.eventTypeName || '')}</span>`;
+  h += `<span class="section-badge">${esc(ev.section || '')}</span>`;
+  h += `</div>`;
+
+  // Event body (collapsible)
+  h += `<div class="collapsible event-body${isMatch ? ' open' : ''}">`;
+
+  // Description
+  if (ev.description) {
+    h += `<div class="event-description">${esc(ev.description)}</div>`;
+  }
+
+  // Applicability
+  h += renderApplicability(ev.applicabilityDetail, ev.applicability);
+
+  // Prerequisites
+  if (prereqs.length > 0) {
+    h += `<div class="prereqs-toggle" onclick="togglePrereqs(this, event)">
+      <span class="caret">&#9654;</span>
+      Prerequisites <span class="prereqs-count">(${prereqs.length})</span>
+    </div>`;
+    h += `<div class="collapsible prereqs-list">`;
+    prereqs.forEach(pr => { h += renderPrereq(pr, ev); });
+    h += `</div>`;
+  }
+
+  h += `</div></div>`;
+  return h;
+}
+
+function renderApplicability(detail, raw) {
+  if (!detail) return '';
+  let h = '<div class="app-row">';
+  h += '<span class="app-label">Required:</span>';
+
+  ALL_POSITIONS.forEach(pos => {
+    const active = detail.positions.includes(pos);
+    h += `<span class="app-chip ${active ? 'active' : 'inactive'}">${pos}</span>`;
+  });
+
+  if (detail.courseType) {
+    const cls = detail.courseType === 'FTC' ? 'course-ftc' : 'course-stc';
+    h += `<span class="course-tag ${cls}">${detail.courseType} only</span>`;
+  }
+  if (detail.clearance) {
+    const label = detail.clearance === 'US_only' ? 'US Only' : 'Non-US Only';
+    h += `<span class="clearance-tag">${label}</span>`;
+  }
+
+  h += '</div>';
+  return h;
+}
+
+function renderPrereq(pr, parentEvent) {
+  let cls = 'prereq';
+  if (pr.isExternal) cls += ' external';
+  if (pr.alternative) cls += ' has-alt';
+  if (pr.errata) cls += ' has-errata';
+  if (pr.partialCompletion) cls += ' has-partial';
+
+  let h = `<div class="${cls}">`;
+
+  // Top row: code + name
+  h += `<div class="prereq-top">`;
+  if (pr.code) {
+    h += `<span class="prereq-code">${esc(pr.code)}</span>`;
+  } else {
+    h += `<span class="prereq-code no-code">No code</span>`;
+  }
+  h += `<span class="prereq-name">${esc(pr.name)}</span>`;
+  h += `</div>`;
+
+  // Tags row
+  h += `<div class="prereq-tags">`;
+
+  // Scope positions
+  const scope = pr.scope || {};
+  if (scope.positions) {
+    if (scope.positions[0] === 'inherit') {
+      h += `<span class="prereq-tag tag-inherit">inherits event applicability</span>`;
+    } else if (scope.positions[0] === 'all') {
+      h += `<span class="prereq-tag tag-all">all positions</span>`;
+    }
+    // specific positions shown in chip row below
+  }
+
+  if (scope.pilotType) {
+    const label = scope.pilotType === 'crew_solo' ? 'Crew Solo' :
+                  scope.pilotType === 'non_crew_solo' ? 'Non-Crew Solo' :
+                  scope.pilotType === 'select' ? 'Select' : scope.pilotType;
+    h += `<span class="prereq-tag tag-crew-solo">${label}`;
+    if (scope.crewSoloAircraft) h += ` (${scope.crewSoloAircraft})`;
+    h += `</span>`;
+  }
+
+  if (scope.dataGroup) {
+    h += `<span class="prereq-tag tag-data-group">${scope.dataGroup} Data Group</span>`;
+  }
+
+  if (scope.clearance) {
+    const label = scope.clearance === 'US_only' ? 'US Only' : 'Non-US Only';
+    h += `<span class="prereq-tag tag-clearance">${label}</span>`;
+  }
+
+  if (scope.timingConstraint) {
+    h += `<span class="prereq-tag tag-timing">${esc(scope.timingConstraint)}</span>`;
+  }
+
+  if (pr.partialCompletion) {
+    h += `<span class="prereq-tag tag-partial">Partial: ${esc(pr.partialCompletion)}</span>`;
+  }
+
+  if (pr.isExternal) {
+    h += `<span class="prereq-tag tag-external">External: ${esc(pr.externalPhase)} phase</span>`;
+  }
+
+  h += `</div>`;
+
+  // Position-specific scope applicability (only for specific positions, not inherit/all)
+  if (scope.positions && scope.positions[0] !== 'inherit' && scope.positions[0] !== 'all') {
+    h += `<div class="scope-app">`;
+    h += `<span style="font-size:10px;color:var(--text-dim);font-family:var(--mono);margin-right:4px;">SCOPE:</span>`;
+    ALL_POSITIONS.forEach(pos => {
+      const active = scope.positions.includes(pos);
+      h += `<span class="app-chip ${active ? 'active' : 'inactive'}">${pos}</span>`;
+    });
+    h += `</div>`;
+  }
+
+  // Alternative info
+  if (pr.alternative) {
+    h += `<div class="alt-info">OR <span class="alt-code">${esc(pr.alternative.altCode)}</span>`;
+    if (pr.alternative.groupId) h += ` <span style="opacity:0.7">(group: ${esc(pr.alternative.groupId)})</span>`;
+    h += `</div>`;
+  }
+
+  // Errata
+  if (pr.errata) {
+    h += `<div class="errata-text">${esc(pr.errata)}</div>`;
+  }
+
+  // Original notes
+  if (pr.originalNotes && pr.originalNotes !== pr.errata) {
+    h += `<div class="original-notes">${esc(pr.originalNotes)}</div>`;
+  }
+
+  h += `</div>`;
+  return h;
+}
+
+// Toggle collapsible
+function toggle(headerEl) {
+  const body = headerEl.nextElementSibling;
+  const caret = headerEl.querySelector('.caret');
+  if (body && body.classList.contains('collapsible')) {
+    body.classList.toggle('open');
+    if (caret) caret.classList.toggle('open');
+  }
+}
+
+function togglePrereqs(toggleEl, e) {
+  e.stopPropagation();
+  const list = toggleEl.nextElementSibling;
+  const caret = toggleEl.querySelector('.caret');
+  if (list && list.classList.contains('collapsible')) {
+    list.classList.toggle('open');
+    if (caret) caret.classList.toggle('open');
+  }
+}
+
+function expandAll() {
+  document.querySelectorAll('.collapsible').forEach(el => el.classList.add('open'));
+  document.querySelectorAll('.caret').forEach(el => el.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.collapsible').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.caret').forEach(el => el.classList.remove('open'));
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init
+loadData();
+</script>
+</body>
+</html>

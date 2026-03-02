@@ -1,0 +1,1448 @@
+{
+  "sheet": "CF PHASE",
+  "classCode": "25A",
+  "extractedAt": "2026-02-19",
+  "sections": [
+    {
+      "name": "TPS AIRMANSHIP",
+      "events": [
+        {
+          "eventCode": "CF 6151FE",
+          "missionName": "C-172 Airmanship FA-1",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD ABM/FTE"
+          ],
+          "notes": [
+            "SCHEDULE AIRCRAFT THRU AERO CLUB 5-2876 (5-AERO)."
+          ],
+          "prerequisites": [
+            "AIRMANSHIP GROUND SCHOOL"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            3
+          ]
+        },
+        {
+          "eventCode": "CF 6152FE",
+          "missionName": "C-172 Airmanship FA-2",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/STUD ABM/FTE"
+          ],
+          "notes": [
+            "SCHEDULE TWO A/C TWO INSTRUCTORS AND FOUR STUDS."
+          ],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            4
+          ]
+        },
+        {
+          "eventCode": "CF 6153FE",
+          "missionName": "C-172 Airmanship FA-3",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/STUD ABM/FTE"
+          ],
+          "notes": [
+            "ANDREW BAXLEY OR ADO WILL MAKE RESERVATIONS"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            5
+          ]
+        },
+        {
+          "eventCode": "CF 6154FE",
+          "missionName": "C-172 Airmanship FA-4",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/STUD ABM/FTE"
+          ],
+          "notes": [
+            "Amnship 1-3 schedule lakebed landing"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            6
+          ]
+        },
+        {
+          "eventCode": "CF 6155FE",
+          "missionName": "C-172 Airmanship FA-5",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/STUD ABM/FTE"
+          ],
+          "notes": [
+            "Amnship 1-3 cannot double brief with 4-5",
+            "Amnship 1-3 prefer tails 4ED or 5ED",
+            "Amnship 4-5 perfer tails 8ED or 9 ED"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "eventCode": "CF 6156FC",
+          "missionName": "C-172 Airmanship CA-1",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/ CSO (As required)"
+          ],
+          "notes": [],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            10
+          ]
+        },
+        {
+          "eventCode": "CF 6157FC",
+          "missionName": "C-172 Airmanship CA-2",
+          "section": "TPS AIRMANSHIP",
+          "aircraftType": "C-172",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "IP/ CSO (As required)"
+          ],
+          "notes": [
+            "SCHEDULE WITH SAME IP AS CF 6650FR IF POSSIBLE"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Glider",
+      "events": [
+        {
+          "eventCode": "CF 6251FJ",
+          "missionName": "Glider Fam",
+          "section": "Glider",
+          "aircraftType": "Glider",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": null,
+          "crew": [
+            "GLIDER IP w/"
+          ],
+          "notes": [
+            "CALL GLIDER PORT @  661-822-5267.  CLSD TUESDAYS."
+          ],
+          "prerequisites": [
+            "GLIDER FAM/SOLO MIB"
+          ],
+          "aircrewQuals": "Fam",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            14
+          ]
+        },
+        {
+          "eventCode": "CF 6252FP",
+          "missionName": "SGS 2-33",
+          "section": "Glider",
+          "aircraftType": "Glider",
+          "aircraftVariant": "ASK-21/G-103* (Hvy Studs)",
+          "config": null,
+          "duration": null,
+          "crew": [
+            "STUD PILOT/FTE/CSO/RPA"
+          ],
+          "notes": [
+            "2 STUDS PER INSTRUCTOR. IF POSSIBLE, SEND 2 IPS AND 4 STUDS.",
+            "NO OTHER FLIGHT EVENTS ON ACADEMIC DAYS",
+            "NO MORE THAN ONE STUD PILOT PER IP",
+            "PILOT (NO SOLO OPT)/FTE/CSO/RPA = 2 TOWS"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": "Fam",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            15,
+            16,
+            17,
+            18
+          ]
+        },
+        {
+          "eventCode": "CF 6251FP",
+          "missionName": "Glider Fam and Solo",
+          "section": "Glider",
+          "aircraftType": "Glider",
+          "aircraftVariant": "SGS 2-33",
+          "config": null,
+          "duration": null,
+          "crew": [
+            "GLIDER IP w/ STUD PILOT"
+          ],
+          "notes": [
+            "PILOT (SOLO) = 3 FAM TOWS + 2 SOLO TOWS"
+          ],
+          "prerequisites": [],
+          "aircrewQuals": "Fam",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            19,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "name": "T-38",
+      "events": [
+        {
+          "eventCode": "CF 6342SN",
+          "missionName": "T-38 Cockpit Fam",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.0,
+          "crew": [
+            "IP w/4 STUD ABM/FTE/CSO"
+          ],
+          "notes": [
+            "ORDER IN CSE WITH EXTERNAL POWER AND MX STAND",
+            "1+00 BRIEF"
+          ],
+          "prerequisites": [
+            "T-38 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            22,
+            23
+          ]
+        },
+        {
+          "eventCode": "CF 6342SP",
+          "missionName": "T-38 CPT",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "IP/2-3 STUD PILOTS"
+          ],
+          "notes": [
+            "SCHEDULE THROUGH CSE W/MX STAND/EXTERNAL POWER",
+            "1+00 BRIEF"
+          ],
+          "prerequisites": [
+            "T-38 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            25,
+            26
+          ]
+        },
+        {
+          "eventCode": "CF 6351FP",
+          "missionName": "T-38 CF-1",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/STUD PILOT"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "T-38C CPT/GND SCHOOL"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            28,
+            29
+          ]
+        },
+        {
+          "eventCode": "CF 6352FP",
+          "missionName": "T-38 CF-2   (T-38 DG ONLY)",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/STUD PILOT"
+          ],
+          "notes": [
+            "BRIEF 1+30"
+          ],
+          "prerequisites": [
+            "CF-1"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            31,
+            32
+          ]
+        },
+        {
+          "eventCode": "CF 6353FP",
+          "missionName": "T-38 CF-3",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/STUD PILOT"
+          ],
+          "notes": [
+            "BRIEF 1+30"
+          ],
+          "prerequisites": [
+            "CF-1,  T-38 DG: CF-2"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            34,
+            35
+          ]
+        },
+        {
+          "eventCode": "CF 6354FP",
+          "missionName": "T-38 CF-FORM",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/STUD PILOT"
+          ],
+          "notes": [
+            "MISSION FREQ, FORMATION",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "CF-3"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            37,
+            38
+          ]
+        },
+        {
+          "eventCode": "CF 6355FN",
+          "missionName": "T-38 Flight Training",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/STUD ABM/CSO/FTE"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3, SSC",
+            "BRIEF 2+00 SUPERSONIC CORRIDOR @ 38K"
+          ],
+          "prerequisites": [
+            "T-38 COCKPIT FAM",
+            "C-172 AIRMANSHIP FA-3 (ABM/FTE)"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            40,
+            41
+          ]
+        },
+        {
+          "eventCode": "CF 6356FM",
+          "missionName": "T-38 Weapons Fam (Required for A-10 Capstone only)",
+          "section": "T-38",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.083,
+          "crew": [
+            "IP w/ STUD"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW",
+            "2+00 BRIEF",
+            "PB-10 OR 12, R15, AC, BH, EAST AND WEST RANGE @13K"
+          ],
+          "prerequisites": [
+            "SY 7911 WEAPONS LECTURE",
+            "T-38 WEAPONS FAM MIB"
+          ],
+          "aircrewQuals": "TPS T-38 WD",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            45,
+            46,
+            47
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Learjet",
+      "events": [
+        {
+          "eventCode": "CF 6451FB",
+          "missionName": "Learjet CF-1",
+          "section": "Learjet",
+          "aircraftType": "Learjet",
+          "aircraftVariant": "LJ-25",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "*IP w/ STUD ABM/CSO/RPA",
+            "IP w/ 2 ABM/CSO/RPA IN FQ SIM A/B",
+            "SIM STUDS EACH FLY 1+00"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+00",
+            "*EACH STUD WILL FLY AN LJ-25 FLIGHT IN CONJUNCTION WITH",
+            "CF-1/2 SIMS. ONLY ONE FLT IS REQUIRED PER ABM/CSO/RPA AND CAN",
+            "OCCUR DURING CF-1 OR CF-2"
+          ],
+          "prerequisites": [
+            "VSS LEARJET INTRO GND SC"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            51,
+            52,
+            53,
+            54,
+            55
+          ]
+        },
+        {
+          "eventCode": "CF 6452FB",
+          "missionName": "Learjet CF-2",
+          "section": "Learjet",
+          "aircraftType": "Learjet",
+          "aircraftVariant": "LJ-25",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "*IP w/ STUD ABM/CSO/RPA",
+            "IP w/ 2 ABM/CSO/RPA IN FQ SIM A/B",
+            "SIM STUDS EACH FLY 1+00"
+          ],
+          "notes": [
+            "BRIEF 1+30"
+          ],
+          "prerequisites": [
+            "CF-1"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            57,
+            58,
+            59
+          ]
+        }
+      ]
+    },
+    {
+      "name": "C-12",
+      "events": [
+        {
+          "eventCode": "CF 6542SE",
+          "missionName": "C-12 Cockpit Fam",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.0,
+          "crew": [
+            "IP w/2 STUD FTE/ABM"
+          ],
+          "notes": [
+            "ORDER IN CSE WITH EXTERNAL POWER",
+            "DAS DESIRED"
+          ],
+          "prerequisites": [
+            "C-12 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            61,
+            62
+          ]
+        },
+        {
+          "eventCode": "CF 6542SD",
+          "missionName": "C-12 CPT",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "IP/2 STUD PILOT/RPA/CSO"
+          ],
+          "notes": [
+            "SCHEDULE THROUGH CSE W/EXTERNAL POWER",
+            "(Non DG Pilots/CSO require C-12 CPT)"
+          ],
+          "prerequisites": [
+            "C-12 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            64,
+            65
+          ]
+        },
+        {
+          "eventCode": "CF 6551FP",
+          "missionName": "C-12 CF-1",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (C-12 DG)"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "STANDARD FUEL LOAD.  BRIEF 2+30"
+          ],
+          "prerequisites": [
+            "C-12 CPT",
+            "OPEN/CLOSED BOOK/MARSHALL"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            67,
+            68
+          ]
+        },
+        {
+          "eventCode": "CF 6552FP",
+          "missionName": "C-12 CF-2",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (C-12 DG)"
+          ],
+          "notes": [
+            "STANDARD FUEL LOAD."
+          ],
+          "prerequisites": [
+            "CF-1"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            70,
+            71
+          ]
+        },
+        {
+          "eventCode": "CF 6553FP",
+          "missionName": "C-12 CF-3",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (C-12 DG)"
+          ],
+          "notes": [
+            "STANDARD FUEL LOAD.",
+            "A/P REQUIRED"
+          ],
+          "prerequisites": [
+            "CF-2"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            73,
+            74
+          ]
+        },
+        {
+          "eventCode": "CF 6554FN",
+          "missionName": "C-12 Flight Training",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP w/2 STUD ABM/FTE/CSO",
+            "w/STAFF or STUD PILOT/RPA/CSO",
+            "(10 Jan 2020 AFMC Waiver)"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "STANDARD FUEL LOAD."
+          ],
+          "prerequisites": [
+            "C-12 COCKPIT FAM",
+            "C-172 AIRMANSHIP FA-3 (ABMFTE)",
+            "C-12 CLOSED BOOK",
+            "MARSHALL EXAM (CSO)"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            76,
+            77,
+            78,
+            79
+          ]
+        },
+        {
+          "eventCode": "CF 6554FP",
+          "missionName": "C-12 Flight Training",
+          "section": "C-12",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP w/ NON-DATA GRP PILOT"
+          ],
+          "notes": [
+            "BRIEF 2+00",
+            "STANDARD FUEL LOAD."
+          ],
+          "prerequisites": [
+            "C-12 CPT",
+            "C-12 CLOSED BOOK"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            81,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RPA",
+      "events": [
+        {
+          "eventCode": "CF 6650FR",
+          "missionName": "C-172 CF-1 (RPA)*",
+          "section": "RPA",
+          "aircraftType": "C-172",
+          "aircraftVariant": "C-172",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/RPA"
+          ],
+          "notes": [
+            "SCHEDULE AIRCRAFT THRU AERO CLUB 5-2876 (5-AERO)."
+          ],
+          "prerequisites": [
+            "GROUND SCHOOL"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            84,
+            85
+          ]
+        },
+        {
+          "eventCode": "CF 6651FR",
+          "missionName": "C-172 CF-2 (RPA)*",
+          "section": "RPA",
+          "aircraftType": "C-172",
+          "aircraftVariant": "C-172",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/RPA"
+          ],
+          "notes": [
+            "SCHEDULE AIRCRAFT THRU AERO CLUB 5-2876 (5-AERO).",
+            "SCHEDULE WITH SAME IP AS CF6650FR IF POSSIBLE"
+          ],
+          "prerequisites": [
+            "CF-1"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            87,
+            88
+          ]
+        },
+        {
+          "eventCode": "CF 6642HR",
+          "missionName": "C-12C CPT (RPA)",
+          "section": "RPA",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "IP w/ 2 RPA"
+          ],
+          "notes": [
+            "SCHEDULE THROUGH CSE W/EXTERNAL POWER",
+            "CAN SCHEDULE IN CONJUNCTION w/ CF 6542 C-12 CPT"
+          ],
+          "prerequisites": [
+            "C-12 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            90,
+            91
+          ]
+        },
+        {
+          "eventCode": "CF 6641SR",
+          "missionName": "T-38 CPT (RPA)",
+          "section": "RPA",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 2.0,
+          "crew": [
+            "IP w/ 2-3 RPA"
+          ],
+          "notes": [
+            "SCHEDULE THROUGH CSE W/MX STAND/EXTERNAL POWER",
+            "1+00 BRIEF"
+          ],
+          "prerequisites": [
+            "T-38 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            93,
+            94
+          ]
+        },
+        {
+          "eventCode": "CF 6652FR",
+          "missionName": "C-12 CF-3 (RPA)",
+          "section": "RPA",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "IP/RPA"
+          ],
+          "notes": [
+            "STANDARD FUEL LOAD.",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "C-12 GROUND SCHOOL/CPT",
+            "C-12 CLOSED BOOK",
+            "C-172 CF-2"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            96,
+            97,
+            98
+          ]
+        },
+        {
+          "eventCode": "CF 6653FR",
+          "missionName": "T-38 CF-4 (RPA)",
+          "section": "RPA",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/ RPA"
+          ],
+          "notes": [
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "CF-3, T-38 GROUND SCHOOL",
+            "T-38 EGRESS, T-38 CPT",
+            "T-38 CLOSED BOOK"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            99,
+            100,
+            101
+          ]
+        },
+        {
+          "eventCode": "CF 6654FR",
+          "missionName": "C-12 CF-5 (RPA)",
+          "section": "RPA",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C",
+          "config": null,
+          "duration": 1.8,
+          "crew": [
+            "IP/RPA",
+            "CHASE: IP w/ STUD P/RPA/CSO",
+            "or ANY QUAL C-12 CREW"
+          ],
+          "notes": [
+            "STANDARD FUEL LOAD. REQUIRES 2xC-12 FOR FORMATION.",
+            "Alternate duration: (2.0*)",
+            "BRIEF 2+00",
+            "*when 2 RPA Studs are flown"
+          ],
+          "prerequisites": [
+            "CF-3"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            102,
+            103,
+            104
+          ]
+        },
+        {
+          "eventCode": "CF 6655FR",
+          "missionName": "T-38 CF-6 (RPA)",
+          "section": "RPA",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.1,
+          "crew": [
+            "IP/RPA",
+            "CHASE: IP/RPA OR ANY QUAL",
+            "T-38 CREW"
+          ],
+          "notes": [
+            "REQUIRES 2xT-38 FOR FORMATION",
+            "BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "CF-4"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            106,
+            107,
+            108
+          ]
+        }
+      ]
+    },
+    {
+      "name": "F-16",
+      "events": [
+        {
+          "eventCode": "CF 6703CE",
+          "missionName": "CR INTRO",
+          "section": "F-16",
+          "aircraftType": "CR",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IFTE w/3 STUDS",
+            "2 FTC STUD ABM/FTE",
+            "1 STC STUD"
+          ],
+          "notes": [
+            "CR PLAYBACK ONLY"
+          ],
+          "prerequisites": [
+            "CF 6703B  F-16 CR Ground School"
+          ],
+          "aircrewQuals": "CR TC Intro",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            110,
+            111,
+            112
+          ]
+        },
+        {
+          "eventCode": "CF 6731SP",
+          "missionName": "F-16  EP",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT WITH",
+            "FTE/CSO/RPA TO OBSERVE"
+          ],
+          "notes": [
+            "USE TPS OR 416TH UTD.",
+            "FTE/CSO/RPA MUST OBSERVE ONE EVENT: CF 6742 F-16 CPT OR",
+            "CF 6731 F-16 EP SIM OR CF 6742 F-16 EP CHECKOUT"
+          ],
+          "prerequisites": [
+            "CPT"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            114,
+            115,
+            116
+          ]
+        },
+        {
+          "eventCode": "CF 6732SP",
+          "missionName": "F-16  EP Checkout",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD DG PILOT WITH",
+            "FTE/CSO/RPA TO OBSERVE"
+          ],
+          "notes": [
+            "USE TPS OR 416TH UTD.",
+            "MUST BE COMPLETE PRIOR TO CREW SOLO",
+            "FTE/CSO/RPA MUST OBSERVE ONE EVENT: CF 6742 F-16 CPT OR",
+            "CF 6731 F-16 EP SIM OR CF 6742 F-16 EP CHECKOUT"
+          ],
+          "prerequisites": [
+            "F-16 EP",
+            "CF-3"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            122,
+            123,
+            124,
+            125
+          ]
+        },
+        {
+          "eventCode": "CF 6742SJ",
+          "missionName": "F-16 Cockpit Fam",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D & UTD",
+          "config": null,
+          "duration": 3.3,
+          "crew": [
+            "IP w/4 STUD FTE/RPA/CSO"
+          ],
+          "notes": [
+            "FOR UTD AND A/C EVENTS COMBINED",
+            "1+00 BRIEF",
+            "COCKPIT TRAINER, TPS OR 416TH UTD (NO FORN in 416th)",
+            "ORDER IN CSE WITH MX STAND",
+            "ALLOW 15 MINUTES TRANSIT TIME BETWEEN UTD AND A/C.  UTD AND AIRCRAFT EVENTS CAN OCCUR ON DIFFERENT DAYS IF REQUIRED.  ADO WILL TRACK AS REQUIRED."
+          ],
+          "prerequisites": [
+            "F-16 GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            130,
+            131,
+            132,
+            133,
+            134
+          ]
+        },
+        {
+          "eventCode": "CF 6742SP",
+          "missionName": "F-16 CPT",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "UTD",
+          "config": null,
+          "duration": 2.5,
+          "crew": [
+            "IP/2 STUD PILOTS WITH 2 STUD",
+            "FTE/CSO/RPA TO OBSERVE"
+          ],
+          "notes": [
+            "USE TPS OR 416th COCKPIT TRAINER  (No foreigners to 416th)",
+            "FTE/CSO/RPA MUST OBSERVE ONE EVENT: CF 6742 F-16 CPT OR",
+            "CF 6731 F-16 EP SIM OR CF 6742 F-16 EP CHECKOUT"
+          ],
+          "prerequisites": [
+            "GROUND SCHOOL",
+            "EGRESS"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            136,
+            137,
+            138
+          ]
+        },
+        {
+          "eventCode": "CF 6751FP",
+          "missionName": "F-16 CF-1",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR FWT",
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+30."
+          ],
+          "prerequisites": [
+            "F-16 GROUND SCHOOL",
+            "EGRESS",
+            "OPEN/CLOSED BOOK/MARSHALL",
+            "F-16 CPT",
+            "EP SIM"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            140,
+            141,
+            142,
+            143,
+            144
+          ]
+        },
+        {
+          "eventCode": "CF 6752FP",
+          "missionName": "F-16 CF-2",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR FWT",
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (DG PILOT)"
+          ],
+          "notes": [],
+          "prerequisites": [
+            "CF-1"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            146,
+            147
+          ]
+        },
+        {
+          "eventCode": "CF 6753FP",
+          "missionName": "F-16 CF-3",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR FWT",
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (DG PILOT)"
+          ],
+          "notes": [
+            "COMPLETE EP SIM PRIOR TO CF-3"
+          ],
+          "prerequisites": [
+            "CF-2",
+            "EP SIM"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            149,
+            150
+          ]
+        },
+        {
+          "eventCode": "CF 6754FP",
+          "missionName": "F-16 CF-4",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR FWT",
+          "duration": 1.5,
+          "crew": [
+            "IP/STUD PILOT (DG PILOT)"
+          ],
+          "notes": [
+            "BRIEF 2+30 UHF/VHF MISSION FREQ, FORMATION"
+          ],
+          "prerequisites": [
+            "CF-3/ F-16 EP CHECKOUT"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            152,
+            153
+          ]
+        },
+        {
+          "eventCode": "CF 6755FJ",
+          "missionName": "F-16 Flight Training",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL/FWT/CLN",
+          "duration": 1.25,
+          "crew": [
+            "IP/STUD ABM/FTE/RPA/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3       *IP TFB QUALED",
+            "BRIEF 2+00 SUPERSONIC CORRIDOR @ 50K"
+          ],
+          "prerequisites": [
+            "F-16 GROUND SCHOOL",
+            "F-16 COCKPIT FAM (ABM/CSO/FTE/RPA)",
+            "F-16 EP",
+            "C-172 AIRMANSHIP FA-3 (ABM/FTE)",
+            "T-38 CF-4  RPA",
+            "T-38 FLIGHT TRAINING (ABM/CSO/FTE)"
+          ],
+          "aircrewQuals": "TPS TFB",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            155,
+            156,
+            157,
+            158,
+            159,
+            160
+          ]
+        },
+        {
+          "eventCode": "CF 6755FP",
+          "missionName": "F-16 Flight Training",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR FWT",
+          "duration": 1.5,
+          "crew": [
+            "IP w/ NON-DATA GRP PILOT"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+30."
+          ],
+          "prerequisites": [
+            "F-16 GROUND SCHOOL",
+            "EGRESS",
+            "OPEN/CLOSED BOOK/MARSHALL",
+            "F-16 CPT"
+          ],
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            162,
+            163,
+            164,
+            165
+          ]
+        },
+        {
+          "eventCode": "CF 6756F",
+          "missionName": "F-16 Departure Flight",
+          "section": "F-16",
+          "aircraftType": "F-16",
+          "aircraftVariant": "F-16D",
+          "config": "FCL OR CLN",
+          "duration": 1.4,
+          "crew": [
+            "IP w/ STUD FTE/CSO/RPA"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3 WITH SPIN AREA",
+            "ANY HI AOA CAPABLE AIRCRAFT, SPIN AREA, MSN FREQ  BRIEF 2+00"
+          ],
+          "prerequisites": [
+            "DEPARTURE Flight MIB"
+          ],
+          "aircrewQuals": "High AOA Fam",
+          "aircraftRequiredCape": "High AOA",
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            168,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Photo / Safety Chase",
+      "events": [
+        {
+          "eventCode": "CF 6951FN",
+          "missionName": "T-38 Photo/Safety Chase Fam",
+          "section": "Photo / Safety Chase",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.083,
+          "crew": [
+            "IP w/ STUD  ABM/FTE/CSO"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+00 SSC @ 38K; FORMATION; MISSON FREQ",
+            "CAN BE SCHEDULED WITH ANY F-16/T-38 PHOTO/SAFETY CHASE OR AS",
+            "A DEDICATED FTE/CSO CHASE MISSION"
+          ],
+          "prerequisites": [
+            "F-16 TRNG FLIGHT (ABM/CSO/FTE/RPA)",
+            "T-38 TRAINING FLIGHT (ABM/CSO/FTE)"
+          ],
+          "aircrewQuals": "Chase Fam",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            171,
+            172,
+            173,
+            174
+          ]
+        },
+        {
+          "eventCode": "CF 6951FP",
+          "missionName": "T-38 Chase Introduction",
+          "section": "Photo / Safety Chase",
+          "aircraftType": "T-38",
+          "aircraftVariant": "T-38C",
+          "config": null,
+          "duration": 1.083,
+          "crew": [
+            "IP w/ STUD PILOT"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "BRIEF 2+00 SSC @ 38K; FORMATION; MISSON FREQ",
+            "SCHEDULE 2xT-38 CHASE INTRO SORTIES TOGETHER"
+          ],
+          "prerequisites": [
+            "T-38 CF 4"
+          ],
+          "aircrewQuals": "Chase Fam",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            176,
+            177,
+            178
+          ]
+        },
+        {
+          "eventCode": "CF 6953FR",
+          "missionName": "C-12 Photo/Safety Chase",
+          "section": "Photo / Safety Chase",
+          "aircraftType": "C-12",
+          "aircraftVariant": "C-12C v C-12C",
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP/RPA"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "Alternate duration: (2.5*)",
+            "STANDARD FUEL LOAD  * (when 2 RPA students are flown)"
+          ],
+          "prerequisites": [
+            "C-12 PHOTO/SAFETY CHASE MIB",
+            "CF-1 C-12 (RPA)"
+          ],
+          "aircrewQuals": "C-12 Chase",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            180,
+            181
+          ]
+        },
+        {
+          "eventCode": "CF 6953RP",
+          "missionName": "C-12 Photo/Safety Target",
+          "section": "Photo / Safety Chase",
+          "aircraftType": "C-12",
+          "aircraftVariant": null,
+          "config": null,
+          "duration": 1.5,
+          "crew": [
+            "IP w/STUD P/RPA or Any C-12 pilot*"
+          ],
+          "notes": [
+            "AIRSPACE:  P-3",
+            "STANDARD FUEL LOAD",
+            "SCHEDULE w/ C-12 RPA PHOTO/CHASE MISSION or LJ FCS PROJ*"
+          ],
+          "prerequisites": [
+            "* or any qualified chase crew outside TPS",
+            "*Optional for studs"
+          ],
+          "aircrewQuals": "C-12 Chase",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            183,
+            184,
+            185
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalEvents": 51,
+    "totalSections": 8,
+    "aircraftTypes": [
+      "C-12",
+      "C-172",
+      "CR",
+      "F-16",
+      "Glider",
+      "Learjet",
+      "T-38"
+    ]
+  }
+}

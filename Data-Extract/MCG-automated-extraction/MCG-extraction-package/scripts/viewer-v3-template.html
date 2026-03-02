@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCG Curriculum Viewer (V3)</title>
+<style>
+  :root {
+    --bg: #0f172a; --surface: #1e293b; --surface2: #334155;
+    --border: #475569; --text: #e2e8f0; --text-dim: #94a3b8;
+    --accent: #38bdf8; --green: #4ade80; --amber: #fbbf24;
+    --red: #f87171; --purple: #a78bfa; --cyan: #22d3ee;
+    --indigo: #818cf8; --orange: #fb923c; --pink: #f472b6;
+    --mono: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.5; }
+
+  /* ─── Header ─────────────────────────────────────────────── */
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:12px 24px; position:sticky; top:0; z-index:100; }
+  .header h1 { font-size:18px; font-weight:600; font-family:var(--mono); }
+  .header-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .header-stats { font-size:12px; color:var(--text-dim); font-family:var(--mono); display:flex; gap:12px; flex-wrap:wrap; }
+  .header-stats span { display:inline-flex; align-items:center; gap:3px; }
+  .header-stats .num { color:var(--accent); font-weight:600; }
+
+  /* ─── Tabs ───────────────────────────────────────────────── */
+  .tab-bar { display:flex; gap:2px; margin-top:8px; border-bottom:1px solid var(--border); }
+  .tab { padding:6px 16px; font-size:13px; font-family:var(--mono); cursor:pointer; color:var(--text-dim); border-bottom:2px solid transparent; transition:all .15s; }
+  .tab:hover { color:var(--text); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); font-weight:600; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* ─── Search & Filters ───────────────────────────────────── */
+  .search-bar { display:flex; gap:8px; margin-top:8px; align-items:center; flex-wrap:wrap; }
+  .search-input { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 12px; color:var(--text); font-family:var(--mono); font-size:13px; width:320px; outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .search-input::placeholder { color:var(--text-dim); }
+  .filter-btn { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:4px 10px; color:var(--text-dim); font-size:12px; cursor:pointer; font-family:var(--mono); transition:all .15s; }
+  .filter-btn:hover { border-color:var(--accent); color:var(--text); }
+  .filter-btn.active { background:var(--accent); color:var(--bg); border-color:var(--accent); font-weight:600; }
+  /* Course-specific filter button colors */
+  .filter-btn.active.ftc-active { background:var(--orange); border-color:var(--orange); }
+  .filter-btn.active.stc-active { background:var(--purple); border-color:var(--purple); }
+  .filter-btn.active.shared-active { background:var(--text-dim); border-color:var(--text-dim); color:var(--bg); }
+  .filter-group { display:flex; align-items:center; gap:4px; }
+  .filter-group-label { font-size:10px; color:var(--text-dim); font-family:var(--mono); text-transform:uppercase; font-weight:600; margin-right:2px; }
+
+  /* ─── Content ────────────────────────────────────────────── */
+  .content { max-width:1200px; margin:0 auto; padding:16px 24px 80px; }
+
+  /* ─── Phase ──────────────────────────────────────────────── */
+  .phase { margin-bottom:16px; }
+  .phase-header { display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:8px; cursor:pointer; user-select:none; transition:background .15s; }
+  .phase-header:hover { background:var(--surface2); }
+  .phase-code { font-family:var(--mono); font-weight:700; font-size:15px; color:var(--accent); min-width:32px; }
+  .phase-name { font-weight:600; flex:1; }
+  .phase-count { font-size:12px; color:var(--text-dim); font-family:var(--mono); }
+  .phase-body { padding-left:8px; }
+
+  /* ─── Course Assignment Badge ────────────────────────────── */
+  .course-badge { font-size:10px; font-family:var(--mono); padding:2px 8px; border-radius:4px; font-weight:700; }
+  .course-ftc { background:rgba(251,146,60,0.2); color:var(--orange); }
+  .course-stc { background:rgba(167,139,250,0.2); color:var(--purple); }
+  .course-shared { background:rgba(148,163,184,0.15); color:var(--text-dim); }
+  .course-source { font-size:9px; font-family:var(--mono); color:var(--text-dim); padding:1px 4px; background:var(--bg); border-radius:3px; opacity:0.7; }
+
+  /* ─── Module ─────────────────────────────────────────────── */
+  .module { margin:6px 0 6px 12px; }
+  .module-header { display:flex; align-items:center; gap:8px; padding:6px 12px; background:rgba(56,189,248,0.06); border-left:3px solid var(--accent); border-radius:0 6px 6px 0; cursor:pointer; user-select:none; transition:background .15s; }
+  .module-header:hover { background:rgba(56,189,248,0.12); }
+  .module-code { font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:600; }
+  .module-name { font-size:13px; flex:1; }
+  .module-count { font-size:11px; color:var(--text-dim); font-family:var(--mono); }
+  .module-body { padding-left:12px; }
+  .tlo { font-size:12px; color:var(--text-dim); padding:2px 0 2px 24px; font-style:italic; }
+
+  /* ─── Caret ──────────────────────────────────────────────── */
+  .caret { display:inline-block; width:16px; text-align:center; font-size:12px; color:var(--text-dim); transition:transform .2s; flex-shrink:0; }
+  .caret.open { transform:rotate(90deg); }
+
+  /* ─── Event ──────────────────────────────────────────────── */
+  .event { margin:4px 0 4px 16px; border:1px solid var(--border); border-radius:6px; background:var(--surface); overflow:hidden; }
+  .event.search-match { border-color:var(--amber); box-shadow:0 0 0 1px var(--amber); }
+  .event-header { display:flex; align-items:center; gap:8px; padding:8px 12px; cursor:pointer; user-select:none; transition:background .15s; }
+  .event-header:hover { background:var(--surface2); }
+  .event-code { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--green); min-width:80px; }
+  .event-name { font-size:13px; flex:1; font-weight:500; }
+  .event-type-badge { font-size:10px; font-family:var(--mono); padding:2px 6px; border-radius:4px; font-weight:600; text-transform:uppercase; flex-shrink:0; }
+  .type-A { background:rgba(129,140,248,0.2); color:var(--indigo); }
+  .type-F { background:rgba(74,222,128,0.2); color:var(--green); }
+  .type-S { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .type-M { background:rgba(248,113,113,0.2); color:var(--red); }
+  .type-H { background:rgba(167,139,250,0.2); color:var(--purple); }
+  .type-C { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .type-O { background:rgba(249,115,22,0.2); color:var(--orange); }
+  .type-B { background:rgba(244,114,182,0.2); color:var(--pink); }
+  .type-R { background:rgba(148,163,184,0.2); color:var(--text-dim); }
+  .type-E { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .type-L { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .type-P { background:rgba(244,114,182,0.2); color:var(--pink); }
+  .type-T { background:rgba(148,163,184,0.2); color:var(--text-dim); }
+  .type-W { background:rgba(129,140,248,0.2); color:var(--indigo); }
+  .type-X { background:rgba(148,163,184,0.2); color:var(--text-dim); }
+  .type-Z { background:rgba(148,163,184,0.2); color:var(--text-dim); }
+  .section-badge { font-size:10px; color:var(--text-dim); font-family:var(--mono); padding:2px 6px; background:var(--bg); border-radius:4px; flex-shrink:0; }
+
+  /* ─── Event body ─────────────────────────────────────────── */
+  .event-body { border-top:1px solid var(--border); padding:10px 14px; }
+  .event-description { font-size:12px; color:var(--text-dim); margin-bottom:10px; line-height:1.6; }
+
+  /* ─── Applicability row ──────────────────────────────────── */
+  .app-row { display:flex; align-items:center; gap:6px; margin-bottom:8px; flex-wrap:wrap; }
+  .app-label { font-size:11px; color:var(--text-dim); font-family:var(--mono); min-width:90px; text-transform:uppercase; font-weight:600; }
+  .app-chip { display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-family:var(--mono); font-weight:600; padding:2px 8px; border-radius:4px; min-width:42px; text-align:center; }
+  .app-chip.active { background:rgba(74,222,128,0.2); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+  .app-chip.inactive { background:rgba(148,163,184,0.08); color:var(--text-dim); border:1px solid rgba(148,163,184,0.15); opacity:0.4; }
+  .clearance-tag { font-size:11px; font-family:var(--mono); padding:2px 8px; border-radius:4px; font-weight:600; background:rgba(248,113,113,0.2); color:var(--red); }
+
+  /* ─── Dependency section ─────────────────────────────────── */
+  .dep-section { margin:8px 0; padding:8px 12px; background:var(--bg); border-radius:6px; }
+  .dep-section-title { font-size:11px; font-family:var(--mono); color:var(--accent); font-weight:600; margin-bottom:4px; }
+  .dep-item { font-size:12px; padding:2px 0; display:flex; align-items:center; gap:6px; }
+  .dep-item .dep-code { font-family:var(--mono); font-weight:700; color:var(--green); cursor:pointer; }
+  .dep-item .dep-code:hover { text-decoration:underline; }
+  .dep-item .dep-name { color:var(--text-dim); }
+  .dep-item .dep-arrow { color:var(--text-dim); font-size:10px; }
+
+  /* ─── Prerequisites ──────────────────────────────────────── */
+  .prereqs-toggle { display:flex; align-items:center; gap:6px; padding:6px 0; cursor:pointer; user-select:none; font-size:12px; color:var(--text-dim); font-family:var(--mono); }
+  .prereqs-toggle:hover { color:var(--text); }
+  .prereqs-count { color:var(--accent); font-weight:600; }
+  .prereqs-list { padding:0; }
+
+  .prereq { padding:8px 12px; margin:4px 0; background:var(--bg); border-radius:6px; border-left:3px solid var(--border); }
+  .prereq.external { border-left-color:var(--indigo); }
+  .prereq.has-alt { border-left-color:var(--amber); }
+  .prereq.has-errata { border-left-color:var(--red); }
+  .prereq.has-partial { border-left-color:var(--cyan); }
+  .prereq-top { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .prereq-code { font-family:var(--mono); font-size:12px; font-weight:700; color:var(--green); }
+  .prereq-code.no-code { color:var(--text-dim); font-style:italic; }
+  .prereq-name { font-size:12px; flex:1; }
+  .prereq-tags { display:flex; gap:4px; flex-wrap:wrap; margin-top:4px; }
+  .prereq-tag { font-size:10px; font-family:var(--mono); padding:1px 6px; border-radius:3px; font-weight:600; }
+  .tag-inherit { background:rgba(148,163,184,0.15); color:var(--text-dim); }
+  .tag-all { background:rgba(74,222,128,0.15); color:var(--green); }
+  .tag-position { background:rgba(56,189,248,0.15); color:var(--accent); }
+  .tag-crew-solo { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .tag-data-group { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .tag-external { background:rgba(129,140,248,0.2); color:var(--indigo); }
+  .tag-alt { background:rgba(251,191,36,0.2); color:var(--amber); }
+  .tag-partial { background:rgba(34,211,238,0.2); color:var(--cyan); }
+  .tag-errata { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag-clearance { background:rgba(248,113,113,0.15); color:var(--red); }
+  .tag-timing { background:rgba(167,139,250,0.15); color:var(--purple); }
+  .scope-app { display:flex; align-items:center; gap:4px; margin-top:4px; }
+  .scope-app .app-chip { font-size:10px; padding:1px 6px; min-width:36px; }
+  .errata-text { font-size:11px; color:var(--red); font-style:italic; margin-top:4px; padding:4px 8px; background:rgba(248,113,113,0.06); border-radius:4px; }
+  .original-notes { font-size:11px; color:var(--text-dim); font-style:italic; margin-top:2px; }
+  .original-notes::before { content:'Notes: '; font-weight:600; }
+  .alt-info { font-size:11px; margin-top:4px; padding:4px 8px; background:rgba(251,191,36,0.06); border-radius:4px; color:var(--amber); }
+  .alt-info .alt-code { font-family:var(--mono); font-weight:700; }
+
+  /* ─── Stats Dashboard ────────────────────────────────────── */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:24px; }
+  .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px; }
+  .stat-card h3 { font-size:13px; font-family:var(--mono); color:var(--accent); margin-bottom:12px; font-weight:600; }
+  .stat-row { display:flex; justify-content:space-between; padding:3px 0; font-size:12px; }
+  .stat-row .label { color:var(--text-dim); }
+  .stat-row .value { font-family:var(--mono); font-weight:600; }
+  .stat-row .value.ftc { color:var(--orange); }
+  .stat-row .value.stc { color:var(--purple); }
+  .stat-row .value.shared { color:var(--text-dim); }
+  .stat-bar { height:6px; background:var(--bg); border-radius:3px; margin-top:8px; overflow:hidden; display:flex; }
+  .stat-bar .seg { height:100%; }
+  .stat-bar .seg-ftc { background:var(--orange); }
+  .stat-bar .seg-stc { background:var(--purple); }
+  .stat-bar .seg-shared { background:var(--text-dim); }
+
+  /* ─── Collapsible ────────────────────────────────────────── */
+  .collapsible { display:none; }
+  .collapsible.open { display:block; }
+
+  /* ─── Controls ───────────────────────────────────────────── */
+  .expand-controls { display:flex; gap:8px; }
+  .expand-btn { background:none; border:1px solid var(--border); border-radius:4px; padding:3px 10px; color:var(--text-dim); font-size:11px; cursor:pointer; font-family:var(--mono); }
+  .expand-btn:hover { border-color:var(--accent); color:var(--text); }
+
+  .no-events { font-size:12px; color:var(--text-dim); padding:4px 24px; font-style:italic; }
+  .loading { text-align:center; padding:60px; color:var(--text-dim); font-family:var(--mono); }
+  .loading .spinner { display:inline-block; width:24px; height:24px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; margin-bottom:12px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .error { background:rgba(248,113,113,0.1); border:1px solid var(--red); padding:16px; border-radius:8px; margin:24px; color:var(--red); font-family:var(--mono); }
+
+  ::-webkit-scrollbar { width:8px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--surface2); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <h1 id="title">MCG Curriculum Viewer (V3)</h1>
+    <div class="header-stats" id="stats"></div>
+    <div class="expand-controls">
+      <button class="expand-btn" onclick="expandAll()">Expand All</button>
+      <button class="expand-btn" onclick="collapseAll()">Collapse All</button>
+    </div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab active" data-tab="browser" onclick="switchTab('browser',this)">Browser</div>
+    <div class="tab" data-tab="stats" onclick="switchTab('stats',this)">Dashboard</div>
+  </div>
+  <div class="search-bar" id="search-controls">
+    <input class="search-input" id="search" type="text" placeholder="Search events, codes, descriptions..." oninput="handleSearch(this.value)">
+    <div class="filter-group"><span class="filter-group-label">Course:</span><span id="course-filters"></span></div>
+    <div class="filter-group"><span class="filter-group-label">Phase:</span><span id="phase-filters"></span></div>
+    <div class="filter-group"><span class="filter-group-label">Position:</span><span id="position-filters"></span></div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="tab-panel active" id="panel-browser">
+    <div id="browser-content">
+      <div class="loading"><div class="spinner"></div><br>Loading V3 phases...</div>
+    </div>
+  </div>
+  <div class="tab-panel" id="panel-stats">
+    <div id="stats-content"></div>
+  </div>
+</div>
+
+<script>
+const PHASES = ['AN','AS','CF','FQ','PF','SO','SY','TF','TL'];
+const ALL_POSITIONS = ['P','FTE','CSO','ABM','RPA'];
+const COURSE_TYPES = ['FTC','STC','Shared'];
+let allPhases = [];
+let depGraph = null;
+let depIndex = {}; // code -> { incoming: [], outgoing: [] }
+let activePhaseFilters = new Set(PHASES);
+let activeCourseFilters = new Set(COURSE_TYPES);
+let activePositionFilters = new Set();
+let searchTerm = '';
+
+async function loadData() {
+  try {
+    const phaseResults = await Promise.all(
+      PHASES.map(p => fetch(`../phase-${p}.json`).then(r => {
+        if (!r.ok) throw new Error(`Failed to load phase-${p}.json`);
+        return r.json();
+      }))
+    );
+    allPhases = phaseResults;
+
+    // Try to load dependency graph (optional)
+    try {
+      const depResp = await fetch('../../dependency-graph.json');
+      if (depResp.ok) depGraph = await depResp.json();
+    } catch(e) { /* optional */ }
+
+    buildDepIndex();
+    updateTitle();
+    renderStats();
+    renderFilters();
+    renderBrowser();
+    renderDashboard();
+  } catch (e) {
+    document.getElementById('browser-content').innerHTML =
+      `<div class="error">Error loading data: ${e.message}<br><br>
+       Serve via HTTP: <code>npx serve .</code> from the Version-3-course-aware directory,<br>
+       then open <code>http://localhost:3000/viewer/</code></div>`;
+  }
+}
+
+function updateTitle() {
+  const src = allPhases[0]?.sourceDocument || 'MCG';
+  document.getElementById('title').textContent = `${src} Curriculum Viewer (V3)`;
+}
+
+function buildDepIndex() {
+  depIndex = {};
+  if (!depGraph) return;
+  for (const edge of (depGraph.edges || [])) {
+    if (!depIndex[edge.to]) depIndex[edge.to] = { incoming: [], outgoing: [] };
+    if (!depIndex[edge.from]) depIndex[edge.from] = { incoming: [], outgoing: [] };
+    depIndex[edge.to].incoming.push(edge);
+    depIndex[edge.from].outgoing.push(edge);
+  }
+}
+
+function renderStats() {
+  let events = 0, prereqs = 0, modules = 0;
+  const courseCounts = { FTC: 0, STC: 0, Shared: 0 };
+  allPhases.forEach(p => {
+    (p.modules || []).forEach(m => {
+      modules++;
+      (m.events || []).forEach(ev => {
+        events++;
+        prereqs += (ev.prerequisites || []).length;
+        const c = ev.courseAssignment || 'Shared';
+        if (courseCounts[c] !== undefined) courseCounts[c]++;
+      });
+    });
+  });
+  document.getElementById('stats').innerHTML =
+    `<span><span class="num">${allPhases.length}</span> phases</span>` +
+    `<span><span class="num">${modules}</span> modules</span>` +
+    `<span><span class="num">${events}</span> events</span>` +
+    `<span><span class="num">${prereqs}</span> prereqs</span>` +
+    `<span style="color:var(--orange)"><span class="num">${courseCounts.FTC}</span> FTC</span>` +
+    `<span style="color:var(--purple)"><span class="num">${courseCounts.STC}</span> STC</span>` +
+    `<span><span class="num">${courseCounts.Shared}</span> shared</span>`;
+}
+
+function renderFilters() {
+  document.getElementById('course-filters').innerHTML = COURSE_TYPES.map(c => {
+    const cls = c === 'FTC' ? 'ftc-active' : c === 'STC' ? 'stc-active' : 'shared-active';
+    return `<button class="filter-btn active ${cls}" onclick="toggleCourseFilter('${c}',this)">${c}</button>`;
+  }).join('');
+
+  document.getElementById('phase-filters').innerHTML = PHASES.map(p =>
+    `<button class="filter-btn active" onclick="togglePhaseFilter('${p}',this)">${p}</button>`
+  ).join('');
+
+  document.getElementById('position-filters').innerHTML = ALL_POSITIONS.map(p =>
+    `<button class="filter-btn" onclick="togglePositionFilter('${p}',this)">${p}</button>`
+  ).join('');
+}
+
+function toggleCourseFilter(c, btn) {
+  if (activeCourseFilters.has(c)) { activeCourseFilters.delete(c); btn.classList.remove('active'); }
+  else { activeCourseFilters.add(c); btn.classList.add('active'); }
+  renderBrowser();
+}
+
+function togglePhaseFilter(p, btn) {
+  if (activePhaseFilters.has(p)) { activePhaseFilters.delete(p); btn.classList.remove('active'); }
+  else { activePhaseFilters.add(p); btn.classList.add('active'); }
+  renderBrowser();
+}
+
+function togglePositionFilter(p, btn) {
+  if (activePositionFilters.has(p)) { activePositionFilters.delete(p); btn.classList.remove('active'); }
+  else { activePositionFilters.add(p); btn.classList.add('active'); }
+  renderBrowser();
+}
+
+function handleSearch(val) { searchTerm = val.toLowerCase().trim(); renderBrowser(); }
+
+function matchesFilters(ev) {
+  // Course filter
+  const c = ev.courseAssignment || 'Shared';
+  if (!activeCourseFilters.has(c)) return false;
+  // Position filter
+  if (activePositionFilters.size > 0) {
+    const detail = ev.applicabilityDetail;
+    if (detail) {
+      let hasPos = false;
+      for (const pos of activePositionFilters) {
+        if (detail.positions.includes(pos)) { hasPos = true; break; }
+      }
+      if (!hasPos) return false;
+    }
+  }
+  // Search
+  if (searchTerm) {
+    const s = searchTerm;
+    return (ev.code && ev.code.toLowerCase().includes(s)) ||
+      (ev.eventName && ev.eventName.toLowerCase().includes(s)) ||
+      (ev.description && ev.description.toLowerCase().includes(s)) ||
+      (ev.prerequisites || []).some(pr =>
+        (pr.code && pr.code.toLowerCase().includes(s)) ||
+        (pr.name && pr.name.toLowerCase().includes(s))
+      );
+  }
+  return true;
+}
+
+// ─── Browser Tab ──────────────────────────────────────────
+
+function renderBrowser() {
+  const container = document.getElementById('browser-content');
+  let html = '';
+
+  allPhases.forEach(phase => {
+    if (!activePhaseFilters.has(phase.phase)) return;
+
+    const isFiltering = activePositionFilters.size > 0 || activeCourseFilters.size < 3;
+    const filteredEvents = [];
+    (phase.modules || []).forEach(m => (m.events || []).forEach(ev => {
+      if (matchesFilters(ev)) filteredEvents.push(ev);
+    }));
+    const totalEvents = (phase.modules || []).reduce((s,m) => s + (m.events||[]).length, 0);
+    if (filteredEvents.length === 0 && (isFiltering || searchTerm)) return;
+
+    const isOpen = searchTerm ? true : false;
+    const countLabel = isFiltering ? `${filteredEvents.length} / ${totalEvents} events` : `${totalEvents} events`;
+    const phaseCourse = phase.courseAssignment || 'Shared';
+    const phaseBadgeCls = phaseCourse === 'FTC' ? 'course-ftc' : phaseCourse === 'STC' ? 'course-stc' : 'course-shared';
+
+    html += `<div class="phase">`;
+    html += `<div class="phase-header" onclick="toggle(this)">
+      <span class="caret${isOpen ? ' open' : ''}">&#9654;</span>
+      <span class="phase-code">${phase.phase}</span>
+      <span class="course-badge ${phaseBadgeCls}">${phaseCourse}</span>
+      <span class="phase-name">${esc(phase.phaseName)}</span>
+      <span class="phase-count">${countLabel}</span>
+    </div>`;
+    html += `<div class="collapsible phase-body${isOpen ? ' open' : ''}">`;
+
+    (phase.modules || []).forEach(mod => {
+      const modEvents = (mod.events || []).filter(matchesFilters);
+      if (modEvents.length === 0 && (isFiltering || searchTerm)) return;
+
+      const modOpen = searchTerm ? true : false;
+      const modCourse = mod.courseAssignment || phaseCourse;
+      const modBadgeCls = modCourse === 'FTC' ? 'course-ftc' : modCourse === 'STC' ? 'course-stc' : 'course-shared';
+
+      html += `<div class="module">`;
+      html += `<div class="module-header" onclick="toggle(this)">
+        <span class="caret${modOpen ? ' open' : ''}">&#9654;</span>
+        <span class="module-code">${esc(mod.moduleCode)}</span>
+        <span class="course-badge ${modBadgeCls}">${modCourse}</span>
+        <span class="module-name">${esc(mod.moduleName)}</span>
+        <span class="module-count">${isFiltering ? modEvents.length + ' / ' + (mod.events||[]).length : (mod.events||[]).length} events</span>
+      </div>`;
+      html += `<div class="collapsible module-body${modOpen ? ' open' : ''}">`;
+
+      if (mod.tlos && mod.tlos.length > 0) {
+        mod.tlos.forEach(t => { html += `<div class="tlo">${esc(t)}</div>`; });
+      }
+
+      (mod.events || []).forEach(ev => {
+        if (!matchesFilters(ev)) return;
+        const isMatch = searchTerm && matchesFilters(ev);
+        html += renderEvent(ev, isMatch);
+      });
+
+      html += `</div></div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  if (!html) html = '<div class="loading" style="color:var(--text-dim)">No matching events found</div>';
+  container.innerHTML = html;
+}
+
+function renderEvent(ev, isMatch) {
+  const prereqs = ev.prerequisites || [];
+  const evCourse = ev.courseAssignment || 'Shared';
+  const badgeCls = evCourse === 'FTC' ? 'course-ftc' : evCourse === 'STC' ? 'course-stc' : 'course-shared';
+  let h = '';
+
+  h += `<div class="event${isMatch ? ' search-match' : ''}">`;
+  h += `<div class="event-header" onclick="toggle(this)">`;
+  h += `<span class="caret">&#9654;</span>`;
+  h += `<span class="event-code">${esc(ev.code)}</span>`;
+  h += `<span class="course-badge ${badgeCls}">${evCourse}</span>`;
+  if (ev.courseAssignmentSource && ev.courseAssignmentSource !== 'phase') {
+    h += `<span class="course-source">${ev.courseAssignmentSource}</span>`;
+  }
+  h += `<span class="event-name">${esc(ev.eventName)}</span>`;
+  h += `<span class="event-type-badge type-${ev.eventType}">${ev.eventType} ${esc(ev.eventTypeName || '')}</span>`;
+  h += `<span class="section-badge">${esc(ev.section || '')}</span>`;
+  h += `</div>`;
+
+  h += `<div class="collapsible event-body${isMatch ? ' open' : ''}">`;
+
+  if (ev.description) {
+    h += `<div class="event-description">${esc(ev.description)}</div>`;
+  }
+
+  h += renderApplicability(ev.applicabilityDetail);
+
+  // Dependency info
+  const deps = depIndex[ev.code];
+  if (deps) {
+    if (deps.incoming.length > 0) {
+      h += `<div class="dep-section">`;
+      h += `<div class="dep-section-title">PREREQUISITES (${deps.incoming.length})</div>`;
+      deps.incoming.forEach(e => {
+        h += `<div class="dep-item"><span class="dep-arrow">&#8592;</span><span class="dep-code" onclick="scrollToEvent('${esc(e.from)}')">${esc(e.from)}</span><span class="dep-name">${findEventName(e.from)}</span></div>`;
+      });
+      h += `</div>`;
+    }
+    if (deps.outgoing.length > 0) {
+      h += `<div class="dep-section">`;
+      h += `<div class="dep-section-title">DEPENDENTS (${deps.outgoing.length})</div>`;
+      deps.outgoing.forEach(e => {
+        h += `<div class="dep-item"><span class="dep-arrow">&#8594;</span><span class="dep-code" onclick="scrollToEvent('${esc(e.to)}')">${esc(e.to)}</span><span class="dep-name">${findEventName(e.to)}</span></div>`;
+      });
+      h += `</div>`;
+    }
+  }
+
+  // Prerequisites (detailed)
+  if (prereqs.length > 0) {
+    h += `<div class="prereqs-toggle" onclick="togglePrereqs(this, event)">
+      <span class="caret">&#9654;</span>
+      Prerequisite Details <span class="prereqs-count">(${prereqs.length})</span>
+    </div>`;
+    h += `<div class="collapsible prereqs-list">`;
+    prereqs.forEach(pr => { h += renderPrereq(pr); });
+    h += `</div>`;
+  }
+
+  h += `</div></div>`;
+  return h;
+}
+
+function renderApplicability(detail) {
+  if (!detail) return '';
+  let h = '<div class="app-row">';
+  h += '<span class="app-label">Required:</span>';
+  ALL_POSITIONS.forEach(pos => {
+    const active = detail.positions && detail.positions.includes(pos);
+    h += `<span class="app-chip ${active ? 'active' : 'inactive'}">${pos}</span>`;
+  });
+  if (detail.courseType) {
+    const cls = detail.courseType === 'FTC' ? 'course-ftc' : 'course-stc';
+    h += `<span class="course-badge ${cls}">${detail.courseType} only</span>`;
+  }
+  if (detail.clearance) {
+    const label = detail.clearance === 'US_only' ? 'US Only' : 'Non-US Only';
+    h += `<span class="clearance-tag">${label}</span>`;
+  }
+  h += '</div>';
+  return h;
+}
+
+function renderPrereq(pr) {
+  let cls = 'prereq';
+  if (pr.isExternal) cls += ' external';
+  if (pr.alternative) cls += ' has-alt';
+  if (pr.errata) cls += ' has-errata';
+  if (pr.partialCompletion) cls += ' has-partial';
+
+  let h = `<div class="${cls}">`;
+  h += `<div class="prereq-top">`;
+  h += pr.code ? `<span class="prereq-code">${esc(pr.code)}</span>` : `<span class="prereq-code no-code">No code</span>`;
+  h += `<span class="prereq-name">${esc(pr.name)}</span>`;
+  h += `</div>`;
+
+  h += `<div class="prereq-tags">`;
+  const scope = pr.scope || {};
+  if (scope.positions) {
+    if (scope.positions[0] === 'inherit') h += `<span class="prereq-tag tag-inherit">inherits</span>`;
+    else if (scope.positions[0] === 'all') h += `<span class="prereq-tag tag-all">all positions</span>`;
+  }
+  if (scope.pilotType) {
+    const label = scope.pilotType === 'crew_solo' ? 'Crew Solo' : scope.pilotType === 'non_crew_solo' ? 'Non-Crew Solo' : scope.pilotType;
+    h += `<span class="prereq-tag tag-crew-solo">${label}`;
+    if (scope.crewSoloAircraft) h += ` (${scope.crewSoloAircraft})`;
+    h += `</span>`;
+  }
+  if (scope.dataGroup) h += `<span class="prereq-tag tag-data-group">${scope.dataGroup} Data Group</span>`;
+  if (scope.clearance) h += `<span class="prereq-tag tag-clearance">${scope.clearance === 'US_only' ? 'US Only' : 'Non-US Only'}</span>`;
+  if (scope.timingConstraint) h += `<span class="prereq-tag tag-timing">${esc(scope.timingConstraint)}</span>`;
+  if (pr.partialCompletion) h += `<span class="prereq-tag tag-partial">Partial: ${esc(pr.partialCompletion)}</span>`;
+  if (pr.isExternal) h += `<span class="prereq-tag tag-external">External: ${esc(pr.externalPhase)} phase</span>`;
+  h += `</div>`;
+
+  if (scope.positions && scope.positions[0] !== 'inherit' && scope.positions[0] !== 'all') {
+    h += `<div class="scope-app"><span style="font-size:10px;color:var(--text-dim);font-family:var(--mono);margin-right:4px;">SCOPE:</span>`;
+    ALL_POSITIONS.forEach(pos => {
+      h += `<span class="app-chip ${scope.positions.includes(pos) ? 'active' : 'inactive'}">${pos}</span>`;
+    });
+    h += `</div>`;
+  }
+
+  if (pr.alternative) {
+    h += `<div class="alt-info">OR <span class="alt-code">${esc(pr.alternative.altCode)}</span>`;
+    if (pr.alternative.groupId) h += ` <span style="opacity:0.7">(${esc(pr.alternative.groupId)})</span>`;
+    h += `</div>`;
+  }
+  if (pr.errata) h += `<div class="errata-text">${esc(pr.errata)}</div>`;
+  if (pr.originalNotes && pr.originalNotes !== pr.errata) h += `<div class="original-notes">${esc(pr.originalNotes)}</div>`;
+
+  h += `</div>`;
+  return h;
+}
+
+// ─── Dashboard Tab ────────────────────────────────────────
+
+function renderDashboard() {
+  let html = '';
+
+  // Overall stats
+  const totals = { events: 0, prereqs: 0, modules: 0, FTC: 0, STC: 0, Shared: 0 };
+  const byPhase = {};
+  const byType = {};
+  const bySource = { explicit: 0, figure: 0, module: 0, phase: 0 };
+
+  allPhases.forEach(p => {
+    const phaseStats = { events: 0, FTC: 0, STC: 0, Shared: 0 };
+    (p.modules || []).forEach(m => {
+      totals.modules++;
+      (m.events || []).forEach(ev => {
+        totals.events++;
+        phaseStats.events++;
+        const c = ev.courseAssignment || 'Shared';
+        totals[c]++;
+        phaseStats[c]++;
+        totals.prereqs += (ev.prerequisites || []).length;
+        const t = ev.eventType || '?';
+        byType[t] = (byType[t] || 0) + 1;
+        const src = ev.courseAssignmentSource || 'phase';
+        bySource[src] = (bySource[src] || 0) + 1;
+      });
+    });
+    byPhase[p.phase] = phaseStats;
+  });
+
+  html += `<div class="stats-grid">`;
+
+  // Course breakdown card
+  html += `<div class="stat-card">`;
+  html += `<h3>Course Breakdown</h3>`;
+  html += `<div class="stat-row"><span class="label">FTC</span><span class="value ftc">${totals.FTC}</span></div>`;
+  html += `<div class="stat-row"><span class="label">STC</span><span class="value stc">${totals.STC}</span></div>`;
+  html += `<div class="stat-row"><span class="label">Shared</span><span class="value shared">${totals.Shared}</span></div>`;
+  html += `<div class="stat-row"><span class="label">Total</span><span class="value">${totals.events}</span></div>`;
+  const ftcPct = totals.events > 0 ? (totals.FTC / totals.events * 100) : 0;
+  const stcPct = totals.events > 0 ? (totals.STC / totals.events * 100) : 0;
+  const shPct = 100 - ftcPct - stcPct;
+  html += `<div class="stat-bar"><div class="seg seg-ftc" style="width:${ftcPct}%"></div><div class="seg seg-stc" style="width:${stcPct}%"></div><div class="seg seg-shared" style="width:${shPct}%"></div></div>`;
+  html += `</div>`;
+
+  // Assignment source card
+  html += `<div class="stat-card">`;
+  html += `<h3>Assignment Source</h3>`;
+  for (const [src, count] of Object.entries(bySource)) {
+    html += `<div class="stat-row"><span class="label">${src}</span><span class="value">${count}</span></div>`;
+  }
+  html += `</div>`;
+
+  // Event type card
+  html += `<div class="stat-card">`;
+  html += `<h3>Event Types</h3>`;
+  const typeNames = { A:'Academic', F:'Flight', S:'Sim', M:'Mission', H:'Ground', E:'Exam', L:'Lab', C:'Control', P:'Presentation', R:'Report', T:'Brief/Study', W:'Working Group', X:'MIB', Z:'Debrief' };
+  for (const [t, count] of Object.entries(byType).sort((a,b) => b[1] - a[1])) {
+    html += `<div class="stat-row"><span class="label">${t} ${typeNames[t] || ''}</span><span class="value">${count}</span></div>`;
+  }
+  html += `</div>`;
+
+  // Dependency stats card
+  if (depGraph) {
+    html += `<div class="stat-card">`;
+    html += `<h3>Dependency Graph</h3>`;
+    html += `<div class="stat-row"><span class="label">Nodes</span><span class="value">${depGraph.stats?.totalNodes || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="label">Edges</span><span class="value">${depGraph.stats?.totalEdges || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="label">Orphan prereqs</span><span class="value">${depGraph.stats?.orphanPrereqs || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="label">Cycles</span><span class="value">${depGraph.stats?.cycleDetected ? 'YES' : 'None'}</span></div>`;
+    if (depGraph.stats?.edgesBySource) {
+      for (const [src, count] of Object.entries(depGraph.stats.edgesBySource)) {
+        html += `<div class="stat-row"><span class="label">Edges (${src})</span><span class="value">${count}</span></div>`;
+      }
+    }
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+
+  // Per-phase breakdown table
+  html += `<div class="stat-card" style="grid-column: 1 / -1">`;
+  html += `<h3>Phase Breakdown</h3>`;
+  html += `<div style="display:grid;grid-template-columns:60px 200px repeat(4,80px);gap:2px;font-size:12px;">`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700">Phase</span></div>`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700">Name</span></div>`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700">Events</span></div>`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700;color:var(--orange)">FTC</span></div>`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700;color:var(--purple)">STC</span></div>`;
+  html += `<div class="stat-row"><span class="label" style="font-weight:700">Shared</span></div>`;
+
+  allPhases.forEach(p => {
+    const ps = byPhase[p.phase] || {};
+    html += `<div class="stat-row"><span class="value">${p.phase}</span></div>`;
+    html += `<div class="stat-row"><span class="label">${esc(p.phaseName)}</span></div>`;
+    html += `<div class="stat-row"><span class="value">${ps.events || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="value ftc">${ps.FTC || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="value stc">${ps.STC || 0}</span></div>`;
+    html += `<div class="stat-row"><span class="value shared">${ps.Shared || 0}</span></div>`;
+  });
+
+  html += `</div></div>`;
+
+  document.getElementById('stats-content').innerHTML = html;
+}
+
+// ─── Helpers ──────────────────────────────────────────────
+
+function findEventName(code) {
+  for (const phase of allPhases) {
+    for (const mod of (phase.modules || [])) {
+      for (const ev of (mod.events || [])) {
+        if (ev.code === code) return ev.eventName || '';
+      }
+    }
+  }
+  return '';
+}
+
+function scrollToEvent(code) {
+  // Search for and highlight the event
+  document.getElementById('search').value = code;
+  searchTerm = code.toLowerCase();
+  renderBrowser();
+  // Scroll to first match
+  setTimeout(() => {
+    const match = document.querySelector('.event.search-match');
+    if (match) match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+function switchTab(tabName, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(`panel-${tabName}`).classList.add('active');
+  // Show/hide search controls
+  document.getElementById('search-controls').style.display = tabName === 'browser' ? 'flex' : 'none';
+}
+
+function toggle(headerEl) {
+  const body = headerEl.nextElementSibling;
+  const caret = headerEl.querySelector('.caret');
+  if (body && body.classList.contains('collapsible')) {
+    body.classList.toggle('open');
+    if (caret) caret.classList.toggle('open');
+  }
+}
+
+function togglePrereqs(toggleEl, e) {
+  e.stopPropagation();
+  const list = toggleEl.nextElementSibling;
+  const caret = toggleEl.querySelector('.caret');
+  if (list && list.classList.contains('collapsible')) {
+    list.classList.toggle('open');
+    if (caret) caret.classList.toggle('open');
+  }
+}
+
+function expandAll() {
+  document.querySelectorAll('.collapsible').forEach(el => el.classList.add('open'));
+  document.querySelectorAll('.caret').forEach(el => el.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.collapsible').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.caret').forEach(el => el.classList.remove('open'));
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+loadData();
+</script>
+</body>
+</html>

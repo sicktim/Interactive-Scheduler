@@ -1,0 +1,374 @@
+===== PAGE 147 =====
+ 
+ 
+147 
+ 
+TF 6300 Analyze 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Apply statistical techniques. 
+ 
+TF 6301A Statistics for Testers Lecture 
+TF 6302Y Statistics for Testers Oral Report 
+This block will teach students how to use statistical techniques to extract information from test data. 
+Specifically, the role that statistics can play in the test process is discussed. The following basic concepts 
+are explained: variability, random sampling, designed experiments, mechanistic versus empirical models, 
+enumerative versus analytic studies, and finally sample mean and variance versus population mean and 
+variance. This block also teaches students to compute various statistics, display results, and interpret 
+them. It covers the basics of probability distributions and how to use them. Finally, students will be able 
+to apply the following basic statistical techniques to test problems: hypothesis tests, linear regression, 
+confidence intervals, and prediction intervals. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6310A Statistics Based Test Design Lecture 
+TF 6311Y Statistics Based Test Design Oral Report 
+TF 6312Z Statistics Based Test Design Debrief 
+Building on the statistics learned and reviewed in TF 6301A, this block will teach students how to 
+apply statistical and constrained optimization methods to designing statistically defensible tests while 
+meeting programmatic constraints such as test hours, instrumentation costs, and total budget. The general 
+concept of Design of Experiments (DOE) is derived using optimization theory and applied to the concept 
+of designing a constrained test program that can answer the customer’s questions in a statistically 
+defensible manner.  
+Prerequisites: 
+TF 6301A Statistics for Testers Lecture 
+ 
+TF 6320A Data Presentation Lecture 
+This block covers techniques for presenting data in a variety of media to communicate a clear 
+message to the intended audience. Methods of presenting data in a visible, clear, and convincing manner 
+are covered along with common presentation pitfalls. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+
+
+===== PAGE 148 =====
+ 
+ 
+148 
+ 
+TF 6400 Report 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Create the applicable data products to answer test objectives for a given system under test. 
+TLO 2. Create data-driven findings of a system under test to various stakeholders at the appropriate 
+level. 
+ 
+TF 6401A Test Reporting Lecture 
+TF 6402R Test Reporting Written Report - Individual 
+TF 6403R Test Reporting Written Report - Group 
+TF 6404Z Test Reporting Feedback 
+This block introduces students to the concept of test reporting; specifically, why they write reports 
+and where reports fit into the overall test process. It introduces the various types of reports in the test 
+world and lists the reports that students will produce during the curriculum. Students will write an 
+individual report using sample aircraft data and receive feedback. Students will also work in a group to 
+collect data, analyze data, write a report, and receive report feedback. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture  
+TF 6320A Data Presentation Lecture [req’d for TF 6402R] 
+ 
+TF 6410B Technical Reports 
+This course teaches students how to communicate test results in an efficient manner that meets the 
+user’s need. It emphasizes how to organize and support technical discussions. It explains how to write 
+technical reports and provides examples of different styles/formats. 
+Prerequisites: 
+TF 6320A Data Presentation Lecture 
+ 
+TF 6420A Oral Reporting Lecture 
+This block introduces techniques for reporting on test data in an oral presentation. Common 
+PowerPoint tips and pitfalls are discussed. 
+Prerequisites: 
+TF 6401A Test Reporting Lecture 
+ 
+TF 6430B Deficiency Reports Lecture 
+This block introduces students to deficiency reports, specifically what they are, who can submit them, 
+how they are written, and how they are handled by the test organization, the program office, AFMC, and 
+the contractor once they are written. 
+Prerequisites: 
+TF 6401A Test Reporting Lecture 
+ 
+
+
+===== PAGE 149 =====
+ 
+ 
+149 
+ 
+TF 6500 Special Topics 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall critical elements of special test foundations topics. 
+ 
+TF 6501A Space Acquisition and Test Lecture (STC) 
+TF 6502A Space Acquisition and Test Lecture (US Only STC) 
+This block introduces students to space acquisition/test and identifies the similarities and differences 
+between space and air vehicle test. The student is introduced to the space environment, systems, missions, 
+organizations, acquisition, and test. The block includes a discussion of space policy guidance and specific 
+discussions of space developmental and operational test, including examples and real-world vignettes. 
+This block also introduces classified space systems with a discussion of real-world acquisition and test 
+considerations for such systems.  
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture  
+ 
+TF 6510A Joint Test and Evaluation (JT&E) (STC) 
+This is a two day-long guided exercise provided by the Air Force Joint Test Program Office. The 
+students will exercise the process that rapidly provides non-materiel solutions to identified operational 
+deficiencies. The course will review operational test definitions such as Critical Operational Issues (COI), 
+System Under Test (SUT), and Tactics, Techniques and Procedures (TTP), and Measures of 
+Effectiveness/Suitability (MOE/MOS). The students will be posed with operational deficiencies and will 
+generate a COI, and associated MOEs/MOSs. The students will develop an execution/data plan for a “test 
+event” of a non-materiel solution (TTP). They will analyze the results and report on the findings. 
+Prerequisites: 
+TF 6101A PEARS Introduction Lecture 
+ 
+TF 6520A All Weather Testing Lecture 
+This block teaches students why all-weather testing is done, what the major objectives are, where 
+these tests are conducted, and how to plan and execute an all-weather test. 
+Prerequisites:  
+ 
+TF 6101A PEARS Introduction Lecture 
+ 
+
+
+===== PAGE 150 =====
+ 
+ 
+150 
+ 
+ TF 7000 Qualitative Evaluations 
+(3 Semester Credit Hours) 
+The Qualitative Evaluation (qual eval, QE) program is designed to build a strong and broad 
+foundation of experience for test aircrew through exposure to different aircraft, systems, and missions 
+using a variety of military and civilian platforms. This program will reinforce the TPS curriculum through 
+application of theory, test techniques, analysis, and reporting. It will expose TPS students to a variety of 
+aircraft performance, flying qualities, and systems characteristics while increasing confidence in their 
+ability to handle new test situations in a systematic and logical manner using a buildup approach. 
+TF 7100 Graded Qualitative Evaluations 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden through exposure to multiple platforms.  
+TLO 2. Prioritize collection of appropriate, mission-relevant data which will answer evaluation 
+objectives during planning and execution of single-sortie qualitative evaluations in 
+unfamiliar platforms.  
+TLO 3. Interpret qualitative evaluation results in the context of system requirements and the 
+platforms’ intended mission through limited-scope written reports. 
+ 
+TF 7101A Qual Eval Program Intro Lecture 
+TF 7102A Contractor Interaction Lecture 
+Students are introduced to the purpose of qualitative evaluations. Techniques are presented to help the 
+students make the most of every qual eval, and specific safety considerations are introduced. The lesson 
+emphasizes techniques on how to properly report on their flight and gives guidelines for the graded qual 
+eval flights. Since many of the qual eval instructor pilots will be contractors, students are reminded of the 
+sensitivities faced when dealing with contractors and are instructed on the proper way to interface with 
+them. 
+Prerequisites: 
+AN 5121A Dean of Faculty Introduction 
+ 
+TF 7110M Graded Qual Eval 1 MIB 
+TF 7111G Graded Qual Eval 1 Ground School 
+TF 7112F Graded Qual Eval 1 Flight 
+TF 7113R Graded Qual Eval 1 Report 
+For each of the three graded qual eval flights, an MIB will introduce the aircraft and the mission for 
+which it will be evaluated. The instructor pilot will provide ground school academics covering the major 
+systems of the subject aircraft as well as any required briefing items and aircraft handling techniques. 
+Following each qual eval flight, students will write a qual eval report documenting their flight and 
+evaluating the aircraft for use in a particular mission. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7112F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7112F] 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+ 
+ 
+ 
+
+
+===== PAGE 151 =====
+ 
+ 
+151 
+ 
+ 
+TF 7120M Graded Qual Eval 2 MIB 
+TF 7121G Graded Qual Eval 2 Ground School 
+TF 7122F Graded Qual Eval 2 Flight 
+TF 7123R Graded Qual Eval 2 Report 
+This is the second graded qual eval. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7122F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7122F] 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7130M Graded Qual Eval 3 MIB 
+TF 7131G Graded Qual Eval 3 Ground School 
+TF 7132F Graded Qual Eval 3 Flight 
+TF 7133R Graded Qual Eval 3 Report 
+This is the third graded qual eval. 
+Prerequisites: 
+FQ 6222F Learjet Lat-Dir Stability Flight (P/RPA) [req’d for TF 7132F] 
+FQ 6223F Learjet Combined Long/Lat-Dir Flight (ABM/CSO/FTE) [req’d for TF 7132F] 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+
+
+===== PAGE 152 =====
+ 
+ 
+152 
+ 
+TF 7200 Experience Broadening Qualitative Evaluation 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+ 
+TF 7201M Experience Broadening Qual Eval MIB 
+TF 7210-15G Experience Broadening Qual Eval Ground School 1-6 
+TF 7220-25F Experience Broadening Qual Eval Flight 1-6 
+Additional unique aircraft will be brought in and flown to expand the students’ experience base. Like 
+the graded qual evals, some aircraft brought in will have a short MIB highlighting the aircraft and the 
+mission for which it should be evaluated, and the contractor will provide the appropriate ground school. 
+However, no report is required following the flight. The single digit indicates required prerequisites for 
+the ground school and flights (e.g., 7210G is required before 7220F, 7211G is required before 7221F). 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7230G C-17 Experience Broadening Qual Eval Ground School (FTC) 
+TF 7231F C-17 Experience Broadening Qual Eval Flight (FTC) 
+The ground school will cover the required areas of operation for students to evaluate the C-17 in 
+groups. There is no reporting requirement for this flight. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7240S Heavy Aircraft Sim Evals (FTC) 
+Utilizing high-fidelity simulators, students will be exposed to two modern heavy aircraft of different 
+designs to compare different design philosophies. In addition to experiencing test operations in a large 
+aircraft, students will perform high-risk large aircraft ground/flight test techniques that cannot be 
+performed inflight at TPS due to safety and aircraft availability considerations. 
+Prerequisites: 
+FQ 9101A Failure Modes Testing Lecture 
+TF 5201A Human Systems Integration Lecture 
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7250G Navy TPS Fixed Wing Qual Eval Ground School (FTC) 
+TF 7251F Navy TPS Fixed Wing Qual Eval Flight (FTC) 
+During a visit to the US Navy Test Pilot School (USNTPS), experience broadening non-graded qual 
+evals may include an F/A-18 out-of-control flight demonstration (when available), a single-engine tail 
+dragger for pilots, and/or a T-6B for non-pilots. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+
+
+===== PAGE 153 =====
+ 
+ 
+153 
+ 
+TF 7300 Rotary Wing (FTC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Recall the performance, flying qualities, and systems characteristics for rotary wing 
+aircraft. 
+ 
+TF 7301M Intro to Rotary Wing Flight MIB (FTC) 
+TF 7302G Intro to Rotary Wing Ground School (FTC) 
+TF 7303F Intro to Rotary Wing Flight (FTC) 
+This MIB will outline the learning objectives of flying rotary wing aircraft and basic warnings and 
+limitations students can expect. The ground school will cover basic rotary wing flight dynamics and the 
+different controls involved in flying helicopters to prepare students for their introductory flight. 
+Prerequisites: 
+TF 5201A Human Systems Integration Lecture  
+TF 7102A Contractor Interaction Lecture 
+ 
+TF 7310G Advanced Rotary Wing Qual Eval Ground School (FTC) 
+TF 7311F Advanced Rotary Wing Qual Eval Flight (FTC) 
+Students will be exposed to rotary wing flight test techniques during their visit to Capstone field trip. 
+All related ground school and academics will take place at the host location. This experience broadening 
+non-graded qual eval will expose the students to unique rotary wing flight characteristics and flight test 
+techniques.  
+Prerequisites: 
+TF 7301M Intro to Rotary Wing Flight MIB (FTC) 
+ 
+
+
+===== PAGE 154 =====
+ 
+ 
+154 
+ 
+TF 7400 Additional Broadeners (FTC) 
+Terminal Learning Objectives: 
+During completion of this Module, students will be able to: 
+TLO 1. View real-world test execution events.  
+ 
+TF 7401C Real-World Control Room Observation (US Only) (FTC) 
+Students will observe a real-world flight test mission control room to provide them with a better 
+perspective of real-world control room operations. The event will also help students better visualize the 
+roles and responsibilities that they may have post-graduation.  
+Prerequisites: 
+TF 6280A Secure Flight Test – Special Topics Lecture (US Only) [req’d for US Only Control Rooms 
+with Special Access Programs] 
+ 
+
+
+===== PAGE 155 =====
+ 
+ 
+155 
+ 
+TF 7500 Capstone Qualitative Evaluation 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+TLO 2. Prioritize collection of appropriate, mission-relevant data which will answer evaluation 
+objectives during planning and execution of single-sortie qualitative evaluations in 
+unfamiliar platforms.  
+TLO 3. Interpret qualitative evaluation results in the context of system requirements and the 
+platforms’ intended mission through a limited-scope oral report. 
+ 
+TF 7501M Capstone Qual Eval MIB 
+TF 7502R Capstone Qual Eval Test Plan 
+TF 7503F Capstone Qual Eval Flight 
+TF 7504Y Capstone Qual Eval Oral Report 
+The student team will develop a test plan to evaluate an unfamiliar aircraft in a scenario that the 
+students develop. Students will deconstruct the scenario into relevant qual eval test objectives and 
+appropriate test techniques for obtaining the qualitative and quantitative data necessary to inform the test 
+objectives. In addition to the test plan, test cards will also be submitted for staff monitor review. 
+Upon returning from their capstone qual eval, students will present their findings in a brief oral report 
+to the school. Students in the junior class observe the oral report. 
+This event provides students with the opportunity to demonstrate their ability to plan, execute, and 
+deliver an oral report on a qualitative evaluation of an unfamiliar aircraft. The student will fly a single 
+qual eval sortie at the capstone host location to collect data for the report.  
+Prerequisites: 
+TF 7113R Graded Qual Eval 1 Report 
+ 
+
+
+===== PAGE 156 =====
+ 
+ 
+156 
+ 
+TF 7600 STC Qualitative Evaluation (STC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+ 
+TF 7601A Wideband Global SATCOM (WGS) Intro (STC)  
+This lesson is a precursor to the TF 5230M Human Systems Evaluation MIB. It provides 
+familiarization with the WGS Technical Orders and other engineering documentation students will be 
+interacting with during the exercise. 
+Prerequisites: 
+AN 5121A Dean of Faculty Introduction 
+ 
+ 

@@ -1,0 +1,29 @@
+.theme-toggle-container {
+  position: fixed;
+  top: 7px;
+  left: 240px;
+  z-index: 9999;
+}
+
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--theme-toggle-border);
+  background: var(--theme-toggle-bg);
+  color: var(--theme-toggle-color);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+  line-height: 1;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--theme-toggle-hover-bg);
+  border-color: var(--theme-toggle-hover-border);
+  transform: scale(1.08);
+}

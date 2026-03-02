@@ -1,0 +1,807 @@
+{
+  "sheet": "SYSTEMS",
+  "classCode": "25A",
+  "extractedAt": "2026-02-19",
+  "sections": [
+    {
+      "name": "Mission System Fundamentals",
+      "events": [
+        {
+          "eventCode": "SY 5711L",
+          "missionName": "Avionics Testing Lab",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS UTD"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "2 Studs (P + FTE/CSO/RPA) + IP/IFTE"
+          ],
+          "notes": [
+            "TPS UTD required"
+          ],
+          "prerequisites": [
+            "SY 5711A Mission Systems Test Fundamentals Lecture",
+            "TF 6713A Deficiency Reports Lecture"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "AT Lab 1",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electro-Optics & Sensors",
+      "events": [
+        {
+          "eventCode": "SY 6551F",
+          "missionName": "F-16 Sensor Flight",
+          "aircraftType": "F-16",
+          "aircraftVariant": "Block 40/50 F-16D",
+          "config": [
+            "Desired:",
+            "Block 40/50 F-16D",
+            "SNIPER SE",
+            "Wing Tanks Highly Desired",
+            "Min Required:",
+            "Any F-16",
+            "SNIPER OR LITENING",
+            "Any tank config"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "1 IP + 1 Stud Pilot/CSO/RPA/FTE",
+            "All Studs complete event",
+            "May go to SIM if time does not allow"
+          ],
+          "notes": [
+            "AIRSPACE  R15, W/E RANGE, BAE, BAW, I, O, S, P",
+            "CMBT LASER, DOWNFALL, LIRB MODIFIED 4-BAR/DAY CONFIG, RAMS VAN",
+            "Coordinate pod w/Sy Branch or 416th POC",
+            "F-16 tail may be dependent on TGP S/W - Contact Sy Branch"
+          ],
+          "prerequisites": [
+            "SY 6141H Electro-Optics Ground Demo",
+            "SY 6551A F-16 Sensors Flight MIB",
+            "TF 6111A Test Planning Lecture"
+          ],
+          "lox": "F-16",
+          "aircrewQuals": "E-O",
+          "aircraftRequiredCape": "Sensors",
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Radar",
+      "events": [
+        {
+          "eventCode": "SY 6321L",
+          "missionName": "TPS Radar Lab 1",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS (Sy Lab)"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "4 Studs + 1 IP/IFTE",
+            "All Studs complete event"
+          ],
+          "notes": [
+            "Located in school house Systems Lab",
+            "Lab POC: Aaron Wenner"
+          ],
+          "prerequisites": [
+            "Before Radar Lecture",
+            "Need to complete before Radar Exam"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "Radar Lab 1",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            15,
+            16
+          ]
+        },
+        {
+          "eventCode": "SY 6322L",
+          "missionName": "TPS Radar Lab 2",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS (Sy Lab)"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "4 Studs + 1 IP/IFTE",
+            "All Studs complete event"
+          ],
+          "notes": [
+            "Located in school house Systems Lab",
+            "Lab POC: Aaron Wenner"
+          ],
+          "prerequisites": [
+            "Start scheduling after the first 3 hours of Radar Lecture",
+            "Highly desired to be complete before Radar Exam"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "Radar Lab 2",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            18,
+            19
+          ]
+        },
+        {
+          "eventCode": "SY 6331SF",
+          "missionName": "Un-Cleared Radar Sim",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS UTD"
+          ],
+          "duration": 2.5,
+          "crew": [
+            "1-2 Studs + 1 IP/IFTE",
+            "Foreign Studs only"
+          ],
+          "notes": [
+            "Use TPS UTD as Primary, 416th UTD as Back-up"
+          ],
+          "prerequisites": [
+            "SY 6321L TPS Radar Lab 1",
+            "SY 6322L TPS Radar Lab 2"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "Int Radar Sim",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            21,
+            22
+          ]
+        },
+        {
+          "eventCode": "SY 6331SU",
+          "missionName": "Cleared Radar Sim",
+          "aircraftType": "F-22",
+          "aircraftVariant": null,
+          "config": [
+            "411th F-22 Sim"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "2 Studs + 1 IP/IFTE",
+            "US Students ONLY"
+          ],
+          "notes": [
+            "411th Sim POC: Dave Grattan, 7-2147 or Rob Washburn, 7-2147"
+          ],
+          "prerequisites": [
+            "SY 6321L TPS Radar Lab 1",
+            "SY 6322L TPS Radar Lab 2"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "US Radar Sim",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            24,
+            25
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Weapons Delivery",
+      "events": [
+        {
+          "eventCode": "SY 7561S",
+          "missionName": "F-16 Weapons Delivery Sim",
+          "aircraftType": "F-16",
+          "aircraftVariant": null,
+          "config": [
+            "UTD"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "2 Studs (FTE + P/RPA) + 1 IFTE",
+            "If 2 CSOs make a pair, if 1 CSO add to P/FTE pair"
+          ],
+          "notes": [
+            "Use TPS UTD as Primary, 416th UTD as Back-up"
+          ],
+          "prerequisites": [
+            "SY 7951A F-16 Weapons Delivery Intro MIB"
+          ],
+          "lox": "F-16",
+          "aircrewQuals": "TPS F-16 WD",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            27,
+            28
+          ]
+        },
+        {
+          "eventCode": "SY 7561FH",
+          "missionName": "F-16 Weapons Delivery Intro",
+          "aircraftType": "F-16",
+          "aircraftVariant": "Block 40/50 F-16D",
+          "config": [
+            "Block 40/50 F-16",
+            "Any tank config",
+            "SNIPER",
+            "1 MAU/GBU-12 (planned asymmetric)"
+          ],
+          "duration": 1.6,
+          "crew": [
+            "Flight: 1 Stud P/RPA/CSO + IP",
+            "Groups: Same as weapons delivery sim"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P",
+            "PB12 (PRIMARY) OR PB10",
+            "EAST/WEST RANGE,VBS, UHF",
+            "PB10 requires Mercury Blvd Closure",
+            "(2+30 BRIEF) 58281 MUNITIONS SCHEDULER",
+            "At Least 14 days notice for bombs.",
+            "AMMO POC: Jeff Stevens or Sanford Kekauoha 7-8285",
+            "CC Munitions Control Org Box"
+          ],
+          "prerequisites": [
+            "SY 7561S F-16 Weapons Delivery Sim",
+            "CF 6356FM T-38 Weapons Fam (if req'd) (Select P/CSO/RPA only)",
+            "TF 6361CE/FO  F-16 Propulsion Intro"
+          ],
+          "lox": "F-16, CR",
+          "aircrewQuals": "TPS F-16 WD, Wps Del Sim-Flt",
+          "aircraftRequiredCape": "DAS Data, DAS HUD, Sensors",
+          "aircraftDesiredCape": "DAS MFD",
+          "sourceRows": [
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38
+          ]
+        },
+        {
+          "eventCode": "SY 7561CE",
+          "missionName": "Control Room",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "Control Room"
+          ],
+          "duration": 0.5,
+          "crew": [
+            "CR: 1 Stud FTE + 1 IFTE",
+            "CR: FTE Students Only & CSO \"See\"",
+            "No CR required for CSO RCP flight",
+            "IP + IFTE with Weapons Group"
+          ],
+          "notes": [
+            "F-16 tail may be dependent on TGP S/W - Contact Sy Branch"
+          ],
+          "prerequisites": [
+            "All group flights complete plus 2 days"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            39,
+            40,
+            41,
+            43
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Data Fusion & Integrated Systems",
+      "events": [
+        {
+          "eventCode": "SY 8221LU",
+          "missionName": "US Only Integrated Systems Lab",
+          "aircraftType": "F-35",
+          "aircraftVariant": null,
+          "config": [
+            "Eglin F-35 Sims"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "3-4 US Studs + IP/IFTE",
+            "US Studs only"
+          ],
+          "notes": [
+            "POC: Beast Taylor, Rosie Rosenstock",
+            "Rosie schedules Eglin F-35 sim blocks for us"
+          ],
+          "prerequisites": [
+            "SY 9601AU US Only Briefings",
+            "SY 8211A Introduction to Data Fusion Lecture"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "US ISL",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            45,
+            46
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electronic Warfare & Software",
+      "events": [
+        {
+          "eventCode": "SY 8521SU",
+          "missionName": "Cleared EW Sim",
+          "aircraftType": "F-22",
+          "aircraftVariant": null,
+          "config": [
+            "411th F-22 Sim"
+          ],
+          "duration": 2.5,
+          "crew": [
+            "3 US Studs (Min 2 Operators P/RPA/CSO/Space Operator) + IP/IFTE",
+            "US Studs only",
+            "Avoid 2x Space Operators in same session if poss."
+          ],
+          "notes": [
+            "411th Sim POC: Dave Grattan, 7-2147 or Rob Washburn, 7-2147"
+          ],
+          "prerequisites": [
+            "SY 8311 Electronic Warfare Lecture"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "US EW Lab",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            49,
+            50,
+            52
+          ]
+        },
+        {
+          "eventCode": "SY 8521LF",
+          "missionName": "Uncleared EW Lab",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS SY Lab"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "All Foreign Studs +  IP/IFTE",
+            "Foreign Studs only"
+          ],
+          "notes": [
+            "Currently on hold for equiment"
+          ],
+          "prerequisites": [
+            "SY 8511A Electronic Warfare Lecture"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "Int EW Lab",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            56,
+            57
+          ]
+        },
+        {
+          "eventCode": "SY 8511L",
+          "missionName": "Software Dev and Test Fund Lab",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "TPS Flight Sciences Sim"
+          ],
+          "duration": 1.0,
+          "crew": [
+            "All Studs +  IP/IFTE"
+          ],
+          "notes": [
+            "Email appointment to Jay.Kemper@calspan.com to schedule sim."
+          ],
+          "prerequisites": null,
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            59,
+            60
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Cyber Vulnerabilities",
+      "events": [
+        {
+          "eventCode": "SY 9221LU",
+          "missionName": "US Only Cyber Vulnerabilities Case Study Lab",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "47 CTS Det 1 (IFAST 2nd Floor)"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "All US Studs",
+            "US Studs only"
+          ],
+          "notes": [
+            "ED schedule with Teddy Thomas via Outlook invite"
+          ],
+          "prerequisites": [
+            "SY 8611AU US Only Cybernetic Systems Vulnerabilities and Threats Lecture"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            62,
+            63
+          ]
+        },
+        {
+          "eventCode": "SY 9221LU",
+          "missionName": "Cyber Vulnerabilities Case Studies Lab",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": null,
+          "duration": 1.0,
+          "crew": [
+            "US Only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch to schedule"
+          ],
+          "prerequisites": [
+            "SY 9211A US Only Cybernetic Systems Vulnerabilities and Threats Lecture"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            89,
+            90
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Advanced Systems Evaluation",
+      "events": [
+        {
+          "eventCode": "SY 7752FU",
+          "missionName": "US Only MQ-9 Advanced System Flight",
+          "aircraftType": "MQ-9",
+          "aircraftVariant": null,
+          "config": [
+            "Grey Butte"
+          ],
+          "duration": null,
+          "crew": [
+            "4 Studs + IRPA",
+            "US Studs only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch for Grey Butte schedule",
+            "POC: Chris \"Jarvis\" Fulton 661-802-1093"
+          ],
+          "prerequisites": [
+            "SY 6111A EO Lecture",
+            "SY 6311A Radar Lecture",
+            "SY 7561F/CE F-16 Weapons Delivery Introduction Flight/CR"
+          ],
+          "lox": "Ground",
+          "aircrewQuals": "MQ9 GCS",
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            65,
+            66,
+            67
+          ]
+        },
+        {
+          "eventCode": "SY 7751FU",
+          "missionName": "F-15E Systems Eval",
+          "aircraftType": "F-15E",
+          "aircraftVariant": "F-15E",
+          "config": [
+            "F15E",
+            "Brief 2+30 Hrs Prior"
+          ],
+          "duration": 1.5,
+          "crew": [
+            "1 Stud + 1 IP",
+            "US Studs only"
+          ],
+          "notes": [
+            "Scheduled and flown at Eglin",
+            "POC: Beast Taylor"
+          ],
+          "prerequisites": [
+            "SY 7751A F-15E Systems Eval MIB",
+            "SY 6111A EO Lecture",
+            "SY 6311A Radar Lecture",
+            "SY 7561F/CE F-16 Weapons Delivery Introduction Flight/CR"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            70,
+            71,
+            72,
+            73
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Systems Practical Exam",
+      "events": [
+        {
+          "eventCode": "SY 7669FP",
+          "missionName": "F-16 Systems Practical Exam Flight",
+          "aircraftType": "F-16",
+          "aircraftVariant": "Block 40/50 F-16D",
+          "config": [
+            "FCL",
+            "DAS F-16",
+            "391/797 PREFERRED",
+            "OPERABLE RADAR",
+            "TGP (ANY)"
+          ],
+          "duration": 1.6,
+          "crew": [
+            "Flight: 1 Stud + 1 IP",
+            "All Pilots and FTEs complete event",
+            "RPA/CSO complete SY8854F"
+          ],
+          "notes": [
+            "AIRSPACE:  R15, BAE, BAW, I, O, S, P; BUCKHORN, ALPHA CORR",
+            "EAST AND WEST RANGE  (OVERFLY ONLY)",
+            "MOVING TARGET ON PIRA (K2 and N. Flank Rd)",
+            "MISSION UHF/VHF, TM FREQS",
+            "Studs should not be scheduled for subsequent events until 3.5hrs after landing.",
+            "Card review IP&IFTE required, completed NLT 2 days prior to execution"
+          ],
+          "prerequisites": [
+            "SY 8853A F-16 Systems Practical Exam MIB",
+            "SY 7951 F-16 Weapons Delivery Intro",
+            "2 days prior - card reviw with an IP and IFTE"
+          ],
+          "lox": "F-16, CR",
+          "aircrewQuals": "Systems, Sys Exam",
+          "aircraftRequiredCape": "DAS Data, DAS HUD, Sensors",
+          "aircraftDesiredCape": "DAS MFD",
+          "sourceRows": [
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ]
+        },
+        {
+          "eventCode": "SY 7669CE",
+          "missionName": "Control Room",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "CONTROL ROOM"
+          ],
+          "duration": null,
+          "crew": [
+            "CR: 1 Stud FTE + 1 IFTE"
+          ],
+          "notes": [
+            "Oral Debrief shall be scheduled out to 3.5 hours after land"
+          ],
+          "prerequisites": null,
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            80
+          ]
+        },
+        {
+          "eventCode": "SY 7659SB",
+          "missionName": "MQ-9 Systems Practical Exam Sim",
+          "aircraftType": "MQ-9",
+          "aircraftVariant": null,
+          "config": [
+            "Grey Butte"
+          ],
+          "duration": 4.0,
+          "crew": [
+            "2 RPA/CSO Studs + 1 IP/IFTE",
+            "RPA/CSO Studs only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch for Grey Butte schedule"
+          ],
+          "prerequisites": [
+            "SY 8854A MQ-9 Sys Practical Exam MIB",
+            "SY 7551 F-16 Sensors Flight"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            81,
+            82
+          ]
+        },
+        {
+          "eventCode": "SY 7659FB",
+          "missionName": "MQ-9 Systems Practical Exam",
+          "aircraftType": "MQ-9",
+          "aircraftVariant": null,
+          "config": [
+            "Grey Butte"
+          ],
+          "duration": 6.0,
+          "crew": [
+            "2 RPA/CSO Studs + 1 IP/IFTE",
+            "RPA/CSO Studs only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch for Grey Butte schedule. Early academics",
+            "same day are OK, but do not plan students to be available after their",
+            "scheduled show time."
+          ],
+          "prerequisites": [
+            "SY 8854A MQ-9 Sys Practical Exam MIB",
+            "SY 7551 F-16 Sensors Flight"
+          ],
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            85,
+            86,
+            87
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5th Generation Systems",
+      "events": [
+        {
+          "eventCode": "SY 9771XU",
+          "missionName": "US Only 5th Gen Tour",
+          "aircraftType": null,
+          "aircraftVariant": null,
+          "config": [
+            "JSF Compound"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "All US Studs + 1 IP/IFTE",
+            "US Studs only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch to schedule"
+          ],
+          "prerequisites": null,
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            92,
+            93
+          ]
+        },
+        {
+          "eventCode": "SY 9771SU",
+          "missionName": "US Only 5th Gen Sims",
+          "aircraftType": "F-22",
+          "aircraftVariant": null,
+          "config": [
+            "F-22 Sim"
+          ],
+          "duration": 2.0,
+          "crew": [
+            "All US Studs + 1 IP/IFTE",
+            "US Studs only"
+          ],
+          "notes": [
+            "Coordinate w/ System Branch to schedule"
+          ],
+          "prerequisites": null,
+          "lox": null,
+          "aircrewQuals": null,
+          "aircraftRequiredCape": null,
+          "aircraftDesiredCape": null,
+          "sourceRows": [
+            94,
+            95
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "totalEvents": 23,
+    "totalSections": 10,
+    "aircraftTypes": [
+      "F-15E",
+      "F-16",
+      "F-22",
+      "F-35",
+      "MQ-9"
+    ],
+    "eventCodes": [
+      "SY 5711L",
+      "SY 6551F",
+      "SY 6321L",
+      "SY 6322L",
+      "SY 6331SF",
+      "SY 6331SU",
+      "SY 7561S",
+      "SY 7561FH",
+      "SY 7561CE",
+      "SY 8221LU",
+      "SY 8521SU",
+      "SY 8521LF",
+      "SY 8511L",
+      "SY 9221LU",
+      "SY 7752FU",
+      "SY 7751FU",
+      "SY 7669FP",
+      "SY 7669CE",
+      "SY 7659SB",
+      "SY 7659FB",
+      "SY 9221LU",
+      "SY 9771XU",
+      "SY 9771SU"
+    ]
+  }
+}

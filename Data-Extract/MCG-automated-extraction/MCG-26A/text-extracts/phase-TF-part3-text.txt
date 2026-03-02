@@ -1,0 +1,248 @@
+===== PAGE 156 =====
+ 
+ 
+156 
+ 
+TF 7600 STC Qualitative Evaluation (STC) 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Differentiate between a variety of aircraft/spacecraft performance, flying qualities, and 
+systems characteristics as their experiences broaden by flying multiple platforms.  
+ 
+TF 7601A Wideband Global SATCOM (WGS) Intro (STC)  
+This lesson is a precursor to the TF 5230M Human Systems Evaluation MIB. It provides 
+familiarization with the WGS Technical Orders and other engineering documentation students will be 
+interacting with during the exercise. 
+Prerequisites: 
+AN 5121A Dean of Faculty Introduction 
+ 
+ 
+
+
+===== PAGE 157 =====
+ 
+ 
+157 
+ 
+TF 8000 Test Management Project 
+(4 Semester Credit Hours) 
+Test Management Projects (TMPs) are customer sponsored real-world test projects which are 
+performed by the USAF TPS students with guidance from the TPS staff. Students are divided into test 
+teams with approximately 4-6 individuals to a team. The customer provides the research concept or item 
+to be tested, and the students design the plan to test the system under test. TPS students collect the test 
+data, reduce the data, conduct data analysis, and provide a written and oral test report for the customer at 
+the end of the process. 
+TF 8100 TMP Planning 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Construct a real-world test program and collaborate with key stakeholders through the full 
+lifecycle – from test concept through final report and presentation of the results.  
+TLO 2. Design a test to answer a customer's needs and modify their approach throughout the 
+lifecycle of the program to address test program objectives.  
+ 
+TF 8101A TMP Assignments and Intro Lecture 
+TF 8102W TMP Resources Workshop 
+TF 8103W TMP Core Team Meeting 
+TF 8104W TMP Test Plan Working Group 1  
+TF 8105W TMP Test Plan Working Group 2 
+TF 8106R TMP Test Plan and Safety Package 
+TF 8107W TMP Technical Review Board/Safety Review Board 
+TF 8108Y TMP Test Approval Briefing 
+During the TMP Assignments and Introduction Lecture, students will be presented with their assigned 
+TMP groups. A basic overview of the 412 Test Wing Program Management process, expectations and 
+timelines for the TMP process, and differences between the USAF TPS TMP process and 412 TW 
+process will be presented. 
+During the Resources Workshop, each student team will meet with the USAF TPS Program 
+Managers, TMP Director, and their Staff Advisors to discuss their specific programmatic requirements 
+and resources. Students will be instructed to draft a 412 TW Test Concept Document (TCD), identifying 
+their TMP's overall objectives, any aircraft or pod modifications required, and support required from 
+other organizations such as logistics, ranges, instrumentation, environmental, frequency management, 
+and/or maintenance. The TCD will be required for TF 8103W. 
+Prior to the Core Team Meeting, the student teams will send their TCDs to the USAF TPS A5 TMP 
+Program Manager and TMP Director, who will review the TCDs for any final edits. The A5 Program 
+Manager will formally begin the 412 TW PID/SOC process by distributing the TCDs to the 412 TW 
+POCs and non-AFTC organizations identified by each student team and requesting a JON. During the 
+Core Team Meeting, the student teams will present their TCDs to the respective organizations, allowing 
+the organizations an opportunity to either concur or non-concur with the support being requested. 
+During the TMP planning process, students will have two test plan working groups (TPWGs) to assist 
+them with drafting their test plan, safety plan, execution schedule, and any additional documentation as 
+required by their TMP. The first TPWG will focus on defining the general test objectives (GTOs), 
+specific test objectives (STOs), measures of performance (MOPs), and any outstanding technical planning 
+discussions that will feed directly into their test plan development. 
+
+
+===== PAGE 158 =====
+ 
+ 
+158 
+ 
+For the second TPWG, the TMP Director, Staff Advisors, and assigned Unit Test Safety Officer will 
+review the updated draft test and safety plans. The focus will be on ensuring the team's test plan 
+objectives, methodologies, and data analysis plans are well-constructed, and that the safety plan identifies 
+and mitigates all risks associated with executing the test plan. Upon conclusion of the second TPWG, 
+student teams will be able to incorporate feedback to have a finalized test plan and safety plan ready to 
+submit to the technical and safety review boards. 
+Graded test plans and safety plans will be submitted to the TPS-led Technical Review Board and the 
+412 TW SET-led Safety Review Board. 
+The purpose of the Technical Review Board (TRB) is to have the student teams present their TMP 
+test plans to the USAF TPS Technical Director (or delegate) and other appointed TRB members, to 
+defend that the test plan is technically adequate, and answer the proposed TMP research question and 
+customer's need. The TRB chair will provide a letter of technical adequacy to the Technical Execution 
+Authority (TEA)/TPS Commandant. 
+The Safety Review Board (SRB), led by a representative of the 412 TW Test Safety Office, is 
+composed of a panel of Independent Operational Reviewers, Technical Experts, TPS Chief UTSO, 
+assigned TMP UTSO, and potentially STARCOM DEL 12 Safety Officers. The purpose of the SRB is to 
+provide a safety review and risk assessment of the finalized safety plan, which will be presented to the 
+TEA/TPS Commandant. 
+Upon completion of both the TRB and SRB, the students will document and correct any action items 
+prior to proceeding with their request for test execution approval. 
+Prerequisites: 
+AN 5180A Test Foundations Phase Intro 
+TF 5410A Test Safety Principles Lecture [req’d for TF 8104W] 
+TF 6104A Intro to Managing Tests Lecture [req’d for TF 8104W] 
+ 
+ 
+
+
+===== PAGE 159 =====
+ 
+ 
+159 
+ 
+TF 8200 TMP Execution 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Execute their TMP data flights/test events, in accordance with their approved test and 
+safety plans. 
+ 
+TF 8201F TMP Data Flights/Events 
+The purpose of the test missions is to collect data in accordance with the test plan and safety package 
+to answer the customer’s questions. 
+Prerequisites: 
+TF 8108Y TMP Test Approval Briefing 
+ 
+
+
+===== PAGE 160 =====
+ 
+ 
+160 
+ 
+TF 8300 TMP Reporting 
+Terminal Learning Objectives: 
+Upon completion of this Module, students will be able to: 
+TLO 1. Brief their peers and TPS Staff on their planned TMP test objectives, test execution 
+schedule, and expected test results. 
+TLO 2. Brief their peers, TPS Staff, and base leadership on their test execution, data results, and 
+any constraints or limitations that occurred during execution. 
+TLO 3. Author a technical information memorandum that identifies the data collected, analysis 
+methods, and data-driven conclusions and recommendations. 
+ 
+TF 8301Y TMP Program Assessment Review 1 
+TF 8302W TMP Pre-Writers Meeting 
+TF 8303Y TMP Program Assessment Review 2 
+TF 8304W TMP Data Working Group 
+TF 8305W TMP Report Coordination Meeting 
+TF 8306R TMP Final Written Report (TIM) 
+TF 8307Y TMP Final Oral Report 
+The purpose of the first Program Assessment Review (PAR) is for each student TMP team to present 
+their planned test objectives, test methodology, test schedule, and expected test results to their peers and 
+TPS staff. 
+The purpose of the Pre-Writers meeting is to brief students on the reporting expectations for their 
+TMP, instruct them on how to write a TPS technical information memorandum (TIM), and to highlight 
+the differences between the USAF TPS TMP TIM versus the 412 TW Technical Report. Upon conclusion 
+of this meeting, student teams will be able to develop their draft TIMs.  
+The second Program Assessment Review is intended to have the student teams brief their peers and 
+TPS Staff on what occurred during their two-week TMP execution window. This will include the actual 
+test execution schedule, preliminary status of data analysis, completion status of the test objectives and 
+measures of performance, and any constraints or limitations that affected execution.  
+The TMP Data Working Group is a post-execution, one-hour meeting with the student teams, TMP 
+Director, Staff Advisor, and appropriate operations/technical experts to discuss data collected, analysis 
+progress and way forward, and the anticipated scope of results and conclusions before completion of the 
+final draft report for the TMP Report Coordination Meeting.  
+The Report Coordination Meeting is a graded event for TMPs, equivalent to the 412 TW "murder 
+board." The purpose of this meeting is to review the students' TIMs by conducting a line-by-line review, 
+and discuss action items and comments required prior to submitting the final report for approval and 
+signature by the TPS commandant and Technical Directors.  
+The final signed and approved TMP TIM is an official USAF TPS document that will be submitted to 
+the TMP customers. Depending on the distribution statement and classification of the TIM, the TIM may 
+be submitted for Public Release Approval and stored in the Defense Technical Information Center and/or 
+412 TW Technical Library.  
+The TMP final oral report is a graded 45-minute presentation by each of the student teams to brief 
+their peers, AFTC, STARCOM, 412 TW, Delta 12, senior base leadership, and/or key stakeholders on 
+their TMP results.  
+Prerequisites: 
+TF 8107W TMP Technical Review Board/Safety Review Board 
+TF 8201F TMP Data Flights/Events [req’d for 8302W] 
+ 
+
+
+===== PAGE 161 =====
+ 
+ 
+161 
+ 
+TF 9000 Comprehensive Exams 
+(6 Semester Credit Hours) 
+The Comprehensive Exams are major assessments which evaluate individual student knowledge and 
+practical applications of what they have learned throughout the year. 
+TF 9100 Comprehensive Exams 
+ 
+TF 9101M Comprehensive Written Exam MIB 
+TF 9102E Comprehensive Written Exam 
+Students will be tested on major concepts from the USAF Test Pilot School curriculum: domain 
+sciences and mission systems. The comprehensive written exam will be conducted once the foundational 
+classroom academics have been presented in each of the sciences. 
+Prerequisites: 
+AS 7110A Satellite Attitude Estimation & Control 
+AS 7120A Satellite Power Subsystems 
+AS 7301A Space Propulsion  
+AS 8210A RPO Path Controllers   
+AS 8301A Advanced Kalman Filter and Relative Navigation  
+FQ 8102E Handling Qualities Evaluation Exam 
+FQ 9101A Failure Modes Testing Lecture 
+FQ 9202E Stall, Departure and Spin Testing Exam 
+FQ 9301A Stores Certification Lecture 
+FQ 9411E First Flight and Envelope Expansion Exam 
+PF 6241R Model Validation Report 
+PF 8351Y Performance Phase Final Test Oral Report 
+SY 8501E Kill Web Mission Systems End-of-Course 
+ 
+TF 9110M Comprehensive Oral Exam MIB 
+TF 9111E Comprehensive Oral Exam 
+Students will be evaluated on their ability to: 1) analyze a test scenario and clearly identify proper 
+objectives that trace to data elements required to meet those objectives; 2) clearly identify the primary 
+safety, security, technical, and programmatic risks; 3) demonstrate a clear understanding of the 
+fundamental engineering principles related to test, translating program objectives and data requirements 
+into proper test techniques and/or procedures; 4) translate test techniques and procedures into correct 
+instrumentation and resource requirements; 5) demonstrate proper Test Judgement; and 6) effectively 
+communicate and defend the test program and adapt it to unexpected circumstances. Students will think 
+critically and apply skills and knowledge gained throughout the year to develop a plan for evaluating a 
+system. Students must consider program requirements, test objectives, data requirements, test techniques, 
+resources, and risks while properly scoping the test campaign with appropriate technical and safety 
+buildup. Students must effectively communicate and defend their plan to a review board comprised of 
+USAF Test Pilot School instructors. 
+Prerequisites: 
+FQ 9502S Sim Flying Qualities Practical Exam (ABM/CSO/RPA) [req’d for TF 9111E] 
+FQ 9511F T-38 Flying Qualities Practical Exam (P) [req’d for TF 9111E] 
+FQ 9512C T-38 Flying Qualities Practical Control Room (FTE) [req’d for TF 9111E] 
+SY 7503F MQ-9 Systems Practical Exam (ABM/CSO/RPA, select FTE/P) [req’d for TF 9111E] 
+SY 7511F F-16 Systems Practical Exam Flight (P) [req’d for TF 9111E] 
+SY 7512C F-16 Systems Practical Exam Control Room (FTE) [req’d for TF 9111E] 
+SY 7521O Space Systems Practical (STC) [req’d for TF 9111E] 
+
+
+===== PAGE 162 =====
+ 
+ 
+162 
+ 
+TF 5103R Systems Engineering for Testers Project Written Report 
+TF 5201A Human Systems Integration Lecture 
+TF 9102E Comprehensive Written Exam 
+TL 5101A Week 1 Class 1 
+TL 5110A Operational Test 
+TL 6101A Negotiation, Persuasion, & Communication (NPC) Course 
+TL 7101A Innovation Course 
+TL 8101A Case Study Seminars 
+ 

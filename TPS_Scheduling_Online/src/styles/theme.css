@@ -1,0 +1,467 @@
+/* ========================================
+   CSS Custom Properties — Dark (default) + Light
+   Replaces all 129 .light-mode prefix overrides
+   ======================================== */
+
+:root {
+  /* Backgrounds */
+  --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+  --bg-surface: rgba(26, 26, 46, 0.95);
+  --bg-surface-solid: rgba(30, 30, 60, 1);
+  --bg-surface-alt: rgba(20, 20, 40, 0.95);
+  --bg-surface-deep: rgba(20, 20, 40, 0.98);
+  --bg-overlay: rgba(0, 0, 0, 0.15);
+  --bg-modal-overlay: rgba(0, 0, 0, 0.8);
+  --bg-modal: #1a1a2e;
+  --bg-input: rgba(255, 255, 255, 0.05);
+  --bg-hover: rgba(255, 255, 255, 0.03);
+  --bg-hover-strong: rgba(255, 255, 255, 0.04);
+  --bg-tab-group: rgba(255, 255, 255, 0.05);
+  --bg-scrollbar-track: rgba(255, 255, 255, 0.05);
+  --bg-scrollbar-thumb: rgba(255, 255, 255, 0.2);
+  --bg-scrollbar-corner: #1a1a2e;
+  --bg-title-bar: rgba(0, 0, 0, 0.15);
+
+  /* Rainbow specific backgrounds */
+  --bg-rainbow: rgba(0, 0, 0, 0.15);
+  --bg-rainbow-toolbar: rgba(26, 26, 46, 0.98);
+  --bg-rainbow-corner: rgba(26, 26, 46, 1);
+  --bg-rainbow-header: rgba(30, 30, 60, 1);
+  --bg-rainbow-name: rgba(15, 15, 35, 1);
+  --bg-rainbow-cell: rgba(15, 15, 35, 0.6);
+  --bg-rainbow-cell-hover: rgba(15, 15, 35, 0.8);
+  --bg-rainbow-separator: rgba(255, 255, 255, 0.03);
+
+  /* Text */
+  --text-primary: #e2e8f0;
+  --text-heading: white;
+  --text-secondary: #94a3b8;
+  --text-muted: rgba(255, 255, 255, 0.35);
+  --text-dimmed: rgba(255, 255, 255, 0.25);
+  --text-event-name: rgba(255, 255, 255, 0.85);
+  --text-event-time: rgba(255, 255, 255, 0.35);
+  --text-change-detail: #cbd5e1;
+  --text-change-header: white;
+  --text-change-date: #94a3b8;
+  --text-rainbow-name: white;
+  --text-rainbow-cat: rgba(255, 255, 255, 0.3);
+  --text-rainbow-separator: rgba(255, 255, 255, 0.3);
+  --text-toolbar: rgba(255, 255, 255, 0.4);
+  --text-undo: rgba(255, 255, 255, 0.25);
+  --text-undo-hover: #f59e0b;
+
+  /* Borders */
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-faint: rgba(255, 255, 255, 0.04);
+  --border-very-faint: rgba(255, 255, 255, 0.02);
+  --border-section: rgba(255, 255, 255, 0.04);
+  --border-header: rgba(255, 255, 255, 0.15);
+  --border-input: rgba(255, 255, 255, 0.1);
+  --border-btn: rgba(255, 255, 255, 0.15);
+  --border-cb: rgba(255, 255, 255, 0.25);
+  --border-rainbow-name: rgba(255, 255, 255, 0.15);
+  --border-rainbow-cell: rgba(255, 255, 255, 0.05);
+  --border-rainbow-corner: rgba(255, 255, 255, 0.08);
+  --border-rainbow-separator: rgba(255, 255, 255, 0.06);
+
+  /* Shadows */
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-rainbow-corner: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  --shadow-rainbow-header: 0 2px 5px rgba(0, 0, 0, 0.3);
+  --shadow-rainbow-name: 2px 0 5px rgba(0, 0, 0, 0.2);
+  --shadow-tooltip: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 20px 50px rgba(0, 0, 0, 0.5);
+  --shadow-chip-hover: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+  /* Component-specific */
+  --hour-line: rgba(255, 255, 255, 0.05);
+  --rb-hour-line: rgba(255, 255, 255, 0.04);
+  --spinner-border: rgba(255, 255, 255, 0.1);
+  --spinner-top: #3b82f6;
+  --saved-color: #10b981;
+  --conflict-tooltip-bg: #1e1e3a;
+  --conflict-tooltip-text: #fca5a5;
+  --flight-bar-track: rgba(255, 255, 255, 0.04);
+  --add-chip-border: rgba(255, 255, 255, 0.2);
+  --add-chip-color: rgba(255, 255, 255, 0.25);
+  --ruler-color: rgba(255, 255, 255, 0.4);
+
+  /* Theme toggle */
+  --theme-toggle-border: rgba(255, 255, 255, 0.15);
+  --theme-toggle-bg: rgba(255, 255, 255, 0.06);
+  --theme-toggle-color: #fbbf24;
+  --theme-toggle-hover-bg: rgba(255, 255, 255, 0.12);
+  --theme-toggle-hover-border: rgba(255, 255, 255, 0.3);
+
+  /* Section dividers */
+  --section-flying-color: #6ee7b7;
+  --section-flying-bg: rgba(16, 185, 129, 0.06);
+  --section-ground-color: #fde68a;
+  --section-ground-bg: rgba(245, 158, 11, 0.06);
+  --section-na-color: #fca5a5;
+  --section-na-bg: rgba(239, 68, 68, 0.06);
+
+  /* Label colors */
+  --label-flying-bg: rgba(16, 185, 129, 0.35);
+  --label-flying-text: #a7f3d0;
+  --label-ground-bg: rgba(245, 158, 11, 0.35);
+  --label-ground-text: #fef3c7;
+  --label-na-bg: rgba(239, 68, 68, 0.35);
+  --label-na-text: #fecaca;
+
+  /* Event card colors */
+  --card-flying-bg: rgba(16, 185, 129, 0.18);
+  --card-flying-border: rgba(16, 185, 129, 0.45);
+  --card-ground-bg: rgba(245, 158, 11, 0.18);
+  --card-ground-border: rgba(245, 158, 11, 0.45);
+  --card-na-bg: rgba(239, 68, 68, 0.18);
+  --card-na-border: rgba(239, 68, 68, 0.45);
+
+  /* Selection screen */
+  --sel-separator-color: rgba(255, 255, 255, 0.25);
+  --sel-separator-line: rgba(255, 255, 255, 0.06);
+  --sel-event-text: #e2e8f0;
+  --sel-crew-preview: rgba(255, 255, 255, 0.3);
+  --na-chip-border: rgba(255, 255, 255, 0.15);
+  --na-chip-color: rgba(255, 255, 255, 0.5);
+  --quick-btn-border: rgba(255, 255, 255, 0.15);
+  --quick-btn-color: rgba(255, 255, 255, 0.6);
+
+  /* Rainbow bar text */
+  --rb-bar-text: rgba(255, 255, 255, 0.9);
+  --rb-bar-text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+
+  /* Accent colors (blue family) */
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #60a5fa;
+  --accent-blue-bg: rgba(59, 130, 246, 0.15);
+  --accent-blue-border: rgba(59, 130, 246, 0.3);
+  --accent-blue-glow: rgba(59, 130, 246, 0.5);
+  --accent-blue-text: #60a5fa;
+  --accent-blue-text-light: #93c5fd;
+  --accent-blue-dark: #2563eb;
+
+  /* Semantic colors (status) */
+  --color-success: #10b981;
+  --color-success-text: #6ee7b7;
+  --color-danger: #ef4444;
+  --color-danger-text: #fca5a5;
+  --color-danger-bg: rgba(239, 68, 68, 0.15);
+  --color-danger-border: rgba(239, 68, 68, 0.3);
+  --color-warning: #f59e0b;
+  --color-warning-text: #fbbf24;
+  --color-move-text: #3b82f6;
+  --color-move-persons: #93c5fd;
+
+  /* Flight bar colors */
+  --flight-bar-fill: rgba(16, 185, 129, 0.5);
+  --flight-bar-border: rgba(16, 185, 129, 0.9);
+  --flight-bar-inner: rgba(16, 185, 129, 0.4);
+  --flight-time-color: rgba(16, 185, 129, 0.7);
+
+  /* Conflict badge */
+  --conflict-badge-bg: #ef4444;
+  --conflict-badge-glow: 0 0 6px rgba(239, 68, 68, 0.6);
+
+  /* Drag state */
+  --drag-ring: #3b82f6;
+  --drag-glow: 0 0 0 2px #3b82f6, 0 0 16px rgba(59, 130, 246, 0.5);
+
+  /* Focus state */
+  --focus-ring: 0 0 0 2px #3b82f6, 0 4px 16px rgba(59, 130, 246, 0.4);
+
+  /* Chip remove */
+  --chip-remove-hover: #ef4444;
+  --chip-busy-dot: #f59e0b;
+
+  /* Checkbox active */
+  --cb-active-bg: #3b82f6;
+  --cb-active-border: #3b82f6;
+
+  /* Rainbow bar section colors */
+  --rb-bar-flying-bg: rgba(16, 185, 129, 0.6);
+  --rb-bar-flying-border: rgba(16, 185, 129, 0.8);
+  --rb-bar-ground-bg: rgba(245, 158, 11, 0.6);
+  --rb-bar-ground-border: rgba(245, 158, 11, 0.8);
+  --rb-bar-na-bg: rgba(239, 68, 68, 0.5);
+  --rb-bar-na-border: rgba(239, 68, 68, 0.7);
+  --rb-bar-supervision-bg: rgba(139, 92, 246, 0.5);
+  --rb-bar-supervision-border: rgba(139, 92, 246, 0.7);
+  --rb-bar-academics-bg: rgba(59, 130, 246, 0.5);
+  --rb-bar-academics-border: rgba(59, 130, 246, 0.7);
+
+  /* Rainbow controls */
+  --rb-control-bg: rgba(55, 65, 81, 0.8);
+  --rb-control-border: rgba(75, 85, 99, 0.6);
+  --rb-control-hover-bg: rgba(75, 85, 99, 0.8);
+  --rb-select-bg: rgba(31, 41, 55, 0.9);
+  --rb-select-text: #d1d5db;
+  --rb-marker-color: #3b82f6;
+  --rb-marker-line: rgba(59, 130, 246, 0.4);
+  --rb-range-fill: rgba(59, 130, 246, 0.08);
+  --rb-info-box-bg: rgba(255, 255, 255, 0.05);
+
+  /* Glassmorphic surface */
+  --surface-blur: 20px;
+
+  /* Quick select hover */
+  --quick-btn-hover-border: rgba(255, 255, 255, 0.3);
+
+  /* Refresh button */
+  --refresh-border: rgba(59, 130, 246, 0.3);
+  --refresh-color: #60a5fa;
+  --refresh-sub-color: rgba(96, 165, 250, 0.5);
+
+  /* Loading text */
+  --loading-text: #3b82f6;
+
+  /* Tooltip border */
+  --conflict-tooltip-border: #ef4444;
+
+  /* Refresh modal options */
+  --refresh-quick-bg: rgba(59, 130, 246, 0.15);
+  --refresh-quick-border: rgba(59, 130, 246, 0.4);
+  --refresh-quick-text: #60a5fa;
+  --refresh-full-bg: rgba(245, 158, 11, 0.1);
+  --refresh-full-border: rgba(245, 158, 11, 0.3);
+  --refresh-full-text: #fbbf24;
+
+  /* Conflict animation (amber/yellow for universal contrast) */
+  --conflict-outline-strong: rgba(251, 191, 36, 0.9);
+  --conflict-outline-weak: rgba(251, 191, 36, 0.4);
+  --conflict-glow-strong: 0 0 6px rgba(251, 191, 36, 0.5);
+  --conflict-glow-weak: 0 0 3px rgba(251, 191, 36, 0.2);
+}
+
+/* ===== LIGHT THEME ===== */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-primary: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafc 100%);
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-surface-solid: rgba(248, 250, 252, 1);
+  --bg-surface-alt: rgba(255, 255, 255, 0.95);
+  --bg-surface-deep: rgba(255, 255, 255, 0.98);
+  --bg-overlay: rgba(241, 245, 249, 0.5);
+  --bg-modal-overlay: rgba(0, 0, 0, 0.35);
+  --bg-modal: #ffffff;
+  --bg-input: rgba(0, 0, 0, 0.03);
+  --bg-hover: rgba(0, 0, 0, 0.02);
+  --bg-hover-strong: rgba(0, 0, 0, 0.03);
+  --bg-tab-group: rgba(0, 0, 0, 0.04);
+  --bg-scrollbar-track: rgba(0, 0, 0, 0.03);
+  --bg-scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --bg-scrollbar-corner: #f0f4f8;
+  --bg-title-bar: rgba(0, 0, 0, 0.04);
+
+  /* Rainbow specific backgrounds */
+  --bg-rainbow: rgba(241, 245, 249, 0.5);
+  --bg-rainbow-toolbar: rgba(255, 255, 255, 0.96);
+  --bg-rainbow-corner: rgba(248, 250, 252, 1);
+  --bg-rainbow-header: rgba(248, 250, 252, 1);
+  --bg-rainbow-name: rgba(255, 255, 255, 1);
+  --bg-rainbow-cell: rgba(255, 255, 255, 0.6);
+  --bg-rainbow-cell-hover: rgba(255, 255, 255, 0.85);
+  --bg-rainbow-separator: rgba(0, 0, 0, 0.03);
+
+  /* Text */
+  --text-primary: #1e293b;
+  --text-heading: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: rgba(0, 0, 0, 0.35);
+  --text-dimmed: rgba(0, 0, 0, 0.25);
+  --text-event-name: #1e293b;
+  --text-event-time: rgba(0, 0, 0, 0.35);
+  --text-change-detail: #334155;
+  --text-change-header: #0f172a;
+  --text-change-date: #475569;
+  --text-rainbow-name: #0f172a;
+  --text-rainbow-cat: rgba(0, 0, 0, 0.35);
+  --text-rainbow-separator: rgba(0, 0, 0, 0.35);
+  --text-toolbar: rgba(0, 0, 0, 0.4);
+  --text-undo: rgba(0, 0, 0, 0.25);
+  --text-undo-hover: #d97706;
+
+  /* Borders */
+  --border-color: rgba(0, 0, 0, 0.1);
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-faint: rgba(0, 0, 0, 0.04);
+  --border-very-faint: rgba(0, 0, 0, 0.03);
+  --border-section: rgba(0, 0, 0, 0.04);
+  --border-header: rgba(0, 0, 0, 0.1);
+  --border-input: rgba(0, 0, 0, 0.12);
+  --border-btn: rgba(0, 0, 0, 0.12);
+  --border-cb: rgba(0, 0, 0, 0.2);
+  --border-rainbow-name: rgba(0, 0, 0, 0.1);
+  --border-rainbow-cell: rgba(0, 0, 0, 0.05);
+  --border-rainbow-corner: rgba(0, 0, 0, 0.08);
+  --border-rainbow-separator: rgba(0, 0, 0, 0.06);
+
+  /* Shadows */
+  --shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-rainbow-corner: 2px 2px 5px rgba(0, 0, 0, 0.06);
+  --shadow-rainbow-header: 0 2px 5px rgba(0, 0, 0, 0.06);
+  --shadow-rainbow-name: 2px 0 5px rgba(0, 0, 0, 0.06);
+  --shadow-tooltip: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.2);
+  --shadow-chip-hover: 0 2px 6px rgba(0, 0, 0, 0.12);
+
+  /* Component-specific */
+  --hour-line: rgba(0, 0, 0, 0.06);
+  --rb-hour-line: rgba(0, 0, 0, 0.05);
+  --spinner-border: rgba(0, 0, 0, 0.08);
+  --spinner-top: #3b82f6;
+  --saved-color: #059669;
+  --conflict-tooltip-bg: #ffffff;
+  --conflict-tooltip-text: #991b1b;
+  --flight-bar-track: rgba(0, 0, 0, 0.06);
+  --add-chip-border: rgba(0, 0, 0, 0.15);
+  --add-chip-color: rgba(0, 0, 0, 0.3);
+  --ruler-color: rgba(0, 0, 0, 0.35);
+
+  /* Theme toggle */
+  --theme-toggle-border: rgba(0, 0, 0, 0.15);
+  --theme-toggle-bg: rgba(0, 0, 0, 0.04);
+  --theme-toggle-color: #6366f1;
+  --theme-toggle-hover-bg: rgba(0, 0, 0, 0.08);
+  --theme-toggle-hover-border: rgba(0, 0, 0, 0.25);
+
+  /* Section dividers */
+  --section-flying-color: #059669;
+  --section-flying-bg: rgba(16, 185, 129, 0.08);
+  --section-ground-color: #b45309;
+  --section-ground-bg: rgba(245, 158, 11, 0.08);
+  --section-na-color: #dc2626;
+  --section-na-bg: rgba(239, 68, 68, 0.08);
+
+  /* Label colors */
+  --label-flying-bg: rgba(16, 185, 129, 0.2);
+  --label-flying-text: #065f46;
+  --label-ground-bg: rgba(245, 158, 11, 0.2);
+  --label-ground-text: #78350f;
+  --label-na-bg: rgba(239, 68, 68, 0.2);
+  --label-na-text: #991b1b;
+
+  /* Event card colors */
+  --card-flying-bg: rgba(16, 185, 129, 0.12);
+  --card-flying-border: rgba(16, 185, 129, 0.4);
+  --card-ground-bg: rgba(245, 158, 11, 0.12);
+  --card-ground-border: rgba(245, 158, 11, 0.4);
+  --card-na-bg: rgba(239, 68, 68, 0.12);
+  --card-na-border: rgba(239, 68, 68, 0.4);
+
+  /* Selection screen */
+  --sel-separator-color: rgba(0, 0, 0, 0.3);
+  --sel-separator-line: rgba(0, 0, 0, 0.08);
+  --sel-event-text: #334155;
+  --sel-crew-preview: rgba(0, 0, 0, 0.35);
+  --na-chip-border: rgba(0, 0, 0, 0.12);
+  --na-chip-color: rgba(0, 0, 0, 0.45);
+  --quick-btn-border: rgba(0, 0, 0, 0.12);
+  --quick-btn-color: rgba(0, 0, 0, 0.5);
+
+  /* Rainbow bar text */
+  --rb-bar-text: rgba(255, 255, 255, 0.95);
+  --rb-bar-text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+
+  /* Accent colors (blue family) */
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --accent-blue-bg: rgba(59, 130, 246, 0.1);
+  --accent-blue-border: rgba(59, 130, 246, 0.25);
+  --accent-blue-glow: rgba(59, 130, 246, 0.3);
+  --accent-blue-text: #2563eb;
+  --accent-blue-text-light: #3b82f6;
+  --accent-blue-dark: #1d4ed8;
+
+  /* Semantic colors (status) */
+  --color-success: #059669;
+  --color-success-text: #059669;
+  --color-danger: #dc2626;
+  --color-danger-text: #dc2626;
+  --color-danger-bg: rgba(239, 68, 68, 0.08);
+  --color-danger-border: rgba(239, 68, 68, 0.25);
+  --color-warning: #d97706;
+  --color-warning-text: #b45309;
+  --color-move-text: #2563eb;
+  --color-move-persons: #1d4ed8;
+
+  /* Flight bar colors */
+  --flight-bar-fill: rgba(16, 185, 129, 0.4);
+  --flight-bar-border: rgba(16, 185, 129, 0.8);
+  --flight-bar-inner: rgba(16, 185, 129, 0.3);
+  --flight-time-color: rgba(5, 150, 105, 0.7);
+
+  /* Conflict badge */
+  --conflict-badge-bg: #dc2626;
+  --conflict-badge-glow: 0 0 6px rgba(220, 38, 38, 0.4);
+
+  /* Drag state */
+  --drag-ring: #3b82f6;
+  --drag-glow: 0 0 0 2px #3b82f6, 0 0 16px rgba(59, 130, 246, 0.3);
+
+  /* Focus state */
+  --focus-ring: 0 0 0 2px #3b82f6, 0 4px 16px rgba(59, 130, 246, 0.2);
+
+  /* Chip remove */
+  --chip-remove-hover: #dc2626;
+  --chip-busy-dot: #d97706;
+
+  /* Checkbox active */
+  --cb-active-bg: #3b82f6;
+  --cb-active-border: #3b82f6;
+
+  /* Rainbow bar section colors */
+  --rb-bar-flying-bg: rgba(16, 185, 129, 0.55);
+  --rb-bar-flying-border: rgba(16, 185, 129, 0.75);
+  --rb-bar-ground-bg: rgba(245, 158, 11, 0.55);
+  --rb-bar-ground-border: rgba(245, 158, 11, 0.75);
+  --rb-bar-na-bg: rgba(239, 68, 68, 0.45);
+  --rb-bar-na-border: rgba(239, 68, 68, 0.65);
+  --rb-bar-supervision-bg: rgba(139, 92, 246, 0.45);
+  --rb-bar-supervision-border: rgba(139, 92, 246, 0.65);
+  --rb-bar-academics-bg: rgba(59, 130, 246, 0.45);
+  --rb-bar-academics-border: rgba(59, 130, 246, 0.65);
+
+  /* Rainbow controls */
+  --rb-control-bg: rgba(243, 244, 246, 0.9);
+  --rb-control-border: rgba(209, 213, 219, 0.6);
+  --rb-control-hover-bg: rgba(229, 231, 235, 0.9);
+  --rb-select-bg: rgba(249, 250, 251, 0.95);
+  --rb-select-text: #374151;
+  --rb-marker-color: #3b82f6;
+  --rb-marker-line: rgba(59, 130, 246, 0.35);
+  --rb-range-fill: rgba(59, 130, 246, 0.06);
+  --rb-info-box-bg: rgba(0, 0, 0, 0.03);
+
+  /* Glassmorphic surface */
+  --surface-blur: 20px;
+
+  /* Quick select hover */
+  --quick-btn-hover-border: rgba(0, 0, 0, 0.25);
+
+  /* Refresh button */
+  --refresh-border: rgba(59, 130, 246, 0.25);
+  --refresh-color: #2563eb;
+  --refresh-sub-color: rgba(37, 99, 235, 0.5);
+
+  /* Loading text */
+  --loading-text: #2563eb;
+
+  /* Tooltip border */
+  --conflict-tooltip-border: #dc2626;
+
+  /* Refresh modal options */
+  --refresh-quick-bg: rgba(59, 130, 246, 0.08);
+  --refresh-quick-border: rgba(59, 130, 246, 0.3);
+  --refresh-quick-text: #2563eb;
+  --refresh-full-bg: rgba(245, 158, 11, 0.08);
+  --refresh-full-border: rgba(245, 158, 11, 0.25);
+  --refresh-full-text: #b45309;
+
+  /* Conflict animation (amber/yellow for universal contrast) */
+  --conflict-outline-strong: rgba(180, 83, 9, 0.9);
+  --conflict-outline-weak: rgba(180, 83, 9, 0.4);
+  --conflict-glow-strong: 0 0 6px rgba(180, 83, 9, 0.4);
+  --conflict-glow-weak: 0 0 3px rgba(180, 83, 9, 0.15);
+}

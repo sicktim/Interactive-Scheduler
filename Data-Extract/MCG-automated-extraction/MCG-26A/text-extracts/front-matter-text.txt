@@ -1,0 +1,446 @@
+===== PAGE 11 =====
+ 
+11 
+ 
+Course Naming and Numbering Convention 
+Most event titles begin with the platform name (e.g., C-12, F-16, T-38, GROOT, etc.) where applicable. Additionally, when a particular event 
+does not apply to the entire class, the subset of students to whom it applies is denoted in parenthesis at the end of the block title (e.g., ABM, CSO, 
+FTE, STC, etc.). Finally, the course number designation follows the convention below. The overall program is broken into multiple phases. Each 
+phase consists of courses indicated by the first digit. Each course consists of learning modules, which trace to a specific set of terminal learning 
+objectives (TLOs). A module consists of blocks of learning which are grouped by topic. A block may be composed of multiple units and include 
+the enabling learning objectives (ELOs) which achieve the learning required by the module’s TLOs. Sequential blocks indicate a required order of 
+instruction (e.g., Block 1, Block 2, Block 3) while a numerical break in the block numbering (e.g., Block 10, Block 20, Block 30) indicates no 
+required sequence unless otherwise listed within the prerequisites. The last letter indicates the type of event.  
+ 
+Table 1: Course Numbering Convention 
+Phase 
+XX 
+ 
+Course 
+#  
+Module 
+#  
+Block 
+## 
+ 
+Event 
+X 
+Ancillary 
+AN 
+ 
+Course A 
+5  
+Topic A 
+1  
+Block A 
+01 
+ 
+Academic Lecture 
+A 
+Check Flight 
+CF 
+ 
+Course B 
+6  
+Topic B 
+2  
+Block B 
+02 
+ 
+Asynchronous Content 
+B 
+Space Operations 
+SO 
+ 
+Course C 
+7  
+Topic C 
+3  
+Block C 
+03 
+ 
+Control Room 
+C 
+Astro Sciences 
+AS 
+ 
+Course D 
+8  
+Topic D 
+4  
+⁝ 
+⁝ 
+ 
+Exam/Assessment 
+E 
+Performance 
+PF 
+ 
+Course E 
+9  
+Topic E 
+5  
+Block F 
+10 
+ 
+Flight 
+F 
+Flying Qualities 
+FQ 
+ 
+ 
+ 
+ 
+Topic F 
+6  
+Block G 
+11 
+ 
+Ground School 
+G 
+Mission Systems 
+SY 
+ 
+ 
+ 
+ 
+Topic G 
+7  
+Block H 
+12 
+ 
+Ground Training 
+H 
+Test Foundations 
+TF 
+ 
+ 
+ 
+ 
+Topic H 
+8  
+⁝ 
+⁝ 
+ 
+Ground Test 
+I 
+Test Leadership 
+TL 
+ 
+ 
+ 
+ 
+Topic I 
+9  
+Block M 
+20 
+ 
+Lab 
+L 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Block N 
+21 
+ 
+MIB 
+M 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Space Operation 
+O 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Written Report 
+R 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Simulator 
+S 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Working Group 
+W 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Oral Report 
+Y 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Debrief 
+Z 
+
+
+===== PAGE 12 =====
+ 
+12 
+ 
+Event Descriptions 
+This section describes the various event types which the school uses to execute the curriculum. 
+Academic Lecture 
+The foundational principles of the curriculum are introduced in academic lectures. Students will be given the 
+opportunity to learn theoretical concepts necessary to participate in hands-on events. Students will also be given basic 
+principles behind the techniques required to interpret the data they acquire for various assignments. 
+Asynchronous Content 
+This event type includes content delivered as computer-based training (CBT) or content that students can view in a 
+self-paced manner such as prerecorded lectures. 
+Control Room 
+A control room is a room which typically provides individual workstations for test conductors, a test director, and 
+various discipline engineers (e.g., propulsion, aerodynamics, avionics) arranged in tiered rows and displaying real-time 
+telemetry, video feeds, and communication channels. This setup facilitates immediate access to critical data and provides 
+direct communication with the operators during flight or space tests. The control room personnel are responsible for 
+overseeing test execution and enhancing test safety. 
+Exams/Assessments 
+Exams and assessments are used to assess student learning in relation to the TLOs and ELOs throughout the course. 
+They are typically based on individual performance and are conducted in class or in a take-home format as determined by 
+the applicable instructors. 
+Flight and Space System Operation Events 
+Flight and Space System Operation Events will reinforce the principles introduced in the classroom, laboratory, and 
+simulation environments, enabling students to see those principles demonstrated in a relevant environment. Students 
+should be able to readily identify the applicable principles during the event. Students should also be able to apply the 
+knowledge acquired to interpret in real-time the different events during the event. The data collected during these events 
+will be analyzed based on the previously learned concepts. Since T&E is reliant on effective teams, many of these events 
+will be performed in groups.  
+Ground School 
+Ground school is conducted for each aircraft or space system that the students will operate. This instruction covers the 
+system description, normal and emergency procedures, and any applicable operating limits to ensure safe operations. This 
+training is conducted by an instructor of the applicable system.  
+Ground Training 
+Ground training includes several events required for safe operation in the flight or space environment but is typically 
+conducted by experts in the applicable operation such as survival or aircrew flight equipment. This training supports the 
+operation of flight and space systems, but in contrast to the ground school is not usually conducted by the instructor of the 
+actual aircraft or satellite.  
+Ground Test 
+Ground test includes all events where test cards are executed but flight or operation is not planned. These events 
+typically occur prior to a flight or space test event.  
+Laboratories and Simulators 
+The laboratories and simulators are considered part of the academics for grading and instructional purposes. These 
+events are where principles introduced in the classroom portion are demonstrated and reinforced. Students should have a 
+firm grasp of the principles outlined in these exercises by the time they complete the events. Students will be given hands 
+on opportunities to collect data as well as analyze the collected data. Focused individual instruction can also occur on an 
+as-needed basis. 
+Mission Information Briefs (MIBs) 
+These briefings are conducted to explain the details of a flight or space operation event. They are often accompanied 
+by a mission planning guide (MPG) which aids the students and instructors in leading the execution event and ensures 
+alignment with the applicable ELOs for the flight or space event. 
+ 
+
+
+===== PAGE 13 =====
+ 
+13 
+ 
+Reports 
+The culmination of most flight and space system operation events are the reports that are used to disseminate the 
+information to the rest of the test community. The reports will often require taking data from individual events and 
+making conclusions supported by analysis. Written and Oral reports will be required throughout the curriculum as part of 
+both case studies and at the conclusion of practical exercises. Reports will often require data from tests to support 
+conclusions and recommendations resulting from student analysis. Depending on the event, the reporting products may be 
+an informal oral report, an informal written report, a formal written report, a formal oral report, or a combination thereof. 
+Reporting requirements will be identified as part of each event brief. Reports generally will be graded. 
+Working Groups 
+Working groups include several events where students collaborate both internal and external to Test Pilot School. The 
+working groups are often used to facilitate test team collaboration in preparation for upcoming test events.  
+Debriefs 
+At the conclusion of selected blocks debrief will be conducted to address any areas of missed student learning and 
+collect feedback from student surveys for future course improvement.  
+ 
+ 
+
+
+===== PAGE 14 =====
+ 
+14 
+ 
+Preparatory Training 
+The section outlines the introduction and debrief events which explain the structure and context of the curriculum to 
+new students and gather their feedback for following classes at the end of the program. Additionally, this section outlines 
+the required training needed for the test and evaluation curriculum.  
+Ancillary Training 
+AN 5000 Ancillary Training 
+Students will complete the following ancillary events during the program. Most of the training takes place during the 
+first and last week of classes. 
+AN 5100 Test Pilot School Introductions 
+This module introduces the students to the school structure and leadership.  
+ 
+AN 5101A 
+TPS Welcome and Mission Brief 
+AN 5126A 
+Technical Directors Introduction 
+AN 5110A 
+AFTC Welcome and Mission Brief 
+AN 5127A 
+Class ADO Introduction 
+AN 5111A 
+Test Wing Welcome and Mission Brief 
+AN 5130A 
+Check Flight Introduction 
+AN 5112A 
+TPS Commandant Introduction 
+AN 5140A 
+Space Operations Introduction 
+AN 5120A 
+A9 Mission Effectiveness Introduction 
+AN 5150A 
+Astronautical Phase Introduction 
+AN 5121A 
+Dean of Faculty Introduction 
+AN 5160A 
+Flight Sciences Phase Introduction 
+AN 5122A 
+Director of FO Introduction 
+AN 5170A 
+Missions Systems Phase Intro 
+AN 5123A 
+Director of SO Introduction 
+AN 5180A 
+Test Foundations Phase Intro 
+AN 5124A 
+Chief Pilot Introduction 
+AN 5190A 
+Test Leadership Phase Intro 
+AN 5125A 
+Chief Instructor FTE Introduction 
+ 
+ 
+ 
+AN 5200 Miscellaneous Training 
+The section covers miscellaneous training required by Air Force instructions.  
+ 
+AN 5201A 
+Ground Safety 
+AN 5241A 
+FDO Security Briefing (US Only) 
+AN 5210A 
+Student Computer Issue 
+AN 5242A 
+Counter-Intelligence Brief (US Only) 
+AN 5211A 
+Student Computer Turn-In 
+AN 5243A 
+Security Out-Processing 
+AN 5220A 
+Student Portraits 
+AN 5250A 
+Field Trip OSI Brief (US Only) 
+AN 5230A 
+UTD Training 
+AN 5251A 
+Field Trip OSI Debrief (US Only) 
+AN 5240A 
+Security Briefing 
+AN 5260A 
+Student Travel DTS Workshop 
+ 
+AN 5300 Test Pilot School Debriefs 
+This module contains the debriefs conducted at the end of the curriculum to collect feedback for the leadership and 
+administration of the school. 
+ 
+AN 5301Z 
+Student Out Processing Brief 
+AN 5325Z 
+Chief Instructor FTE Debrief 
+AN 5310Z 
+AFTC Out Brief 
+AN 5326Z 
+Class ADO Debrief 
+AN 5311Z 
+Test Wing Out Brief 
+AN 5330Z 
+Check Flight Debrief 
+AN 5312Z 
+TPS Commandant Debrief 
+AN 5340Z 
+Space Operations Debrief 
+AN 5320Z 
+A9 Mission Effectiveness Debrief 
+AN 5350Z 
+Astronautical Phase Debrief 
+AN 5321Z 
+Dean of Faculty Debrief 
+AN 5360Z 
+Flights Sciences Phase Debrief 
+AN 5322Z 
+Director of FO Debrief 
+AN 5370Z 
+Missions Systems Phase Debrief 
+AN 5323Z 
+Director of SO Debrief 
+AN 5380Z 
+Test Foundations Phase Debrief 
+AN 5324Z 
+Chief Pilot Debrief 
+AN 5390Z 
+Test Leadership Phase Debrief 
+ 
+ 
+ 
+ 
+ 
+ 
