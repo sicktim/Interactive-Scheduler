@@ -2,6 +2,28 @@
 
 ---
 
+## v4.2.0 — Bug Fixes, Supervision UX, Select-All Persistence
+
+### Bug Fixes
+- **Cancelled events blocking focus picker (T1)** — `focusedAvailability` useMemo now skips cancelled events (`if (ev.cancelled) return`); a CX'd flight no longer marks crew as unavailable in focus mode
+- **Notes field "undefined" in change summary (T2a)** — `handleEditSave` now includes `notes: ev.notes` in the `before` snapshot so notes changes display correctly in `NetChangeEntry`
+- **Notes diff not shown (T2b)** — `NetChangeEntry` renders `notes → "..."` diff line when `before.notes !== after.notes`
+- **Notes undo broken (T2c)** — `handleUndoGroup` replaced `Object.assign(ev, ch.before)` with a key-by-key restore (`Object.keys(ch.before).forEach`) to prevent setting `ev.notes = undefined` on pre-notes-tracking entries
+- **Edit selection destroys working changes (T3)** — Removed `clearWorkingCopy()` from `onChangeSelection` in App; `handleContinue` now reloads the existing cache from localStorage and passes it as `cachedWorkingState` so SchedulerView restores prior work instead of reinitializing from raw allEvents
+- **FOA/AUTH duplicated as supervision rows (T4)** — `SUPERVISION_ROLE_ORDER` no longer includes 'FOA'/'AUTH'; `dayEvents` useMemo in `WhiteboardView` filters events where `section=Supervision`, `startTime=null`, and `eventName` matches `/^(FOA|AUTH)$/i`
+
+### Enhancements
+- **Per-triplet delete button for supervision (T6)** — Each supervision column group (POC/Start/End triplet) now has its own × delete button in a 4th column; applies to both API-sourced and custom events; removes the old row-end delete that only worked on custom events
+- **Select-All persisted across refresh (T7)** — `selectAllActive` flag added to `saveState`/`loadState`; when whiteboard refresh occurs with `selectAllActive=true`, newly fetched events are automatically selected; flag threaded through App → EventSelectionScreen → SchedulerView
+
+### New Features / Components
+- **UI modal for supervision event creation (T5)** — `window.prompt` replaced with an inline modal in `WhiteboardSupervision`; contains a text input, quick-pick chips for all standard duty names, Cancel and Create buttons; click-outside dismisses; no more browser popup
+
+### Reverted (T8)
+- **SegmentedTimeInput reverted** — T8 implemented a two-segment HH/MM input replacing `MilitaryTimeInput` and `PendingTimeInput`, but it caused events to re-sort mid-edit (because `onChange` fired on each valid digit, triggering list re-render and losing the user's scroll position). Reverted to `MilitaryTimeInput` in modals and `PendingTimeInput` in whiteboard pending slots. Time entry UX remains a backlog item.
+
+---
+
 ## v4.1.0 — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts
 
 ### Bug Fixes

@@ -202,3 +202,53 @@ Change summary simply tracks each change, but doesn't track net change. For exam
             - On whiteboard views, conflicts should be limited to ONLY what is on that specific day. Picker menu shouldn't show conflicts from another date (this is a bigger change, may need an implementation strategy). [FIXED in v4.1.0 — wbDayConflicts filtered Map passed to WhiteboardView and PersonnelPicker in whiteboard mode]
             - Also only on whiteboard views, conflict summary should only count/show conflicts on that day. [FIXED in v4.1.0 — conflictCount and ConflictSummaryModal scope to active day in whiteboard mode; (today) suffix on header button]
 
+        **Version 4.1.0 Feedback**
+        - BUG: When updating notes field the change summary shows "name → "undefined" · undefined–?? · model → —"
+            When undoing the note in the change summary, it doesn't revert back to original. [FIXED in v4.2.0 — T2: notes captured in before/after snapshot; notes diff rendered in NetChangeEntry; handleUndoGroup restores notes key-by-key to avoid overwriting missing keys with undefined]
+        - Edit selection deletes changes:
+            - Whiteboard shows all events by default. If I make a change to the events in whiteboard, then edit selection so that it is visible on timeline, the event resets to default values. [FIXED in v4.2.0 — T3: clearWorkingCopy() removed from onChangeSelection; handleContinue reloads cache from localStorage before navigating to scheduler so existing work is preserved across selection changes]
+        - Add supervision event:
+            - Prefer not to have a browser popup appear. Would prefer to have a UI popup for adding a supervision line. [FIXED in v4.2.0 — T5: window.prompt replaced with inline modal in WhiteboardSupervision; text input with quick-pick chips for SUPV_DUTY_ORDER entries; click-outside closes; Cancel/Create buttons]
+        - Delete supervision events: Right now an 'x' is at the end of the entire line which deletes events from right to left. Each supervision column group (on each line), should have it's own 'x' to delete it. [FIXED in v4.2.0 — T6: per-triplet delete column added to colgroup/header/body; each occupied triplet has its own × button; applies to both API-sourced and custom supervision events]
+        - When refreshing from whiteboard, remember if select all was selected. If so, then upon refresh all new events should be shown. [FIXED in v4.2.0 — T7: selectAllActive flag persisted in localStorage via saveState/loadState; on whiteboard refresh when selectAllActive=true, newly fetched events are auto-selected; flag threaded through App → EventSelectionScreen → SchedulerView]
+        - Conflict Issue: Picker menu filtered out member due to cancelled event. Situation: C-172 flight cnx'd with Knoerr as member. Another event created with same times and then focused. Knoerr was not "available" and when hovered, said reason was the cnx'd 172 flight. [FIXED in v4.2.0 — T1: focusedAvailability useMemo now skips cancelled events (if ev.cancelled) when computing who is unavailable]
+        - Time entry format. Like "create new event" popup, time entry format should automatically populate the ":". I would prefer the feel for all times to be the same across the entire application.
+            - Feel: The feel should be as follows. "hh:mm" (24hrs) is what it looks like. When you click either the "hh" or "mm" area it selects the entire "hh" or "mm". You can then type the numeric hour.
+                -Hour entry: If you type 2 valid numeric digits, it moves to minutes. If you type 1 valid numeric digit, it'll either wait for the second digit or if you tab, then it moves to minutes.  Think through the possibilities if needed, ("00 - 09" - Moves to minutes, "0-2" - waits for second digit, etc.) unless this is already a structure which has been built and coded already and then incorporate that (preferred method). It must be in 24 hr format though (hh:mm AM/PM is not valid for this).
+                -Minute Entry: After done typing minutes wait for enter or tab to move to the next field. (unless the tool already exists and has better refined behavior). [REVERTED in v4.2.0 — T8 SegmentedTimeInput was implemented but caused event re-sorting mid-edit, losing user's scroll position. Reverted to MilitaryTimeInput (modals) and PendingTimeInput (whiteboard pending slots). MilitaryTimeInput auto-inserts the colon on the 2nd digit.]
+        - FOA/Auth should not be duplicated on the supervision lines. Exclude them from the timeline and whiteboard as supervision lines. They are supervision events, they just show in both date/title bars.
+            - See where on `FOA-auth-timeline.png` [FIXED in v4.2.0 — T4: FOA/AUTH removed from SUPERVISION_ROLE_ORDER so they don't render on timeline supervision layout; dayEvents useMemo in WhiteboardView filters out null-startTime Supervision events matching /^(FOA|AUTH)$/i so they don't appear as whiteboard rows]
+
+        **Version 4.2.0 Feedback**
+        - FOA/Auth doesn't update between Timeline and Whiteboard. Display FOA/Auth fields exactly like they are shown in Whiteboard.
+        - Don't like the implementation of the time entry.
+            - It is hard to make changes to times when the event is automatically sorted. You just lose it on the page and have to search for it again. I liked better having a simple numeric entry but just having the ":" automatically populate.
+            - For the event sorting, if possible don't let events sort until the page is refreshed or you move to that page. So pages should be sorted on entry, but not sorted as you are entering times. Very frustrating to "lose" an event.
+        - When adding Supervision duty from either add event at top or add supervision at bottom, they appear with default times 8-9, only on the timeline view. It doesn't create a supervision line. Add time input to add supervision event. Logically, if you are adding a supervision line, you will also add an event.
+        - Change Summary of notes is still showing strangely. Now that i'm thinking about this one, when notes get updated, it should have a different display and have a different way of copying over.
+            - Here is what is currently output (grabbed from inspect).
+            - INSPECT Text Input: "name → "undefined" · undefined–?? · model → — · notes → "test notes""
+            - "Copy" UI Button output:
+                --- Wed 4 Mar ---
+  EDITED: C-12 | CF-2 (11:30) [name -> "undefined", time -> undefined-??, model -> -]
+  EDITED: C-12 | CF-2 (11:30) [name -> "undefined", time -> undefined-??, model -> -]
+  EDITED: C-12 | CF-2 (11:30) [name -> "undefined", time -> undefined-??, model -> -]
+
+            - Desired Notes Output in Change Summary:
+            Edited: C-12 | CF-2 (11:30)
+            notes -> (insert current actual notes)
+
+            Hovering over this note will display a note change summary popup showing the history of all notes.
+                Popup:
+                Date Changed - Note
+                    2 Mar - CF-2, need IP
+                    2 Mar - CF-2, no in house IP, asked Siddiqui
+                    3 Mar - CF-2
+                    5 Mar - Weather Cnx 
+
+                When hitting UI copy button output (notes specifically):
+  EDITED: C-12 | CF-2 (11:30) Notes
+    2 Mar - CF-2, need IP
+    2 Mar - CF-2, no in house IP, asked Siddiqui
+    3 Mar - CF-2
+    5 Mar - Weather Cnx 

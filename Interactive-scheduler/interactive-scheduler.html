@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.1.0 — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts -->
+<!-- Interactive Scheduler v4.2.0 — Bug Fixes, Supervision UX, Select-All Persistence -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -1452,6 +1452,14 @@
             padding-left: 10px !important;
         }
 
+        /* T6: Per-triplet delete column cell in supervision table */
+        td.wb-supv-triplet-del-cell {
+            width: 14px;
+            min-width: 14px;
+            padding: 0 1px !important;
+            text-align: center;
+            vertical-align: middle;
+        }
         /* Flex row: Supervision left, Academics right */
         .wb-supv-acad-row {
             display: grid;
@@ -1859,6 +1867,100 @@
             background: rgba(59,130,246,0.04);
         }
 
+        /* Add-supervision-event modal (T5) */
+        .wb-add-supv-modal-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .wb-add-supv-modal {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            z-index: 350;
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 8px;
+            min-width: 240px;
+            max-width: 340px;
+            margin-bottom: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        .wb-add-supv-modal-title {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .wb-add-supv-modal-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px;
+            color: #e2e8f0;
+            font: inherit;
+            font-size: 0.65rem;
+            padding: 4px 6px;
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+        }
+        .wb-add-supv-modal-input:focus { border-color: rgba(59,130,246,0.6); }
+        .wb-add-supv-modal-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+        .wb-add-supv-chip {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.1s;
+        }
+        .wb-add-supv-chip:hover { background: rgba(59,130,246,0.2); color: #93c5fd; border-color: rgba(59,130,246,0.4); }
+        .wb-add-supv-modal-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+        .wb-add-supv-btn-create {
+            padding: 3px 10px;
+            border-radius: 3px;
+            font: inherit;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+        }
+        .wb-add-supv-btn-create:hover { background: #1d4ed8; }
+        .wb-add-supv-btn-create:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+        .wb-add-supv-btn-cancel {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font: inherit;
+            font-size: 0.6rem;
+            cursor: pointer;
+            background: transparent;
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .wb-add-supv-btn-cancel:hover { color: rgba(255,255,255,0.7); }
+        .light-mode .wb-add-supv-modal { background: #f8fafc; border-color: rgba(0,0,0,0.1); }
+        .light-mode .wb-add-supv-modal-title { color: rgba(0,0,0,0.5); }
+        .light-mode .wb-add-supv-modal-input { background: #fff; border-color: rgba(0,0,0,0.2); color: #0f172a; }
+        .light-mode .wb-add-supv-chip { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); border-color: rgba(0,0,0,0.1); }
+        .light-mode .wb-add-supv-btn-cancel { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.1); }
+
         /* Pending supervision slot — empty triplet editable state */
         .wb-pending-poc-cell {
             min-width: 0;
@@ -1921,6 +2023,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.12);
             color: rgba(255,255,255,0.35);
             font: inherit;
+            opacity: 23%;
             font-size: 0.6rem;
             text-align: center;
             padding: 0 1px;
@@ -2498,6 +2601,7 @@
         const SECTION_BADGE    = { Flying: 'FLT', Ground: 'GND', Academics: 'ACD', NA: 'N/A', Supervision: 'SP' };
         const SECTION_BADGE_COLOR = { Flying: '#3b82f6', Ground: '#16a34a', Academics: '#7c3aed', NA: '#475569', Supervision: '#d97706' };
         const WB_SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
+        // T4: FOA/AUTH excluded — they display as date/title bar pills, not whiteboard table rows
         const SUPV_DUTY_ORDER = ['SOF', 'OS', 'ODO', 'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO'];
         // Fixed row definitions for the Academics table (always 4 rows regardless of event data)
         const ACAD_FIXED_CATS = [
@@ -2510,12 +2614,12 @@
         // Military time validation regex for HH:MM text inputs (00:00–23:59)
         const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 
-        // Fixed display order for supervision duty roles (SOF → AUTH)
+        // Fixed display order for supervision duty roles.
+        // T4: FOA and AUTH removed — they display as date/title bar pills only, not as timeline rows.
         const SUPERVISION_ROLE_ORDER = [
             'SOF', 'OS', 'ODO',
             'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO',
             "Other (As Req'd)",
-            'FOA', 'AUTH',
         ];
 
         // Fixed display order for aircraft model bands in the Flying section
@@ -3772,7 +3876,7 @@
         // Stable event key for matching across sessions (IDs are session-specific)
         const eventNaturalKey = (ev) => `${ev.date}|${ev.section}|${ev.eventName}|${ev.startTime || ''}|${ev.model || ''}`;
 
-        const saveState = (changes, selectedIds, naCats, allEvents) => {
+        const saveState = (changes, selectedIds, naCats, allEvents, selectAllActive) => {
             try {
                 // Save natural keys of selected events (stable across reloads)
                 const selectedKeys = allEvents
@@ -3786,6 +3890,7 @@
                     selectedIds: [...selectedIds],
                     selectedKeys,
                     naCats: [...naCats],
+                    selectAllActive: !!selectAllActive, // T7: persist select-all flag
                     savedAt: new Date().toISOString(),
                 }));
             } catch (e) {}
@@ -3844,6 +3949,7 @@
                     selectedIds: new Set(data.selectedIds || []),
                     selectedKeys: data.selectedKeys || [],
                     naCats: new Set(data.naCats || []),
+                    selectAllActive: !!data.selectAllActive, // T7
                     savedAt: data.savedAt,
                 };
             } catch (e) { return null; }
@@ -3925,9 +4031,11 @@
 
         // ─── SELECTION SCREEN (v3.1: role-based grouping, separate NA, quick-select) ───
 
-        const EventSelectionScreen = ({ allEvents, roster, dates, onContinue, initialSelected, initialNaCats }) => {
+        const EventSelectionScreen = ({ allEvents, roster, dates, onContinue, initialSelected, initialNaCats, initialSelectAllActive }) => {
             const [selectedIds, setSelectedIds] = useState(initialSelected || new Set());
             const [naCats, setNaCats] = useState(initialNaCats || new Set());
+            // T7: track whether "Select All" is the active state
+            const [selectAllActive, setSelectAllActive] = useState(!!initialSelectAllActive);
 
             const secColors = {
                 Flying:      { bg: 'rgba(16,185,129,0.1)',  border: '#10b981', text: '#6ee7b7' },
@@ -4040,6 +4148,7 @@
 
             // Toggle individual event
             const toggleEvent = (id) => {
+                setSelectAllActive(false); // T7: manual toggle clears select-all flag
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     next.has(id) ? next.delete(id) : next.add(id);
@@ -4051,6 +4160,7 @@
             const toggleGroup = (evs) => {
                 const ids = evs.map(e => e.id);
                 const allSel = ids.every(id => selectedIds.has(id));
+                setSelectAllActive(false); // T7: manual toggle clears select-all flag
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     ids.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -4063,6 +4173,7 @@
                 const ids = classSets[cls];
                 if (!ids || ids.size === 0) return;
                 const allSel = [...ids].every(id => selectedIds.has(id));
+                setSelectAllActive(false); // T7
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     ids.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -4071,6 +4182,7 @@
             };
 
             const toggleNaCat = (cat) => {
+                setSelectAllActive(false); // T7
                 setNaCats(prev => {
                     const next = new Set(prev);
                     next.has(cat) ? next.delete(cat) : next.add(cat);
@@ -4085,6 +4197,7 @@
                 });
                 setSelectedIds(all);
                 setNaCats(new Set(naCategoriesAvailable));
+                setSelectAllActive(true); // T7: set the select-all flag
             };
 
             // Check if all events of a class are selected
@@ -4107,9 +4220,9 @@
                         </div>
                         <div className="flex gap-3 items-center">
                             <button onClick={selectAll} className="filter-btn">Select All</button>
-                            <button onClick={() => { setSelectedIds(new Set()); setNaCats(new Set()); }} className="filter-btn">Clear</button>
+                            <button onClick={() => { setSelectedIds(new Set()); setNaCats(new Set()); setSelectAllActive(false); }} className="filter-btn">Clear</button>
                             <button
-                                onClick={() => onContinue(selectedIds, naCats)}
+                                onClick={() => onContinue(selectedIds, naCats, selectAllActive)}
                                 disabled={totalSelected === 0}
                                 className="px-5 py-1.5 rounded-lg text-sm font-bold transition-colors"
                                 style={{
@@ -4137,6 +4250,7 @@
                                         <div
                                             className={`na-cat-chip ${allSel ? 'selected' : ''}`}
                                             onClick={() => {
+                                                setSelectAllActive(false); // T7
                                                 setSelectedIds(prev => {
                                                     const next = new Set(prev);
                                                     allSupervisionIds.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -5136,6 +5250,8 @@
                     if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
                         diffs.push(`${inst.after.startTime}\u2013${inst.after.endTime || '??'}`);
                     if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
+                    if (inst.before.hasOwnProperty('notes') && inst.before.notes !== inst.after.notes)
+                        diffs.push(`notes \u2192 "${inst.after.notes || ''}"`);
                 }
                 return (
                     <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
@@ -5892,6 +6008,7 @@
 
         // ─── MILITARY TIME INPUT ───
 
+        // ─── MilitaryTimeInput ────────────────────────────────────────────────────
         const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM' }) => {
             const handleChange = (e) => {
                 let raw = e.target.value;
@@ -5995,22 +6112,22 @@
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={lbl}>Brief (Start) *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                    <MilitaryTimeInput value={startTime} onChange={setStartTime} style={inputStyle} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={lbl}>Debrief (End)</label>
-                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                    <MilitaryTimeInput value={endTime} onChange={setEndTime} style={inputStyle} />
                                 </div>
                             </div>
                             {event.section === 'Flying' && (
                                 <div style={{ display: 'flex', gap: 8 }}>
                                     <div style={{ flex: 1 }}>
                                         <label style={lbl}>ETD</label>
-                                        <MilitaryTimeInput style={inputStyle} value={etd} onChange={setEtd} />
+                                        <MilitaryTimeInput value={etd} onChange={setEtd} style={inputStyle} />
                                     </div>
                                     <div style={{ flex: 1 }}>
                                         <label style={lbl}>ETA</label>
-                                        <MilitaryTimeInput style={inputStyle} value={eta} onChange={setEta} />
+                                        <MilitaryTimeInput value={eta} onChange={setEta} style={inputStyle} />
                                     </div>
                                 </div>
                             )}
@@ -6138,11 +6255,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                    <MilitaryTimeInput value={startTime} onChange={setStartTime} style={inputStyle} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                    <MilitaryTimeInput value={endTime} onChange={setEndTime} style={inputStyle} />
                                 </div>
                             </div>
                         </div>
@@ -6247,15 +6364,12 @@
             ].filter(Boolean).join(' ');
 
             if (editing && !readonly) {
-                const isTime = type === 'time';
-                const inputClass = isTime ? 'wb-input-time' : 'wb-input';
                 return (
                     <td ref={tdRef} className={cellClass} onClick={handleClick}>
-                        <input ref={inputRef} className={inputClass}
+                        <input ref={inputRef} className="wb-input"
                             type="text"
                             value={draft} onChange={e => setDraft(e.target.value)}
-                            onBlur={commit} onKeyDown={handleKeyDown}
-                            {...(isTime ? { placeholder: 'HH:MM', maxLength: 5 } : {})} />
+                            onBlur={commit} onKeyDown={handleKeyDown} />
                     </td>
                 );
             }
@@ -6869,7 +6983,7 @@
         // ─────────────────────── WhiteboardSupervision ────────────────────────
         const WhiteboardSupervision = ({ events, roster, onEditSave, onAdd, onRemove, onFocusEvent,
             focusedEventId, highlights, highlightMode, onHighlight, onCreateEvent, onDeleteCustom, activeDay,
-            conflicts, onShowTooltip, onHideTooltip }) => {
+            conflicts, onShowTooltip, onHideTooltip, onDeleteEvent }) => {
             const byDuty = useMemo(() => {
                 const map = {};
                 SUPV_DUTY_ORDER.forEach(d => { map[d] = []; });
@@ -6898,6 +7012,22 @@
             const [pendingSlots, setPendingSlots] = useState({});
             // Track which POC drop targets are currently being dragged over
             const [pocDragOver, setPocDragOver] = useState({});
+            // ── Add-supervision-event modal state (T5) ─────────────────────────
+            const [showAddSupvModal, setShowAddSupvModal] = useState(false);
+            const [addSupvDutyName, setAddSupvDutyName] = useState('');
+            const addSupvInputRef = React.useRef(null);
+            // Close modal when clicking outside it
+            React.useEffect(() => {
+                if (!showAddSupvModal) return;
+                const handleDown = (e) => {
+                    if (!e.target.closest('.wb-add-supv-modal') && !e.target.closest('.wb-add-row')) {
+                        setShowAddSupvModal(false);
+                        setAddSupvDutyName('');
+                    }
+                };
+                document.addEventListener('pointerdown', handleDown);
+                return () => document.removeEventListener('pointerdown', handleDown);
+            }, [showAddSupvModal]);
 
             // Clear pending slot state when the active day changes
             React.useEffect(() => {
@@ -6924,10 +7054,10 @@
                                     <col style={{ width: '6%' }} />
                                     <col style={{ width: '4.5%' }} />
                                     <col style={{ width: '4.5%' }} />
+                                    <col style={{ width: 14 }} />{/* Per-triplet delete (T6) */}
                                 </React.Fragment>
                             ))}
                             <col />{/* Notes — remaining (expanded) */}
-                            <col style={{ width: 20 }} />{/* Delete btn */}
                         </colgroup>
                         <thead>
                             <tr>
@@ -6937,10 +7067,10 @@
                                         <th className="wb-supv-group-start">POC</th>
                                         <th>Start</th>
                                         <th>End</th>
+                                        <th></th>{/* delete col */}
                                     </React.Fragment>
                                 ))}
                                 <th className="wb-supv-group-start">Notes</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -6969,7 +7099,15 @@
                                             {Array.from({ length: maxTriplets }, (_, i) => {
                                                 const ev = evts[i];
                                                 if (ev) {
-                                                    // Occupied triplet — existing event
+                                                    // Occupied triplet — existing event with per-triplet delete (T6)
+                                                    const handleTripletDelete = (e) => {
+                                                        e.stopPropagation();
+                                                        if (ev.isCustom && onDeleteCustom) {
+                                                            onDeleteCustom(ev.id);
+                                                        } else if (!ev.isCustom && onDeleteEvent) {
+                                                            onDeleteEvent(ev);
+                                                        }
+                                                    };
                                                     return (
                                                         <React.Fragment key={i}>
                                                             <WhiteboardCrewCell person={ev.personnel[0] || null}
@@ -6992,6 +7130,11 @@
                                                                 highlight={highlights ? highlights[`${ev.id}:endTime`] : null}
                                                                 highlightMode={highlightMode}
                                                                 onHighlight={onHighlight} />
+                                                            <td className="wb-supv-triplet-del-cell">
+                                                                <span className="wb-delete-btn"
+                                                                    onClick={handleTripletDelete}
+                                                                    title="Remove this event">{'\u2715'}</span>
+                                                            </td>
                                                         </React.Fragment>
                                                     );
                                                 }
@@ -7151,7 +7294,7 @@
                                                             <PendingTimeInput
                                                                 value={stVal}
                                                                 amber={stAmber}
-                                                                placeholder="HH:MM"
+                                                                placeholder="Start"
                                                                 onCommit={(v) => handleTimeCommit('startTime', v)}
                                                             />
                                                         </td>
@@ -7160,10 +7303,12 @@
                                                             <PendingTimeInput
                                                                 value={etVal}
                                                                 amber={etAmber}
-                                                                placeholder="HH:MM"
+                                                                placeholder="End"
                                                                 onCommit={(v) => handleTimeCommit('endTime', v)}
                                                             />
                                                         </td>
+                                                        {/* Empty delete cell — pending slot has no event to delete yet */}
+                                                        <td className="wb-supv-triplet-del-cell"></td>
                                                     </React.Fragment>
                                                 );
                                             })}
@@ -7173,16 +7318,6 @@
                                                 highlightMode={highlightMode}
                                                 onHighlight={onHighlight}
                                                 className="wb-supv-group-start" />
-                                            <td>
-                                                {evts.some(ev => ev.isCustom) && onDeleteCustom && (
-                                                    <span className="wb-delete-btn"
-                                                        onClick={() => {
-                                                            const customEv = evts.find(ev => ev.isCustom);
-                                                            if (customEv) onDeleteCustom(customEv.id);
-                                                        }}
-                                                        title="Remove custom event">{'\u2715'}</span>
-                                                )}
-                                            </td>
                                         </tr>
                                     );
                                 };
@@ -7197,13 +7332,65 @@
                         </tbody>
                     </table>
                     {onCreateEvent && (
-                        <button className="wb-add-row" onClick={() => {
-                            const dutyName = (window.prompt('Enter duty name (e.g. "SOF", "ODO", or a custom title):') || '').trim();
-                            if (!dutyName) return;
-                            onCreateEvent('Supervision', activeDay, { eventName: dutyName });
-                        }}>
-                            + Add Supervision Event
-                        </button>
+                        <div className="wb-add-supv-modal-wrap">
+                            {showAddSupvModal && (
+                                <div className="wb-add-supv-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="wb-add-supv-modal-title">Add Supervision Event</div>
+                                    <input
+                                        ref={addSupvInputRef}
+                                        className="wb-add-supv-modal-input"
+                                        type="text"
+                                        placeholder="Custom duty name..."
+                                        value={addSupvDutyName}
+                                        onChange={e => setAddSupvDutyName(e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === 'Enter' && addSupvDutyName.trim()) {
+                                                onCreateEvent('Supervision', activeDay, { eventName: addSupvDutyName.trim() });
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            } else if (e.key === 'Escape') {
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            }
+                                        }}
+                                    />
+                                    <div className="wb-add-supv-modal-chips">
+                                        {SUPV_DUTY_ORDER.map(duty => (
+                                            <span key={duty} className="wb-add-supv-chip"
+                                                onClick={() => {
+                                                    onCreateEvent('Supervision', activeDay, { eventName: duty });
+                                                    setShowAddSupvModal(false);
+                                                    setAddSupvDutyName('');
+                                                }}>{duty}</span>
+                                        ))}
+                                    </div>
+                                    <div className="wb-add-supv-modal-actions">
+                                        <button className="wb-add-supv-btn-cancel"
+                                            onClick={() => { setShowAddSupvModal(false); setAddSupvDutyName(''); }}>
+                                            Cancel
+                                        </button>
+                                        <button className="wb-add-supv-btn-create"
+                                            disabled={!addSupvDutyName.trim()}
+                                            onClick={() => {
+                                                if (!addSupvDutyName.trim()) return;
+                                                onCreateEvent('Supervision', activeDay, { eventName: addSupvDutyName.trim() });
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            }}>
+                                            Create
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            <button className="wb-add-row" onClick={() => {
+                                setAddSupvDutyName('');
+                                setShowAddSupvModal(prev => !prev);
+                                // Focus input after render
+                                requestAnimationFrame(() => { if (addSupvInputRef.current) addSupvInputRef.current.focus(); });
+                            }}>
+                                + Add Supervision Event
+                            </button>
+                        </div>
                     )}
                 </React.Fragment>
             );
@@ -7787,6 +7974,10 @@
                 bySection.Academics = [];
                 workingEvents.forEach(ev => {
                     if (ev.date !== activeDay) return;
+                    // T4: FOA/AUTH events (section=Supervision, startTime=null) are displayed as
+                    // date/title bar pills via foaByDate — exclude them from whiteboard table rows.
+                    if (ev.section === 'Supervision' && ev.startTime === null &&
+                        /^(FOA|AUTH)$/i.test(ev.eventName || '')) return;
                     if (bySection[ev.section] !== undefined) bySection[ev.section].push(ev);
                 });
                 // Sort events but keep newly-created (blank name) events at the bottom
@@ -7971,6 +8162,7 @@
                                                 onHighlight={handleHighlightCellClick}
                                                 onCreateEvent={handleCreateWbEvent}
                                                 onDeleteCustom={onDeleteCustom}
+                                                onDeleteEvent={onDeleteEvent}
                                                 activeDay={activeDay}
                                                 conflicts={conflicts}
                                                 onShowTooltip={onShowTooltip}
@@ -8035,7 +8227,7 @@
 
         // ─── SCHEDULER VIEW ───
 
-        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard }) => {
+        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive }) => {
             const [workingEvents, setWorkingEvents] = useState([]);
             const [changes, setChanges] = useState([]);
             const [savedShow, setSavedShow] = useState(false);
@@ -8105,7 +8297,7 @@
                             eventTime: ev.startTime,
                             eventSection: ev.section,
                             date: ev.date,
-                            before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime },
+                            before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime, notes: ev.notes },
                             after: updates,
                         }]);
                     }
@@ -8194,7 +8386,7 @@
                     setChanges([]);
                 }
                 // Save selections immediately so they persist across refresh
-                saveState([], initialSelectedIds, initialNaCats, allEvents);
+                saveState([], initialSelectedIds, initialNaCats, allEvents, selectAllActive);
                 // Use requestAnimationFrame to ensure state is settled before enabling change tracking
                 requestAnimationFrame(() => { initialized.current = true; });
             }, [allEvents]);
@@ -8287,6 +8479,7 @@
                 workingEvents.forEach(ev => {
                     if (ev.id === focusedEventId) return;
                     if (ev.date !== fDate) return;
+                    if (ev.cancelled) return; // T1: cancelled events do not block availability
                     const eS = evStart(ev); const eE = evEnd(ev);
                     if (eS == null || fStart == null) return;
                     if (eS < fEnd && eE > fStart) {
@@ -8311,7 +8504,7 @@
             // Auto-save changes + full working copy
             useEffect(() => {
                 if (!initialized.current) return;
-                saveState(changes, initialSelectedIds, initialNaCats, allEvents);
+                saveState(changes, initialSelectedIds, initialNaCats, allEvents, selectAllActive);
                 saveWorkingCopy(workingEvents, changes, allEvents, roster, dates, initialSelectedIds, initialNaCats);
                 if (changes.length > 0) {
                     setSavedShow(true);
@@ -8471,7 +8664,13 @@
                         }
                         if (ch.type === 'event-edit') {
                             const ev = next.find(e => e.id === ch.eventId);
-                            if (ev && ch.before) Object.assign(ev, ch.before);
+                            if (ev && ch.before) {
+                                // Only restore fields actually present in the snapshot (avoids setting
+                                // ev.notes = undefined on old change entries that predate the notes field)
+                                Object.keys(ch.before).forEach(k => {
+                                    if (Object.prototype.hasOwnProperty.call(ch.before, k)) ev[k] = ch.before[k];
+                                });
+                            }
                             return;
                         }
                         if (ch.type === 'event-delete') {
@@ -8839,6 +9038,7 @@
             const [dates, setDates] = useState([]);
             const [selectedIds, setSelectedIds] = useState(new Set());
             const [naCats, setNaCats] = useState(new Set());
+            const [selectAllActive, setSelectAllActive] = useState(false); // T7
             const [progress, setProgress] = useState('Initializing...');
             const [error, setError] = useState(null);
             const [cachedWorkingState, setCachedWorkingState] = useState(null);
@@ -8889,6 +9089,13 @@
                         loadedEvents.forEach(ev => {
                             if (keySet.has(eventNaturalKey(ev))) matchedIds.add(ev.id);
                         });
+                        // T7: if select-all was active, also auto-select any new events not in previous selection
+                        if (savedSelections.selectAllActive) {
+                            loadedEvents.forEach(ev => {
+                                if (!ev.readonly && ev.section !== 'NA') matchedIds.add(ev.id);
+                            });
+                            setSelectAllActive(true);
+                        }
                         if (matchedIds.size > 0) {
                             setSelectedIds(matchedIds);
                             setNaCats(savedSelections.naCats || new Set());
@@ -8969,6 +9176,7 @@
                             if (matchedIds.size > 0) {
                                 setSelectedIds(matchedIds);
                                 setNaCats(saved.naCats || new Set());
+                                if (saved.selectAllActive) setSelectAllActive(true); // T7
                                 setScreen('scheduler');
                                 return;
                             }
@@ -8982,9 +9190,19 @@
                 load();
             }, []);
 
-            const handleContinue = (ids, cats) => {
+            const handleContinue = (ids, cats, selAllActive) => {
                 setSelectedIds(ids);
                 setNaCats(cats);
+                setSelectAllActive(!!selAllActive); // T7
+                // Save the selectAllActive flag to persistent state immediately
+                saveState([], ids, cats, allEvents, !!selAllActive);
+                // T3: preserve working changes across edit-selection round-trip.
+                // Reload any saved working copy so SchedulerView restores from cache
+                // rather than reinitializing from allEvents (which would discard changes).
+                const existingCache = loadWorkingCopy();
+                if (existingCache && existingCache.workingEvents.length > 0) {
+                    setCachedWorkingState(existingCache);
+                }
                 setScreen('scheduler');
             };
 
@@ -9026,6 +9244,7 @@
                         onContinue={handleContinue}
                         initialSelected={selectedIds}
                         initialNaCats={naCats}
+                        initialSelectAllActive={selectAllActive}
                     />
                     </>
                 );
@@ -9040,9 +9259,10 @@
                     dates={dates}
                     initialSelectedIds={selectedIds}
                     initialNaCats={naCats}
-                    onChangeSelection={() => { clearWorkingCopy(); setScreen('selection'); }}
+                    onChangeSelection={() => { setScreen('selection'); }}
                     cachedWorkingState={cachedWorkingState}
                     onRefreshFromWhiteboard={refreshFromWhiteboard}
+                    selectAllActive={selectAllActive}
                 />
                 </>
             );

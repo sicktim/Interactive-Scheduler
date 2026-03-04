@@ -1,9 +1,9 @@
 # TPS Interactive Scheduler — Agent Handoff Instructions
 
-> **Current Version:** 4.1.0
-> **File:** `Interactive-scheduler/interactive-scheduler.html` (~9049 lines)
-> **Last Updated:** 2026-03-02
-> **Status:** v4.1.0 complete — Supervision Enhancements, Whiteboard Conflict Indicators, Day-Scoped Conflicts
+> **Current Version:** 4.2.0
+> **File:** `Interactive-scheduler/interactive-scheduler.html` (~9607 lines)
+> **Last Updated:** 2026-03-04
+> **Status:** v4.2.0 complete — Bug Fixes, Supervision UX, Select-All Persistence (T8 SegmentedTimeInput reverted)
 
 ### PROCESS REQUIREMENT
 **Before implementing ANY fix**, agents MUST:
@@ -100,7 +100,7 @@ Both produce the same normalized event shape:
 
 ---
 
-## 4. Component Map (v3.1)
+## 4. Component Map (v4.2.0)
 
 ```
 App
@@ -108,22 +108,38 @@ App
 ├── EventSelectionScreen       ← role-based grouping (A-Class/B-Class/Staff/Other)
 │   ├── classifyEvent()           quick-select buttons per category
 │   ├── NA section (standalone)   crew category chips, separate from dates
+│   ├── selectAllActive state      persisted to localStorage; passed to App via onContinue(ids,cats,flag)
 │   └── Date groups with class/section sub-groups
 ├── SchedulerView
 │   ├── tooltip state (portal-based, position:fixed at root)
+│   ├── selectAllActive prop       saved on every saveState() call
 │   ├── Header (day tabs, conflict count, edit selection, refresh)
 │   ├── Timeline area
 │   │   └── DayColumn (per date) — passes onShowTooltip/onHideTooltip
-│   │       └── Section (Flying/Ground/NA)
+│   │       └── Section (Flying/Ground/NA/Supervision)
 │   │           └── EventCard — passes tooltip props to chips, badge uses portal
 │   │               ├── Title bar (type label, name, time)
 │   │               ├── Flight bar (ETD→ETA graphical, Flying only)
 │   │               ├── Crew area (PersonnelChip × N, "+" add chip)
 │   │               └── Conflict badge (onMouseEnter triggers portal tooltip)
+│   ├── WhiteboardView (always mounted, display:none toggling)
+│   │   ├── WhiteboardFlying
+│   │   ├── WhiteboardGround
+│   │   ├── WhiteboardNA
+│   │   └── WhiteboardSupervision — inline modal for custom event creation (showAddSupvModal state)
+│   │       └── per-triplet × delete column (4th column per POC/Start/End group)
 │   ├── PersonnelPicker (bottom panel, category tabs, search, drag source)
 │   ├── ChangeSummary (right panel, uses computeNetChanges for display)
-│   │   └── NetChangeEntry (move/add/remove display with grouped persons)
+│   │   └── NetChangeEntry (move/add/remove display with grouped persons + notes diff)
+│   ├── CreateEventModal — uses MilitaryTimeInput for start/end times
+│   ├── EditEventModal — uses MilitaryTimeInput for all 4 time fields
 │   └── Tooltip portal div (position:fixed, z-index:9999)
+
+Shared Components
+├── MilitaryTimeInput — auto-inserts colon on 2nd digit; used in CreateEventModal, EditEventModal
+├── PendingTimeInput — lightweight time input for pending supervision triplet slots; local draft state; onCommit on blur/Enter
+├── PersonnelChip — dual-context (picker AND event cards)
+└── BlankPuck — drag source for empty assignment slots
 ```
 
 ---
@@ -167,11 +183,13 @@ App
 - `visualEnd()` (v3.1) accounts for min-width:140px card expansion when computing lane overlap
 - Returns `{ evMap: { [id]: { top, height } }, total: totalHeight }`
 
-### Change tracking — UPDATED in v3.1
+### Change tracking — UPDATED in v3.1, v4.2.0
 - Changes stored as chronological array of `{ type, person, date, eventSection, eventModel, eventName, eventTime, eventId }`
+- Event-level edits (`event-edit` type) additionally carry `before`/`after` snapshots: `{ eventName, model, startTime, endTime, notes }` — `notes` added in v4.2.0
 - `initialized` ref guard (with `requestAnimationFrame`) prevents recording changes during state initialization
 - `handleRemove` now calls `setChanges` inside `setWorkingEvents` updater for React 18 batching atomicity
-- `handleUndoGroup(indices)` reverses entire groups in reverse-chronological order
+- `handleUndoGroup(indices)` restores event-level changes key-by-key (`Object.keys(ch.before).forEach(k => ev[k] = ch.before[k])`) to avoid setting undefined on fields not present in old snapshots
+- `NetChangeEntry` renders notes diff (`notes → "..."`) when `before.notes !== after.notes`
 - Auto-saved to localStorage under key `tps-scheduler-state`
 
 ### Tooltip portal — NEW in v3.0
@@ -257,6 +275,27 @@ Reference image: `Interactive-scheduler/color-scheme.png`
 - The problem case: two genuinely different flights with same name/model/times but different leads, where neither lead is in a staff roster category
 - Fix approach: sub-group by `personnel[0]` (first person = lead) regardless of staff detection. Events with empty personnel attach to existing groups (overflow rows with no instructor listed).
 - This replaces the staff-only lead detection while preserving the "no-lead overflow" merge behavior.
+
+---
+
+## 8d. Bugs Fixed in v4.2.0
+
+| Issue | Root Cause | Fix |
+|-------|-----------|-----|
+| Cancelled events block focus picker | `focusedAvailability` forEach processed all events including `cancelled:true` events | Added `if (ev.cancelled) return` guard inside the overlapping-events forEach in `focusedAvailability` useMemo |
+| Notes shows "undefined" in change summary | `handleEditSave` did not include `notes` in `before` snapshot; `NetChangeEntry` had no notes diff rendering | Added `notes: ev.notes` to `before`; added notes diff rendering in `NetChangeEntry` |
+| Notes undo broken | `handleUndoGroup` used `Object.assign(ev, ch.before)` — sets `ev.notes = undefined` on pre-v4.2 entries | Replaced with key-by-key restore using `Object.keys(ch.before).forEach` |
+| Edit selection destroys working changes | `onChangeSelection` called `clearWorkingCopy()`; SchedulerView reinit from raw allEvents | Removed `clearWorkingCopy()` from `onChangeSelection`; `handleContinue` reloads cache and passes as `cachedWorkingState` |
+| FOA/AUTH appear as supervision rows | `SUPERVISION_ROLE_ORDER` included 'FOA'/'AUTH'; no filter on whiteboard dayEvents | Removed FOA/AUTH from `SUPERVISION_ROLE_ORDER`; `dayEvents` useMemo filters `section=Supervision, startTime=null, eventName=/^(FOA\|AUTH)$/i` |
+
+## 8e. Features Added in v4.2.0
+
+| Feature | Description |
+|---------|-------------|
+| **UI modal for supervision event creation** | `WhiteboardSupervision` now shows inline modal (state: `showAddSupvModal`, `addSupvDutyName`) with text input + quick-pick chips + Cancel/Create buttons; `window.prompt` removed |
+| **Per-triplet supervision delete** | Each supervision POC/Start/End triplet has its own × delete button in a dedicated 4th column; colgroup/header/occupied-body/pending-body all updated for the extra column |
+| **Select-All persisted across refresh** | `saveState`/`loadState` include `selectAllActive` flag; `EventSelectionScreen` tracks it with `setSelectAllActive`; `handleContinue` passes it to App; `refreshFromWhiteboard` auto-selects new events when flag is true |
+| **T8 SegmentedTimeInput (REVERTED)** | Implemented but reverted — caused event re-sorting mid-edit on each valid digit. `MilitaryTimeInput` restored in modals; `PendingTimeInput` restored in whiteboard pending slots. Time entry UX is a backlog item. |
 
 ---
 
