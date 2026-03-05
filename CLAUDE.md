@@ -108,6 +108,9 @@ Always break feedback into a logically ordered task list and assign agents to ad
 |-------|------------|
 | `task-planner` | Decomposing ambiguous/multi-faceted work into ordered task lists (Opus model) |
 | `ui-frontend-architect` | Implementing new UI features or components |
+| `backend-api-architect` | Database schema, API routes, server logic, PostgreSQL/Fastify work |
 | `compartment-reviewer` | After high-risk changes (3+ compartments or fragile areas) |
 | `test-qa-agent` | Verifying fixes against feedback.txt and known corner cases |
 | `project-coordinator` | Updating docs, tracking progress, checking scope |
+| `mcg-data-extractor` | Curriculum data extraction from PDFs and spreadsheets |
+| `project-file-classifier` | Classifying and organizing project files |
