@@ -6009,7 +6009,7 @@
         // ─── MILITARY TIME INPUT ───
 
         // ─── MilitaryTimeInput ────────────────────────────────────────────────────
-        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM' }) => {
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur }) => {
             const handleChange = (e) => {
                 let raw = e.target.value;
                 raw = raw.replace(/[^\d:]/g, '');
@@ -6032,7 +6032,7 @@
 
             const handleBlur = () => {
                 let v = value.trim();
-                if (!v) return;
+                if (!v) { if (externalOnBlur) externalOnBlur(''); return; }
                 let hours, minutes;
                 if (v.includes(':')) {
                     [hours, minutes] = v.split(':');
@@ -6046,7 +6046,9 @@
                 if (isNaN(m)) m = 0;
                 h = Math.min(Math.max(h, 0), 23);
                 m = Math.min(Math.max(m, 0), 59);
-                onChange(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+                const normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                onChange(normalized);
+                if (externalOnBlur) externalOnBlur(normalized);
             };
 
             return <input type="text" maxLength={5} placeholder={placeholder}
@@ -6364,6 +6366,42 @@
             ].filter(Boolean).join(' ');
 
             if (editing && !readonly) {
+                if (type === 'time') {
+                    const commitTimeDirect = (normalizedValue) => {
+                        setEditing(false);
+                        const trimmed = (normalizedValue || '').trim();
+                        if (trimmed !== (value || '').trim()) onSave(eventId, field, trimmed);
+                    };
+                    const handleTimeKeyDown = (e) => {
+                        if (e.key === 'Escape') { setDraft(value || ''); setEditing(false); }
+                        else if (e.key === 'Tab') {
+                            e.preventDefault();
+                            // Normalize current draft the same way MilitaryTimeInput.handleBlur would
+                            let v = (draft || '').trim();
+                            let normalized = v;
+                            if (v) {
+                                let hours, minutes;
+                                if (v.includes(':')) { [hours, minutes] = v.split(':'); }
+                                else if (v.length <= 2) { hours = v; minutes = '0'; }
+                                else { hours = v.slice(0, 2); minutes = v.slice(2); }
+                                let h = Math.min(Math.max(parseInt(hours, 10) || 0, 0), 23);
+                                let m = Math.min(Math.max(parseInt(minutes || '0', 10) || 0, 0), 59);
+                                normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                            }
+                            commitTimeDirect(normalized);
+                            if (e.shiftKey && onShiftTab) onShiftTab();
+                            else if (!e.shiftKey && onTab) onTab();
+                        }
+                    };
+                    return (
+                        <td ref={tdRef} className={cellClass} onClick={handleClick} onKeyDown={handleTimeKeyDown}>
+                            <MilitaryTimeInput value={draft} onChange={setDraft} onBlur={commitTimeDirect}
+                                style={{ background: 'transparent', border: 'none', color: 'inherit',
+                                         fontFamily: 'inherit', fontSize: 'inherit', width: '100%',
+                                         outline: 'none', padding: 0 }} />
+                        </td>
+                    );
+                }
                 return (
                     <td ref={tdRef} className={cellClass} onClick={handleClick}>
                         <input ref={inputRef} className="wb-input"
