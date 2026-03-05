@@ -108,6 +108,8 @@ Always break feedback into a logically ordered task list and assign agents to ad
 |-------|------------|
 | `task-planner` | Decomposing ambiguous/multi-faceted work into ordered task lists (Opus model) |
 | `ui-frontend-architect` | Implementing new UI features or components |
+| `db-architect` | **Opus** — High-level database planning, schema design, real-time architecture, migration strategy |
+| `db-builder` | **Sonnet** — Hands-on database implementation: SQL, migrations, API routes, WebSocket wiring |
 | `backend-api-architect` | Database schema, API routes, server logic, PostgreSQL/Fastify work |
 | `compartment-reviewer` | After high-risk changes (3+ compartments or fragile areas) |
 | `test-qa-agent` | Verifying fixes against feedback.txt and known corner cases |
