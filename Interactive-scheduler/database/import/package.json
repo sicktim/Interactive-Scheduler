@@ -1,0 +1,13 @@
+{
+  "name": "tps-db-import",
+  "version": "1.0.0",
+  "description": "GAS batch API to PostgreSQL import script",
+  "type": "module",
+  "scripts": {
+    "import": "node import.js",
+    "import:roster": "node import.js --roster-only"
+  },
+  "dependencies": {
+    "pg": "^8.13.0"
+  }
+}
