@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.0.1 — Whiteboard view with inline editing, crew assignment, and cell highlighting -->
+<!-- Interactive Scheduler v4.2.0 — Bug Fixes, Supervision UX, Select-All Persistence -->
 <!--
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
@@ -1439,17 +1439,27 @@
             padding: 2px 4px;
             height: 20px;
         }
-        /* Bold left border on the first column of each POC/Start/End triplet group */
-        .wb-supv-group-start th,
-        .wb-supv-group-start td {
-            border-left: 2px solid rgba(255,255,255,0.18) !important;
-            padding-left: 6px;
+        /* Left border + padding gap on the first column of each POC/Start/End triplet group */
+        /* NOTE: class is applied directly on <th>/<td>, so selectors must be th.class / td.class */
+        th.wb-supv-group-start,
+        td.wb-supv-group-start {
+            border-left: 2px solid rgba(255,255,255,0.22) !important;
+            padding-left: 10px !important;
         }
-        .light-mode .wb-supv-group-start th,
-        .light-mode .wb-supv-group-start td {
-            border-left: 2px solid rgba(0,0,0,0.18) !important;
+        .light-mode th.wb-supv-group-start,
+        .light-mode td.wb-supv-group-start {
+            border-left: 2px solid rgba(0,0,0,0.22) !important;
+            padding-left: 10px !important;
         }
 
+        /* T6: Per-triplet delete column cell in supervision table */
+        td.wb-supv-triplet-del-cell {
+            width: 14px;
+            min-width: 14px;
+            padding: 0 1px !important;
+            text-align: center;
+            vertical-align: middle;
+        }
         /* Flex row: Supervision left, Academics right */
         .wb-supv-acad-row {
             display: grid;
@@ -1855,6 +1865,201 @@
             border-color: rgba(59,130,246,0.4);
             color: rgba(59,130,246,0.7);
             background: rgba(59,130,246,0.04);
+        }
+
+        /* Add-supervision-event modal (T5) */
+        .wb-add-supv-modal-wrap {
+            position: relative;
+            width: 100%;
+        }
+        .wb-add-supv-modal {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            z-index: 350;
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 8px;
+            min-width: 240px;
+            max-width: 340px;
+            margin-bottom: 4px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+        }
+        .wb-add-supv-modal-title {
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .wb-add-supv-modal-input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px;
+            color: #e2e8f0;
+            font: inherit;
+            font-size: 0.65rem;
+            padding: 4px 6px;
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 6px;
+        }
+        .wb-add-supv-modal-input:focus { border-color: rgba(59,130,246,0.6); }
+        .wb-add-supv-modal-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+        .wb-add-supv-chip {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.1s;
+        }
+        .wb-add-supv-chip:hover { background: rgba(59,130,246,0.2); color: #93c5fd; border-color: rgba(59,130,246,0.4); }
+        .wb-add-supv-modal-actions {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+        .wb-add-supv-btn-create {
+            padding: 3px 10px;
+            border-radius: 3px;
+            font: inherit;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+        }
+        .wb-add-supv-btn-create:hover { background: #1d4ed8; }
+        .wb-add-supv-btn-create:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+        .wb-add-supv-btn-cancel {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font: inherit;
+            font-size: 0.6rem;
+            cursor: pointer;
+            background: transparent;
+            color: rgba(255,255,255,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .wb-add-supv-btn-cancel:hover { color: rgba(255,255,255,0.7); }
+        .light-mode .wb-add-supv-modal { background: #f8fafc; border-color: rgba(0,0,0,0.1); }
+        .light-mode .wb-add-supv-modal-title { color: rgba(0,0,0,0.5); }
+        .light-mode .wb-add-supv-modal-input { background: #fff; border-color: rgba(0,0,0,0.2); color: #0f172a; }
+        .light-mode .wb-add-supv-chip { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); border-color: rgba(0,0,0,0.1); }
+        .light-mode .wb-add-supv-btn-cancel { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.1); }
+
+        /* Pending supervision slot — empty triplet editable state */
+        .wb-pending-poc-cell {
+            min-width: 0;
+            padding: 1px 3px !important;
+            padding-left: 10px !important;
+            vertical-align: middle;
+            cursor: default;
+            border-left: 2px solid rgba(255,255,255,0.22) !important; /* matches wb-supv-group-start separator */
+        }
+        .light-mode .wb-pending-poc-cell {
+            border-left: 2px solid rgba(0,0,0,0.22) !important;
+        }
+        .wb-pending-poc-drop {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 14px;
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 3px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.2);
+            cursor: default;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .wb-pending-poc-drop.wb-pending-poc-dragover {
+            border-color: rgba(59,130,246,0.6);
+            color: rgba(59,130,246,0.8);
+            background: rgba(59,130,246,0.06);
+        }
+        .wb-pending-poc-stored {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            padding: 0 3px;
+            border-radius: 3px;
+            font-size: 0.55rem;
+            opacity: 0.6;
+            font-style: italic;
+            background: rgba(255,255,255,0.06);
+            cursor: default;
+        }
+        .wb-pending-poc-stored .wb-pending-poc-remove {
+            cursor: pointer;
+            opacity: 0.5;
+            font-size: 0.5rem;
+            line-height: 1;
+            padding: 0 1px;
+        }
+        .wb-pending-poc-stored .wb-pending-poc-remove:hover { opacity: 1; }
+        .wb-pending-time-td {
+            padding: 1px 2px !important;
+            vertical-align: middle;
+        }
+        .wb-pending-time-input {
+            width: 100%;
+            min-width: 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.35);
+            font: inherit;
+            opacity: 23%;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 0 1px;
+            outline: none;
+            transition: border-color 0.15s, color 0.15s;
+        }
+        .wb-pending-time-input:focus {
+            border-bottom-color: rgba(59,130,246,0.6);
+            color: rgba(255,255,255,0.85);
+        }
+        .wb-pending-time-input.wb-pending-time-amber {
+            border-bottom-color: rgba(251,191,36,0.6);
+            border-bottom-width: 2px;
+        }
+        /* Light mode overrides for pending slots */
+        .light-mode .wb-pending-poc-drop {
+            border-color: rgba(0,0,0,0.15);
+            color: rgba(0,0,0,0.2);
+        }
+        .light-mode .wb-pending-poc-drop.wb-pending-poc-dragover {
+            border-color: rgba(59,130,246,0.5);
+            color: rgba(59,130,246,0.7);
+        }
+        .light-mode .wb-pending-poc-stored {
+            background: rgba(0,0,0,0.04);
+        }
+        .light-mode .wb-pending-time-input {
+            border-bottom-color: rgba(0,0,0,0.12);
+            color: rgba(0,0,0,0.3);
+        }
+        .light-mode .wb-pending-time-input:focus {
+            border-bottom-color: rgba(59,130,246,0.5);
+            color: rgba(0,0,0,0.85);
+        }
+        .light-mode .wb-pending-time-input.wb-pending-time-amber {
+            border-bottom-color: rgba(217,119,6,0.7);
         }
 
         /* Delete row button */
@@ -2396,7 +2601,8 @@
         const SECTION_BADGE    = { Flying: 'FLT', Ground: 'GND', Academics: 'ACD', NA: 'N/A', Supervision: 'SP' };
         const SECTION_BADGE_COLOR = { Flying: '#3b82f6', Ground: '#16a34a', Academics: '#7c3aed', NA: '#475569', Supervision: '#d97706' };
         const WB_SECTION_ORDER = ['Supervision', 'Flying', 'Ground', 'NA'];
-        const SUPV_DUTY_ORDER = ['SOF', 'OS', 'ODO', 'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO', "Other (As Req'd)"];
+        // T4: FOA/AUTH excluded — they display as date/title bar pills, not whiteboard table rows
+        const SUPV_DUTY_ORDER = ['SOF', 'OS', 'ODO', 'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO'];
         // Fixed row definitions for the Academics table (always 4 rows regardless of event data)
         const ACAD_FIXED_CATS = [
             { label: 'Alpha FTC', alphaKey: 'alpha', classKey: 'ftc', catColor: 'FTC-A' },
@@ -2408,12 +2614,12 @@
         // Military time validation regex for HH:MM text inputs (00:00–23:59)
         const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
 
-        // Fixed display order for supervision duty roles (SOF → AUTH)
+        // Fixed display order for supervision duty roles.
+        // T4: FOA and AUTH removed — they display as date/title bar pills only, not as timeline rows.
         const SUPERVISION_ROLE_ORDER = [
             'SOF', 'OS', 'ODO',
             'F-16 FDO', 'T-38 TDO', 'C-12 TDO', 'A-29 ADO',
             "Other (As Req'd)",
-            'FOA', 'AUTH',
         ];
 
         // Fixed display order for aircraft model bands in the Flying section
@@ -2752,6 +2958,37 @@
 
                 if (raw.supervision) {
                     raw.supervision.forEach(row => {
+                        // Detect FOA/AUTH footer row BEFORE the empty-duty guard.
+                        // Footer row structure: row[0]="" row[9]="FOA" row[10]=foaPerson row[12]="AUTH" row[13]=authPerson
+                        if (row[9] === 'FOA') {
+                            const foaPerson = (row[10] && row[10].trim()) ? row[10].trim() : null;
+                            const authPerson = (row[13] && row[13].trim()) ? row[13].trim() : null;
+                            if (foaPerson && isValidName(foaPerson)) {
+                                all.push({
+                                    id: mkId(), section: 'Supervision', date,
+                                    model: null, eventName: 'FOA',
+                                    startTime: null, endTime: null,
+                                    etd: null, eta: null,
+                                    personnel: [foaPerson],
+                                    originalPersonnel: [foaPerson],
+                                    notes: null, readonly: false,
+                                    cancelled: false,
+                                });
+                            }
+                            if (authPerson && isValidName(authPerson)) {
+                                all.push({
+                                    id: mkId(), section: 'Supervision', date,
+                                    model: null, eventName: 'AUTH',
+                                    startTime: null, endTime: null,
+                                    etd: null, eta: null,
+                                    personnel: [authPerson],
+                                    originalPersonnel: [authPerson],
+                                    notes: null, readonly: false,
+                                    cancelled: false,
+                                });
+                            }
+                            return; // footer row consumed, skip triplet loop
+                        }
                         const duty = row[0];
                         if (!duty || duty === 'Supervision' || !duty.trim()) return;
                         for (let i = 1; i < row.length - 2; i += 3) {
@@ -3639,7 +3876,7 @@
         // Stable event key for matching across sessions (IDs are session-specific)
         const eventNaturalKey = (ev) => `${ev.date}|${ev.section}|${ev.eventName}|${ev.startTime || ''}|${ev.model || ''}`;
 
-        const saveState = (changes, selectedIds, naCats, allEvents) => {
+        const saveState = (changes, selectedIds, naCats, allEvents, selectAllActive) => {
             try {
                 // Save natural keys of selected events (stable across reloads)
                 const selectedKeys = allEvents
@@ -3653,6 +3890,7 @@
                     selectedIds: [...selectedIds],
                     selectedKeys,
                     naCats: [...naCats],
+                    selectAllActive: !!selectAllActive, // T7: persist select-all flag
                     savedAt: new Date().toISOString(),
                 }));
             } catch (e) {}
@@ -3711,6 +3949,7 @@
                     selectedIds: new Set(data.selectedIds || []),
                     selectedKeys: data.selectedKeys || [],
                     naCats: new Set(data.naCats || []),
+                    selectAllActive: !!data.selectAllActive, // T7
                     savedAt: data.savedAt,
                 };
             } catch (e) { return null; }
@@ -3792,9 +4031,11 @@
 
         // ─── SELECTION SCREEN (v3.1: role-based grouping, separate NA, quick-select) ───
 
-        const EventSelectionScreen = ({ allEvents, roster, dates, onContinue, initialSelected, initialNaCats }) => {
+        const EventSelectionScreen = ({ allEvents, roster, dates, onContinue, initialSelected, initialNaCats, initialSelectAllActive }) => {
             const [selectedIds, setSelectedIds] = useState(initialSelected || new Set());
             const [naCats, setNaCats] = useState(initialNaCats || new Set());
+            // T7: track whether "Select All" is the active state
+            const [selectAllActive, setSelectAllActive] = useState(!!initialSelectAllActive);
 
             const secColors = {
                 Flying:      { bg: 'rgba(16,185,129,0.1)',  border: '#10b981', text: '#6ee7b7' },
@@ -3907,6 +4148,7 @@
 
             // Toggle individual event
             const toggleEvent = (id) => {
+                setSelectAllActive(false); // T7: manual toggle clears select-all flag
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     next.has(id) ? next.delete(id) : next.add(id);
@@ -3918,6 +4160,7 @@
             const toggleGroup = (evs) => {
                 const ids = evs.map(e => e.id);
                 const allSel = ids.every(id => selectedIds.has(id));
+                setSelectAllActive(false); // T7: manual toggle clears select-all flag
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     ids.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -3930,6 +4173,7 @@
                 const ids = classSets[cls];
                 if (!ids || ids.size === 0) return;
                 const allSel = [...ids].every(id => selectedIds.has(id));
+                setSelectAllActive(false); // T7
                 setSelectedIds(prev => {
                     const next = new Set(prev);
                     ids.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -3938,6 +4182,7 @@
             };
 
             const toggleNaCat = (cat) => {
+                setSelectAllActive(false); // T7
                 setNaCats(prev => {
                     const next = new Set(prev);
                     next.has(cat) ? next.delete(cat) : next.add(cat);
@@ -3952,6 +4197,7 @@
                 });
                 setSelectedIds(all);
                 setNaCats(new Set(naCategoriesAvailable));
+                setSelectAllActive(true); // T7: set the select-all flag
             };
 
             // Check if all events of a class are selected
@@ -3974,9 +4220,9 @@
                         </div>
                         <div className="flex gap-3 items-center">
                             <button onClick={selectAll} className="filter-btn">Select All</button>
-                            <button onClick={() => { setSelectedIds(new Set()); setNaCats(new Set()); }} className="filter-btn">Clear</button>
+                            <button onClick={() => { setSelectedIds(new Set()); setNaCats(new Set()); setSelectAllActive(false); }} className="filter-btn">Clear</button>
                             <button
-                                onClick={() => onContinue(selectedIds, naCats)}
+                                onClick={() => onContinue(selectedIds, naCats, selectAllActive)}
                                 disabled={totalSelected === 0}
                                 className="px-5 py-1.5 rounded-lg text-sm font-bold transition-colors"
                                 style={{
@@ -4004,6 +4250,7 @@
                                         <div
                                             className={`na-cat-chip ${allSel ? 'selected' : ''}`}
                                             onClick={() => {
+                                                setSelectAllActive(false); // T7
                                                 setSelectedIds(prev => {
                                                     const next = new Set(prev);
                                                     allSupervisionIds.forEach(id => allSel ? next.delete(id) : next.add(id));
@@ -4591,7 +4838,7 @@
 
         // ─── DAY COLUMN ───
 
-        const DayColumn = ({ date, events, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
+        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
             const hdr = fmtDate(date);
             const today = new Date().toISOString().slice(0, 10);
             const isToday = date === today;
@@ -4614,12 +4861,59 @@
                 return result;
             }, [events]);
 
+            // Abbreviate a name for the FOA/AUTH chip (Last name only, or first 8 chars)
+            const abbrevName = (name) => {
+                if (!name) return '';
+                const parts = name.split(/[\s,]+/).filter(Boolean);
+                // "Smith, J" -> "Smith" / "Smith J" -> "Smith" / "Smith" -> "Smith"
+                return parts[0].slice(0, 8);
+            };
+
             return (
                 <div className="day-column" style={{ borderColor: isToday ? 'rgba(59,130,246,0.25)' : undefined }}>
                     <div className="day-header" style={{ borderBottom: isToday ? '2px solid #3b82f6' : undefined }}>
-                        <div style={{ textAlign: 'center' }}>
-                            <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white' }}>{hdr.weekday}</div>
-                            <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>{hdr.day} {hdr.month}</div>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                            <div style={{ flex: 1, textAlign: 'center' }}>
+                                <div style={{ fontWeight: 700, fontSize: '0.8rem', color: 'white' }}>{hdr.weekday}</div>
+                                <div style={{ fontSize: '0.65rem', color: '#94a3b8' }}>{hdr.day} {hdr.month}</div>
+                            </div>
+                            {/* FOA / AUTH duty chips — only shown when populated */}
+                            {(foaAuth && (foaAuth.foa || foaAuth.auth)) && (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'flex-end', flexShrink: 0 }}>
+                                    {foaAuth.foa && (() => {
+                                        const c = chipColor(foaAuth.foa, roster);
+                                        return (
+                                            <div title={`FOA: ${foaAuth.foa}`} style={{
+                                                display: 'flex', alignItems: 'center', gap: 2,
+                                                background: c.bg, color: c.text,
+                                                borderRadius: 3, padding: '1px 4px',
+                                                fontSize: '0.48rem', fontWeight: 700, lineHeight: 1.4,
+                                                maxWidth: 64, overflow: 'hidden',
+                                                userSelect: 'none', cursor: 'default',
+                                            }}>
+                                                <span style={{ opacity: 0.7, fontSize: '0.42rem' }}>FOA</span>
+                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{abbrevName(foaAuth.foa)}</span>
+                                            </div>
+                                        );
+                                    })()}
+                                    {foaAuth.auth && (() => {
+                                        const c = chipColor(foaAuth.auth, roster);
+                                        return (
+                                            <div title={`AUTH: ${foaAuth.auth}`} style={{
+                                                display: 'flex', alignItems: 'center', gap: 2,
+                                                background: c.bg, color: c.text,
+                                                borderRadius: 3, padding: '1px 4px',
+                                                fontSize: '0.48rem', fontWeight: 700, lineHeight: 1.4,
+                                                maxWidth: 64, overflow: 'hidden',
+                                                userSelect: 'none', cursor: 'default',
+                                            }}>
+                                                <span style={{ opacity: 0.7, fontSize: '0.42rem' }}>AUTH</span>
+                                                <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{abbrevName(foaAuth.auth)}</span>
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                            )}
                         </div>
                         <div className="timeline-ruler">
                             {[6,9,12,15,18].map(h => (
@@ -4956,6 +5250,8 @@
                     if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
                         diffs.push(`${inst.after.startTime}\u2013${inst.after.endTime || '??'}`);
                     if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
+                    if (inst.before.hasOwnProperty('notes') && inst.before.notes !== inst.after.notes)
+                        diffs.push(`notes \u2192 "${inst.after.notes || ''}"`);
                 }
                 return (
                     <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
@@ -5712,7 +6008,8 @@
 
         // ─── MILITARY TIME INPUT ───
 
-        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM' }) => {
+        // ─── MilitaryTimeInput ────────────────────────────────────────────────────
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur }) => {
             const handleChange = (e) => {
                 let raw = e.target.value;
                 raw = raw.replace(/[^\d:]/g, '');
@@ -5735,7 +6032,7 @@
 
             const handleBlur = () => {
                 let v = value.trim();
-                if (!v) return;
+                if (!v) { if (externalOnBlur) externalOnBlur(''); return; }
                 let hours, minutes;
                 if (v.includes(':')) {
                     [hours, minutes] = v.split(':');
@@ -5749,7 +6046,9 @@
                 if (isNaN(m)) m = 0;
                 h = Math.min(Math.max(h, 0), 23);
                 m = Math.min(Math.max(m, 0), 59);
-                onChange(String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0'));
+                const normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                onChange(normalized);
+                if (externalOnBlur) externalOnBlur(normalized);
             };
 
             return <input type="text" maxLength={5} placeholder={placeholder}
@@ -5815,22 +6114,22 @@
                             <div style={{ display: 'flex', gap: 8 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={lbl}>Brief (Start) *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                    <MilitaryTimeInput value={startTime} onChange={setStartTime} style={inputStyle} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={lbl}>Debrief (End)</label>
-                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                    <MilitaryTimeInput value={endTime} onChange={setEndTime} style={inputStyle} />
                                 </div>
                             </div>
                             {event.section === 'Flying' && (
                                 <div style={{ display: 'flex', gap: 8 }}>
                                     <div style={{ flex: 1 }}>
                                         <label style={lbl}>ETD</label>
-                                        <MilitaryTimeInput style={inputStyle} value={etd} onChange={setEtd} />
+                                        <MilitaryTimeInput value={etd} onChange={setEtd} style={inputStyle} />
                                     </div>
                                     <div style={{ flex: 1 }}>
                                         <label style={lbl}>ETA</label>
-                                        <MilitaryTimeInput style={inputStyle} value={eta} onChange={setEta} />
+                                        <MilitaryTimeInput value={eta} onChange={setEta} style={inputStyle} />
                                     </div>
                                 </div>
                             )}
@@ -5958,11 +6257,11 @@
                             <div style={{ display: 'flex', gap: 10 }}>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>Start Time *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={startTime} onChange={setStartTime} />
+                                    <MilitaryTimeInput value={startTime} onChange={setStartTime} style={inputStyle} />
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <label style={{ fontSize: '0.6rem', color: '#9ca3af', display: 'block', marginBottom: 3 }}>End Time *</label>
-                                    <MilitaryTimeInput style={inputStyle} value={endTime} onChange={setEndTime} />
+                                    <MilitaryTimeInput value={endTime} onChange={setEndTime} style={inputStyle} />
                                 </div>
                             </div>
                         </div>
@@ -6067,15 +6366,48 @@
             ].filter(Boolean).join(' ');
 
             if (editing && !readonly) {
-                const isTime = type === 'time';
-                const inputClass = isTime ? 'wb-input-time' : 'wb-input';
+                if (type === 'time') {
+                    const commitTimeDirect = (normalizedValue) => {
+                        setEditing(false);
+                        const trimmed = (normalizedValue || '').trim();
+                        if (trimmed !== (value || '').trim()) onSave(eventId, field, trimmed);
+                    };
+                    const handleTimeKeyDown = (e) => {
+                        if (e.key === 'Escape') { setDraft(value || ''); setEditing(false); }
+                        else if (e.key === 'Tab') {
+                            e.preventDefault();
+                            // Normalize current draft the same way MilitaryTimeInput.handleBlur would
+                            let v = (draft || '').trim();
+                            let normalized = v;
+                            if (v) {
+                                let hours, minutes;
+                                if (v.includes(':')) { [hours, minutes] = v.split(':'); }
+                                else if (v.length <= 2) { hours = v; minutes = '0'; }
+                                else { hours = v.slice(0, 2); minutes = v.slice(2); }
+                                let h = Math.min(Math.max(parseInt(hours, 10) || 0, 0), 23);
+                                let m = Math.min(Math.max(parseInt(minutes || '0', 10) || 0, 0), 59);
+                                normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                            }
+                            commitTimeDirect(normalized);
+                            if (e.shiftKey && onShiftTab) onShiftTab();
+                            else if (!e.shiftKey && onTab) onTab();
+                        }
+                    };
+                    return (
+                        <td ref={tdRef} className={cellClass} onClick={handleClick} onKeyDown={handleTimeKeyDown}>
+                            <MilitaryTimeInput value={draft} onChange={setDraft} onBlur={commitTimeDirect}
+                                style={{ background: 'transparent', border: 'none', color: 'inherit',
+                                         fontFamily: 'inherit', fontSize: 'inherit', width: '100%',
+                                         outline: 'none', padding: 0 }} />
+                        </td>
+                    );
+                }
                 return (
                     <td ref={tdRef} className={cellClass} onClick={handleClick}>
-                        <input ref={inputRef} className={inputClass}
+                        <input ref={inputRef} className="wb-input"
                             type="text"
                             value={draft} onChange={e => setDraft(e.target.value)}
-                            onBlur={commit} onKeyDown={handleKeyDown}
-                            {...(isTime ? { placeholder: 'HH:MM', maxLength: 5 } : {})} />
+                            onBlur={commit} onKeyDown={handleKeyDown} />
                     </td>
                 );
             }
@@ -6084,7 +6416,8 @@
 
         // ─────────────────────── WhiteboardCrewCell ───────────────────────────
         const WhiteboardCrewCell = ({ person, eventId, slotIndex, roster, onAdd, onRemove, onFocusEvent,
-            highlight, highlightMode, onHighlight, readonly, className: extraClass }) => {
+            highlight, highlightMode, onHighlight, readonly, className: extraClass,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const [dragOver, setDragOver] = useState(false);
             const color = person ? chipColor(person, roster) : null;
@@ -6140,11 +6473,15 @@
 
             const style = person && color ? { background: color.bg, color: color.text } : {};
 
+            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
+            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
+
             return (
                 <td className={cellClass} style={style} onClick={handleClick}
                     onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                     {person ? (
                         <span
+                            className={hasCon ? 'chip-conflict' : undefined}
                             draggable
                             style={{ cursor: 'grab', display: 'inline-flex', alignItems: 'center', gap: '2px' }}
                             onDragStart={(e) => {
@@ -6159,11 +6496,18 @@
                             }}
                             onDragEnd={(e) => {
                                 e.currentTarget.style.opacity = '1';
-                            }}>
+                            }}
+                            onMouseEnter={(e) => {
+                                if (hasCon && onShowTooltip) {
+                                    onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                }
+                            }}
+                            onMouseLeave={onHideTooltip}>
                             {person}
+                            {hasCon && <span className="conflict-icon">!</span>}
                             {!readonly && (
                                 <span className="wb-crew-remove"
-                                    onClick={(e) => { e.stopPropagation(); onRemove(eventId, person); }}>
+                                    onClick={(e) => { e.stopPropagation(); if (onHideTooltip) onHideTooltip(); onRemove(eventId, person); }}>
                                     {'\u00D7'}
                                 </span>
                             )}
@@ -6392,7 +6736,8 @@
         // plus a + button to add placeholder slots.
         const WhiteboardCrewGroup = ({ crew, placeholders, eventId, roster, onAdd, onRemove,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            onFocusEvent, colSpan, highlights, highlightMode, onHighlight }) => {
+            onFocusEvent, colSpan, highlights, highlightMode, onHighlight,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const [dragOver, setDragOver] = useState(false);
             const [addMenuOpen, setAddMenuOpen] = useState(false);
@@ -6505,9 +6850,11 @@
                             const color = person ? chipColor(person, roster) : null;
                             const style = color ? { background: color.bg, color: color.text } : {};
                             const isPending = pendingFill && pendingFill.person === person;
+                            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
+                            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
                             return (
                                 <span key={i} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-                                    <span className="wb-crew-chip" style={style}
+                                    <span className={`wb-crew-chip${hasCon ? ' chip-conflict' : ''}`} style={style}
                                         draggable
                                         onDragStart={(e) => {
                                             e.dataTransfer.setData('text/plain', JSON.stringify({
@@ -6521,11 +6868,18 @@
                                         }}
                                         onDragEnd={(e) => {
                                             e.currentTarget.style.opacity = '1';
-                                        }}>
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            if (hasCon && onShowTooltip) {
+                                                onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                            }
+                                        }}
+                                        onMouseLeave={onHideTooltip}>
                                         {person}
+                                        {hasCon && <span className="conflict-icon">!</span>}
                                         {onRemove && (
                                             <span className="wb-crew-remove"
-                                                onClick={(e) => { e.stopPropagation(); onRemove(eventId, person); }}>
+                                                onClick={(e) => { e.stopPropagation(); if (onHideTooltip) onHideTooltip(); onRemove(eventId, person); }}>
                                                 {'\u00D7'}
                                             </span>
                                         )}
@@ -6623,17 +6977,60 @@
             return '';
         };
 
+        // ─────────────── PendingTimeInput (used by WhiteboardSupervision) ────────
+        // Lightweight input for pending supervision slot times.
+        // Manages its own draft to avoid per-keystroke parent state updates.
+        // onCommit(value) fires once on blur or Enter with the trimmed value.
+        const PendingTimeInput = ({ value, amber, placeholder, onCommit }) => {
+            const [draft, setDraft] = React.useState(value || '');
+            const inputRef = React.useRef(null);
+
+            // Keep draft in sync when value is reset from parent (e.g. day change clears pendingSlots)
+            React.useEffect(() => { setDraft(value || ''); }, [value]);
+
+            const commit = () => {
+                onCommit(draft.trim());
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter') { e.preventDefault(); commit(); if (inputRef.current) inputRef.current.blur(); }
+                else if (e.key === 'Escape') { setDraft(value || ''); if (inputRef.current) inputRef.current.blur(); }
+                // Tab: commit happens on subsequent blur; natural Tab navigation continues
+            };
+
+            const cls = [
+                'wb-pending-time-input',
+                amber ? 'wb-pending-time-amber' : '',
+            ].filter(Boolean).join(' ');
+
+            return (
+                <input ref={inputRef}
+                    type="text"
+                    className={cls}
+                    value={draft}
+                    placeholder={placeholder || 'HH:MM'}
+                    maxLength={5}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onBlur={commit}
+                    onKeyDown={handleKeyDown}
+                    onClick={(e) => e.stopPropagation()}
+                />
+            );
+        };
+
         // ─────────────────────── WhiteboardSupervision ────────────────────────
         const WhiteboardSupervision = ({ events, roster, onEditSave, onAdd, onRemove, onFocusEvent,
-            focusedEventId, highlights, highlightMode, onHighlight, onCreateEvent, onDeleteCustom, activeDay }) => {
+            focusedEventId, highlights, highlightMode, onHighlight, onCreateEvent, onDeleteCustom, activeDay,
+            conflicts, onShowTooltip, onHideTooltip, onDeleteEvent }) => {
             const byDuty = useMemo(() => {
                 const map = {};
                 SUPV_DUTY_ORDER.forEach(d => { map[d] = []; });
                 events.forEach(ev => {
-                    const duty = ev.eventName;
-                    const key = SUPV_DUTY_ORDER.find(d => duty.trim().toUpperCase() === d.toUpperCase())
+                    const duty = (ev.eventName || '').trim();
+                    const key = SUPV_DUTY_ORDER.find(d => duty.toUpperCase() === d.toUpperCase())
                         || SUPV_DUTY_ORDER.find(d => duty.toUpperCase().includes(d.toUpperCase()))
-                        || "Other (As Req'd)";
+                        || duty
+                        || 'Unnamed Duty';
                     if (!map[key]) map[key] = [];
                     map[key].push(ev);
                 });
@@ -6647,6 +7044,44 @@
 
             const maxTriplets = 4;
 
+            // ── Pending slot state ──────────────────────────────────────────────
+            // Shape: { [dutyKey + '_' + slotIndex]: { startTime: '', endTime: '', poc: null } }
+            // Pure UI state — not persisted, not in workingEvents. Cleared on day change.
+            const [pendingSlots, setPendingSlots] = useState({});
+            // Track which POC drop targets are currently being dragged over
+            const [pocDragOver, setPocDragOver] = useState({});
+            // ── Add-supervision-event modal state (T5) ─────────────────────────
+            const [showAddSupvModal, setShowAddSupvModal] = useState(false);
+            const [addSupvDutyName, setAddSupvDutyName] = useState('');
+            const addSupvInputRef = React.useRef(null);
+            // Close modal when clicking outside it
+            React.useEffect(() => {
+                if (!showAddSupvModal) return;
+                const handleDown = (e) => {
+                    if (!e.target.closest('.wb-add-supv-modal') && !e.target.closest('.wb-add-row')) {
+                        setShowAddSupvModal(false);
+                        setAddSupvDutyName('');
+                    }
+                };
+                document.addEventListener('pointerdown', handleDown);
+                return () => document.removeEventListener('pointerdown', handleDown);
+            }, [showAddSupvModal]);
+
+            // Clear pending slot state when the active day changes
+            React.useEffect(() => {
+                setPendingSlots({});
+                setPocDragOver({});
+            }, [activeDay]);
+
+            // Helper: update one field in one pending slot
+            const updatePending = useCallback((slotKey, field, value) => {
+                setPendingSlots(prev => ({
+                    ...prev,
+                    [slotKey]: { startTime: '', endTime: '', poc: null, ...(prev[slotKey] || {}), [field]: value },
+                }));
+            }, []);
+
+
             return (
                 <React.Fragment>
                     <table className="wb-table wb-table-compact">
@@ -6657,10 +7092,10 @@
                                     <col style={{ width: '6%' }} />
                                     <col style={{ width: '4.5%' }} />
                                     <col style={{ width: '4.5%' }} />
+                                    <col style={{ width: 14 }} />{/* Per-triplet delete (T6) */}
                                 </React.Fragment>
                             ))}
                             <col />{/* Notes — remaining (expanded) */}
-                            <col style={{ width: 20 }} />{/* Delete btn */}
                         </colgroup>
                         <thead>
                             <tr>
@@ -6670,84 +7105,330 @@
                                         <th className="wb-supv-group-start">POC</th>
                                         <th>Start</th>
                                         <th>End</th>
+                                        <th></th>{/* delete col */}
                                     </React.Fragment>
                                 ))}
                                 <th className="wb-supv-group-start">Notes</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            {SUPV_DUTY_ORDER.map(duty => {
-                                const evts = byDuty[duty] || [];
-                                const rowEvId = evts[0]?.id || null;
-                                const rowFocusClass = focusedEventId && rowEvId
-                                    ? (evts.some(ev => ev.id === focusedEventId) ? 'wb-row-focused' : 'wb-row-dimmed')
-                                    : '';
-                                return (
-                                    <tr key={duty} className={rowFocusClass || undefined}
-                                        style={{ cursor: 'pointer' }}
-                                        onClick={(e) => {
-                                            const tag = e.target.tagName;
-                                            if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'LABEL' || tag === 'SELECT') return;
-                                            if (e.target.closest('.wb-crew-chip') || e.target.closest('.wb-remove-btn') ||
-                                                e.target.closest('.wb-checkbox') || e.target.closest('.placeholder-chip') ||
-                                                e.target.closest('.wb-add-btn') || e.target.closest('.wb-delete-btn')) return;
-                                            if (!rowEvId) return;
-                                            if (onFocusEvent) onFocusEvent(evts.some(ev => ev.id === focusedEventId) ? null : rowEvId);
-                                        }}>
-                                        <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.6rem' }}>{duty}</td>
-                                        {Array.from({ length: maxTriplets }, (_, i) => {
-                                            const ev = evts[i];
-                                            if (!ev) return (
-                                                <React.Fragment key={i}><td className="wb-supv-group-start"></td><td></td><td></td></React.Fragment>
-                                            );
-                                            return (
-                                                <React.Fragment key={i}>
-                                                    <WhiteboardCrewCell person={ev.personnel[0] || null}
-                                                        eventId={ev.id} slotIndex={0} roster={roster}
-                                                        onAdd={onAdd} onRemove={onRemove} onFocusEvent={onFocusEvent}
-                                                        highlight={highlights ? highlights[`${ev.id}:crew:0`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight}
-                                                        className="wb-supv-group-start" />
-                                                    <WhiteboardCell value={ev.startTime} field="startTime" eventId={ev.id} type="time"
-                                                        onSave={handleCellSave}
-                                                        highlight={highlights ? highlights[`${ev.id}:startTime`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight} />
-                                                    <WhiteboardCell value={ev.endTime} field="endTime" eventId={ev.id} type="time"
-                                                        onSave={handleCellSave}
-                                                        highlight={highlights ? highlights[`${ev.id}:endTime`] : null}
-                                                        highlightMode={highlightMode}
-                                                        onHighlight={onHighlight} />
-                                                </React.Fragment>
-                                            );
-                                        })}
-                                        <WhiteboardCell value={evts[0]?.notes || ''} field="notes"
-                                            eventId={evts[0]?.id} type="text" onSave={handleCellSave}
-                                            highlight={highlights && evts[0] ? highlights[`${evts[0].id}:notes`] : null}
-                                            highlightMode={highlightMode}
-                                            onHighlight={onHighlight}
-                                            className="wb-supv-group-start" />
-                                        <td>
-                                            {evts.some(ev => ev.isCustom) && onDeleteCustom && (
-                                                <span className="wb-delete-btn"
-                                                    onClick={() => {
-                                                        const customEv = evts.find(ev => ev.isCustom);
-                                                        if (customEv) onDeleteCustom(customEv.id);
-                                                    }}
-                                                    title="Remove custom event">{'\u2715'}</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {(() => {
+                                // Shared row renderer — used for both fixed-order and dynamic rows
+                                const renderRow = (duty) => {
+                                    const evts = byDuty[duty] || [];
+                                    const rowEvId = evts[0]?.id || null;
+                                    const rowFocusClass = focusedEventId && rowEvId
+                                        ? (evts.some(ev => ev.id === focusedEventId) ? 'wb-row-focused' : 'wb-row-dimmed')
+                                        : '';
+                                    return (
+                                        <tr key={duty} className={rowFocusClass || undefined}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={(e) => {
+                                                const tag = e.target.tagName;
+                                                if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'LABEL' || tag === 'SELECT') return;
+                                                if (e.target.closest('.wb-crew-chip') || e.target.closest('.wb-remove-btn') ||
+                                                    e.target.closest('.wb-checkbox') || e.target.closest('.placeholder-chip') ||
+                                                    e.target.closest('.wb-add-btn') || e.target.closest('.wb-delete-btn')) return;
+                                                if (e.target.closest('.wb-pending-poc-cell') || e.target.closest('.wb-pending-time-td')) return;
+                                                if (!rowEvId) return;
+                                                if (onFocusEvent) onFocusEvent(evts.some(ev => ev.id === focusedEventId) ? null : rowEvId);
+                                            }}>
+                                            <td style={{ fontWeight: 600, whiteSpace: 'nowrap', fontSize: '0.6rem' }}>{duty}</td>
+                                            {Array.from({ length: maxTriplets }, (_, i) => {
+                                                const ev = evts[i];
+                                                if (ev) {
+                                                    // Occupied triplet — existing event with per-triplet delete (T6)
+                                                    const handleTripletDelete = (e) => {
+                                                        e.stopPropagation();
+                                                        if (ev.isCustom && onDeleteCustom) {
+                                                            onDeleteCustom(ev.id);
+                                                        } else if (!ev.isCustom && onDeleteEvent) {
+                                                            onDeleteEvent(ev);
+                                                        }
+                                                    };
+                                                    return (
+                                                        <React.Fragment key={i}>
+                                                            <WhiteboardCrewCell person={ev.personnel[0] || null}
+                                                                eventId={ev.id} slotIndex={0} roster={roster}
+                                                                onAdd={onAdd} onRemove={onRemove} onFocusEvent={onFocusEvent}
+                                                                highlight={highlights ? highlights[`${ev.id}:crew:0`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight}
+                                                                className="wb-supv-group-start"
+                                                                conflicts={conflicts}
+                                                                onShowTooltip={onShowTooltip}
+                                                                onHideTooltip={onHideTooltip} />
+                                                            <WhiteboardCell value={ev.startTime} field="startTime" eventId={ev.id} type="time"
+                                                                onSave={handleCellSave}
+                                                                highlight={highlights ? highlights[`${ev.id}:startTime`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight} />
+                                                            <WhiteboardCell value={ev.endTime} field="endTime" eventId={ev.id} type="time"
+                                                                onSave={handleCellSave}
+                                                                highlight={highlights ? highlights[`${ev.id}:endTime`] : null}
+                                                                highlightMode={highlightMode}
+                                                                onHighlight={onHighlight} />
+                                                            <td className="wb-supv-triplet-del-cell">
+                                                                <span className="wb-delete-btn"
+                                                                    onClick={handleTripletDelete}
+                                                                    title="Remove this event">{'\u2715'}</span>
+                                                            </td>
+                                                        </React.Fragment>
+                                                    );
+                                                }
+
+                                                // ── Empty triplet slot — editable pending state ──────────────
+                                                const slotKey = `${duty}_${i}`;
+                                                const slot = pendingSlots[slotKey] || { startTime: '', endTime: '', poc: null };
+                                                const stVal = slot.startTime || '';
+                                                const etVal = slot.endTime   || '';
+                                                // Amber highlighting rules:
+                                                // 1. A time field is empty and the OTHER time field has any content
+                                                // 2. A time field has content but it fails TIME_RE (invalid format)
+                                                // A stored POC alone does NOT trigger amber on times.
+                                                const stOk = !!(stVal && TIME_RE.test(stVal));
+                                                const etOk = !!(etVal && TIME_RE.test(etVal));
+                                                const anyTimeContent = !!(stVal || etVal);
+                                                const stAmber = !!(anyTimeContent && !stOk);
+                                                const etAmber = !!(anyTimeContent && !etOk);
+
+                                                // POC cell drop handlers
+                                                const handlePocDragOver = (e) => {
+                                                    e.preventDefault();
+                                                    e.dataTransfer.dropEffect = 'copy';
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: true }));
+                                                };
+                                                const handlePocDragLeave = () => {
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: false }));
+                                                };
+                                                const handlePocDrop = (e) => {
+                                                    e.preventDefault();
+                                                    setPocDragOver(prev => ({ ...prev, [slotKey]: false }));
+                                                    const raw = e.dataTransfer.getData('text/plain');
+                                                    if (!raw) return;
+                                                    let personName = raw;
+                                                    let sourceId = null;
+                                                    try {
+                                                        const parsed = JSON.parse(raw);
+                                                        if (parsed.isBlankPuck) return;
+                                                        personName = parsed.person || raw;
+                                                        sourceId = parsed.sourceEventId || null;
+                                                    } catch(ignored) {}
+                                                    if (!personName) return;
+                                                    // Build the current slot state with the new POC
+                                                    const updatedSlot = { startTime: '', endTime: '', poc: null, ...slot, poc: personName };
+                                                    // If both times are already present + valid → create event immediately
+                                                    const st = (updatedSlot.startTime || '').trim();
+                                                    const et = (updatedSlot.endTime   || '').trim();
+                                                    if (st && et && TIME_RE.test(st) && TIME_RE.test(et)) {
+                                                        // Times already satisfied — create event with poc included
+                                                        if (onCreateEvent) {
+                                                            // If person came from another event, remove them from source
+                                                            if (sourceId && onRemove) onRemove(sourceId, personName);
+                                                            const personnel = [personName];
+                                                            onCreateEvent('Supervision', activeDay, {
+                                                                eventName: duty,
+                                                                startTime: st,
+                                                                endTime:   et,
+                                                                personnel,
+                                                                originalPersonnel: [...personnel],
+                                                            });
+                                                            setPendingSlots(prev => {
+                                                                const next = { ...prev };
+                                                                delete next[slotKey];
+                                                                return next;
+                                                            });
+                                                        }
+                                                    } else {
+                                                        // Times not yet set — store poc for later; if person came from source event, do NOT remove yet
+                                                        setPendingSlots(prev => ({
+                                                            ...prev,
+                                                            [slotKey]: { ...updatedSlot, pocSourceId: sourceId },
+                                                        }));
+                                                    }
+                                                };
+
+                                                // Time input commit handler — checks if both times now present
+                                                const handleTimeCommit = (field, rawValue) => {
+                                                    const trimmed = rawValue.trim();
+                                                    const updatedSlot = {
+                                                        startTime: '', endTime: '', poc: null,
+                                                        ...slot,
+                                                        [field]: trimmed,
+                                                    };
+                                                    // Validate — if invalid, just store (amber border will show)
+                                                    if (trimmed && !TIME_RE.test(trimmed)) {
+                                                        // Store as-is; amber border via stAmber/etAmber check above will remain
+                                                        setPendingSlots(prev => ({
+                                                            ...prev,
+                                                            [slotKey]: updatedSlot,
+                                                        }));
+                                                        return;
+                                                    }
+                                                    // Save the new value first
+                                                    setPendingSlots(prev => ({
+                                                        ...prev,
+                                                        [slotKey]: updatedSlot,
+                                                    }));
+                                                    // Then attempt creation if both times are now set + valid
+                                                    const st = (updatedSlot.startTime || '').trim();
+                                                    const et = (updatedSlot.endTime   || '').trim();
+                                                    if (st && et && TIME_RE.test(st) && TIME_RE.test(et)) {
+                                                        if (onCreateEvent) {
+                                                            // If the POC was dragged from an existing event, remove them from source now
+                                                            if (updatedSlot.pocSourceId && updatedSlot.poc && onRemove) {
+                                                                onRemove(updatedSlot.pocSourceId, updatedSlot.poc);
+                                                            }
+                                                            const personnel = updatedSlot.poc ? [updatedSlot.poc] : [];
+                                                            onCreateEvent('Supervision', activeDay, {
+                                                                eventName: duty,
+                                                                startTime: st,
+                                                                endTime:   et,
+                                                                personnel,
+                                                                originalPersonnel: [...personnel],
+                                                            });
+                                                            setPendingSlots(prev => {
+                                                                const next = { ...prev };
+                                                                delete next[slotKey];
+                                                                return next;
+                                                            });
+                                                        }
+                                                    }
+                                                };
+
+                                                return (
+                                                    <React.Fragment key={i}>
+                                                        {/* Empty POC cell — drop target */}
+                                                        <td className="wb-pending-poc-cell"
+                                                            onDragOver={handlePocDragOver}
+                                                            onDragLeave={handlePocDragLeave}
+                                                            onDrop={handlePocDrop}>
+                                                            {slot.poc ? (
+                                                                <span className="wb-pending-poc-stored"
+                                                                    style={chipColor(slot.poc, roster) ? {
+                                                                        background: chipColor(slot.poc, roster).bg,
+                                                                        color: chipColor(slot.poc, roster).text,
+                                                                    } : {}}>
+                                                                    {slot.poc}
+                                                                    <span className="wb-pending-poc-remove"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            updatePending(slotKey, 'poc', null);
+                                                                        }}
+                                                                        title="Remove pending POC">{'\u00D7'}</span>
+                                                                </span>
+                                                            ) : (
+                                                                <span className={[
+                                                                    'wb-pending-poc-drop',
+                                                                    pocDragOver[slotKey] ? 'wb-pending-poc-dragover' : '',
+                                                                ].filter(Boolean).join(' ')}
+                                                                    title="Drop a person here to set as POC">
+                                                                    +
+                                                                </span>
+                                                            )}
+                                                        </td>
+                                                        {/* Pending Start time input */}
+                                                        <td className="wb-pending-time-td">
+                                                            <PendingTimeInput
+                                                                value={stVal}
+                                                                amber={stAmber}
+                                                                placeholder="Start"
+                                                                onCommit={(v) => handleTimeCommit('startTime', v)}
+                                                            />
+                                                        </td>
+                                                        {/* Pending End time input */}
+                                                        <td className="wb-pending-time-td">
+                                                            <PendingTimeInput
+                                                                value={etVal}
+                                                                amber={etAmber}
+                                                                placeholder="End"
+                                                                onCommit={(v) => handleTimeCommit('endTime', v)}
+                                                            />
+                                                        </td>
+                                                        {/* Empty delete cell — pending slot has no event to delete yet */}
+                                                        <td className="wb-supv-triplet-del-cell"></td>
+                                                    </React.Fragment>
+                                                );
+                                            })}
+                                            <WhiteboardCell value={evts[0]?.notes || ''} field="notes"
+                                                eventId={evts[0]?.id} type="text" onSave={handleCellSave}
+                                                highlight={highlights && evts[0] ? highlights[`${evts[0].id}:notes`] : null}
+                                                highlightMode={highlightMode}
+                                                onHighlight={onHighlight}
+                                                className="wb-supv-group-start" />
+                                        </tr>
+                                    );
+                                };
+                                // Fixed rows in canonical SUPV_DUTY_ORDER
+                                const fixedRows = SUPV_DUTY_ORDER.map(duty => renderRow(duty));
+                                // Dynamic rows: duty keys not in SUPV_DUTY_ORDER (custom/unrecognized duties)
+                                // Rendered in insertion order (Object.keys preserves insertion order in V8)
+                                const dynamicKeys = Object.keys(byDuty).filter(k => !SUPV_DUTY_ORDER.includes(k));
+                                const dynamicRows = dynamicKeys.map(duty => renderRow(duty));
+                                return [...fixedRows, ...dynamicRows];
+                            })()}
                         </tbody>
                     </table>
                     {onCreateEvent && (
-                        <button className="wb-add-row" onClick={() => onCreateEvent('Supervision', activeDay)}>
-                            + Add Supervision Event
-                        </button>
+                        <div className="wb-add-supv-modal-wrap">
+                            {showAddSupvModal && (
+                                <div className="wb-add-supv-modal" onClick={e => e.stopPropagation()}>
+                                    <div className="wb-add-supv-modal-title">Add Supervision Event</div>
+                                    <input
+                                        ref={addSupvInputRef}
+                                        className="wb-add-supv-modal-input"
+                                        type="text"
+                                        placeholder="Custom duty name..."
+                                        value={addSupvDutyName}
+                                        onChange={e => setAddSupvDutyName(e.target.value)}
+                                        onKeyDown={e => {
+                                            if (e.key === 'Enter' && addSupvDutyName.trim()) {
+                                                onCreateEvent('Supervision', activeDay, { eventName: addSupvDutyName.trim() });
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            } else if (e.key === 'Escape') {
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            }
+                                        }}
+                                    />
+                                    <div className="wb-add-supv-modal-chips">
+                                        {SUPV_DUTY_ORDER.map(duty => (
+                                            <span key={duty} className="wb-add-supv-chip"
+                                                onClick={() => {
+                                                    onCreateEvent('Supervision', activeDay, { eventName: duty });
+                                                    setShowAddSupvModal(false);
+                                                    setAddSupvDutyName('');
+                                                }}>{duty}</span>
+                                        ))}
+                                    </div>
+                                    <div className="wb-add-supv-modal-actions">
+                                        <button className="wb-add-supv-btn-cancel"
+                                            onClick={() => { setShowAddSupvModal(false); setAddSupvDutyName(''); }}>
+                                            Cancel
+                                        </button>
+                                        <button className="wb-add-supv-btn-create"
+                                            disabled={!addSupvDutyName.trim()}
+                                            onClick={() => {
+                                                if (!addSupvDutyName.trim()) return;
+                                                onCreateEvent('Supervision', activeDay, { eventName: addSupvDutyName.trim() });
+                                                setShowAddSupvModal(false);
+                                                setAddSupvDutyName('');
+                                            }}>
+                                            Create
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            <button className="wb-add-row" onClick={() => {
+                                setAddSupvDutyName('');
+                                setShowAddSupvModal(prev => !prev);
+                                // Focus input after render
+                                requestAnimationFrame(() => { if (addSupvInputRef.current) addSupvInputRef.current.focus(); });
+                            }}>
+                                + Add Supervision Event
+                            </button>
+                        </div>
                     )}
                 </React.Fragment>
             );
@@ -6758,7 +7439,8 @@
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -6856,7 +7538,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(6)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -6892,7 +7577,8 @@
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -6975,7 +7661,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(3)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -7058,7 +7747,8 @@
             onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
             onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
-            highlights, highlightMode, onHighlight, activeDay }) => {
+            highlights, highlightMode, onHighlight, activeDay,
+            conflicts, onShowTooltip, onHideTooltip }) => {
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -7135,7 +7825,10 @@
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
                                             highlights={highlights} highlightMode={highlightMode}
-                                            onHighlight={onHighlight} />
+                                            onHighlight={onHighlight}
+                                            conflicts={conflicts}
+                                            onShowTooltip={onShowTooltip}
+                                            onHideTooltip={onHideTooltip} />
                                         <WhiteboardCell {...makeTab(3)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
@@ -7187,6 +7880,28 @@
             React.useEffect(() => {
                 setDutyState(loadDutyForDay(String(activeDay ?? '')));
             }, [activeDay]);
+
+            // Seed duty pucks from API-parsed FOA/AUTH supervision events when localStorage is empty.
+            // Runs when activeDay or workingEvents change. Does NOT overwrite existing user assignments.
+            React.useEffect(() => {
+                if (!activeDay) return;
+                const dayKey = String(activeDay);
+                const stored = loadDutyForDay(dayKey);
+                // Only seed if both slots are empty (user has not made any assignments for this day)
+                if (stored.foa.length > 0 || stored.auth.length > 0) return;
+                const dayEvts = workingEvents.filter(ev => ev.date === activeDay && ev.section === 'Supervision');
+                const foaEv   = dayEvts.find(ev => /^FOA$/i.test(ev.eventName || ''));
+                const authEv  = dayEvts.find(ev => /^AUTH$/i.test(ev.eventName || ''));
+                const foaPerson  = foaEv  && foaEv.personnel[0]  ? foaEv.personnel[0]  : null;
+                const authPerson = authEv && authEv.personnel[0] ? authEv.personnel[0] : null;
+                if (!foaPerson && !authPerson) return; // nothing to seed
+                const seeded = {
+                    foa:  foaPerson  ? [foaPerson]  : [],
+                    auth: authPerson ? [authPerson] : [],
+                };
+                setDutyState(seeded);
+                saveDutyForDay(dayKey, seeded);
+            }, [activeDay, workingEvents]);
 
             const updateDuty = (slot, newList) => {
                 const next = { ...dutyState, [slot]: newList };
@@ -7297,6 +8012,10 @@
                 bySection.Academics = [];
                 workingEvents.forEach(ev => {
                     if (ev.date !== activeDay) return;
+                    // T4: FOA/AUTH events (section=Supervision, startTime=null) are displayed as
+                    // date/title bar pills via foaByDate — exclude them from whiteboard table rows.
+                    if (ev.section === 'Supervision' && ev.startTime === null &&
+                        /^(FOA|AUTH)$/i.test(ev.eventName || '')) return;
                     if (bySection[ev.section] !== undefined) bySection[ev.section].push(ev);
                 });
                 // Sort events but keep newly-created (blank name) events at the bottom
@@ -7364,7 +8083,7 @@
                 return () => document.removeEventListener('pointerdown', handleDown);
             }, [pickerTarget]);
 
-            const handleCreateWbEvent = useCallback((section, date) => {
+            const handleCreateWbEvent = useCallback((section, date, extraFields) => {
                 const id = 'custom-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5);
                 const ev = {
                     id, section, date,
@@ -7382,6 +8101,7 @@
                     cancelled: false,
                     effective: false,
                     partiallyEffective: false,
+                    ...(extraFields || {}),
                 };
                 onCreateEvent(ev);
             }, [onCreateEvent]);
@@ -7480,7 +8200,11 @@
                                                 onHighlight={handleHighlightCellClick}
                                                 onCreateEvent={handleCreateWbEvent}
                                                 onDeleteCustom={onDeleteCustom}
-                                                activeDay={activeDay} />
+                                                onDeleteEvent={onDeleteEvent}
+                                                activeDay={activeDay}
+                                                conflicts={conflicts}
+                                                onShowTooltip={onShowTooltip}
+                                                onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
                                             <WhiteboardAcademics events={acadEvts} roster={roster} />
@@ -7498,7 +8222,9 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : sec === 'Ground' ? (
                                     <WhiteboardGround events={evts} roster={roster} conflicts={conflicts}
                                         onEditSave={onEditSave} onStatusChange={onStatusChange}
@@ -7511,7 +8237,9 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : sec === 'NA' ? (
                                     <WhiteboardNA events={evts} roster={roster}
                                         onEditSave={onEditSave} onAdd={onAdd} onRemove={onRemove}
@@ -7523,7 +8251,10 @@
                                         onFillPlaceholder={onFillPlaceholder}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
-                                        activeDay={activeDay} />
+                                        activeDay={activeDay}
+                                        conflicts={conflicts}
+                                        onShowTooltip={onShowTooltip}
+                                        onHideTooltip={onHideTooltip} />
                                 ) : null}
                             </div>
                         );
@@ -7534,7 +8265,7 @@
 
         // ─── SCHEDULER VIEW ───
 
-        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard }) => {
+        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive }) => {
             const [workingEvents, setWorkingEvents] = useState([]);
             const [changes, setChanges] = useState([]);
             const [savedShow, setSavedShow] = useState(false);
@@ -7604,7 +8335,7 @@
                             eventTime: ev.startTime,
                             eventSection: ev.section,
                             date: ev.date,
-                            before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime },
+                            before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime, notes: ev.notes },
                             after: updates,
                         }]);
                     }
@@ -7693,7 +8424,7 @@
                     setChanges([]);
                 }
                 // Save selections immediately so they persist across refresh
-                saveState([], initialSelectedIds, initialNaCats, allEvents);
+                saveState([], initialSelectedIds, initialNaCats, allEvents, selectAllActive);
                 // Use requestAnimationFrame to ensure state is settled before enabling change tracking
                 requestAnimationFrame(() => { initialized.current = true; });
             }, [allEvents]);
@@ -7714,15 +8445,57 @@
             }, [workingEvents, initialSelectedIds, initialNaCats, roster]);
 
             // Events by date
+            // Guard: skip events with null startTime (e.g. FOA/AUTH supervision footer rows).
+            // Those events are already displayed as DayColumn header pills via foaByDate.
+            // Passing them to EventCard would produce NaN left/width values (timePct(null) = NaN).
             const eventsByDate = useMemo(() => {
                 const m = {};
                 dates.forEach(d => { m[d] = []; });
-                visibleEvents.forEach(ev => { if (m[ev.date]) m[ev.date].push(ev); });
+                visibleEvents.forEach(ev => {
+                    if (ev.startTime == null) return;
+                    if (m[ev.date]) m[ev.date].push(ev);
+                });
                 return m;
             }, [visibleEvents, dates]);
 
+            // FOA/AUTH per date — scan workingEvents for supervision events named 'FOA' / 'AUTH'
+            // Derived from ALL workingEvents (not filtered visibleEvents) so chips always appear
+            // even when the Supervision section is not selected in the event picker.
+            const foaByDate = useMemo(() => {
+                const m = {};
+                dates.forEach(d => { m[d] = { foa: null, auth: null }; });
+                workingEvents.forEach(ev => {
+                    if (ev.section !== 'Supervision') return;
+                    if (!m[ev.date]) return;
+                    if (/^FOA$/i.test(ev.eventName || '') && ev.personnel[0]) {
+                        m[ev.date].foa = ev.personnel[0];
+                    } else if (/^AUTH$/i.test(ev.eventName || '') && ev.personnel[0]) {
+                        m[ev.date].auth = ev.personnel[0];
+                    }
+                });
+                return m;
+            }, [workingEvents, dates]);
+
             // Conflict detection on ALL events
             const conflicts = useMemo(() => detectConflicts(workingEvents), [workingEvents]);
+
+            // Day-scoped conflict map for whiteboard view — filters to only conflicts where the
+            // conflicting event shares the currently active whiteboard day. Cross-day conflicts
+            // are noise in whiteboard mode (which shows one day at a time).
+            const wbDayConflicts = useMemo(() => {
+                const resolvedDay = wbActiveDay || (dates && (dates.includes(today) ? today : dates[0]));
+                if (!resolvedDay || !conflicts) return conflicts;
+                const filtered = new Map();
+                conflicts.forEach((personMap, eventId) => {
+                    const filteredPersonMap = new Map();
+                    personMap.forEach((entries, person) => {
+                        const filteredEntries = entries.filter(c => c.date === resolvedDay);
+                        if (filteredEntries.length > 0) filteredPersonMap.set(person, filteredEntries);
+                    });
+                    if (filteredPersonMap.size > 0) filtered.set(eventId, filteredPersonMap);
+                });
+                return filtered;
+            }, [conflicts, wbActiveDay, dates, today]);
 
             // Focus mode: compute who is unavailable during the focused event's time window
             const focusedAvailability = useMemo(() => {
@@ -7744,6 +8517,7 @@
                 workingEvents.forEach(ev => {
                     if (ev.id === focusedEventId) return;
                     if (ev.date !== fDate) return;
+                    if (ev.cancelled) return; // T1: cancelled events do not block availability
                     const eS = evStart(ev); const eE = evEnd(ev);
                     if (eS == null || fStart == null) return;
                     if (eS < fEnd && eE > fStart) {
@@ -7768,7 +8542,7 @@
             // Auto-save changes + full working copy
             useEffect(() => {
                 if (!initialized.current) return;
-                saveState(changes, initialSelectedIds, initialNaCats, allEvents);
+                saveState(changes, initialSelectedIds, initialNaCats, allEvents, selectAllActive);
                 saveWorkingCopy(workingEvents, changes, allEvents, roster, dates, initialSelectedIds, initialNaCats);
                 if (changes.length > 0) {
                     setSavedShow(true);
@@ -7928,7 +8702,13 @@
                         }
                         if (ch.type === 'event-edit') {
                             const ev = next.find(e => e.id === ch.eventId);
-                            if (ev && ch.before) Object.assign(ev, ch.before);
+                            if (ev && ch.before) {
+                                // Only restore fields actually present in the snapshot (avoids setting
+                                // ev.notes = undefined on old change entries that predate the notes field)
+                                Object.keys(ch.before).forEach(k => {
+                                    if (Object.prototype.hasOwnProperty.call(ch.before, k)) ev[k] = ch.before[k];
+                                });
+                            }
                             return;
                         }
                         if (ch.type === 'event-delete') {
@@ -8037,10 +8817,11 @@
             };
 
             const conflictCount = useMemo(() => {
+                const src = viewMode === 'whiteboard' ? wbDayConflicts : conflicts;
                 const people = new Set();
-                conflicts.forEach(pm => pm.forEach((_, p) => people.add(p)));
+                src.forEach(pm => pm.forEach((_, p) => people.add(p)));
                 return people.size;
-            }, [conflicts]);
+            }, [conflicts, wbDayConflicts, viewMode]);
 
             const today = new Date().toISOString().slice(0, 10);
 
@@ -8063,7 +8844,7 @@
                                             className="text-red-400 ml-2"
                                             title="View conflict summary"
                                         >
-                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}
+                                            &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}{viewMode === 'whiteboard' ? ' (today)' : ''}
                                         </button>
                                     )}
                                 </p>
@@ -8122,6 +8903,7 @@
                                     events={eventsByDate[date] || []}
                                     roster={roster}
                                     conflicts={conflicts}
+                                    foaAuth={foaByDate[date] || { foa: null, auth: null }}
                                     onRemove={handleRemove}
                                     onAdd={handleAdd}
                                     onShowTooltip={showTooltip}
@@ -8140,7 +8922,7 @@
                     </div>
 
                     <div style={{ gridColumn: 1, gridRow: 3, display: (viewMode !== 'timeline' && viewMode !== 'whiteboard') ? 'none' : undefined }}>
-                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
+                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
                     </div>
 
                     {/* Rainbow: always mounted for state preservation but hidden when not active */}
@@ -8153,7 +8935,7 @@
                         <WhiteboardView
                             workingEvents={workingEvents}
                             roster={roster}
-                            conflicts={conflicts}
+                            conflicts={wbDayConflicts}
                             dates={dates}
                             today={today}
                             activeDay={wbActiveDay || (dates && (dates.includes(today) ? today : dates[0]))}
@@ -8228,7 +9010,7 @@
 
                     {showConflictSummary && (
                         <ConflictSummaryModal
-                            conflicts={conflicts}
+                            conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts}
                             workingEvents={workingEvents}
                             onClose={() => setShowConflictSummary(false)}
                         />
@@ -8294,6 +9076,7 @@
             const [dates, setDates] = useState([]);
             const [selectedIds, setSelectedIds] = useState(new Set());
             const [naCats, setNaCats] = useState(new Set());
+            const [selectAllActive, setSelectAllActive] = useState(false); // T7
             const [progress, setProgress] = useState('Initializing...');
             const [error, setError] = useState(null);
             const [cachedWorkingState, setCachedWorkingState] = useState(null);
@@ -8344,6 +9127,13 @@
                         loadedEvents.forEach(ev => {
                             if (keySet.has(eventNaturalKey(ev))) matchedIds.add(ev.id);
                         });
+                        // T7: if select-all was active, also auto-select any new events not in previous selection
+                        if (savedSelections.selectAllActive) {
+                            loadedEvents.forEach(ev => {
+                                if (!ev.readonly && ev.section !== 'NA') matchedIds.add(ev.id);
+                            });
+                            setSelectAllActive(true);
+                        }
                         if (matchedIds.size > 0) {
                             setSelectedIds(matchedIds);
                             setNaCats(savedSelections.naCats || new Set());
@@ -8424,6 +9214,7 @@
                             if (matchedIds.size > 0) {
                                 setSelectedIds(matchedIds);
                                 setNaCats(saved.naCats || new Set());
+                                if (saved.selectAllActive) setSelectAllActive(true); // T7
                                 setScreen('scheduler');
                                 return;
                             }
@@ -8437,9 +9228,19 @@
                 load();
             }, []);
 
-            const handleContinue = (ids, cats) => {
+            const handleContinue = (ids, cats, selAllActive) => {
                 setSelectedIds(ids);
                 setNaCats(cats);
+                setSelectAllActive(!!selAllActive); // T7
+                // Save the selectAllActive flag to persistent state immediately
+                saveState([], ids, cats, allEvents, !!selAllActive);
+                // T3: preserve working changes across edit-selection round-trip.
+                // Reload any saved working copy so SchedulerView restores from cache
+                // rather than reinitializing from allEvents (which would discard changes).
+                const existingCache = loadWorkingCopy();
+                if (existingCache && existingCache.workingEvents.length > 0) {
+                    setCachedWorkingState(existingCache);
+                }
                 setScreen('scheduler');
             };
 
@@ -8481,6 +9282,7 @@
                         onContinue={handleContinue}
                         initialSelected={selectedIds}
                         initialNaCats={naCats}
+                        initialSelectAllActive={selectAllActive}
                     />
                     </>
                 );
@@ -8495,9 +9297,10 @@
                     dates={dates}
                     initialSelectedIds={selectedIds}
                     initialNaCats={naCats}
-                    onChangeSelection={() => { clearWorkingCopy(); setScreen('selection'); }}
+                    onChangeSelection={() => { setScreen('selection'); }}
                     cachedWorkingState={cachedWorkingState}
                     onRefreshFromWhiteboard={refreshFromWhiteboard}
+                    selectAllActive={selectAllActive}
                 />
                 </>
             );
