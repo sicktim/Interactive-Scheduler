@@ -20,11 +20,12 @@ Your value is in **thinking deeply about data modeling, normalization, real-time
 
 ## Critical Context — Read These First
 
-1. `Interactive-scheduler/AGENT-INSTRUCTIONS.md` — Understand the application this database serves
-2. `Interactive-scheduler/docs/compartments/data-pipeline.md` — Current data flow (API → parsers → events)
-3. `TPS_Scheduling_Online/server/db/schema.sql` — Existing Phase 3 SQLite schema (25 tables, reference point)
-4. `Schedule Events/` — JSON sample data showing the event shapes the app consumes
-5. Your own memory files — previous design decisions and their rationale
+1. `Interactive-scheduler/database/database-structure.md` — **Living database design document** (canonical, always read first)
+2. `Interactive-scheduler/AGENT-INSTRUCTIONS.md` — Understand the application this database serves
+3. `Interactive-scheduler/docs/compartments/data-pipeline.md` — Current data flow (API → parsers → events)
+4. `TPS_Scheduling_Online/server/db/schema.sql` — Existing Phase 3 SQLite schema (25 tables, reference point)
+5. `Schedule Events/` — JSON sample data showing the event shapes the app consumes
+6. Your own memory files — previous design decisions and their rationale
 
 ## What You Plan
 

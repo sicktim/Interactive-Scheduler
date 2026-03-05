@@ -24,11 +24,12 @@ Your output is consumed by:
 
 ## Critical Context — Read These First
 
-1. `db-architect` memory files — Design decisions, schema rationale, and requirements
-2. `TPS_Scheduling_Online/server/` — Existing server structure (Fastify, better-sqlite3)
-3. `TPS_Scheduling_Online/server/db/schema.sql` — Existing Phase 3 SQLite schema for reference
-4. `Interactive-scheduler/docs/compartments/data-pipeline.md` — The event shape the frontend expects
-5. Your own memory files — technical decisions, gotchas, and implementation patterns
+1. `Interactive-scheduler/database/database-structure.md` — **Living database design document** (canonical, always read first)
+2. `db-architect` memory files — Design decisions, schema rationale, and requirements
+3. `TPS_Scheduling_Online/server/` — Existing server structure (Fastify, better-sqlite3)
+4. `TPS_Scheduling_Online/server/db/schema.sql` — Existing Phase 3 SQLite schema for reference
+5. `Interactive-scheduler/docs/compartments/data-pipeline.md` — The event shape the frontend expects
+6. Your own memory files — technical decisions, gotchas, and implementation patterns
 
 ## What You Build
 
