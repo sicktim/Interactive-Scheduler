@@ -1,0 +1,15 @@
+{
+  "name": "tps-local-api",
+  "version": "1.0.0",
+  "description": "Local PostgreSQL API server for TPS Interactive Scheduler — GAS-compatible responses",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.2",
+    "fastify": "^5.3.2",
+    "pg": "^8.14.1"
+  }
+}
