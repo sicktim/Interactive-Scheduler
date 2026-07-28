@@ -1,5 +1,25 @@
 # Rainbow View Compartment
 
+> **v4.3.0 update — Crew Rainbow v6.3 parity merge.** The refined standalone TPS Crew Rainbow
+> (github.com/sicktim/Schedule-Gantt, v6.3) was merged into this view. New since this doc's
+> line references were written (line refs below are stale; concepts remain valid):
+> - Per-person weekly Fly/Gnd **workload counters** in the name column, with **This Wk / Next Wk**
+>   checkbox toggles in the PERSONNEL corner (Sun–Sat weeks, America/Los_Angeles, Monday `M/DD`
+>   labels, cancelled events counted — intentional v6.3 parity).
+> - **Today header highlight** (blue top border + tint) and a dashed **Pacific now-line** in
+>   today's column (06:00–18:00 only; frozen at render).
+> - **Cancelled bars**: type color kept at 0.4 opacity + strike-through label + ` [CANCELLED]`
+>   tooltip suffix (replaces the old red-tint override).
+> - **Person modal**: click a name → two-week schedule (Academics excluded, cancelled struck).
+> - **Event modal**: now shows Date, Notes (yellow panel), CANCELLED chip.
+> - **Pan-to-scroll** grab on the grid (5px click-vs-drag threshold; empty-grid click clears
+>   the marker/range).
+> - **Personnel status notes** (yellow, cell bottom) + Notes pill — dormant until a
+>   `personnelStatuses` prop is supplied (the batch feed lacks `personnelNotes` today).
+> - Geometry: headers 44px → **54px** (grid-line top 55px), name column 160px → **190px**
+>   (marker offset formula `191 + i*301`). New helpers are `rb`-prefixed module-level consts.
+> - Full feature spec + replication contract: see **`AI-CONTEXT.md`** at repo root.
+
 ## Purpose
 
 The Rainbow view is a personnel-centric read-only Gantt chart. Where the Timeline view organizes events by section (Flying/Ground/NA/Supervision) and date column, the Rainbow view pivots the data: each row is a single roster member, each column is a date, and horizontal event bars show that person's schedule for that day across the full 06:00–18:00 window. Its primary scheduling use-case is spotting crew overloads and open time slots at a glance, matching the visual pattern of `GUI HTML/index.html`.

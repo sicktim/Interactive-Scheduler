@@ -2,6 +2,46 @@
 
 ---
 
+## v4.3.0 — Crew Rainbow v6.3 Parity Merge
+
+Merged the refined standalone TPS Crew Rainbow (sicktim.github.io/Schedule-Gantt, v6.3 on
+`feature/workload-tracking`) into the Rainbow view. All features are driven by the app's
+canonical event pipeline — no second data source. Layout kept the scheduler's CSS-sticky
+single-grid architecture (display:none-safe) instead of the standalone's JS height-synced
+two-panel layout; the standalone's features were ported onto it.
+
+### New Features (Rainbow)
+- **Weekly workload counters** — per-person Fly (green) / Gnd (amber) counts for current and
+  next week (Sun–Sat, America/Los_Angeles) in the name column; **This Wk / Next Wk** checkbox
+  toggles in the PERSONNEL corner; week label = Monday `M/DD`; counts include cancelled
+  events (v6.3 parity)
+- **Today highlight + now-line** — today's date header gets blue top border + tint; dashed
+  vertical now-line in today's column when Pacific now is within 06:00–18:00 (frozen at
+  render, like the standalone)
+- **Person schedule modal** — click a personnel name → two-week schedule (current + next),
+  Academics excluded, cancelled rows dimmed/struck
+- **Pan-to-scroll** — grab-drag anywhere on the grid; 5px click-vs-drag threshold preserves
+  bar/name clicks; non-drag click on empty grid clears the timeline marker/range
+- **Personnel status notes (dormant)** — yellow cell-bottom note + Notes filter pill, fully
+  plumbed via optional `personnelStatuses` prop; activates when the batch feed supplies
+  `personnelNotes` (the standalone's GAS `?mode=full` does; this app's batch does not yet)
+
+### Changes (Rainbow)
+- **Cancelled bars restyled to v6.3 convention** — type color retained at 0.4 opacity with
+  strike-through label and ` [CANCELLED]` tooltip suffix (was: red-tinted override)
+- **Event modal enriched** — Date field, Notes yellow panel, CANCELLED chip
+- Headers 44px → 54px; name column 160px → 190px (marker-line offset formulas updated:
+  `161 + i*301` → `191 + i*301`; grid-line top 45px → 55px)
+- Light-mode overrides added for every new class
+
+### Documentation
+- **`AI-CONTEXT.md`** added at repo root — comprehensive machine-oriented context (data
+  contracts, feature specs, nuances/gotchas) for AI coding assistants replicating these
+  features (e.g. the TPS LMS integration); linked from the app header ("AI Context") and a
+  comment block at the top of `index.html`
+
+---
+
 ## v4.2.0 — Bug Fixes, Supervision UX, Select-All Persistence
 
 ### Bug Fixes

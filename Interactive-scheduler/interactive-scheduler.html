@@ -1,5 +1,31 @@
-<!-- Interactive Scheduler v4.2.0 — Bug Fixes, Supervision UX, Select-All Persistence -->
+<!-- Interactive Scheduler v4.3.0 — Crew Rainbow v6.3 Parity Merge (workload counters, today/now line, cancelled styling, person modal, pan-to-scroll) -->
 <!--
+  AI / LLM DEVELOPERS — READ THIS FIRST
+  Comprehensive machine-readable context for replicating this application's features,
+  data contracts, and UX nuances lives at ./AI-CONTEXT.md (served next to this file):
+    https://sicktim.github.io/Interactive-Scheduler/AI-CONTEXT.md
+    https://github.com/sicktim/Interactive-Scheduler
+  It documents the data pipeline, all three views (Timeline / Rainbow / Whiteboard),
+  conflict detection, change tracking, and the hard-won gotchas behind each feature.
+-->
+<!--
+  v4.3.0 Crew Rainbow v6.3 Parity Merge
+  - Merged the refined standalone TPS Crew Rainbow (sicktim.github.io/Schedule-Gantt, v6.3)
+    into the Rainbow view, driven by this app's canonical event pipeline (no second data source)
+  - Per-person weekly Fly/Gnd workload counters in the name column with This Wk / Next Wk
+    toggles in the PERSONNEL corner (Sun–Sat weeks, America/Los_Angeles; counts include cancelled)
+  - Today column header highlight (blue top border + tint) + dashed Pacific now-line (06:00–18:00)
+  - Cancelled bars restyled to v6.3 convention: keep type color, 0.4 opacity, strike-through
+    label, " [CANCELLED]" tooltip suffix
+  - Click a personnel name → two-week schedule modal (Academics excluded, cancelled struck)
+  - Event popup now shows Date, Notes (yellow panel), and a CANCELLED chip
+  - Pan-to-scroll grab on the rainbow grid (5px click-vs-drag threshold preserves bar clicks;
+    empty-grid click clears the timeline marker/range, matching the standalone)
+  - Personnel status notes (yellow, cell-bottom) + Notes filter pill implemented but dormant:
+    activates when the batch feed supplies personnelNotes (see AI-CONTEXT.md)
+  - Headers 44px → 54px; name column 160px → 190px (marker offsets updated to match)
+  - Added ./AI-CONTEXT.md + header link for AI coding assistants
+
   v3.6.1 Light/Dark Mode
   - Theme toggle button (sun/moon) in top-right corner, visible on all screens
   - Light mode: white/light-gray surfaces, dark text, adjusted borders and overlays
@@ -211,9 +237,11 @@
             color: #ef4444;
         }
         .rb-bar-cancelled {
-            opacity: 0.5;
-            border-color: rgba(239, 68, 68, 0.8) !important;
-            background: rgba(239, 68, 68, 0.3) !important;
+            /* v6.3 Crew Rainbow parity: keep type color, fade + strike-through */
+            opacity: 0.4;
+        }
+        .rb-bar-cancelled .rb-bar-label {
+            text-decoration: line-through;
         }
 
         /* Custom event styling */
@@ -932,6 +960,11 @@
             flex: 1;
             overflow: auto;
             position: relative;
+            cursor: grab; /* v6.3 parity: pan-to-scroll */
+        }
+        .rainbow-scroll.rb-panning {
+            cursor: grabbing;
+            user-select: none;
         }
 
         .rainbow-filter-btn {
@@ -967,7 +1000,7 @@
             background: rgba(26, 26, 46, 1);
             border-right: 1px solid rgba(255,255,255,0.08);
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            height: 44px;
+            height: 54px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
         }
 
@@ -982,9 +1015,22 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            height: 44px;
+            height: 54px;
             user-select: none;
             cursor: pointer;
+        }
+        /* v6.3 parity: today column highlight */
+        .rainbow-date-header.rb-today {
+            border-top: 3px solid #3b82f6;
+            background: rgb(40, 40, 81);
+        }
+        .rainbow-date-header.rb-today .rb-weekday { color: #60a5fa; }
+        .rainbow-date-header.rb-today .rb-daymonth { color: #93c5fd; }
+        .rainbow-corner.rb-corner-flex {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
         }
 
         .rainbow-date-label {
@@ -1028,6 +1074,81 @@
             justify-content: center;
             min-height: 28px;
             box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+            cursor: pointer; /* v6.3 parity: click name → two-week person modal */
+        }
+        .rainbow-name-cell:hover { background: rgba(30, 30, 60, 1); }
+        .rainbow-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            min-width: 0;
+        }
+        /* v6.3 parity: per-person weekly Fly/Gnd workload counters */
+        .rb-workload {
+            text-align: right;
+            font-size: 0.5rem;
+            line-height: 1.35;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .rb-workload-label { color: rgba(255,255,255,0.35); margin-right: 3px; }
+        .rb-workload-fly { color: #10b981; font-weight: 700; }
+        .rb-workload-gnd { color: #f59e0b; font-weight: 700; }
+        .rb-workload-dot {
+            display: inline-block;
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: #10b981;
+            margin: 0 3px;
+            vertical-align: middle;
+        }
+        /* v6.3 parity: This Wk / Next Wk workload toggles (corner cell) */
+        .rb-week-toggles {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            margin-left: auto;
+        }
+        .rb-week-toggle {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .rb-week-toggle input {
+            width: 9px; height: 9px;
+            accent-color: #3b82f6;
+            cursor: pointer;
+            margin: 0;
+        }
+        /* v6.3 parity: Pacific now-line in today's column */
+        .rb-now-line {
+            position: absolute;
+            top: 55px;
+            bottom: 0;
+            width: 0;
+            border-left: 1px dashed rgba(255,255,255,0.3);
+            pointer-events: none;
+            z-index: 36;
+        }
+        /* v6.3 parity: yellow personnel status note pinned to cell bottom */
+        .rb-personnel-note {
+            position: absolute;
+            bottom: 1px;
+            left: 2px;
+            right: 2px;
+            font-size: 0.5rem;
+            color: #facc15;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+            z-index: 4;
         }
 
         .rainbow-name-text {
@@ -1185,7 +1306,7 @@
         /* ===== RAINBOW GRID-LEVEL MARKER/RANGE (spans full height below header) ===== */
         .rb-grid-line {
             position: absolute;
-            top: 45px;
+            top: 55px;
             bottom: 0;
             width: 2px;
             background-color: #ef4444;
@@ -1195,7 +1316,7 @@
         }
         .rb-grid-range {
             position: absolute;
-            top: 45px;
+            top: 55px;
             bottom: 0;
             background-color: rgba(59, 130, 246, 0.15);
             border-left: 1px solid rgba(59, 130, 246, 0.5);
@@ -2398,6 +2519,19 @@
         .light-mode .rb-filter-cb {
             border-color: rgba(0,0,0,0.2);
         }
+
+        /* --- Rainbow v6.3-parity features (v4.3.0) --- */
+        .light-mode .rainbow-date-header.rb-today {
+            background: #dbeafe;
+            border-top-color: #3b82f6;
+        }
+        .light-mode .rainbow-date-header.rb-today .rb-weekday { color: #1d4ed8 !important; }
+        .light-mode .rainbow-date-header.rb-today .rb-daymonth { color: #2563eb !important; }
+        .light-mode .rainbow-name-cell:hover { background: #f1f5f9; }
+        .light-mode .rb-workload-label { color: rgba(0,0,0,0.4); }
+        .light-mode .rb-week-toggle { color: rgba(0,0,0,0.5); }
+        .light-mode .rb-now-line { border-left-color: rgba(0,0,0,0.35); }
+        .light-mode .rb-personnel-note { color: #a16207; }
 
         /* --- Inline style overrides (require !important to beat React style prop) --- */
         .light-mode .selection-section-title span { color: inherit !important; }
@@ -5422,6 +5556,33 @@
 
         const ROSTER_ORDER = ['FTC-A', 'STC-A', 'FTC-B', 'STC-B', 'Staff IP', 'Staff IFTE/ICSO', 'Staff STC', 'Attached/Support'];
 
+        // ─── Pacific-time helpers (v6.3 Crew Rainbow parity — squadron operates on America/Los_Angeles) ───
+        // Note: header DATE rendering stays UTC (fmtDate); only "today"/"now"/week math is Pacific.
+        const rbPacificNow = () => new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+        const rbPacificTodayISO = () => new Date().toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+        const rbISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        // Sunday-based week bounds [Sun, Sat] containing d (v6.3 getWeekBounds parity)
+        const rbWeekBounds = (d) => {
+            const start = new Date(d);
+            start.setDate(d.getDate() - d.getDay());
+            const end = new Date(start);
+            end.setDate(start.getDate() + 6);
+            return [start, end];
+        };
+        // Week label = that week's MONDAY as M/DD (v6.3 parity)
+        const rbMonLabel = (weekStart) => {
+            const mon = new Date(weekStart);
+            mon.setDate(weekStart.getDate() + 1);
+            return `${mon.getMonth() + 1}/${String(mon.getDate()).padStart(2, '0')}`;
+        };
+        const RB_BADGE = {
+            Flying: { label: 'Fly', color: '#10b981' },
+            Ground: { label: 'Gnd', color: '#f59e0b' },
+            NA: { label: 'NA', color: '#ef4444' },
+            Supervision: { label: 'Supv', color: '#8b5cf6' },
+            Academics: { label: 'Acad', color: '#3b82f6' },
+        };
+
         // ─── RAINBOW MODAL (click event popup) ───
 
         const RainbowModal = ({ event, onClose }) => {
@@ -5432,7 +5593,10 @@
                 <div className="modal-overlay" onClick={onClose}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-start mb-4">
-                            <h2 className="text-xl font-bold px-3 py-1 rounded" style={{ borderLeft: `4px solid ${cHex}`, color: cHex }}>{event.title}</h2>
+                            <h2 className="text-xl font-bold px-3 py-1 rounded" style={{ borderLeft: `4px solid ${cHex}`, color: cHex }}>
+                                {event.title}
+                                {event.cancelled && <span className="ml-2 align-middle rounded px-2 py-0.5 font-bold" style={{ fontSize: '0.6rem', color: '#f87171', background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.4)' }}>CANCELLED</span>}
+                            </h2>
                             <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
                         </div>
                         <div className="space-y-4">
@@ -5441,6 +5605,12 @@
                                     <div className="text-xs text-gray-500 uppercase font-bold mb-1">Time</div>
                                     <div className="text-white">{event.start || '?'} – {event.end || '?'}</div>
                                 </div>
+                                {event.date && (
+                                    <div className="bg-white/5 p-3 rounded-lg flex-1">
+                                        <div className="text-xs text-gray-500 uppercase font-bold mb-1">Date</div>
+                                        <div className="text-white">{event.date}</div>
+                                    </div>
+                                )}
                                 <div className="bg-white/5 p-3 rounded-lg flex-1">
                                     <div className="text-xs text-gray-500 uppercase font-bold mb-1">Section</div>
                                     <div className="text-white">{event.section}</div>
@@ -5456,6 +5626,12 @@
                                 <div className="bg-white/5 p-3 rounded-lg">
                                     <div className="text-xs text-gray-500 uppercase font-bold mb-1">Personnel ({event.personnel.length})</div>
                                     <div className="text-sm text-gray-300">{event.personnel.join(', ')}</div>
+                                </div>
+                            )}
+                            {event.notes && (
+                                <div className="p-3 rounded-lg" style={{ background: 'rgba(250,204,21,0.08)', border: '1px solid rgba(250,204,21,0.25)' }}>
+                                    <div className="text-xs uppercase font-bold mb-1" style={{ color: '#facc15' }}>Notes</div>
+                                    <div className="text-sm" style={{ color: '#fde68a' }}>{event.notes}</div>
                                 </div>
                             )}
                         </div>
@@ -5531,17 +5707,78 @@
             );
         };
 
+        // ─── RAINBOW PERSON MODAL (click name → two-week schedule; v6.3 parity) ───
+
+        const RainbowPersonModal = ({ person, workingEvents, onClose }) => {
+            if (!person) return null;
+            const today = rbPacificNow();
+            const [w1s, w1e] = rbWeekBounds(today);
+            const w2Seed = new Date(w1e);
+            w2Seed.setDate(w1e.getDate() + 1);
+            const [w2s, w2e] = rbWeekBounds(w2Seed);
+            // v6.3 parity: Academics excluded from the person schedule; all filters ignored
+            const mine = workingEvents
+                .filter(ev => (ev.personnel || []).includes(person) && ev.section !== 'Academics')
+                .sort((a, b) => a.date === b.date
+                    ? String(a.startTime || '').localeCompare(String(b.startTime || ''))
+                    : a.date.localeCompare(b.date));
+            const inRange = (iso, s, e) => iso >= rbISO(s) && iso <= rbISO(e);
+            const weeks = [
+                { label: rbMonLabel(w1s), evs: mine.filter(ev => inRange(ev.date, w1s, w1e)) },
+                { label: rbMonLabel(w2s), evs: mine.filter(ev => inRange(ev.date, w2s, w2e)) },
+            ];
+            return (
+                <div className="modal-overlay" onClick={onClose}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 700, width: '90%' }}>
+                        <div className="flex justify-between items-start mb-4">
+                            <h2 className="text-xl font-bold text-white">{person}</h2>
+                            <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        <div className="flex gap-4">
+                            {weeks.map(week => (
+                                <div key={week.label} className="flex-1 min-w-0">
+                                    <div className="text-xs text-gray-500 uppercase font-bold mb-2">Week of {week.label}</div>
+                                    <div className="space-y-1">
+                                        {week.evs.length === 0 && <div className="text-gray-500 text-sm py-2">No events this week</div>}
+                                        {week.evs.map((ev, i) => {
+                                            const badge = RB_BADGE[ev.section] || { label: ev.section, color: '#6b7280' };
+                                            const cancelled = !!ev.cancelled;
+                                            const title = ev.model ? `${ev.model} ${ev.eventName}` : ev.eventName;
+                                            const [, m, d] = ev.date.split('-');
+                                            return (
+                                                <div key={`${ev.id}-${i}`} className="flex items-center gap-2 text-sm" style={cancelled ? { opacity: 0.5 } : undefined}>
+                                                    <span className="text-gray-500 flex-shrink-0" style={{ fontSize: '0.7rem', width: 38 }}>{ev.startTime || '--:--'}</span>
+                                                    <span className="flex-shrink-0 rounded px-1 font-bold" style={{ fontSize: '0.6rem', color: badge.color, background: badge.color + '33' }}>{badge.label}</span>
+                                                    <span className="text-white truncate" style={cancelled ? { textDecoration: 'line-through' } : undefined}>{title}</span>
+                                                    <span className="text-gray-500 ml-auto flex-shrink-0" style={{ fontSize: '0.65rem' }}>{Number(m)}/{d}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={onClose} className="mt-6 w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-bold">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
         // ─── RAINBOW VIEW ───
 
-        const RainbowView = ({ workingEvents, roster, dates }) => {
-            const [visibleTypes, setVisibleTypes] = useState(() => new Set(RAINBOW_FILTERS.map(f => f.key)));
+        const RainbowView = ({ workingEvents, roster, dates, personnelStatuses = [] }) => {
+            const [visibleTypes, setVisibleTypes] = useState(() => new Set([...RAINBOW_FILTERS.map(f => f.key), 'Notes']));
             const [modalEvent, setModalEvent] = useState(null);
             const [rbSelection, setRbSelection] = useState(null);
             const [filterOpen, setFilterOpen] = useState(false);
             const [visiblePersonnel, setVisiblePersonnel] = useState(null); // null = show all
             const [selectedCategory, setSelectedCategory] = useState('All');
+            const [showW1, setShowW1] = useState(true);  // v6.3 parity: This Wk workload counters
+            const [showW2, setShowW2] = useState(true);  // v6.3 parity: Next Wk workload counters
+            const [personModal, setPersonModal] = useState(null);
             const dragRef = useRef(null);
             const scrollRef = useRef(null);
+            const panRef = useRef(null);
 
             const toggleType = useCallback((key) => {
                 setVisibleTypes(prev => {
@@ -5570,6 +5807,8 @@
                             personnel: ev.personnel,
                             id: ev.id,
                             cancelled: ev.cancelled || false,
+                            notes: ev.notes || null,
+                            date: ev.date,
                         });
                     });
                 });
@@ -5589,6 +5828,83 @@
                 });
                 return list;
             }, [roster, visiblePersonnel]);
+
+            // v6.3 parity: per-person Fly/Gnd counts for current + next week (Sun–Sat, Pacific).
+            // Deliberately counts cancelled events — matches standalone Crew Rainbow v6.3 behavior.
+            const rbWorkload = useMemo(() => {
+                const today = rbPacificNow();
+                const [w1s, w1e] = rbWeekBounds(today);
+                const w2Seed = new Date(w1e);
+                w2Seed.setDate(w1e.getDate() + 1);
+                const [w2s, w2e] = rbWeekBounds(w2Seed);
+                const w1sI = rbISO(w1s), w1eI = rbISO(w1e), w2sI = rbISO(w2s), w2eI = rbISO(w2e);
+                const byPerson = new Map();
+                workingEvents.forEach(ev => {
+                    if (ev.section !== 'Flying' && ev.section !== 'Ground') return;
+                    let wk = null;
+                    if (ev.date >= w1sI && ev.date <= w1eI) wk = 'w1';
+                    else if (ev.date >= w2sI && ev.date <= w2eI) wk = 'w2';
+                    if (!wk) return;
+                    const key = ev.section === 'Flying' ? 'fly' : 'gnd';
+                    (ev.personnel || []).forEach(p => {
+                        if (!byPerson.has(p)) byPerson.set(p, { w1: { fly: 0, gnd: 0 }, w2: { fly: 0, gnd: 0 } });
+                        byPerson.get(p)[wk][key]++;
+                    });
+                });
+                return { byPerson, w1Label: rbMonLabel(w1s), w2Label: rbMonLabel(w2s) };
+            }, [workingEvents]);
+
+            // v6.3 parity: yellow personnel status notes ("person|date" → first status).
+            // Dormant until the batch feed supplies personnelNotes (see AI-CONTEXT.md).
+            const statusByPersonDate = useMemo(() => {
+                const m = new Map();
+                (personnelStatuses || []).forEach(s => {
+                    const k = `${s.person}|${s.date}`;
+                    if (!m.has(k)) m.set(k, s.status);
+                });
+                return m;
+            }, [personnelStatuses]);
+
+            const rbFilters = personnelStatuses.length > 0
+                ? [...RAINBOW_FILTERS, { key: 'Notes', label: 'Notes', color: '#facc15' }]
+                : RAINBOW_FILTERS;
+
+            const rbToday = rbPacificTodayISO();
+
+            // v6.3 parity: pan-to-scroll grab. Click-vs-drag threshold (5px) keeps bar clicks
+            // working; a non-drag click on empty grid clears the timeline marker/range.
+            const handlePanPointerDown = useCallback((e) => {
+                if (e.button !== 0) return;
+                const el = scrollRef.current;
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
+                if (e.clientX > rect.right - 14 || e.clientY > rect.bottom - 14) return; // scrollbars
+                panRef.current = { startX: e.clientX, startY: e.clientY, scrollLeft: el.scrollLeft, scrollTop: el.scrollTop, dragging: false, target: e.target };
+                const onMove = (me) => {
+                    const p = panRef.current;
+                    if (!p) return;
+                    const dx = me.clientX - p.startX, dy = me.clientY - p.startY;
+                    if (!p.dragging && Math.hypot(dx, dy) > 5) { p.dragging = true; el.classList.add('rb-panning'); }
+                    if (p.dragging) {
+                        el.scrollLeft = p.scrollLeft - dx;
+                        el.scrollTop = p.scrollTop - dy;
+                        me.preventDefault();
+                    }
+                };
+                const onUp = () => {
+                    const p = panRef.current;
+                    el.classList.remove('rb-panning');
+                    if (p && !p.dragging && p.target.closest &&
+                        !p.target.closest('.rb-event-bar, .rainbow-name-cell, .rainbow-date-header, .rainbow-corner')) {
+                        setRbSelection(sel => sel ? null : sel);
+                    }
+                    panRef.current = null;
+                    window.removeEventListener('pointermove', onMove);
+                    window.removeEventListener('pointerup', onUp);
+                };
+                window.addEventListener('pointermove', onMove);
+                window.addEventListener('pointerup', onUp);
+            }, []);
 
             // Lane layout for a set of events in one cell
             const layoutEvents = useCallback((events) => {
@@ -5651,7 +5967,7 @@
                     if (!area) return;
                     const areaRect = area.getBoundingClientRect();
                     const scrollLeft = area.scrollLeft;
-                    const colLeft = 161 + dateIndex * (RAINBOW_COL_WIDTH + 1); // px from grid left (+1px per gap)
+                    const colLeft = 191 + dateIndex * (RAINBOW_COL_WIDTH + 1); // px from grid left: 190px name col + 1px gap (+1px per column gap)
                     const colVisualLeft = areaRect.left + colLeft - scrollLeft;
                     const xInCol = me.clientX - colVisualLeft;
                     const pct = Math.max(0, Math.min(100, (xInCol / RAINBOW_COL_WIDTH) * 100));
@@ -5725,7 +6041,7 @@
                 <>
                     <div className="rainbow-toolbar">
                         <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>FILTERS</span>
-                        {RAINBOW_FILTERS.map(f => (
+                        {rbFilters.map(f => (
                             <button
                                 key={f.key}
                                 className={`rainbow-filter-btn ${visibleTypes.has(f.key) ? 'active' : ''}`}
@@ -5753,20 +6069,30 @@
                         </div>
                     </div>
 
-                    <div className="rainbow-scroll" ref={scrollRef}>
+                    <div className="rainbow-scroll" ref={scrollRef} onPointerDown={handlePanPointerDown}>
                     <div
                         className="rainbow-grid"
-                        style={{ gridTemplateColumns: `160px repeat(${dates.length}, ${RAINBOW_COL_WIDTH}px)` }}
+                        style={{ gridTemplateColumns: `190px repeat(${dates.length}, ${RAINBOW_COL_WIDTH}px)` }}
                     >
-                        {/* Header row: corner + date headers */}
-                        <div className="rainbow-corner" style={{ padding: '4px 8px', display: 'flex', alignItems: 'flex-end' }}>
+                        {/* Header row: corner (PERSONNEL + week workload toggles) + date headers */}
+                        <div className="rainbow-corner rb-corner-flex">
                             <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>PERSONNEL</span>
+                            <div className="rb-week-toggles">
+                                <label className="rb-week-toggle">
+                                    <input type="checkbox" checked={showW1} onChange={() => setShowW1(v => !v)} />
+                                    This Wk
+                                </label>
+                                <label className="rb-week-toggle">
+                                    <input type="checkbox" checked={showW2} onChange={() => setShowW2(v => !v)} />
+                                    Next Wk
+                                </label>
+                            </div>
                         </div>
                         {dates.map((d, dIdx) => {
                             const h = fmtDate(d);
                             const isSelected = rbSelection && rbSelection.dateIndex === dIdx;
                             return (
-                                <div key={d} className="rainbow-date-header">
+                                <div key={d} className={`rainbow-date-header${d === rbToday ? ' rb-today' : ''}`}>
                                     <div className="rainbow-date-label">
                                         <div className="rb-weekday">{h.weekday}</div>
                                         <div className="rb-daymonth">{h.day} {h.month}</div>
@@ -5831,21 +6157,50 @@
 
                             return (
                                 <React.Fragment key={`person-${item.name}-${idx}`}>
-                                    <div className="rainbow-name-cell">
-                                        <div className="rainbow-name-text">{item.name}</div>
-                                        <div className="rainbow-cat-text">{item.category}</div>
+                                    <div className="rainbow-name-cell" onClick={() => setPersonModal(item.name)} title={`View ${item.name}'s two-week schedule`}>
+                                        <div className="rainbow-name-row">
+                                            <div style={{ minWidth: 0 }}>
+                                                <div className="rainbow-name-text">{item.name}</div>
+                                                <div className="rainbow-cat-text">{item.category}</div>
+                                            </div>
+                                            {(showW1 || showW2) && (() => {
+                                                const wl = rbWorkload.byPerson.get(item.name) || { w1: { fly: 0, gnd: 0 }, w2: { fly: 0, gnd: 0 } };
+                                                return (
+                                                    <div className="rb-workload">
+                                                        {showW1 && (
+                                                            <div>
+                                                                <span className="rb-workload-label">{rbWorkload.w1Label}</span>
+                                                                <span className="rb-workload-fly">{wl.w1.fly}</span>
+                                                                <span className="rb-workload-dot" />
+                                                                <span className="rb-workload-gnd">{wl.w1.gnd}</span>
+                                                            </div>
+                                                        )}
+                                                        {showW2 && (
+                                                            <div>
+                                                                <span className="rb-workload-label">{rbWorkload.w2Label}</span>
+                                                                <span className="rb-workload-fly">{wl.w2.fly}</span>
+                                                                <span className="rb-workload-dot" />
+                                                                <span className="rb-workload-gnd">{wl.w2.gnd}</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })()}
+                                        </div>
                                     </div>
                                     {dates.map(date => {
                                         const allCellEvts = personDates ? personDates.get(date) || [] : [];
                                         const cellEvts = allCellEvts.filter(e => visibleTypes.has(e.section));
                                         const { events: laid, laneCount } = layoutEvents(cellEvts);
-                                        const cellH = Math.max(28, laneCount * 24 + 4);
+                                        const personStatus = visibleTypes.has('Notes') ? statusByPersonDate.get(`${item.name}|${date}`) : null;
+                                        const cellH = Math.max(28, laneCount * 24 + 4 + (personStatus ? 12 : 0));
 
                                         return (
                                             <div key={date} className="rainbow-cell" style={{ height: cellH }}>
                                                 {hourLines.map(pct => (
                                                     <div key={pct} className="rb-hour-line" style={{ left: pct + '%' }} />
                                                 ))}
+                                                {personStatus && <div className="rb-personnel-note" title={personStatus}>{personStatus}</div>}
                                                 {laid.map((ev, i) => {
                                                     const left = timePct(ev.startMin);
                                                     const width = Math.max(2, timePct(ev.endMin) - left);
@@ -5873,7 +6228,7 @@
                                                             key={i}
                                                             className={`rb-event-bar ${barClass}${ev.cancelled ? ' rb-bar-cancelled' : ''}`}
                                                             style={{ left: left + '%', width: width + '%', top, cursor: 'pointer' }}
-                                                            title={`${ev.title}\n${ev.start || '?'}–${ev.end || '?'}`}
+                                                            title={`${ev.title}\n${ev.start || '?'}–${ev.end || '?'}${ev.cancelled ? ' [CANCELLED]' : ''}`}
                                                             onClick={() => setModalEvent(ev)}
                                                         >
                                                             {innerBar}
@@ -5887,9 +6242,19 @@
                                 </React.Fragment>
                             );
                         })}
+                        {/* v6.3 parity: dashed now-line in today's column (Pacific; frozen at render like standalone) */}
+                        {(() => {
+                            const todayIdx = dates.indexOf(rbToday);
+                            if (todayIdx < 0) return null;
+                            const now = rbPacificNow();
+                            const nowMins = now.getHours() * 60 + now.getMinutes();
+                            if (nowMins < TIMELINE_START || nowMins > TIMELINE_END) return null;
+                            const leftPx = 191 + todayIdx * (RAINBOW_COL_WIDTH + 1) + (timePct(nowMins) / 100) * RAINBOW_COL_WIDTH;
+                            return <div className="rb-now-line" style={{ left: `${leftPx}px` }} />;
+                        })()}
                         {/* Grid-level marker/range line spanning full height below header */}
                         {rbSelection && (() => {
-                            const colLeft = 161 + rbSelection.dateIndex * (RAINBOW_COL_WIDTH + 1); // +1px per gap
+                            const colLeft = 191 + rbSelection.dateIndex * (RAINBOW_COL_WIDTH + 1); // 190px name col + 1px gap per column
                             if (rbSelection.type === 'marker') {
                                 const pct = timePct(rbSelection.start);
                                 const leftPx = colLeft + (pct / 100) * RAINBOW_COL_WIDTH;
@@ -5907,6 +6272,7 @@
                     </div>
                     </div>{/* close rainbow-scroll */}
                     <RainbowModal event={modalEvent} onClose={() => setModalEvent(null)} />
+                    <RainbowPersonModal person={personModal} workingEvents={workingEvents} onClose={() => setPersonModal(null)} />
                     <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={handleRbFilterApply} />
                 </>
             );
@@ -8847,6 +9213,9 @@
                                             &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}{viewMode === 'whiteboard' ? ' (today)' : ''}
                                         </button>
                                     )}
+                                    <a href="./AI-CONTEXT.md" target="_blank" rel="noopener" className="ml-2"
+                                        style={{ color: 'rgba(148,163,184,0.5)', textDecoration: 'underline dotted' }}
+                                        title="Architecture, data contracts, and feature nuances for AI coding assistants">AI Context</a>
                                 </p>
                             </div>
                             {viewMode === 'timeline' && (
