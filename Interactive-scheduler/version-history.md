@@ -2,6 +2,41 @@
 
 ---
 
+## v4.5.0 — Light Mode Overhaul + v4.4 Feedback Batch
+
+### Light Mode (complete rebuild — flat, high-contrast)
+- All ~288 `.light-mode` rules rebuilt by a focused UI pass: **solid colors + crisp
+  lines, zero alpha shading** (remaining alpha only in shadows/scrim). Palette tokens
+  documented atop the light-mode CSS block: `#eef2f6` slate page ground, `#ffffff`
+  surfaces, `#e2e8f0` wells, `#0f172a`/`#334155`/`#64748b` text tiers,
+  `#cbd5e1`/`#94a3b8` lines, saturated solid category tints (Tailwind-100 bg +
+  700/800 text). Rainbow bars now solid tints with dark text (no text-shadow);
+  previously-unstyled light surfaces covered (highlight picker, 6 highlight color
+  variants, pending time inputs, supervision/cancelled/custom event cards).
+
+### Fixes
+- **Change Summary edit bug** — whiteboard single-field saves recorded sparse
+  `after` snapshots, rendering `name → "undefined" · undefined–…` noise. Recorder
+  now stores the full merged snapshot; renderer hardened for sparse pre-v4.5
+  entries already persisted in working copies.
+- **Popup click-out** — closing the [+] popup by clicking elsewhere swallows the
+  follow-through click; it no longer focuses/selects the row underneath.
+- **Academics** — a block with no backing event is now editable: typing a time
+  creates a custom Academics event for that category/day.
+
+### Enhancements
+- **Big Board class filter** — pills in the [+] popup's Big Board tab toggle each
+  loaded cohort (e.g. hide 26B while scheduling 26A); persisted.
+- **Pair groups** — "Pair groups (may fly together)" containers, outlined/tinted in
+  each pair's actual Big Board cell color, holding member chips (assigned ✔,
+  completed faded). Cache bumped to `tps-bigboard-cache-v2` (stores pair color) —
+  previously cached classes need one reload.
+- **Grouped-event visuals** — parent rows join the continuous blue left edge,
+  attached SIM/CR rows indent with a bolder `└` tie; block reads as one unit in
+  both sort modes (aircraft mode keeps tied rows under the parent's aircraft).
+
+---
+
 ## v4.4.0 — Big Board Integration, Tabbed [+] Menu, Whiteboard UX Batch
 
 Plan: `docs/plans/2026-07-29-v4.4-feature-batch.md`. Verified via Babel compile gate +

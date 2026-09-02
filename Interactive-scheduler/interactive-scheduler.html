@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.4.0 — Big Board Integration, Tabbed [+] Menu, Whiteboard UX Batch (time entry, contrast, grouped events, collapsible summary, academics times) -->
+<!-- Interactive Scheduler v4.5.0 — Light Mode Overhaul, Change-Summary Fix, Pair Groups, Class Filter, Grouping Visuals -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
   Comprehensive machine-readable context for replicating this application's features,
@@ -9,6 +9,20 @@
   conflict detection, change tracking, and the hard-won gotchas behind each feature.
 -->
 <!--
+  v4.5.0 Light Mode Overhaul + Feedback Batch
+  - Light mode rebuilt as a flat high-contrast theme: solid colors + crisp lines, no
+    alpha shading; #eef2f6 slate ground, white surfaces, #0f172a text, saturated
+    solid category tints (palette tokens documented atop the .light-mode CSS block)
+  - Change Summary edit entries fixed: full after-snapshots (no more name→"undefined");
+    renderer also tolerates sparse pre-v4.5 entries in saved working copies
+  - Closing a popup by clicking outside no longer selects the row underneath
+  - Big Board tab: class filter pills (hide/show 26A/26B cohorts, persisted)
+  - Pair groups: color-outlined containers show who may fly together (cache v2
+    stores pair colors — cached classes need one reload)
+  - Grouped events: parent + tied SIM/CR rows share a continuous blue edge, children
+    indented with bolder tie marker
+  - Academics blocks with no time create the event on first time entry
+
   v4.4.0 Big Board Integration + Whiteboard UX Batch
   - Big Board (curriculum completion) service: pulls per-student event status from the
     Big-Board-Summary GAS for 26A/26B FTC/STC; cached locally with "as of" stamps;
@@ -1665,7 +1679,7 @@
         }
         .light-mode th.wb-supv-group-start,
         .light-mode td.wb-supv-group-start {
-            border-left: 2px solid rgba(0,0,0,0.22) !important;
+            border-left: 2px solid #94a3b8 !important;
             padding-left: 10px !important;
         }
 
@@ -2028,6 +2042,42 @@
             padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+        .ap-class-pills {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .ap-class-pill {
+            padding: 1px 8px;
+            border-radius: 9px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: rgba(255,255,255,0.35);
+        }
+        .ap-class-pill.active {
+            border-color: rgba(96,165,250,0.7);
+            background: rgba(59,130,246,0.15);
+            color: #93c5fd;
+        }
+        .ap-pair-boxes { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ap-pair-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 5px 6px;
+            border: 1.5px solid;
+            border-radius: 8px;
+        }
+        .ap-chip.ap-onevent {
+            outline: 2px solid rgba(134, 239, 172, 0.7);
+            cursor: default;
+        }
         /* The + button that opens the popover */
         .wb-crew-add-btn {
             display: inline-flex;
@@ -2222,11 +2272,16 @@
             white-space: nowrap;
         }
         .wb-sort-btn:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
-        /* SIM/CR rows tied to the event above them (attachedTo) */
-        .wb-row-attached td:first-child { border-left: 3px solid rgba(59,130,246,0.55); }
+        /* SIM/CR rows tied to the event above them (attachedTo).
+           Parent + children share a continuous blue border down the first column so
+           the eye reads them as one block; children indent + carry a bold └ tie. */
+        .wb-row-parent td:first-child { border-left: 3px solid rgba(96,165,250,0.75); }
+        .wb-row-attached td:first-child { border-left: 3px solid rgba(96,165,250,0.75); }
+        .wb-row-attached td:nth-child(2) { padding-left: 14px; }
         .wb-attach-tie {
-            color: rgba(59,130,246,0.8);
-            font-size: 0.7rem;
+            color: rgba(96,165,250,0.95);
+            font-size: 0.85rem;
+            font-weight: 700;
             margin-right: 2px;
             user-select: none;
         }
@@ -2339,11 +2394,14 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         .wb-add-supv-btn-cancel:hover { color: rgba(255,255,255,0.7); }
-        .light-mode .wb-add-supv-modal { background: #f8fafc; border-color: rgba(0,0,0,0.1); }
-        .light-mode .wb-add-supv-modal-title { color: rgba(0,0,0,0.5); }
-        .light-mode .wb-add-supv-modal-input { background: #fff; border-color: rgba(0,0,0,0.2); color: #0f172a; }
-        .light-mode .wb-add-supv-chip { background: rgba(0,0,0,0.05); color: rgba(0,0,0,0.5); border-color: rgba(0,0,0,0.1); }
-        .light-mode .wb-add-supv-btn-cancel { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.1); }
+        .light-mode .wb-add-supv-modal { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 6px 20px rgba(15,23,42,0.2); }
+        .light-mode .wb-add-supv-modal-title { color: #334155; }
+        .light-mode .wb-add-supv-modal-input { background: #ffffff; border-color: #94a3b8; color: #0f172a; }
+        .light-mode .wb-add-supv-chip { background: #e2e8f0; color: #334155; border-color: #cbd5e1; }
+        .light-mode .wb-add-supv-chip:hover { background: #dbeafe; color: #1d4ed8; border-color: #2563eb; }
+        .light-mode .wb-add-supv-btn-cancel { color: #475569; border-color: #94a3b8; }
+        .light-mode .wb-add-supv-btn-cancel:hover { color: #0f172a; }
+        .light-mode .wb-add-supv-btn-create:disabled { background: #cbd5e1; color: #64748b; }
 
         /* Pending supervision slot — empty triplet editable state */
         .wb-pending-poc-cell {
@@ -2355,7 +2413,7 @@
             border-left: 2px solid rgba(255,255,255,0.22) !important; /* matches wb-supv-group-start separator */
         }
         .light-mode .wb-pending-poc-cell {
-            border-left: 2px solid rgba(0,0,0,0.22) !important;
+            border-left: 2px solid #94a3b8 !important;
         }
         .wb-pending-poc-drop {
             display: inline-flex;
@@ -2424,26 +2482,28 @@
         }
         /* Light mode overrides for pending slots */
         .light-mode .wb-pending-poc-drop {
-            border-color: rgba(0,0,0,0.15);
-            color: rgba(0,0,0,0.2);
+            border-color: #94a3b8;
+            color: #64748b;
         }
         .light-mode .wb-pending-poc-drop.wb-pending-poc-dragover {
-            border-color: rgba(59,130,246,0.5);
-            color: rgba(59,130,246,0.7);
+            border-color: #2563eb;
+            color: #1d4ed8;
+            background: #dbeafe;
         }
         .light-mode .wb-pending-poc-stored {
-            background: rgba(0,0,0,0.04);
+            background: #e2e8f0;
         }
         .light-mode .wb-pending-time-input {
-            border-bottom-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.3);
+            border-bottom-color: #94a3b8;
+            color: #64748b;
+            opacity: 1;
         }
         .light-mode .wb-pending-time-input:focus {
-            border-bottom-color: rgba(59,130,246,0.5);
-            color: rgba(0,0,0,0.85);
+            border-bottom-color: #2563eb;
+            color: #0f172a;
         }
         .light-mode .wb-pending-time-input.wb-pending-time-amber {
-            border-bottom-color: rgba(217,119,6,0.7);
+            border-bottom-color: #b45309;
         }
 
         /* Delete row button */
@@ -2459,193 +2519,230 @@
         .wb-table tr:hover .wb-delete-btn { opacity: 1; }
         .wb-delete-btn:hover { color: #ef4444; }
 
-        /* ===== LIGHT MODE OVERRIDES ===== */
+        /* ===== LIGHT MODE OVERRIDES =====
+           High-contrast flat palette (light overhaul):
+             page ground  #eef2f6   surfaces/cards #ffffff   wells/insets #e2e8f0
+             text primary #0f172a   secondary #334155        metadata min #64748b
+             lines        #cbd5e1   emphasis lines #94a3b8
+             accent       #2563eb   accent text #1d4ed8
+           Rules: solid opaque backgrounds and text colors only — no translucent
+           washes. Alpha is permitted solely in box-shadows, overlay scrims, and
+           hairline borders. Structure comes from solid 1px lines, not tints. */
         .light-mode body,
         body.light-mode {
-            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f8fafc 100%);
-            color: #1e293b;
+            background: #eef2f6;
+            color: #0f172a;
         }
 
         .light-mode .theme-toggle-header-btn {
-            border-color: rgba(0,0,0,0.15);
-            background: rgba(0,0,0,0.05);
+            border-color: #94a3b8;
+            background: #ffffff;
             color: #b45309;
         }
         .light-mode .theme-toggle-header-btn:hover {
-            background: rgba(0,0,0,0.1);
-            border-color: rgba(0,0,0,0.3);
+            background: #e2e8f0;
+            border-color: #64748b;
         }
         .light-mode .theme-toggle-btn {
-            border-color: rgba(0,0,0,0.15);
-            background: rgba(0,0,0,0.04);
-            color: #6366f1;
+            border-color: #94a3b8;
+            background: #ffffff;
+            color: #6d28d9;
         }
         .light-mode .theme-toggle-btn:hover {
-            background: rgba(0,0,0,0.08);
-            border-color: rgba(0,0,0,0.25);
+            background: #e2e8f0;
+            border-color: #64748b;
         }
 
         /* --- App layout / chrome --- */
         .light-mode .app-header {
-            background: rgba(255, 255, 255, 0.92);
-            border-bottom-color: rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
+            background: #ffffff;
+            border-bottom-color: #cbd5e1;
+            backdrop-filter: none;
         }
         .light-mode .app-header h1 { color: #0f172a !important; }
         .light-mode .app-header p { color: #64748b !important; }
 
         .light-mode .timeline-area {
-            background: rgba(241, 245, 249, 0.5);
+            background: #eef2f6;
         }
         .light-mode .change-summary-panel {
-            background: rgba(255, 255, 255, 0.95);
-            border-left-color: rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-left-color: #cbd5e1;
         }
-        .light-mode .change-summary-panel.change-summary-collapsed:hover { background: rgba(241,245,249,0.95); }
-        .light-mode .cs-collapse-chevron { color: rgba(0,0,0,0.4); }
-        .light-mode .cs-collapsed-label { color: rgba(0,0,0,0.35); }
-        .light-mode .cs-collapse-btn { color: rgba(0,0,0,0.4); }
-        .light-mode .cs-collapse-btn:hover { color: rgba(0,0,0,0.8); }
+        .light-mode .change-summary-panel.change-summary-collapsed:hover { background: #f1f5f9; }
+        .light-mode .cs-collapse-chevron { color: #64748b; }
+        .light-mode .cs-collapsed-badge {
+            background: #fef3c7;
+            border-color: #d97706;
+            color: #92400e;
+        }
+        .light-mode .cs-collapsed-label { color: #64748b; }
+        .light-mode .cs-collapse-btn { color: #64748b; }
+        .light-mode .cs-collapse-btn:hover { color: #0f172a; }
         .light-mode .picker-panel {
-            background: rgba(255, 255, 255, 0.98);
-            border-top-color: rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-top-color: #cbd5e1;
         }
 
         /* --- Day columns & headers --- */
         .light-mode .day-column {
-            border-right-color: rgba(0,0,0,0.06);
+            border-right-color: #cbd5e1;
         }
         .light-mode .day-header {
-            background: rgba(248, 250, 252, 1);
-            border-bottom-color: rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-bottom-color: #94a3b8;
         }
         .light-mode .day-header div {
             color: #0f172a !important;
         }
         .light-mode .day-header .timeline-ruler span {
-            color: rgba(0,0,0,0.35) !important;
+            color: #64748b !important;
         }
         .light-mode .timeline-ruler {
-            color: rgba(0,0,0,0.35);
+            color: #64748b;
         }
 
         /* --- Section dividers --- */
-        .light-mode .section-divider { border-bottom-color: rgba(0,0,0,0.04); }
-        .light-mode .section-divider-flying { color: #059669; background: rgba(16,185,129,0.08); }
-        .light-mode .section-divider-ground { color: #b45309; background: rgba(245,158,11,0.08); }
-        .light-mode .section-divider-na { color: #dc2626; background: rgba(239,68,68,0.08); }
+        .light-mode .section-divider { border-bottom-color: #cbd5e1; }
+        .light-mode .section-divider-flying { color: #065f46; background: #d1fae5; }
+        .light-mode .section-divider-ground { color: #92400e; background: #fef3c7; }
+        .light-mode .section-divider-na { color: #991b1b; background: #fee2e2; }
 
         /* --- Event cards --- */
         .light-mode .event-card-flying {
-            background: rgba(16, 185, 129, 0.12);
-            border-color: rgba(16, 185, 129, 0.4);
+            background: #d1fae5;
+            border-color: #10b981;
         }
         .light-mode .event-card-ground {
-            background: rgba(245, 158, 11, 0.12);
-            border-color: rgba(245, 158, 11, 0.4);
+            background: #fef3c7;
+            border-color: #f59e0b;
         }
         .light-mode .event-card-na {
-            background: rgba(239, 68, 68, 0.12);
-            border-color: rgba(239, 68, 68, 0.4);
+            background: #fee2e2;
+            border-color: #ef4444;
+        }
+        .light-mode .event-card-supervision {
+            background: #ede9fe;
+            border-color: #8b5cf6;
         }
         .light-mode .event-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(15,23,42,0.18);
+            filter: none;
         }
+        .light-mode .event-card.focused { filter: none; }
+        .light-mode .event-card-cancelled {
+            background: #fef2f2 !important;
+            border-color: #dc2626 !important;
+        }
+        .light-mode .event-card-cancelled .event-name-text { color: #b91c1c !important; }
+        .light-mode .event-card-custom { border-color: #2563eb !important; }
+        .light-mode .custom-badge { color: #1d4ed8; }
+        .light-mode .custom-delete-btn { color: #dc2626; }
         .light-mode .event-title-bar {
-            background: rgba(0,0,0,0.04);
-            border-bottom-color: rgba(0,0,0,0.06);
+            background: transparent;
+            border-bottom-color: rgba(15,23,42,0.18);
         }
-        .light-mode .label-flying { background: rgba(16,185,129,0.2); color: #065f46; }
-        .light-mode .label-ground { background: rgba(245,158,11,0.2); color: #78350f; }
-        .light-mode .label-na { background: rgba(239,68,68,0.2); color: #991b1b; }
-        .light-mode .event-name-text { color: #1e293b !important; }
-        .light-mode .event-time-text { color: rgba(0,0,0,0.35) !important; }
-        .light-mode .flight-bar-track { background: rgba(0,0,0,0.06); }
+        .light-mode .label-flying { background: #a7f3d0; color: #065f46; }
+        .light-mode .label-ground { background: #fde68a; color: #78350f; }
+        .light-mode .label-na { background: #fecaca; color: #991b1b; }
+        .light-mode .event-name-text { color: #0f172a !important; }
+        .light-mode .event-time-text { color: #475569 !important; }
+        .light-mode .flight-bar-track { background: #ffffff; }
+        .light-mode .flight-bar-fill {
+            background: #34d399;
+            border-left-color: #047857;
+            border-right-color: #047857;
+        }
+        .light-mode .flight-time-marker { color: #047857; }
 
         /* --- Personnel chips --- */
-        .light-mode .chip:hover { box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+        .light-mode .chip:hover { box-shadow: 0 2px 6px rgba(15,23,42,0.25); }
+        .light-mode .chip-placeholder { opacity: 0.85; }
+        .light-mode .conflict-icon { color: #b45309; }
 
         /* --- Conflict tooltip --- */
         .light-mode .conflict-tooltip-portal {
             background: #ffffff;
-            border-color: #ef4444;
+            border-color: #dc2626;
             color: #991b1b;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(15,23,42,0.2);
         }
 
         /* --- Focus mode --- */
         .light-mode .focus-toggle-btn.on {
-            background: rgba(59,130,246,0.12);
-            color: #2563eb;
-            border-color: rgba(59,130,246,0.3);
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-color: #2563eb;
         }
         .light-mode .focus-toggle-btn.off {
-            background: rgba(0,0,0,0.03);
-            color: rgba(0,0,0,0.35);
-            border-color: rgba(0,0,0,0.12);
+            background: #ffffff;
+            color: #475569;
+            border-color: #cbd5e1;
         }
 
         /* --- Modal overlay & content --- */
         .light-mode .modal-overlay {
-            background: rgba(0,0,0,0.35);
+            background: rgba(15,23,42,0.4); /* scrim — alpha intentional */
         }
         .light-mode .modal-content {
             background: #ffffff;
-            border-color: rgba(0,0,0,0.12);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border-color: #cbd5e1;
+            box-shadow: 0 20px 60px rgba(15,23,42,0.25);
         }
         .light-mode .modal-content h3,
         .light-mode .modal-content h2 { color: #0f172a !important; }
-        .light-mode .modal-content p { color: #475569 !important; }
+        .light-mode .modal-content p { color: #334155 !important; }
         .light-mode .modal-content span { color: #334155; }
         .light-mode .modal-content button { color: #334155; }
         .light-mode .modal-content select,
         .light-mode .modal-content input {
-            background: #f1f5f9 !important;
+            background: #ffffff !important;
             color: #0f172a !important;
-            border-color: rgba(0,0,0,0.2) !important;
+            border-color: #94a3b8 !important;
         }
         .light-mode .modal-content select option {
-            background: #f1f5f9;
+            background: #ffffff;
             color: #0f172a;
         }
 
         /* --- Picker --- */
         .light-mode .picker-tab {
-            color: rgba(0,0,0,0.35);
+            color: #64748b;
         }
-        .light-mode .picker-tab:hover { color: rgba(0,0,0,0.6); }
-        .light-mode .picker-tab.active { color: #2563eb; border-bottom-color: #2563eb; }
+        .light-mode .picker-tab:hover { color: #0f172a; }
+        .light-mode .picker-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; }
         .light-mode .picker-search {
-            background: rgba(0,0,0,0.03);
-            border-color: rgba(0,0,0,0.12);
-            color: #1e293b;
+            background: #ffffff;
+            border-color: #94a3b8;
+            color: #0f172a;
         }
-        .light-mode .picker-search::placeholder { color: rgba(0,0,0,0.3); }
-        .light-mode .blank-puck-divider { background: rgba(0,0,0,0.1); }
-        .light-mode .blank-puck { border-color: rgba(0,0,0,0.25); }
-        .light-mode .pp-section-label { color: rgba(0,0,0,0.3); }
+        .light-mode .picker-search::placeholder { color: #64748b; }
+        .light-mode .blank-puck-divider { background: #cbd5e1; }
+        .light-mode .blank-puck { border-color: #64748b; }
+        .light-mode .pp-section-label { color: #64748b; }
 
         /* --- Change summary --- */
         .light-mode .change-summary-header {
             color: #0f172a;
-            border-bottom-color: rgba(0,0,0,0.08);
+            border-bottom-color: #cbd5e1;
         }
         .light-mode .change-date-group {
             color: #475569;
-            border-bottom-color: rgba(0,0,0,0.05);
-            background: rgba(248,250,252,0.98);
+            border-bottom-color: #e2e8f0;
+            background: #f1f5f9;
         }
         .light-mode .change-entry {
-            border-bottom-color: rgba(0,0,0,0.03);
+            border-bottom-color: #e2e8f0;
         }
-        .light-mode .change-entry:hover { background: rgba(0,0,0,0.02); }
+        .light-mode .change-entry:hover { background: #f1f5f9; }
         .light-mode .change-detail { color: #334155; }
         .light-mode .change-detail span { color: #334155 !important; }
-        .light-mode .change-undo { color: rgba(0,0,0,0.25); }
-        .light-mode .change-undo:hover { color: #d97706; }
+        .light-mode .change-icon-add { color: #047857; }
+        .light-mode .change-icon-remove { color: #b91c1c; }
+        .light-mode .change-undo { color: #64748b; }
+        .light-mode .change-undo:hover { color: #b45309; }
         .light-mode .change-summary-footer {
-            border-top-color: rgba(0,0,0,0.08);
+            border-top-color: #cbd5e1;
         }
         .light-mode .change-summary-footer button {
             color: #334155 !important;
@@ -2654,166 +2751,181 @@
         /* --- Selection screen --- */
         .light-mode .selection-day-header {
             color: #0f172a;
-            border-bottom-color: rgba(0,0,0,0.1);
+            border-bottom-color: #94a3b8;
         }
         .light-mode .selection-day-header span { color: #0f172a !important; }
-        .light-mode .sel-event-row:hover { background: rgba(0,0,0,0.03); }
+        .light-mode .sel-event-row:hover { background: #e2e8f0; }
         .light-mode .sel-event-row span { color: #334155 !important; }
         .light-mode .sel-cb {
-            border-color: rgba(0,0,0,0.2);
+            border-color: #94a3b8;
         }
-        .light-mode .sel-crew-preview { color: rgba(0,0,0,0.35) !important; }
+        .light-mode .sel-crew-preview { color: #64748b !important; }
         .light-mode .na-cat-chip {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.45);
+            border-color: #94a3b8;
+            color: #475569;
         }
         .light-mode .na-cat-chip.selected {
-            border-color: #ef4444;
-            color: #dc2626;
-            background: rgba(239,68,68,0.08);
+            border-color: #dc2626;
+            color: #b91c1c;
+            background: #fee2e2;
         }
         .light-mode .selection-separator {
-            color: rgba(0,0,0,0.3);
+            color: #64748b;
+            border-bottom-color: #cbd5e1;
         }
         .light-mode .selection-separator::before,
         .light-mode .selection-separator::after {
-            background: rgba(0,0,0,0.08);
+            background: #cbd5e1;
         }
 
         /* --- Quick select buttons --- */
         .light-mode .quick-select-btn {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.5);
+            border-color: #94a3b8;
+            color: #475569;
         }
         .light-mode .quick-select-btn.active-a {
-            border-color: #a855f7;
-            color: #7c3aed;
-            background: rgba(168,85,247,0.08);
+            border-color: #7c3aed;
+            color: #6d28d9;
+            background: #ede9fe;
         }
         .light-mode .quick-select-btn.active-b {
-            border-color: #f97316;
-            color: #ea580c;
-            background: rgba(249,115,22,0.08);
+            border-color: #ea580c;
+            color: #c2410c;
+            background: #ffedd5;
         }
         .light-mode .quick-select-btn.active-staff {
-            border-color: #22c55e;
-            color: #16a34a;
-            background: rgba(34,197,94,0.08);
+            border-color: #16a34a;
+            color: #15803d;
+            background: #dcfce7;
         }
 
         /* --- Misc controls --- */
-        .light-mode .loading-screen { color: #1e293b; }
+        .light-mode .loading-screen { color: #0f172a; }
         .light-mode .spinner {
-            border-color: rgba(0,0,0,0.08);
-            border-top-color: #3b82f6;
+            border-color: #cbd5e1;
+            border-top-color: #2563eb;
         }
         .light-mode .filter-btn {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.5);
+            border-color: #94a3b8;
+            color: #334155;
         }
         .light-mode .filter-btn:hover {
-            border-color: rgba(0,0,0,0.25);
+            border-color: #0f172a;
             color: #0f172a;
         }
         .light-mode .day-tab {
-            color: rgba(0,0,0,0.55);
+            color: #475569;
         }
-        .light-mode .day-tab:hover { color: rgba(0,0,0,0.6); background: rgba(0,0,0,0.03); }
-        .light-mode .day-tab.today { color: #2563eb; background: rgba(59,130,246,0.06); }
-        .light-mode .empty-day { color: rgba(0,0,0,0.15); }
-        .light-mode .saved-indicator { color: #059669; }
+        .light-mode .day-tab:hover { color: #0f172a; background: #e2e8f0; }
+        .light-mode .day-tab.today { color: #1d4ed8; background: #dbeafe; }
+        .light-mode .empty-day { color: #94a3b8; }
+        .light-mode .saved-indicator { color: #047857; }
 
         /* --- Scrollbar --- */
-        .light-mode ::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); }
-        .light-mode ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
-        .light-mode ::-webkit-scrollbar-corner { background: #f0f4f8; }
+        .light-mode ::-webkit-scrollbar-track { background: #e2e8f0; }
+        .light-mode ::-webkit-scrollbar-thumb { background: #94a3b8; }
+        .light-mode ::-webkit-scrollbar-corner { background: #eef2f6; }
 
         /* --- View toggle tabs --- */
-        .light-mode .view-tabs { background: rgba(0,0,0,0.04); }
-        .light-mode .view-tab { color: rgba(0,0,0,0.35); }
-        .light-mode .view-tab:hover { color: rgba(0,0,0,0.6); }
-        .light-mode .view-tab.active { color: #2563eb; background: rgba(59,130,246,0.08); }
+        .light-mode .view-tabs { background: #e2e8f0; }
+        .light-mode .view-tab { color: #64748b; }
+        .light-mode .view-tab:hover { color: #0f172a; }
+        .light-mode .view-tab.active { color: #1d4ed8; background: #ffffff; }
 
         /* --- Rainbow view --- */
         .light-mode .rainbow-area {
-            background: rgba(241,245,249,0.5);
+            background: #eef2f6;
         }
         .light-mode .rainbow-toolbar {
-            background: rgba(255,255,255,0.96);
-            border-bottom-color: rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-bottom-color: #cbd5e1;
+            backdrop-filter: none;
         }
         .light-mode .rainbow-filter-btn {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.35);
+            border-color: #94a3b8;
+            color: #475569;
         }
         .light-mode .rainbow-corner {
-            background: rgba(248,250,252,1);
-            border-right-color: rgba(0,0,0,0.08);
-            border-bottom-color: rgba(0,0,0,0.08);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.06);
+            background: #ffffff;
+            border-right-color: #cbd5e1;
+            border-bottom-color: #94a3b8;
+            box-shadow: 2px 2px 5px rgba(15,23,42,0.08);
         }
-        .light-mode .rainbow-corner span { color: #475569 !important; }
+        .light-mode .rainbow-corner span { color: #334155 !important; }
         .light-mode .rainbow-date-header {
-            background: rgba(248,250,252,1);
-            border-bottom-color: rgba(0,0,0,0.08);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+            background: #ffffff;
+            border-bottom-color: #94a3b8;
+            box-shadow: 0 2px 5px rgba(15,23,42,0.08);
         }
         .light-mode .rb-weekday { color: #0f172a !important; }
-        .light-mode .rb-daymonth { color: #64748b !important; }
-        .light-mode .rainbow-time-ruler { color: rgba(0,0,0,0.35); }
+        .light-mode .rb-daymonth { color: #475569 !important; }
+        .light-mode .rainbow-time-ruler { color: #64748b; }
         .light-mode .rainbow-name-cell {
-            background: rgba(255,255,255,1);
-            border-right-color: rgba(0,0,0,0.1);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.06);
+            background: #ffffff;
+            border-right-color: #94a3b8;
+            box-shadow: 2px 0 5px rgba(15,23,42,0.06);
         }
         .light-mode .rainbow-name-text { color: #0f172a !important; }
-        .light-mode .rainbow-cat-text { color: rgba(0,0,0,0.35) !important; }
+        .light-mode .rainbow-cat-text { color: #64748b !important; }
         .light-mode .rainbow-cat-separator {
-            background: rgba(0,0,0,0.03);
-            color: rgba(0,0,0,0.35);
-            border-top-color: rgba(0,0,0,0.06);
+            background: #e2e8f0;
+            color: #475569;
+            border-top-color: #cbd5e1;
         }
         .light-mode .rainbow-cell {
-            background: rgba(255,255,255,0.6);
-            border-right-color: rgba(0,0,0,0.05);
+            background: #ffffff;
+            border-right-color: #e2e8f0;
         }
-        .light-mode .rainbow-cell:hover { background: rgba(255,255,255,0.85); }
-        .light-mode .rb-hour-line { background: rgba(0,0,0,0.05); }
-        .light-mode .rb-event-bar { color: rgba(255,255,255,0.95); }
-        .light-mode .rb-bar-label { text-shadow: 0 0 2px rgba(0,0,0,0.4); }
-        .light-mode .rb-event-bar:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .light-mode .rainbow-cell:hover { background: #f1f5f9; }
+        .light-mode .rb-hour-line { background: #e2e8f0; }
+        /* Bars: solid identity-color tints, dark text, saturated 1px border */
+        .light-mode .rb-event-bar { color: #0f172a; }
+        .light-mode .rb-bar-label { text-shadow: none; }
+        .light-mode .rb-event-bar:hover { box-shadow: 0 4px 12px rgba(15,23,42,0.25); filter: none; }
+        .light-mode .rb-bar-flying { background: #a7f3d0; border-color: #059669; }
+        .light-mode .rb-bar-ground { background: #fde68a; border-color: #d97706; }
+        .light-mode .rb-bar-na { background: #fecaca; border-color: #dc2626; }
+        .light-mode .rb-bar-supervision { background: #ddd6fe; border-color: #7c3aed; }
+        .light-mode .rb-bar-academics { background: #bfdbfe; border-color: #2563eb; }
+        .light-mode .rb-flight-inner {
+            background: #34d399;
+            border-left-color: #047857;
+            border-right-color: #047857;
+        }
 
         /* --- Rainbow filter modal --- */
         .light-mode .rb-filter-group-header {
             color: #334155;
-            border-bottom-color: rgba(0,0,0,0.05);
+            border-bottom-color: #e2e8f0;
         }
-        .light-mode .rb-filter-group-header:hover { background: rgba(0,0,0,0.03); }
+        .light-mode .rb-filter-group-header:hover { background: #f1f5f9; }
         .light-mode .rb-filter-person-row {
             color: #475569;
         }
-        .light-mode .rb-filter-person-row:hover { background: rgba(0,0,0,0.03); }
+        .light-mode .rb-filter-person-row:hover { background: #f1f5f9; }
         .light-mode .rb-filter-cb {
-            border-color: rgba(0,0,0,0.2);
+            border-color: #94a3b8;
         }
 
         /* --- Rainbow v6.3-parity features (v4.3.0) --- */
         .light-mode .rainbow-date-header.rb-today {
             background: #dbeafe;
-            border-top-color: #3b82f6;
+            border-top-color: #2563eb;
         }
         .light-mode .rainbow-date-header.rb-today .rb-weekday { color: #1d4ed8 !important; }
-        .light-mode .rainbow-date-header.rb-today .rb-daymonth { color: #2563eb !important; }
+        .light-mode .rainbow-date-header.rb-today .rb-daymonth { color: #1d4ed8 !important; }
         .light-mode .rainbow-name-cell:hover { background: #f1f5f9; }
-        .light-mode .rb-workload-label { color: rgba(0,0,0,0.4); }
-        .light-mode .rb-week-toggle { color: rgba(0,0,0,0.5); }
-        .light-mode .rb-now-line { border-left-color: rgba(0,0,0,0.35); }
-        .light-mode .rb-personnel-note { color: #a16207; }
+        .light-mode .rb-workload-label { color: #64748b; }
+        .light-mode .rb-workload-fly { color: #047857; }
+        .light-mode .rb-workload-gnd { color: #b45309; }
+        .light-mode .rb-week-toggle { color: #475569; }
+        .light-mode .rb-now-line { border-left-color: #475569; }
+        .light-mode .rb-personnel-note { color: #854d0e; }
 
         /* --- Inline style overrides (require !important to beat React style prop) --- */
         .light-mode .selection-section-title span { color: inherit !important; }
         .light-mode .day-header > div > div:first-child { color: #0f172a !important; }
-        .light-mode .day-header > div > div:last-child { color: #64748b !important; }
+        .light-mode .day-header > div > div:last-child { color: #475569 !important; }
 
         /* Refresh modal overrides */
         .light-mode .modal-content div[style*="background: 'rgba(59,130,246"],
@@ -2823,12 +2935,12 @@
 
         /* Rainbow toolbar inline style overrides */
         .light-mode .rainbow-toolbar span {
-            color: rgba(0,0,0,0.4) !important;
+            color: #475569 !important;
         }
         .light-mode .rainbow-toolbar select {
-            background: rgba(0,0,0,0.04) !important;
-            border-color: rgba(0,0,0,0.12) !important;
-            color: #334155 !important;
+            background: #ffffff !important;
+            border-color: #94a3b8 !important;
+            color: #0f172a !important;
         }
         .light-mode .rainbow-toolbar button[style] {
             color: inherit !important;
@@ -2842,7 +2954,7 @@
 
         /* Change summary inline overrides */
         .light-mode .change-entry .change-detail span {
-            color: #475569 !important;
+            color: #334155 !important;
         }
         .light-mode .change-summary-header span {
             color: #0f172a !important;
@@ -2850,11 +2962,11 @@
 
         /* Refresh button inline overrides */
         .light-mode .filter-btn[style] {
-            color: #3b82f6 !important;
-            border-color: rgba(59,130,246,0.3) !important;
+            color: #1d4ed8 !important;
+            border-color: #2563eb !important;
         }
         .light-mode .filter-btn[style] span:last-child {
-            color: rgba(59,130,246,0.6) !important;
+            color: #1d4ed8 !important;
         }
 
         /* ===== EVENT ACTION MENU PORTAL ===== */
@@ -2892,10 +3004,10 @@
 
         /* Light mode overrides for action menu */
         .light-mode .event-action-menu {
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.25));
+            filter: drop-shadow(0 4px 12px rgba(15,23,42,0.3));
         }
         .light-mode .action-tooltip {
-            background: rgba(15,23,42,0.9);
+            background: #0f172a;
             color: #f8fafc;
         }
 
@@ -2904,108 +3016,147 @@
         .light-mode .modal-content .confirm-delete-modal-title { color: #0f172a !important; }
 
         /* --- Whiteboard light mode --- */
-        .light-mode .wb-date-header-row { background: #f1f5f9; }
-        .light-mode .wb-date-header-label { color: rgba(0,0,0,0.85); }
-        .light-mode .wb-section-title { border-bottom-color: rgba(0,0,0,0.08); }
-        .light-mode .wb-section-flying .wb-section-title  { color: #065f46; background: #e6f7f2; border-bottom-color: rgba(6,95,70,0.12); }
-        .light-mode .wb-section-ground .wb-section-title  { color: #78350f; background: #fef3cd; border-bottom-color: rgba(120,53,15,0.12); }
-        .light-mode .wb-section-na .wb-section-title      { color: #7f1d1d; background: #fee2e2; border-bottom-color: rgba(127,29,29,0.12); }
-        .light-mode .wb-section-supervision .wb-section-title { color: #4c1d95; background: #ede9fe; border-bottom-color: rgba(76,29,149,0.12); }
-        .light-mode .wb-section-academics .wb-section-title  { color: #1e3a8a; background: #dbeafe; border-bottom-color: rgba(30,58,138,0.12); }
+        .light-mode .wb-date-header-row { background: #e2e8f0; box-shadow: 0 1px 0 #cbd5e1; }
+        .light-mode .wb-date-header-label { color: #0f172a; }
+        .light-mode .wb-section-title { border-bottom-color: #cbd5e1; }
+        .light-mode .wb-section-flying .wb-section-title  { color: #065f46; background: #d1fae5; border-bottom-color: #34d399; }
+        .light-mode .wb-section-ground .wb-section-title  { color: #92400e; background: #fef3c7; border-bottom-color: #fbbf24; }
+        .light-mode .wb-section-na .wb-section-title      { color: #991b1b; background: #fee2e2; border-bottom-color: #f87171; }
+        .light-mode .wb-section-supervision .wb-section-title { color: #5b21b6; background: #ede9fe; border-bottom-color: #a78bfa; }
+        .light-mode .wb-section-academics .wb-section-title  { color: #1e40af; background: #dbeafe; border-bottom-color: #60a5fa; }
         .light-mode .wb-table th {
-            color: rgba(0,0,0,0.7);
-            background: rgba(0,0,0,0.04);
-            border-color: rgba(0,0,0,0.12);
+            color: #334155;
+            background: #e2e8f0;
+            border-color: #cbd5e1;
         }
         .light-mode .wb-table td {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.92);
+            border-color: #cbd5e1;
+            color: #0f172a;
+            background: #ffffff;
         }
-        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.02); }
-        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.045); }
+        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: #f1f5f9; }
+        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: #e2e8f0; }
         /* Preserve status row colors on hover in light mode */
-        .light-mode .wb-row-effective:hover td { background: rgba(34,197,94,0.16) !important; }
-        .light-mode .wb-row-partial:hover td   { background: rgba(234,179,8,0.16)  !important; }
-        .light-mode .wb-row-cancelled:hover td { background: rgba(239,68,68,0.16)  !important; }
+        .light-mode .wb-row-effective:hover td { background: #bbf7d0 !important; }
+        .light-mode .wb-row-partial:hover td   { background: #fef08a !important; }
+        .light-mode .wb-row-cancelled:hover td { background: #fecaca !important; }
         /* compact table inherits .light-mode .wb-table th/td rules — no extra overrides needed */
-        .light-mode .wb-cell-editable:hover { outline-color: rgba(59,130,246,0.3); }
-        .light-mode .wb-cell-editing { background: rgba(59,130,246,0.06) !important; }
-        .light-mode .wb-crew-cell.wb-crew-empty { color: rgba(0,0,0,0.2); }
-        .light-mode .wb-crew-cell .wb-crew-remove { background: rgba(255,255,255,0.8); color: rgba(0,0,0,0.5); }
-        .light-mode .wb-crew-chip .wb-crew-remove { color: rgba(0,0,0,0.4); }
-        .light-mode .wb-crew-drop-zone { border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.2); }
+        .light-mode .wb-cell-editable:hover { outline-color: #60a5fa; }
+        .light-mode .wb-cell-editing { background: #dbeafe !important; }
+        .light-mode .wb-crew-cell.wb-crew-empty { color: #64748b; }
+        .light-mode .wb-crew-cell .wb-crew-remove { background: #ffffff; color: #475569; }
+        .light-mode .wb-crew-drop-zone { border-color: #94a3b8; color: #64748b; }
         .light-mode .wb-placeholder-chip { border-color: currentColor; }
         .light-mode .wb-placeholder-chip.wb-placeholder-generic {
-            color: #1e293b;
-            border-color: rgba(30,41,59,0.3);
-            background: rgba(30,41,59,0.06);
+            color: #334155;
+            border-color: #64748b;
+            background: #e2e8f0;
         }
         .light-mode .wb-placeholder-warn,
         .light-mode .wb-fill-prompt {
-            background: #f8fafc;
-            color: #1e293b;
-            border-color: rgba(0,0,0,0.15);
+            background: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 6px 20px rgba(15,23,42,0.2);
         }
+        .light-mode .wb-placeholder-warn { border-color: #f87171; }
+        .light-mode .wb-fill-prompt { border-color: #60a5fa; }
         .light-mode .wb-placeholder-warn-btn,
         .light-mode .wb-fill-prompt-btn {
-            color: #1e293b;
-            border-color: rgba(0,0,0,0.2);
-            background: rgba(0,0,0,0.04);
+            color: #0f172a;
+            border-color: #94a3b8;
+            background: #f1f5f9;
         }
         .light-mode .wb-placeholder-warn-btn:hover,
-        .light-mode .wb-fill-prompt-btn:hover { background: rgba(0,0,0,0.08); }
-        .light-mode .wb-add-ph-popover { background: #f8fafc; border-color: rgba(0,0,0,0.1); }
-        .light-mode .wb-add-ph-option { color: #1e293b; }
-        .light-mode .wb-add-ph-option:hover { background: rgba(0,0,0,0.05); }
-        .light-mode .wb-add-ph-dot { opacity: 0.85; }
+        .light-mode .wb-fill-prompt-btn:hover { background: #e2e8f0; }
+        .light-mode .wb-add-ph-popover { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 8px 24px rgba(15,23,42,0.18); }
+        .light-mode .wb-add-ph-option { color: #0f172a; }
+        .light-mode .wb-add-ph-option:hover { background: #f1f5f9; }
+        .light-mode .wb-add-ph-dot { opacity: 1; }
         /* Add-person popup */
-        .light-mode .add-person-popup { background: #ffffff; border-color: rgba(0,0,0,0.15); box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
-        .light-mode .ap-header { border-bottom-color: rgba(0,0,0,0.08); }
+        .light-mode .add-person-popup { background: #ffffff; border-color: #cbd5e1; box-shadow: 0 12px 40px rgba(15,23,42,0.25); }
+        .light-mode .ap-header { border-bottom-color: #e2e8f0; }
         .light-mode .ap-title { color: #0f172a; }
-        .light-mode .ap-sub { color: rgba(0,0,0,0.45); }
-        .light-mode .ap-tabs { border-bottom-color: rgba(0,0,0,0.1); }
-        .light-mode .ap-tab { color: rgba(0,0,0,0.45); }
-        .light-mode .ap-tab:hover { color: rgba(0,0,0,0.75); }
-        .light-mode .ap-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; background: rgba(37,99,235,0.06); }
-        .light-mode .ap-section-label { color: rgba(0,0,0,0.5); }
-        .light-mode .ap-search { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.15); color: #0f172a; }
-        .light-mode .ap-note { color: rgba(0,0,0,0.5); }
-        .light-mode .ap-load-btn { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.35); color: #1d4ed8; }
-        .light-mode .ap-load-btn:hover { background: rgba(37,99,235,0.15); }
-        .light-mode .ap-toggle-na { color: rgba(0,0,0,0.4); }
-        .light-mode .ap-toggle-na:hover { color: rgba(0,0,0,0.65); }
-        .light-mode .ap-chip-pair { border-color: rgba(0,0,0,0.6); }
-        .light-mode .bb-class-row { border-bottom-color: rgba(0,0,0,0.06); }
-        .light-mode .wb-crew-add-btn { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.3); }
-        .light-mode .wb-crew-add-btn:hover { border-color: rgba(0,0,0,0.3); color: rgba(0,0,0,0.5); }
-        .light-mode .wb-row-effective td { background: rgba(34,197,94,0.1); }
-        .light-mode .wb-row-partial td { background: rgba(234,179,8,0.1); }
-        .light-mode .wb-row-cancelled td { background: rgba(239,68,68,0.1); }
-        .light-mode .wb-highlight-yellow { box-shadow: inset 0 0 0 100px rgba(250,204,21,0.2); }
-        .light-mode .wb-highlight-purple { box-shadow: inset 0 0 0 100px rgba(168,85,247,0.2); }
-        .light-mode .wb-highlight-orange { box-shadow: inset 0 0 0 100px rgba(249,115,22,0.2); }
-        .light-mode .wb-highlight-red { box-shadow: inset 0 0 0 100px rgba(239,68,68,0.2); }
-        .light-mode .wb-highlight-btn { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.15); }
-        .light-mode .wb-highlight-btn:hover { color: rgba(0,0,0,0.7); }
-        .light-mode .wb-highlight-btn.active { color: #b45309; border-color: rgba(180,83,9,0.4); background: rgba(180,83,9,0.06); }
-        .light-mode .wb-sort-btn { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.18); }
-        .light-mode .wb-sort-btn:hover { color: rgba(0,0,0,0.85); border-color: rgba(0,0,0,0.35); }
-        .light-mode .wb-row-attached td:first-child { border-left-color: rgba(37,99,235,0.5); }
-        .light-mode .wb-attach-tie { color: rgba(37,99,235,0.7); }
+        .light-mode .ap-sub { color: #64748b; }
+        .light-mode .ap-tabs { border-bottom-color: #cbd5e1; }
+        .light-mode .ap-tab { color: #64748b; }
+        .light-mode .ap-tab:hover { color: #0f172a; }
+        .light-mode .ap-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; background: #eff6ff; }
+        .light-mode .ap-section-label { color: #64748b; }
+        .light-mode .ap-search { background: #ffffff; border-color: #94a3b8; color: #0f172a; }
+        .light-mode .ap-note { color: #64748b; }
+        .light-mode .ap-load-btn { background: #eff6ff; border-color: #2563eb; color: #1d4ed8; }
+        .light-mode .ap-load-btn:hover { background: #dbeafe; }
+        .light-mode .ap-toggle-na { color: #64748b; }
+        .light-mode .ap-toggle-na:hover { color: #334155; }
+        .light-mode .ap-chip-pair { border-color: #334155; }
+        .light-mode .ap-chip-date { background: #dbeafe; color: #1e40af; }
+        .light-mode .ap-chip-check { color: #15803d; }
+        .light-mode .ap-chip-bang { color: #b45309; }
+        .light-mode .ap-chip.ap-armed {
+            background: #fee2e2 !important;
+            color: #b91c1c !important;
+            border-color: #dc2626 !important;
+        }
+        .light-mode .bb-class-row { border-bottom-color: #e2e8f0; }
+        .light-mode .wb-crew-add-btn { border-color: #94a3b8; color: #64748b; }
+        .light-mode .wb-crew-add-btn:hover { border-color: #475569; color: #334155; }
+        .light-mode .wb-row-effective td { background: #dcfce7; }
+        .light-mode .wb-row-partial td { background: #fef9c3; }
+        .light-mode .wb-row-cancelled td { background: #fee2e2; }
+        .light-mode .wb-row-focused td {
+            border-top-color: #2563eb !important;
+            border-bottom-color: #2563eb !important;
+        }
+        .light-mode .wb-row-focused td:first-child { border-left-color: #2563eb !important; }
+        .light-mode .wb-row-focused td:last-child { border-right-color: #2563eb !important; }
+        /* Highlight overlays — solid marker tints (inset shadow paints under cell text) */
+        .light-mode .wb-highlight-yellow { box-shadow: inset 0 0 0 100px #fef08a; }
+        .light-mode .wb-highlight-purple { box-shadow: inset 0 0 0 100px #e9d5ff; }
+        .light-mode .wb-highlight-orange { box-shadow: inset 0 0 0 100px #fed7aa; }
+        .light-mode .wb-highlight-red { box-shadow: inset 0 0 0 100px #fecaca; }
+        .light-mode .wb-highlight-ftca { box-shadow: inset 0 0 0 100px #e9d5ff; }
+        .light-mode .wb-highlight-ftcb { box-shadow: inset 0 0 0 100px #fed7aa; }
+        .light-mode .wb-highlight-stca { box-shadow: inset 0 0 0 100px #f3e8ff; }
+        .light-mode .wb-highlight-stcb { box-shadow: inset 0 0 0 100px #ffedd5; }
+        .light-mode .wb-highlight-ip   { box-shadow: inset 0 0 0 100px #dcfce7; }
+        .light-mode .wb-highlight-ifte { box-shadow: inset 0 0 0 100px #e0e7ff; }
+        .light-mode .wb-highlight-btn { color: #475569; border-color: #94a3b8; }
+        .light-mode .wb-highlight-btn:hover { color: #0f172a; border-color: #475569; }
+        .light-mode .wb-highlight-btn.active { color: #92400e; border-color: #d97706; background: #fef3c7; }
+        .light-mode .wb-sort-btn { color: #334155; border-color: #94a3b8; }
+        .light-mode .wb-sort-btn:hover { color: #0f172a; border-color: #475569; }
+        .light-mode .wb-row-parent td:first-child { border-left-color: #2563eb; }
+        .light-mode .wb-row-attached td:first-child { border-left-color: #2563eb; }
+        .light-mode .wb-attach-tie { color: #1d4ed8; }
+        .light-mode .ap-class-pill { border-color: #94a3b8; color: #475569; }
+        .light-mode .ap-class-pill.active { border-color: #2563eb; background: #dbeafe; color: #1d4ed8; }
+        .light-mode .ap-chip.ap-onevent { outline-color: #16a34a; }
         .light-mode .duty-slot-label { color: #475569; }
-        .light-mode .duty-drop-zone { border-color: rgba(0,0,0,0.2); color: #334155; }
-        .light-mode .duty-drop-zone.drag-over { border-color: #2563eb; background: rgba(37,99,235,0.08); color: #2563eb; }
+        .light-mode .duty-drop-zone { border-color: #94a3b8; color: #334155; }
+        .light-mode .duty-drop-zone.drag-over { border-color: #2563eb; background: #dbeafe; color: #1d4ed8; }
         .light-mode .wb-add-row {
-            border-color: rgba(0,0,0,0.12);
-            color: rgba(0,0,0,0.25);
+            border-color: #94a3b8;
+            color: #64748b;
         }
         .light-mode .wb-add-row:hover {
-            border-color: rgba(59,130,246,0.3);
-            color: rgba(59,130,246,0.6);
-            background: rgba(59,130,246,0.03);
+            border-color: #2563eb;
+            color: #1d4ed8;
+            background: #eff6ff;
         }
-        .light-mode .wb-delete-btn { color: rgba(0,0,0,0.2); }
-        .light-mode .wb-delete-btn:hover { color: #ef4444; }
+        .light-mode .wb-delete-btn { color: #64748b; }
+        .light-mode .wb-delete-btn:hover { color: #dc2626; }
+        /* Highlight color picker popup */
+        .light-mode .wb-picker-popup {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            box-shadow: 0 6px 20px rgba(15,23,42,0.25);
+        }
+        .light-mode .wb-picker-swatch:hover { border-color: #334155; }
+        .light-mode .wb-picker-divider { background: #cbd5e1; }
+        .light-mode .wb-picker-erase { color: #475569; border-color: #94a3b8; }
+        .light-mode .wb-picker-erase:hover { color: #0f172a; border-color: #475569; }
+        .light-mode .wb-picker-close { color: #64748b; }
+        .light-mode .wb-picker-close:hover { color: #0f172a; }
     </style>
 </head>
 <body>
@@ -4436,7 +4587,7 @@
         //  asserted as truth.
         // ═══════════════════════════════════════════════════════════════════════
         const BB_GAS_URL = 'https://script.google.com/macros/s/AKfycbyU4XfKl5ct6SMzl1nh7e4yZOR6U_wqD9_4HbUNBUOm7fgUaJIPTUIH95CVEGsIfVmiUw/exec';
-        const BB_CACHE_KEY = 'tps-bigboard-cache-v1';
+        const BB_CACHE_KEY = 'tps-bigboard-cache-v2'; // v2: paired cells carry p (pair-group color)
         // Sheet names on the Big Board spreadsheet are inconsistent ("26A FTC Big
         // Board", "***26A STC BigBoard***") — resolve by pattern, never hardcode.
         const BB_CLASSES = [
@@ -4576,6 +4727,9 @@
                     status[idx] = { c: r.completion };
                     if (r.dateText) status[idx].d = r.dateText;
                     if (r.flag) status[idx].f = r.flag;
+                    // Pair-group color: students sharing a paired cell color are an
+                    // allowable pairing group for this event.
+                    if (cell.rgbFamily === 'paired') status[idx].p = cell.bgHex;
                 });
                 // Duplicate eventNo rows exist on some boards — keep the row with the
                 // most applicable (non-notreq) students.
@@ -5886,11 +6040,23 @@
             if (inst.type === 'event-edit') {
                 const diffs = [];
                 if (inst.before && inst.after) {
-                    if (inst.before.eventName !== inst.after.eventName) diffs.push(`name \u2192 "${inst.after.eventName}"`);
-                    if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
-                        diffs.push(`${inst.after.startTime}\u2013${inst.after.endTime || '??'}`);
-                    if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
-                    if (inst.before.hasOwnProperty('notes') && inst.before.notes !== inst.after.notes)
+                    // Only diff fields the `after` snapshot actually carries \u2014 entries recorded
+                    // by single-field whiteboard saves (pre-v4.5) are sparse, and diffing a
+                    // missing key against the full `before` produced "undefined" noise.
+                    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k) && o[k] !== undefined;
+                    if (has(inst.after, 'eventName') && inst.before.eventName !== inst.after.eventName)
+                        diffs.push(`name \u2192 "${inst.after.eventName}"`);
+                    const timeChanged =
+                        (has(inst.after, 'startTime') && inst.before.startTime !== inst.after.startTime) ||
+                        (has(inst.after, 'endTime') && inst.before.endTime !== inst.after.endTime);
+                    if (timeChanged) {
+                        const s = has(inst.after, 'startTime') ? inst.after.startTime : inst.before.startTime;
+                        const e = has(inst.after, 'endTime') ? inst.after.endTime : inst.before.endTime;
+                        diffs.push(`${s || '??'}\u2013${e || '??'}`);
+                    }
+                    if (has(inst.after, 'model') && (inst.before.model || '') !== (inst.after.model || ''))
+                        diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
+                    if (inst.before.hasOwnProperty('notes') && has(inst.after, 'notes') && inst.before.notes !== inst.after.notes)
                         diffs.push(`notes \u2192 "${inst.after.notes || ''}"`);
                 }
                 return (
@@ -8406,9 +8572,10 @@
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
                                 const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
+                                const parentClass = events.some(e => e.attachedTo === ev.id) ? 'wb-row-parent' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass, parentClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8541,9 +8708,10 @@
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
                                 const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
+                                const parentClass = events.some(e => e.attachedTo === ev.id) ? 'wb-row-parent' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass, parentClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8610,13 +8778,30 @@
         };
 
         // ─────────────────────────── WhiteboardAcademics ───────────────────────
-        const WhiteboardAcademics = ({ events, roster, onEditSave }) => {
+        const WhiteboardAcademics = ({ events, roster, onEditSave, onCreateEvent, activeDay }) => {
             // Academics events are readonly (crew/timeline stay locked), but the block
             // TIMES are adjustable from here — saves flow through the normal edit path
             // and show up in the Change Summary as event-edit entries.
             const handleCellSave = useCallback((eventId, field, value) => {
                 if (onEditSave) onEditSave(eventId, { [field]: value || null });
             }, [onEditSave]);
+
+            // A block with NO backing event (day had no academics row for it) becomes
+            // one on first time entry: typing a time creates a custom Academics event
+            // for that category — from then on it's a normal editable row.
+            const handleCreateSave = useCallback((cat) => (eventId, field, value) => {
+                if (!value || !onCreateEvent || !activeDay) return;
+                const members = [...(roster[cat.catColor] || [])];
+                onCreateEvent('Academics', activeDay, {
+                    eventName: `${cat.label} Academics`,
+                    startTime: null,
+                    endTime: null,
+                    personnel: members,
+                    originalPersonnel: [...members],
+                    readonly: true, // crew/timeline stay locked, matching parsed academics
+                    [field]: value,
+                });
+            }, [onCreateEvent, activeDay, roster]);
 
             const cellRefsMap = React.useRef(new Map());
 
@@ -8673,6 +8858,16 @@
                                             <WhiteboardCell {...makeTab(1)} value={ev.endTime || ''} field="endTime" eventId={ev.id}
                                                 type="time" onSave={handleCellSave} className="wb-acad-time" />
                                         </React.Fragment>
+                                        );
+                                    })() : (!ev && onCreateEvent && activeDay) ? (() => {
+                                        const creator = handleCreateSave({ label, catColor });
+                                        return (
+                                            <React.Fragment>
+                                                <WhiteboardCell value="" field="startTime" eventId={`acad-new-${label}`}
+                                                    type="time" onSave={creator} className="wb-acad-time" />
+                                                <WhiteboardCell value="" field="endTime" eventId={`acad-new-${label}`}
+                                                    type="time" onSave={creator} className="wb-acad-time" />
+                                            </React.Fragment>
                                         );
                                     })() : (
                                         <React.Fragment>
@@ -9208,7 +9403,8 @@
                                                 onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
-                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave} />
+                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave}
+                                                onCreateEvent={handleCreateWbEvent} activeDay={activeDay} />
                                         </div>
                                     </div>
                                 ) : sec === 'Flying' ? (
@@ -9291,6 +9487,26 @@
             const [showNA, setShowNA] = useState(false);
             const [armed, setArmed] = useState(null); // chip awaiting "Add anyway?" confirm
 
+            // Class filter (e.g. hide 26B while scheduling 26A); persisted across popups.
+            const [classFilter, setClassFilter] = useState(() => {
+                try {
+                    const raw = JSON.parse(localStorage.getItem('tps-bb-class-filter'));
+                    if (Array.isArray(raw) && raw.length > 0) return new Set(raw);
+                } catch (e) {}
+                return null; // null = all classes
+            });
+            const toggleClassFilter = (key) => {
+                setClassFilter(prev => {
+                    const cur = new Set(prev || bbHits.map(h => h.def.key));
+                    if (cur.has(key)) cur.delete(key); else cur.add(key);
+                    try { localStorage.setItem('tps-bb-class-filter', JSON.stringify([...cur])); } catch (e) {}
+                    return cur;
+                });
+            };
+            const activeHits = useMemo(
+                () => bbHits.filter(h => !classFilter || classFilter.has(h.def.key)),
+                [bbHits, classFilter]);
+
             const unavail = useMemo(() => computeUnavailability(event, workingEvents), [event, workingEvents]);
             const assigned = useMemo(() => new Set(event.personnel || []), [event]);
 
@@ -9298,7 +9514,14 @@
                 const onDown = (e) => {
                     // Let [+] buttons' own click handlers decide (toggle / switch event)
                     if (e.target.closest && e.target.closest('.wb-crew-add-btn')) return;
-                    if (popRef.current && !popRef.current.contains(e.target)) onClose();
+                    if (popRef.current && !popRef.current.contains(e.target)) {
+                        // Swallow the click that follows this pointerdown — closing the
+                        // popup must not also focus/select whatever was under the cursor.
+                        const swallow = (ce) => { ce.stopPropagation(); ce.preventDefault(); };
+                        window.addEventListener('click', swallow, { capture: true, once: true });
+                        setTimeout(() => window.removeEventListener('click', swallow, { capture: true }), 400);
+                        onClose();
+                    }
                 };
                 const onKey = (e) => { if (e.key === 'Escape') onClose(); };
                 window.addEventListener('pointerdown', onDown);
@@ -9320,7 +9543,7 @@
             // Tab 1 grouping: completion (Big Board) × availability (working schedule)
             const groups = useMemo(() => {
                 const g = { needAvail: [], needBusy: [], scheduled: [], complete: [], na: [], unmatched: [] };
-                bbHits.forEach(({ def, entry, match }) => {
+                activeHits.forEach(({ def, entry, match }) => {
                     (roster[def.rosterCat] || []).forEach(ws => {
                         if (assigned.has(ws)) return;
                         const idx = match.map.get(ws);
@@ -9335,7 +9558,29 @@
                     });
                 });
                 return g;
-            }, [bbHits, roster, assigned, unavail]);
+            }, [activeHits, roster, assigned, unavail]);
+
+            // Pair groups: students sharing a paired-cell color = allowable pairing.
+            // Includes already-assigned members (shown checked) so the whole group reads.
+            const pairGroups = useMemo(() => {
+                const map = new Map();
+                activeHits.forEach(({ def, entry, match }) => {
+                    (roster[def.rosterCat] || []).forEach(ws => {
+                        const idx = match.map.get(ws);
+                        if (idx === undefined) return;
+                        const st = entry.status[idx];
+                        if (!st || !st.p) return;
+                        if (!map.has(st.p)) map.set(st.p, []);
+                        map.get(st.p).push({
+                            name: ws, date: st.d, flag: st.f,
+                            busy: unavail.has(ws),
+                            complete: st.c === 'complete',
+                            onEvent: assigned.has(ws),
+                        });
+                    });
+                });
+                return [...map.entries()];
+            }, [activeHits, roster, assigned, unavail]);
 
             const busyTooltip = (name) => (unavail.get(name) || [])
                 .map(b => `${b.model ? b.model + ' ' : ''}${b.eventName} (${b.startTime || '?'}–${b.endTime || '?'})`)
@@ -9438,11 +9683,48 @@
                                 </div>
                             ) : (
                                 <div>
+                                    {bbHits.length > 1 && (
+                                        <div className="ap-class-pills">
+                                            <span className="ap-section-label" style={{ margin: 0 }}>Classes:</span>
+                                            {bbHits.map(h => {
+                                                const on = !classFilter || classFilter.has(h.def.key);
+                                                return (
+                                                    <button key={h.def.key} className={`ap-class-pill ${on ? 'active' : ''}`}
+                                                        onClick={() => toggleClassFilter(h.def.key)}>
+                                                        {h.def.key}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                    {activeHits.length === 0 && (
+                                        <div className="ap-note">All classes are filtered out — toggle one back on above.</div>
+                                    )}
                                     {renderSection('Needs · Available', groups.needAvail, 'needs')}
                                     {renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
                                     {renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
                                     {renderSection('Completed', groups.complete, 'complete')}
-                                    {groups.needAvail.length + groups.needBusy.length + groups.scheduled.length + groups.complete.length === 0 && (
+                                    {pairGroups.length > 0 && (
+                                        <React.Fragment>
+                                            <div className="ap-section-label">Pair groups (may fly together)</div>
+                                            <div className="ap-pair-boxes">
+                                                {pairGroups.map(([hex, members]) => (
+                                                    <div key={hex} className="ap-pair-box"
+                                                        style={{ borderColor: `#${hex}`, background: `#${hex}22` }}>
+                                                        {members.map(m => m.onEvent ? (
+                                                            <span key={m.name} className="ap-chip ap-onevent"
+                                                                style={{ '--chip-bg': chipColor(m.name, roster).bg, '--chip-text': chipColor(m.name, roster).text }}
+                                                                title="Already on this event">
+                                                                <span className="ap-chip-name">{m.name}</span>
+                                                                <span className="ap-chip-check">✔</span>
+                                                            </span>
+                                                        ) : renderChip(m, m.complete ? 'complete' : 'needs'))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </React.Fragment>
+                                    )}
+                                    {activeHits.length > 0 && groups.needAvail.length + groups.needBusy.length + groups.scheduled.length + groups.complete.length === 0 && (
                                         <div className="ap-note">No matched students for {code} outside this event's crew.</div>
                                     )}
                                     {groups.na.length > 0 && (
@@ -9692,7 +9974,12 @@
                             eventSection: ev.section,
                             date: ev.date,
                             before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime, notes: ev.notes },
-                            after: updates,
+                            // Full merged snapshot, not just the edited field — single-field
+                            // saves from whiteboard cells otherwise diff as "undefined"
+                            after: (() => {
+                                const merged = { ...ev, ...updates };
+                                return { eventName: merged.eventName, model: merged.model, startTime: merged.startTime, endTime: merged.endTime, notes: merged.notes };
+                            })(),
                         }]);
                     }
                     return prev.map(e => e.id === eventId ? { ...e, ...updates } : e);
