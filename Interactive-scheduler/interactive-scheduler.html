@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
+<!-- Interactive Scheduler v4.6.1 — Fix: Soft pill missing on Ground events -->
+<!-- v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
   Comprehensive machine-readable context for replicating this application's features,
@@ -9036,6 +9037,15 @@
                                         <td style={{ textAlign: 'center' }}>
                                             <input type="checkbox" className="wb-checkbox wb-checkbox-pe"
                                                 checked={!!ev.partiallyEffective} onChange={() => onStatusChange(ev.id, 'partiallyEffective')} />
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <span className={`wb-soft-pill${ev.soft ? ' on' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); if (onToggleSoft) onToggleSoft(ev.id); }}
+                                                title={ev.soft
+                                                    ? 'Soft restriction ON — people on this event stay available for other events (conflicts still shown). Click for hard.'
+                                                    : 'Mark as soft restriction — routine/missable; people on it stay available elsewhere.'}>
+                                                soft
+                                            </span>
                                         </td>
                                     </tr>
                                 );
