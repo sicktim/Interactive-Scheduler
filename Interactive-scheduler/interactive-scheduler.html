@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
+<!-- Interactive Scheduler v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
+<!-- v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
 <!-- v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
 <!-- v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
 <!-- v4.6.1 — Fix: Soft pill missing on Ground events -->
@@ -1505,6 +1506,29 @@
         .theme-toggle-header-btn:hover {
             background: rgba(255,255,255,0.12);
             border-color: rgba(255,255,255,0.3);
+        }
+        /* Non-fatal notice banner (e.g. failed refresh with local data preserved) */
+        .app-notice {
+            position: fixed;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            max-width: 640px;
+            background: rgba(120, 53, 15, 0.97);
+            border: 1px solid #f59e0b;
+            color: #fde68a;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+        }
+        .light-mode .app-notice {
+            background: #fef3c7;
+            border-color: #d97706;
+            color: #92400e;
         }
         .theme-toggle-btn {
             width: 40px; height: 40px;
@@ -4953,9 +4977,11 @@
             const fStart = evStart(targetEvent);
             const fEnd = evEnd(targetEvent);
             const assigned = new Set(targetEvent.personnel || []);
+            if (fStart == null) return busy; // null-start target (FOA/AUTH): no time window to conflict with
             workingEvents.forEach(ev => {
                 if (ev.id === targetEvent.id || ev.date !== targetEvent.date || ev.cancelled || ev.soft) return;
                 const eS = evStart(ev), eE = evEnd(ev);
+                if (eS == null) return; // all-day FOA/AUTH rows must not mark people busy (matches focusedAvailability)
                 if (eS < fEnd && eE > fStart) {
                     (ev.personnel || []).forEach(p => {
                         if (assigned.has(p)) return;
@@ -5666,7 +5692,7 @@
                 ec.forEach((confList, person) => {
                     confList.forEach(c => {
                         const m = c.model ? `${c.model} ` : '';
-                        lines.push(`${person} → ${m}${c.eventName} ${c.startTime}-${c.endTime || '??'}`);
+                        lines.push(`${person} → ${m}${c.eventName} ${c.startTime}-${c.endTime || '??'}${c.soft ? ' [soft]' : ''}`);
                     });
                 });
                 badgeTooltip = lines.join('\n');
@@ -5850,7 +5876,7 @@
 
         const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu, onToggleSoft }) => {
             const hdr = fmtDate(date);
-            const today = new Date().toISOString().slice(0, 10);
+            const today = new Date().toLocaleDateString('en-CA'); // LOCAL date (UTC version rolled to tomorrow every evening)
             const isToday = date === today;
 
             const sectionData = useMemo(() => {
@@ -10324,6 +10350,18 @@
                 setWorkingEvents(prev => {
                     const ev = prev.find(e => e.id === eventId);
                     if (!ev) return prev;
+                    // Migrate persisted soft-flag key when a natural-key field changes,
+                    // or the flag silently orphans on the next reload/refresh.
+                    if (ev.soft) {
+                        const oldKey = eventNaturalKey(ev);
+                        const newKey = eventNaturalKey({ ...ev, ...updates });
+                        if (oldKey !== newKey) {
+                            const keys = loadSoftKeys();
+                            keys.delete(oldKey);
+                            keys.add(newKey);
+                            saveSoftKeys(keys);
+                        }
+                    }
                     if (initialized.current) {
                         setChanges(c => [...c, {
                             type: 'event-edit',
@@ -10770,7 +10808,9 @@
 
             // Clear all
             const handleClearAll = useCallback(() => {
-                setWorkingEvents(allEvents.map(ev => ({ ...ev, personnel: [...ev.originalPersonnel] })));
+                // applySoftFlags keeps soft restrictions alive through Clear All (they're
+                // planning metadata, not tracked changes)
+                setWorkingEvents(applySoftFlags(allEvents.map(ev => ({ ...ev, personnel: [...ev.originalPersonnel] }))));
                 setChanges([]);
                 clearState();
             }, [allEvents]);
@@ -11188,10 +11228,18 @@
             const [progress, setProgress] = useState('Initializing...');
             const [error, setError] = useState(null);
             const [cachedWorkingState, setCachedWorkingState] = useState(null);
+            // Non-fatal notice (e.g. a failed refresh where local data was preserved)
+            const [refreshNotice, setRefreshNotice] = useState(null);
+            useEffect(() => {
+                if (!refreshNotice) return;
+                const t = setTimeout(() => setRefreshNotice(null), 12000);
+                return () => clearTimeout(t);
+            }, [refreshNotice]);
 
             const refreshFromWhiteboard = useCallback(async (mode) => {
-                clearWorkingCopy();
-                setCachedWorkingState(null);
+                // IMPORTANT: do NOT clear the saved working copy yet. If the fetch fails
+                // (network blip / GAS timeout), the user's local changes must survive —
+                // clearing happens only after new data has arrived and validated.
                 setScreen('loading');
 
                 // Save current selections before refresh
@@ -11224,6 +11272,10 @@
                     const filtered = {};
                     Object.entries(loadedRoster).forEach(([k, v]) => { if (v?.length > 0) filtered[k] = v; });
 
+                    // Fetch succeeded and parsed — NOW it's safe to discard the old working copy
+                    clearWorkingCopy();
+                    setCachedWorkingState(null);
+
                     setRoster(filtered);
                     setDates(loadedDates);
                     setAllEvents(loadedEvents);
@@ -11252,7 +11304,14 @@
 
                     setScreen('selection');
                 } catch (err) {
-                    setError('Refresh failed: ' + err.message);
+                    // Refresh failed — the working copy was never cleared, so put the user
+                    // straight back into the scheduler with their data intact.
+                    const wc = loadWorkingCopy();
+                    if (wc && wc.workingEvents && wc.workingEvents.length > 0) {
+                        setCachedWorkingState(wc);
+                    }
+                    setRefreshNotice(`Refresh failed (${err.message}). Your local changes are safe — nothing was discarded. Try again in a moment.`);
+                    setScreen('scheduler');
                 }
             }, []);
 
@@ -11397,6 +11456,13 @@
             }
 
             return (
+                <>
+                {refreshNotice && (
+                    <div className="app-notice" onClick={() => setRefreshNotice(null)}
+                        title="Click to dismiss">
+                        ⚠ {refreshNotice}
+                    </div>
+                )}
                 <SchedulerView
                     allEvents={allEvents}
                     roster={roster}
@@ -11410,6 +11476,7 @@
                     darkMode={darkMode}
                     onToggleTheme={() => setDarkMode(d => !d)}
                 />
+                </>
             );
         }
 
