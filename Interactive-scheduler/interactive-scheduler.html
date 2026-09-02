@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
+<!-- Interactive Scheduler v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
+<!-- v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
 <!-- v4.6.1 — Fix: Soft pill missing on Ground events -->
 <!-- v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
 <!--
@@ -4873,20 +4874,41 @@
             try { localStorage.setItem(BB_CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
         };
 
+        // GAS sometimes returns Google's HTML error page instead of JSON when the
+        // script runs long (reads take ~10–20s; slow runs get cut off). Detect it,
+        // retry once, and fail with a human-readable message instead of
+        // "Unexpected token '<'".
+        const bbFetchJson = async (url, attempts = 2) => {
+            let lastErr = null;
+            for (let i = 0; i < attempts; i++) {
+                try {
+                    const res = await fetch(url);
+                    const text = await res.text();
+                    if (text.trim().startsWith('<')) {
+                        throw new Error('Google cut the request off (the Big Board read timed out on their end). It usually works on retry.');
+                    }
+                    return JSON.parse(text);
+                } catch (e) {
+                    lastErr = (e instanceof SyntaxError)
+                        ? new Error('Big Board returned unreadable data — likely a Google-side timeout. Try again.')
+                        : e;
+                }
+            }
+            throw lastErr;
+        };
+
         // Fetch one class sheet and derive a compact per-student status map.
         // Raw sheets are ~500KB; the derived form is ~120KB/class in localStorage.
         const bbFetchClass = async (classKey) => {
             const def = BB_CLASSES.find(c => c.key === classKey);
             if (!def) throw new Error(`Unknown class: ${classKey}`);
-            const listRes = await fetch(`${BB_GAS_URL}?call=sheets_avail`);
-            const listJson = await listRes.json();
+            const listJson = await bbFetchJson(`${BB_GAS_URL}?call=sheets_avail`);
             if (!listJson.ok) throw new Error(listJson.error || 'sheets_avail failed');
             const sheetName = listJson.sheets.map(s => s.name)
                 .filter(n => !/^Backup_/i.test(n))
                 .find(n => def.pattern.test(n));
             if (!sheetName) throw new Error(`No Big Board sheet matches ${classKey}`);
-            const res = await fetch(`${BB_GAS_URL}?call=fetch_sheet&sheet=${encodeURIComponent(sheetName)}`);
-            const json = await res.json();
+            const json = await bbFetchJson(`${BB_GAS_URL}?call=fetch_sheet&sheet=${encodeURIComponent(sheetName)}`);
             if (!json.ok) throw new Error(json.error || 'fetch_sheet failed');
             const now = new Date();
             const students = json.students.map(s => {
