@@ -928,17 +928,18 @@
         }
 
         .day-tab {
-            padding: 3px 8px;
-            font-size: 0.55rem;
+            padding: 4px 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             border-radius: 3px 3px 0 0;
             cursor: pointer;
-            color: rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.65);
             white-space: nowrap;
             transition: all 0.15s;
+            border-bottom: 2px solid transparent;
         }
-        .day-tab:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
-        .day-tab.today { color: #3b82f6; background: rgba(59,130,246,0.08); }
+        .day-tab:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); }
+        .day-tab.today { color: #60a5fa; background: rgba(59,130,246,0.15); border-bottom-color: #3b82f6; font-weight: 700; }
 
         .empty-day {
             display: flex;
@@ -1425,10 +1426,31 @@
 
         /* ===== THEME TOGGLE ===== */
         .theme-toggle-container {
+            /* Non-scheduler screens only (loading/selection/error) — top-right corner,
+               out of the way. In the scheduler it's a normal header button instead. */
             position: fixed;
             top: 7px;
-            left: 240px;
+            right: 12px;
             z-index: 9999;
+        }
+        .theme-toggle-header-btn {
+            width: 28px;
+            height: 26px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #fbbf24;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.15s;
+        }
+        .theme-toggle-header-btn:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
         }
         .theme-toggle-btn {
             width: 40px; height: 40px;
@@ -1547,7 +1569,7 @@
         }
         .wb-section { margin-bottom: 10px; }
         .wb-section-title {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -1573,43 +1595,47 @@
         .wb-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             table-layout: fixed;
         }
         .wb-table th { overflow: hidden; }
         .wb-table td { overflow: visible; }
         .wb-table th {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.03em;
-            padding: 2px 4px;
+            padding: 3px 4px;
             text-align: left;
-            color: rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
             white-space: nowrap;
             user-select: none;
         }
         .wb-table td {
-            padding: 1px 4px;
-            border: 1px solid rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.85);
-            height: 24px;
+            padding: 2px 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.95);
+            height: 26px;
             vertical-align: middle;
             position: relative;
         }
-        .wb-table tr:hover td { background: rgba(255,255,255,0.02); }
+        /* Zebra striping for row tracking across wide tables.
+           Status rows (effective/partial/cancelled) keep their tints — excluded here,
+           and the hover rule mirrors the zebra's specificity so it still wins on hover. */
+        .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.025); }
+        .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.06); }
 
         /* Compact table variant for Supervision/Academics (smaller cells) */
         .wb-table-compact th {
-            font-size: 0.45rem;
+            font-size: 0.55rem;
             padding: 2px 3px;
         }
         .wb-table-compact td {
-            font-size: 0.55rem;
+            font-size: 0.65rem;
             padding: 2px 4px;
-            height: 20px;
+            height: 22px;
         }
         /* Left border + padding gap on the first column of each POC/Start/End triplet group */
         /* NOTE: class is applied directly on <th>/<td>, so selectors must be th.class / td.class */
@@ -1845,9 +1871,9 @@
             justify-content: center;
             padding: 1px 6px;
             border-radius: 3px;
-            border: 1px dashed rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.3);
-            font-size: 0.65rem;
+            border: 1px dashed rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.55);
+            font-size: 0.7rem;
             min-width: 20px;
             cursor: pointer;
             position: relative;
@@ -2017,6 +2043,28 @@
             color: #facc15;
             border-color: rgba(250,204,21,0.5);
             background: rgba(250,204,21,0.08);
+        }
+        .wb-sort-btn {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            margin-left: 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .wb-sort-btn:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
+        /* SIM/CR rows tied to the event above them (attachedTo) */
+        .wb-row-attached td:first-child { border-left: 3px solid rgba(59,130,246,0.55); }
+        .wb-attach-tie {
+            color: rgba(59,130,246,0.8);
+            font-size: 0.7rem;
+            margin-right: 2px;
+            user-select: none;
         }
 
         /* Add-row button */
@@ -2254,6 +2302,15 @@
             color: #1e293b;
         }
 
+        .light-mode .theme-toggle-header-btn {
+            border-color: rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.05);
+            color: #b45309;
+        }
+        .light-mode .theme-toggle-header-btn:hover {
+            background: rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.3);
+        }
         .light-mode .theme-toggle-btn {
             border-color: rgba(0,0,0,0.15);
             background: rgba(0,0,0,0.04);
@@ -2495,7 +2552,7 @@
             color: #0f172a;
         }
         .light-mode .day-tab {
-            color: rgba(0,0,0,0.35);
+            color: rgba(0,0,0,0.55);
         }
         .light-mode .day-tab:hover { color: rgba(0,0,0,0.6); background: rgba(0,0,0,0.03); }
         .light-mode .day-tab.today { color: #2563eb; background: rgba(59,130,246,0.06); }
@@ -2692,15 +2749,16 @@
         .light-mode .wb-section-supervision .wb-section-title { color: #4c1d95; background: #ede9fe; border-bottom-color: rgba(76,29,149,0.12); }
         .light-mode .wb-section-academics .wb-section-title  { color: #1e3a8a; background: #dbeafe; border-bottom-color: rgba(30,58,138,0.12); }
         .light-mode .wb-table th {
-            color: rgba(0,0,0,0.55);
-            background: rgba(0,0,0,0.03);
-            border-color: rgba(0,0,0,0.08);
+            color: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.04);
+            border-color: rgba(0,0,0,0.12);
         }
         .light-mode .wb-table td {
-            border-color: rgba(0,0,0,0.08);
-            color: rgba(0,0,0,0.85);
+            border-color: rgba(0,0,0,0.12);
+            color: rgba(0,0,0,0.92);
         }
-        .light-mode .wb-table tr:hover td { background: rgba(0,0,0,0.02); }
+        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.02); }
+        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.045); }
         /* Preserve status row colors on hover in light mode */
         .light-mode .wb-row-effective:hover td { background: rgba(34,197,94,0.16) !important; }
         .light-mode .wb-row-partial:hover td   { background: rgba(234,179,8,0.16)  !important; }
@@ -2748,6 +2806,10 @@
         .light-mode .wb-highlight-btn { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.15); }
         .light-mode .wb-highlight-btn:hover { color: rgba(0,0,0,0.7); }
         .light-mode .wb-highlight-btn.active { color: #b45309; border-color: rgba(180,83,9,0.4); background: rgba(180,83,9,0.06); }
+        .light-mode .wb-sort-btn { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.18); }
+        .light-mode .wb-sort-btn:hover { color: rgba(0,0,0,0.85); border-color: rgba(0,0,0,0.35); }
+        .light-mode .wb-row-attached td:first-child { border-left-color: rgba(37,99,235,0.5); }
+        .light-mode .wb-attach-tie { color: rgba(37,99,235,0.7); }
         .light-mode .duty-slot-label { color: #475569; }
         .light-mode .duty-drop-zone { border-color: rgba(0,0,0,0.2); color: #334155; }
         .light-mode .duty-drop-zone.drag-over { border-color: #2563eb; background: rgba(37,99,235,0.08); color: #2563eb; }
@@ -3063,7 +3125,8 @@
                 const raw = dayData.data;
 
                 if (raw.flying) {
-                    raw.flying.forEach(row => {
+                    const dayFlying = [];
+                    raw.flying.forEach((row, rowIdx) => {
                         const briefTime = row[1];
                         const eventName = row[5];
                         const model = (row[0] || '').trim();
@@ -3077,7 +3140,7 @@
                         const cancelled = (cxField === 'TRUE' || cxField === true || cxField === 'CX');
                         const effective = (effField === 'TRUE' || effField === true);
                         const partiallyEffective = (peField === 'TRUE' || peField === true);
-                        all.push({
+                        dayFlying.push({
                             id: mkId(), section: 'Flying', date,
                             model,
                             eventName: eventName || model || 'Unnamed Event',
@@ -3091,12 +3154,27 @@
                             cancelled,
                             effective,
                             partiallyEffective,
+                            rowIdx, // source sheet row order — drives "Whiteboard" sort mode
                         });
                     });
+                    // Tie SIM/CR rows to their parent: on the source whiteboard a CR/SIM
+                    // row sits immediately under the event it supports (verified in batch
+                    // data: identical times usually, but row precedence is the reliable
+                    // key — times can be offset, and unrelated events share exact times).
+                    // Same rule the Timeline's buildFlyingLayout already uses.
+                    let lastRealFlyingId = null;
+                    dayFlying.forEach(ev => {
+                        if (SIM_CR_MODELS.has(ev.model || '')) {
+                            if (lastRealFlyingId) ev.attachedTo = lastRealFlyingId;
+                        } else {
+                            lastRealFlyingId = ev.id;
+                        }
+                    });
+                    all.push(...dayFlying);
                 }
 
                 if (raw.ground) {
-                    raw.ground.forEach(row => {
+                    raw.ground.forEach((row, rowIdx) => {
                         const evName = row[0];
                         const start = row[1];
                         if (evName === 'Events') return; // skip header row
@@ -3121,12 +3199,13 @@
                             cancelled,
                             effective,
                             partiallyEffective,
+                            rowIdx,
                         });
                     });
                 }
 
                 if (raw.na) {
-                    raw.na.forEach(row => {
+                    raw.na.forEach((row, rowIdx) => {
                         const reason = row[0];
                         const start = row[1];
                         if (!reason || !start || reason === 'Reason') return;
@@ -3142,6 +3221,7 @@
                             cancelled: false,
                             effective: false,
                             partiallyEffective: false,
+                            rowIdx,
                         });
                     });
                 }
@@ -7951,9 +8031,10 @@
                                 const rowFocusClass = focusedEventId
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
+                                const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -7964,6 +8045,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -8083,9 +8165,10 @@
                                 const rowFocusClass = focusedEventId
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
+                                const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8096,6 +8179,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -8289,6 +8373,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -8491,6 +8576,20 @@
                 prevActiveDay.current = activeDay;
             }, [activeDay]);
 
+            // Sort mode: 'aircraft' (model → time, the long-standing default) or
+            // 'whiteboard' (source sheet row order). In BOTH modes, SIM/CR rows tied to a
+            // parent event (ev.attachedTo, set at parse time) stay nested under it.
+            const [wbSortMode, setWbSortMode] = useState(() => {
+                try { return localStorage.getItem('tps-wb-sort-mode') === 'whiteboard' ? 'whiteboard' : 'aircraft'; } catch (e) { return 'aircraft'; }
+            });
+            const toggleWbSortMode = useCallback(() => {
+                setWbSortMode(prev => {
+                    const next = prev === 'aircraft' ? 'whiteboard' : 'aircraft';
+                    try { localStorage.setItem('tps-wb-sort-mode', next); } catch (e) {}
+                    return next;
+                });
+            }, []);
+
             const dayEvents = useMemo(() => {
                 if (!activeDay) return {};
                 const bySection = {};
@@ -8511,11 +8610,41 @@
                     if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
                     return 0;
                 };
-                bySection.Flying.sort((a, b) => sortEnd(a, b, e => e.model || e.eventName) || (a.model || '').localeCompare(b.model || '') || (a.startTime || '').localeCompare(b.startTime || ''));
-                bySection.Ground.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.eventName || '').localeCompare(b.eventName || '') || (a.startTime || '').localeCompare(b.startTime || ''));
-                bySection.NA.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.startTime || '').localeCompare(b.startTime || ''));
+                // Events without a rowIdx (custom-created) sort after sheet rows in whiteboard mode.
+                const byRowIdx = (a, b) => (a.rowIdx ?? 1e9) - (b.rowIdx ?? 1e9);
+                // Splice attached SIM/CR rows out, sort the parents, then re-nest each
+                // attached row directly under its parent (in row order).
+                const nestAttached = (list, parentSort) => {
+                    const attachedByParent = new Map();
+                    const parents = [];
+                    list.forEach(ev => {
+                        if (ev.attachedTo && list.some(p => p.id === ev.attachedTo)) {
+                            if (!attachedByParent.has(ev.attachedTo)) attachedByParent.set(ev.attachedTo, []);
+                            attachedByParent.get(ev.attachedTo).push(ev);
+                        } else {
+                            parents.push(ev);
+                        }
+                    });
+                    parents.sort(parentSort);
+                    const out = [];
+                    parents.forEach(p => {
+                        out.push(p);
+                        (attachedByParent.get(p.id) || []).sort(byRowIdx).forEach(c => out.push(c));
+                    });
+                    return out;
+                };
+                const flyingAircraftSort = (a, b) => sortEnd(a, b, e => e.model || e.eventName) || (a.model || '').localeCompare(b.model || '') || (a.startTime || '').localeCompare(b.startTime || '');
+                if (wbSortMode === 'whiteboard') {
+                    bySection.Flying = nestAttached(bySection.Flying, byRowIdx);
+                    bySection.Ground.sort(byRowIdx);
+                    bySection.NA.sort(byRowIdx);
+                } else {
+                    bySection.Flying = nestAttached(bySection.Flying, flyingAircraftSort);
+                    bySection.Ground.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.eventName || '').localeCompare(b.eventName || '') || (a.startTime || '').localeCompare(b.startTime || ''));
+                    bySection.NA.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.startTime || '').localeCompare(b.startTime || ''));
+                }
                 return bySection;
-            }, [workingEvents, activeDay]);
+            }, [workingEvents, activeDay, wbSortMode]);
 
             // Called when a cell is clicked in highlight mode — opens the picker popup
             const handleHighlightCellClick = useCallback((key, rect) => {
@@ -8627,6 +8756,15 @@
                                 title="Toggle highlight mode — click a cell to pick a color"
                             >
                                 {highlightMode ? '\uD83C\uDFA8 Highlight ON' : '\uD83C\uDFA8 Highlight'}
+                            </button>
+                            <button
+                                className="wb-sort-btn"
+                                onClick={toggleWbSortMode}
+                                title={wbSortMode === 'aircraft'
+                                    ? 'Sorted by aircraft, then time. Click to sort in source whiteboard row order (keeps tied CR/SIM rows under their event).'
+                                    : 'Sorted in source whiteboard row order. Click to sort by aircraft, then time.'}
+                            >
+                                {'\u21C5'} Sort: {wbSortMode === 'aircraft' ? 'Aircraft' : 'Whiteboard'}
                             </button>
                             <div className="wb-date-header-label">
                                 {dateLabel.weekday}, {dateLabel.day} {dateLabel.month}
@@ -8751,7 +8889,7 @@
 
         // ─── SCHEDULER VIEW ───
 
-        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive }) => {
+        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive, darkMode, onToggleTheme }) => {
             const [workingEvents, setWorkingEvents] = useState([]);
             const [changes, setChanges] = useState([]);
             const [savedShow, setSavedShow] = useState(false);
@@ -9387,6 +9525,12 @@
                                 <span>Refresh from Whiteboard</span>
                                 <span style={{ fontSize: '0.45rem', color: 'rgba(96,165,250,0.5)', fontWeight: 400 }}>Clears local work</span>
                             </button>
+                            {onToggleTheme && (
+                                <button className="theme-toggle-header-btn" onClick={onToggleTheme}
+                                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+                                    {darkMode ? '☀' : '☽'}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -9789,8 +9933,6 @@
             }
 
             return (
-                <>
-                {themeToggle}
                 <SchedulerView
                     allEvents={allEvents}
                     roster={roster}
@@ -9801,8 +9943,9 @@
                     cachedWorkingState={cachedWorkingState}
                     onRefreshFromWhiteboard={refreshFromWhiteboard}
                     selectAllActive={selectAllActive}
+                    darkMode={darkMode}
+                    onToggleTheme={() => setDarkMode(d => !d)}
                 />
-                </>
             );
         }
 
