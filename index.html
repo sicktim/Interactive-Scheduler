@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
+<!-- Interactive Scheduler v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
+<!-- v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
 <!-- v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
 <!-- v4.6.1 — Fix: Soft pill missing on Ground events -->
 <!-- v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
@@ -9844,6 +9845,22 @@
             const unavail = useMemo(() => computeUnavailability(event, workingEvents), [event, workingEvents]);
             const assigned = useMemo(() => new Set(event.personnel || []), [event]);
 
+            // Local overlay: someone already scheduled on ANOTHER working event with the
+            // same event code has this requirement covered locally — show them as
+            // "Scheduled (not complete)", not "Needs", even though the Big Board cache
+            // (a snapshot) doesn't know yet. E.g. Dobbs on Departure Demo #1 must not
+            // appear as needing Departure Demo #2 the same week.
+            const localScheduled = useMemo(() => {
+                if (!code) return new Map();
+                const m = new Map(); // person -> the working event that covers them
+                workingEvents.forEach(ev => {
+                    if (ev.id === event.id || ev.cancelled) return;
+                    if (bbCodeFromTitle(ev.eventName) !== code) return;
+                    (ev.personnel || []).forEach(p => { if (!m.has(p)) m.set(p, ev); });
+                });
+                return m;
+            }, [code, workingEvents, event.id]);
+
             useEffect(() => {
                 const onDown = (e) => {
                     // Let [+] buttons' own click handlers decide (toggle / switch event)
@@ -9885,14 +9902,22 @@
                         const st = entry.status[idx] || { c: 'pending' };
                         const busy = unavail.has(ws);
                         const item = { name: ws, date: st.d, flag: st.f, busy, paired: st.c === 'paired-opted' };
+                        const localEv = localScheduled.get(ws);
                         if (st.c === 'notreq') g.na.push(item);
                         else if (st.c === 'complete') g.complete.push(item);
                         else if (st.c === 'scheduled') g.scheduled.push(item);
+                        else if (localEv) {
+                            // Covered by a local working event with this code
+                            const [, lm, ld] = (localEv.date || '').split('-');
+                            item.date = lm ? `${Number(lm)}/${Number(ld)}` : item.date;
+                            item.local = true;
+                            g.scheduled.push(item);
+                        }
                         else (busy ? g.needBusy : g.needAvail).push(item);
                     });
                 });
                 return g;
-            }, [activeHits, roster, assigned, unavail]);
+            }, [activeHits, roster, assigned, unavail, localScheduled]);
 
             // Pair groups: students sharing a paired-cell color = allowable pairing.
             // Includes already-assigned members (shown checked) so the whole group reads.
@@ -9937,7 +9962,8 @@
                 ].filter(Boolean).join(' ');
                 const tips = [];
                 if (item.busy) tips.push('Busy:\n' + busyTooltip(item.name));
-                if (state === 'scheduled') tips.push(`Big Board shows this scheduled ${item.date || ''} — adding may double-book.`);
+                if (state === 'scheduled' && item.local) tips.push(`Already scheduled for this event code on YOUR working schedule (${item.date || ''}) — adding here would duplicate the ride.`);
+                else if (state === 'scheduled') tips.push(`Big Board shows this scheduled ${item.date || ''} — adding may double-book.`);
                 if (state === 'complete') tips.push('Big Board shows this event COMPLETE for this student.');
                 if (item.flag === 'past-date-unchecked') tips.push('Past-dated but not marked complete — verify on Big Board.');
                 if (item.paired) tips.push('Paired event — student is in a pairing group.');
@@ -10468,6 +10494,14 @@
                 return m;
             }, [workingEvents, dates]);
 
+            // Local calendar date. MUST be declared before wbDayConflicts below — it was
+            // previously declared after that memo, and Babel's const→var hoisting made it
+            // silently `undefined` inside the memo on initial render, so the whiteboard
+            // filtered conflicts for dates[0] instead of today → no conflict highlights
+            // until the user clicked a day tab. (en-CA = YYYY-MM-DD in LOCAL time; the
+            // old toISOString version rolled to tomorrow every evening.)
+            const today = new Date().toLocaleDateString('en-CA');
+
             // Conflict detection on ALL events
             const conflicts = useMemo(() => detectConflicts(workingEvents), [workingEvents]);
 
@@ -10842,8 +10876,6 @@
                 src.forEach(pm => pm.forEach((_, p) => people.add(p)));
                 return people.size;
             }, [conflicts, wbDayConflicts, viewMode]);
-
-            const today = new Date().toISOString().slice(0, 10);
 
             return (
                 <div className={`app-layout${summaryCollapsed ? ' summary-collapsed' : ''}`}>
