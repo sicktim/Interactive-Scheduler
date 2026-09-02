@@ -2,6 +2,44 @@
 
 ---
 
+## v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions
+
+### Collapsible aircraft groups (whiteboard Flying, Aircraft sort mode)
+- Blue group-header rows per aircraft ("▾ C-12 (5 events)") — click to collapse/expand;
+  tied SIM/CR rows belong to their parent's aircraft group and collapse with it.
+  Zebra/hover selectors exclude `.wb-group-header` (specificity structure preserved).
+
+### Change Summary reorganization
+- **event-create tracking**: creating an event records `event-create` (with snapshot);
+  `computeNetChanges` folds subsequent edits and personnel adds on that event under a
+  single "＋ Created: MODEL | NAME (times)" entry with the people nested beneath.
+  A created-then-deleted event nets to nothing. Undoing a Created entry removes the
+  event and its custom-storage record.
+- **Edit merging**: repeated `event-edit` entries per event merge into one net
+  before→after entry (net no-ops omitted). Copy-to-clipboard mirrors all of this
+  (`NEW EVENT:` lines with nested personnel/notes).
+
+### Soft restrictions
+- Every Flying/Ground/NA event has a **SOFT pill** — whiteboard "Soft" column and the
+  timeline card title bar (ghost pill on hover; solid amber when on). Soft events are
+  excluded from `focusedAvailability`, `computeUnavailability` ([+] popup), and the
+  picker busy-dot — people on them read as **available** — while `detectConflicts`
+  still reports the overlap (informational `!`). Flags persist by natural key in
+  `tps-soft-events` and re-apply after refresh/reload (`applySoftFlags` at init).
+
+### Light-mode contrast polish (follow-up to v4.5 overhaul, screenshot-verified)
+- Section title bars now solid saturated 600-level colors with white text (whiteboard
+  + timeline, incl. previously-unstyled timeline supervision divider); active view
+  tab solid blue; filter/Highlight/Sort buttons get true button treatment (white bg,
+  border, shadow); selection-screen separators darkened (were pale inline colors);
+  theme toggle moved to bottom-right on non-scheduler screens (it overlapped the
+  selection screen's Continue button).
+
+Verified: Babel compile clean; 28/28 headless jsdom checks; light-mode + grouping +
+soft pills + collapse behavior verified in-browser via Claude in Chrome.
+
+---
+
 ## v4.5.0 — Light Mode Overhaul + v4.4 Feedback Batch
 
 ### Light Mode (complete rebuild — flat, high-contrast)

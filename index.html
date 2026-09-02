@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.5.0 — Light Mode Overhaul, Change-Summary Fix, Pair Groups, Class Filter, Grouping Visuals -->
+<!-- Interactive Scheduler v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
   Comprehensive machine-readable context for replicating this application's features,
@@ -9,6 +9,22 @@
   conflict detection, change tracking, and the hard-won gotchas behind each feature.
 -->
 <!--
+  v4.6.0 Grouping, Summary Organization, Soft Restrictions
+  - Whiteboard Flying: collapsible aircraft groups in Aircraft sort mode (blue header
+    rows with chevron + count; tied SIM/CR rows collapse with their parent's aircraft)
+  - Change Summary reorganized: creating an event yields ONE "Created" entry with its
+    final details and added personnel nested beneath (edits/adds on it fold in; a
+    created-then-deleted event nets to nothing); repeated edits on any event merge
+    into a single net before→after entry; copy text updated to match
+  - Soft restrictions: every Flying/Ground/NA event has a SOFT pill (whiteboard Soft
+    column + timeline title bar). Soft events don't make their people unavailable
+    (focus mode, [+] popup, picker busy-dot all ignore them) while conflict badges
+    still show the overlap. Persisted by natural key across refreshes (tps-soft-events)
+  - Light mode contrast polish: solid saturated section title bars (white text),
+    active view tab solid blue, real button treatment (white bg + shadow) for
+    header/Highlight/Sort buttons, selection-screen separators darkened, theme toggle
+    moved to bottom-right on non-scheduler screens (was overlapping Continue)
+
   v4.5.0 Light Mode Overhaul + Feedback Batch
   - Light mode rebuilt as a flat high-contrast theme: solid colors + crisp lines, no
     alpha shading; #eef2f6 slate ground, white surfaces, #0f172a text, saturated
@@ -1459,10 +1475,11 @@
 
         /* ===== THEME TOGGLE ===== */
         .theme-toggle-container {
-            /* Non-scheduler screens only (loading/selection/error) — top-right corner,
-               out of the way. In the scheduler it's a normal header button instead. */
+            /* Non-scheduler screens only (loading/selection/error) — bottom-right corner,
+               clear of the selection screen's own header buttons. In the scheduler it's
+               a normal header button instead. */
             position: fixed;
-            top: 7px;
+            bottom: 12px;
             right: 12px;
             z-index: 9999;
         }
@@ -1657,8 +1674,8 @@
         /* Zebra striping for row tracking across wide tables.
            Status rows (effective/partial/cancelled) keep their tints — excluded here,
            and the hover rule mirrors the zebra's specificity so it still wins on hover. */
-        .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.025); }
-        .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.06); }
+        .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled):not(.wb-group-header) td { background: rgba(255,255,255,0.025); }
+        .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled):not(.wb-group-header) td { background: rgba(255,255,255,0.06); }
 
         /* Compact table variant for Supervision/Academics (smaller cells) */
         .wb-table-compact th {
@@ -2286,6 +2303,54 @@
             user-select: none;
         }
 
+        /* Collapsible aircraft group header rows (Aircraft sort mode) */
+        .wb-group-header td {
+            background: rgba(59,130,246,0.1);
+            border-left: 3px solid rgba(96,165,250,0.75);
+            color: #93c5fd;
+            font-weight: 700;
+            font-size: 0.68rem;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            user-select: none;
+            padding: 3px 8px;
+        }
+        .wb-group-header:hover td { background: rgba(59,130,246,0.18); }
+        .wb-group-chevron { display: inline-block; width: 14px; }
+        .wb-group-count { font-weight: 400; opacity: 0.7; margin-left: 6px; font-size: 0.6rem; }
+        .wb-group-hint { font-weight: 400; opacity: 0.5; margin-left: 10px; font-size: 0.55rem; font-style: italic; }
+
+        /* Soft-restriction pill (whiteboard column + timeline title bar) */
+        .wb-soft-pill, .soft-pill {
+            display: inline-block;
+            padding: 0 5px;
+            border-radius: 8px;
+            font-size: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            border: 1px dashed rgba(251,191,36,0.4);
+            color: rgba(251,191,36,0.45);
+            background: transparent;
+            transition: all 0.15s;
+            line-height: 1.5;
+        }
+        .wb-soft-pill:hover, .soft-pill:hover {
+            border-color: rgba(251,191,36,0.8);
+            color: rgba(251,191,36,0.9);
+        }
+        .wb-soft-pill.on, .soft-pill.on {
+            border: 1px solid #b45309;
+            background: #f59e0b;
+            color: #1c1917;
+        }
+        /* Timeline: ghost pill only appears on card hover; active pill always shows */
+        .event-card .soft-pill { opacity: 0; }
+        .event-card:hover .soft-pill { opacity: 1; }
+        .event-card .soft-pill.on { opacity: 1; }
+
         /* Add-row button */
         .wb-add-row {
             width: 100%;
@@ -2603,10 +2668,14 @@
         }
 
         /* --- Section dividers --- */
+        /* Section title bands: committed color, not pastel — solid 600-level bg + white text */
         .light-mode .section-divider { border-bottom-color: #cbd5e1; }
-        .light-mode .section-divider-flying { color: #065f46; background: #d1fae5; }
-        .light-mode .section-divider-ground { color: #92400e; background: #fef3c7; }
-        .light-mode .section-divider-na { color: #991b1b; background: #fee2e2; }
+        .light-mode .section-divider-flying { color: #ffffff; background: #059669; }
+        .light-mode .section-divider-ground { color: #ffffff; background: #d97706; }
+        .light-mode .section-divider-na { color: #ffffff; background: #dc2626; }
+        .light-mode .section-divider-supervision { color: #ffffff; background: #7c3aed; }
+        /* Selection screen separators carry pale dark-theme inline colors — beat them */
+        .light-mode .selection-separator { color: #334155 !important; border-color: #94a3b8 !important; }
 
         /* --- Event cards --- */
         .light-mode .event-card-flying {
@@ -2806,11 +2875,14 @@
             border-top-color: #2563eb;
         }
         .light-mode .filter-btn {
+            background: #ffffff;
             border-color: #94a3b8;
-            color: #334155;
+            color: #1e293b;
+            box-shadow: 0 1px 2px rgba(15,23,42,0.08);
         }
         .light-mode .filter-btn:hover {
-            border-color: #0f172a;
+            background: #e2e8f0;
+            border-color: #64748b;
             color: #0f172a;
         }
         .light-mode .day-tab {
@@ -2830,7 +2902,7 @@
         .light-mode .view-tabs { background: #e2e8f0; }
         .light-mode .view-tab { color: #64748b; }
         .light-mode .view-tab:hover { color: #0f172a; }
-        .light-mode .view-tab.active { color: #1d4ed8; background: #ffffff; }
+        .light-mode .view-tab.active { color: #ffffff; background: #2563eb; }
 
         /* --- Rainbow view --- */
         .light-mode .rainbow-area {
@@ -3018,12 +3090,14 @@
         /* --- Whiteboard light mode --- */
         .light-mode .wb-date-header-row { background: #e2e8f0; box-shadow: 0 1px 0 #cbd5e1; }
         .light-mode .wb-date-header-label { color: #0f172a; }
+        /* Whiteboard section titles: solid saturated bars with white text (high contrast) */
         .light-mode .wb-section-title { border-bottom-color: #cbd5e1; }
-        .light-mode .wb-section-flying .wb-section-title  { color: #065f46; background: #d1fae5; border-bottom-color: #34d399; }
-        .light-mode .wb-section-ground .wb-section-title  { color: #92400e; background: #fef3c7; border-bottom-color: #fbbf24; }
-        .light-mode .wb-section-na .wb-section-title      { color: #991b1b; background: #fee2e2; border-bottom-color: #f87171; }
-        .light-mode .wb-section-supervision .wb-section-title { color: #5b21b6; background: #ede9fe; border-bottom-color: #a78bfa; }
-        .light-mode .wb-section-academics .wb-section-title  { color: #1e40af; background: #dbeafe; border-bottom-color: #60a5fa; }
+        .light-mode .wb-section-flying .wb-section-title  { color: #ffffff; background: #059669; border-bottom-color: #047857; }
+        .light-mode .wb-section-ground .wb-section-title  { color: #ffffff; background: #d97706; border-bottom-color: #b45309; }
+        .light-mode .wb-section-na .wb-section-title      { color: #ffffff; background: #dc2626; border-bottom-color: #b91c1c; }
+        .light-mode .wb-section-supervision .wb-section-title { color: #ffffff; background: #7c3aed; border-bottom-color: #6d28d9; }
+        .light-mode .wb-section-academics .wb-section-title  { color: #ffffff; background: #2563eb; border-bottom-color: #1d4ed8; }
+        .light-mode .wb-section-title .wb-section-count { color: rgba(255,255,255,0.85); }
         .light-mode .wb-table th {
             color: #334155;
             background: #e2e8f0;
@@ -3034,8 +3108,8 @@
             color: #0f172a;
             background: #ffffff;
         }
-        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: #f1f5f9; }
-        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: #e2e8f0; }
+        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled):not(.wb-group-header) td { background: #f1f5f9; }
+        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled):not(.wb-group-header) td { background: #e2e8f0; }
         /* Preserve status row colors on hover in light mode */
         .light-mode .wb-row-effective:hover td { background: #bbf7d0 !important; }
         .light-mode .wb-row-partial:hover td   { background: #fef08a !important; }
@@ -3120,11 +3194,16 @@
         .light-mode .wb-highlight-stcb { box-shadow: inset 0 0 0 100px #ffedd5; }
         .light-mode .wb-highlight-ip   { box-shadow: inset 0 0 0 100px #dcfce7; }
         .light-mode .wb-highlight-ifte { box-shadow: inset 0 0 0 100px #e0e7ff; }
-        .light-mode .wb-highlight-btn { color: #475569; border-color: #94a3b8; }
-        .light-mode .wb-highlight-btn:hover { color: #0f172a; border-color: #475569; }
-        .light-mode .wb-highlight-btn.active { color: #92400e; border-color: #d97706; background: #fef3c7; }
-        .light-mode .wb-sort-btn { color: #334155; border-color: #94a3b8; }
-        .light-mode .wb-sort-btn:hover { color: #0f172a; border-color: #475569; }
+        .light-mode .wb-highlight-btn { color: #334155; border-color: #94a3b8; background: #ffffff; box-shadow: 0 1px 2px rgba(15,23,42,0.08); }
+        .light-mode .wb-highlight-btn:hover { color: #0f172a; border-color: #64748b; background: #e2e8f0; }
+        .light-mode .wb-highlight-btn.active { color: #ffffff; border-color: #b45309; background: #d97706; }
+        .light-mode .wb-sort-btn { color: #334155; border-color: #94a3b8; background: #ffffff; box-shadow: 0 1px 2px rgba(15,23,42,0.08); }
+        .light-mode .wb-sort-btn:hover { color: #0f172a; border-color: #64748b; background: #e2e8f0; }
+        .light-mode .wb-soft-pill, .light-mode .soft-pill { border-color: #d6b47c; color: #b45309; }
+        .light-mode .wb-soft-pill:hover, .light-mode .soft-pill:hover { border-color: #b45309; color: #92400e; }
+        .light-mode .wb-soft-pill.on, .light-mode .soft-pill.on { border-color: #b45309; background: #f59e0b; color: #ffffff; }
+        .light-mode .wb-group-header td { background: #dbeafe; border-left-color: #2563eb; color: #1d4ed8; }
+        .light-mode .wb-group-header:hover td { background: #bfdbfe; }
         .light-mode .wb-row-parent td:first-child { border-left-color: #2563eb; }
         .light-mode .wb-row-attached td:first-child { border-left-color: #2563eb; }
         .light-mode .wb-attach-tie { color: #1d4ed8; }
@@ -3900,12 +3979,32 @@
         function computeNetChanges(changes) {
             if (!changes || changes.length === 0) return [];
 
-            const EVENT_LEVEL_TYPES = new Set(['event-cancel', 'event-edit', 'event-delete']);
+            // ── Created events: one "Created" entry per event; later edits and personnel
+            //    adds on it fold underneath instead of appearing as disconnected lines. ──
+            const creates = new Map(); // eventId -> create item
+            changes.forEach((ch, idx) => {
+                if (ch.type !== 'event-create') return;
+                creates.set(ch.eventId, {
+                    type: 'event-create', date: ch.date, rawIndices: [idx], firstIndex: idx,
+                    persons: [],
+                    source: { eventId: ch.eventId, eventName: ch.eventName,
+                              eventModel: ch.eventModel, eventTime: ch.eventTime, date: ch.date },
+                    final: { ...(ch.snapshot || {}) },
+                    personsAdded: [],
+                });
+            });
+            // A created event that was later deleted nets to nothing — hide everything about it.
+            const annihilated = new Set();
+            changes.forEach(ch => {
+                if (ch.type === 'event-delete' && creates.has(ch.eventId)) annihilated.add(ch.eventId);
+            });
 
-            // Collect event-level changes (cancel/edit/delete) as discrete entries
+            const EVENT_LEVEL_TYPES = new Set(['event-cancel', 'event-delete']);
+
+            // Collect cancel/delete as discrete entries (edits merged separately below)
             const eventLevelItems = [];
             changes.forEach((ch, idx) => {
-                if (EVENT_LEVEL_TYPES.has(ch.type)) {
+                if (EVENT_LEVEL_TYPES.has(ch.type) && !annihilated.has(ch.eventId)) {
                     eventLevelItems.push({
                         type: ch.type, date: ch.date, rawIndices: [idx], firstIndex: idx,
                         persons: [],
@@ -3918,9 +4017,42 @@
                 }
             });
 
+            // ── Merge event-edit chains per event: one entry per event with the net
+            //    before→after (repeated tweaks no longer spam separate lines). ──
+            const editChains = new Map();
+            changes.forEach((ch, idx) => {
+                if (ch.type !== 'event-edit' || annihilated.has(ch.eventId)) return;
+                if (!editChains.has(ch.eventId)) editChains.set(ch.eventId, []);
+                editChains.get(ch.eventId).push({ ch, idx });
+            });
+            const mergedEdits = [];
+            editChains.forEach((chain, eventId) => {
+                const first = chain[0].ch;
+                const mergedAfter = {};
+                chain.forEach(({ ch }) => Object.assign(mergedAfter, ch.after || {}));
+                const allIdx = chain.map(x => x.idx);
+                const create = creates.get(eventId);
+                if (create) {
+                    Object.assign(create.final, mergedAfter);
+                    create.rawIndices.push(...allIdx);
+                    return;
+                }
+                const before = first.before || {};
+                const changed = Object.keys(mergedAfter).some(k => (mergedAfter[k] ?? null) !== (before[k] ?? null));
+                if (!changed) return; // edits cancelled out — net zero, omit
+                mergedEdits.push({
+                    type: 'event-edit', date: first.date, rawIndices: allIdx,
+                    firstIndex: Math.min(...allIdx), persons: [],
+                    source: { eventId, eventName: first.eventName, eventModel: first.eventModel,
+                              eventTime: first.eventTime, date: first.date },
+                    before, after: { ...before, ...mergedAfter },
+                });
+            });
+
             const netMap = new Map();
             changes.forEach((ch, idx) => {
-                if (EVENT_LEVEL_TYPES.has(ch.type)) return; // handled above
+                if (ch.type !== 'add' && ch.type !== 'remove') return; // person-level only
+                if (annihilated.has(ch.eventId)) return;
                 const key = `${ch.person}||${ch.eventId}`;
                 if (!netMap.has(key)) {
                     netMap.set(key, {
@@ -3995,6 +4127,20 @@
                 group.firstIndex = Math.min(group.firstIndex, inst.firstIndex);
             });
 
+            // Fold personnel add/remove groups on created events under their "Created" entry
+            for (const [key, group] of [...groupMap.entries()]) {
+                const eid = group.type === 'add' ? group.target.eventId
+                          : group.type === 'remove' ? group.source.eventId
+                          : null; // moves stay separate — they involve a second event
+                if (eid && creates.has(eid) && !annihilated.has(eid)) {
+                    const create = creates.get(eid);
+                    if (group.type === 'add') create.personsAdded.push(...group.persons);
+                    create.rawIndices.push(...group.rawIndices);
+                    create.firstIndex = Math.min(create.firstIndex, group.firstIndex);
+                    groupMap.delete(key);
+                }
+            }
+
             // Collapse event-cancel chains per eventId: even-length = net zero (omit), odd = keep last state
             const cancelGroups = new Map();
             eventLevelItems.forEach(item => {
@@ -4017,7 +4163,11 @@
                 netEventItems.push({ ...chain[chain.length - 1], rawIndices: allIndices, firstIndex: Math.min(...allIndices) });
             });
 
-            const result = [...Array.from(groupMap.values()), ...netEventItems];
+            const createItems = [...creates.entries()]
+                .filter(([eid]) => !annihilated.has(eid))
+                .map(([, item]) => item);
+
+            const result = [...Array.from(groupMap.values()), ...netEventItems, ...mergedEdits, ...createItems];
             result.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.firstIndex - b.firstIndex);
             return result;
         }
@@ -4479,6 +4629,25 @@
         // Stable event key for matching across sessions (IDs are session-specific)
         const eventNaturalKey = (ev) => `${ev.date}|${ev.section}|${ev.eventName}|${ev.startTime || ''}|${ev.model || ''}`;
 
+        // ── Soft-restriction flags ──
+        // A "soft" event (routine meeting that can be missed) does NOT make its
+        // personnel unavailable elsewhere: focus mode, the [+] popup, and the picker
+        // busy-dot all ignore soft events. Conflict badges still show the overlap —
+        // informational, not isolating. Persisted by natural key so flags survive
+        // "Refresh from Whiteboard".
+        const SOFT_EVENTS_KEY = 'tps-soft-events';
+        const loadSoftKeys = () => {
+            try { return new Set(JSON.parse(localStorage.getItem(SOFT_EVENTS_KEY) || '[]')); } catch (e) { return new Set(); }
+        };
+        const saveSoftKeys = (set) => {
+            try { localStorage.setItem(SOFT_EVENTS_KEY, JSON.stringify([...set])); } catch (e) {}
+        };
+        const applySoftFlags = (events) => {
+            const keys = loadSoftKeys();
+            if (keys.size === 0) return events;
+            return events.map(ev => keys.has(eventNaturalKey(ev)) && !ev.soft ? { ...ev, soft: true } : ev);
+        };
+
         const saveState = (changes, selectedIds, naCats, allEvents, selectAllActive) => {
             try {
                 // Save natural keys of selected events (stable across reloads)
@@ -4750,7 +4919,7 @@
             const fEnd = evEnd(targetEvent);
             const assigned = new Set(targetEvent.personnel || []);
             workingEvents.forEach(ev => {
-                if (ev.id === targetEvent.id || ev.date !== targetEvent.date || ev.cancelled) return;
+                if (ev.id === targetEvent.id || ev.date !== targetEvent.date || ev.cancelled || ev.soft) return;
                 const eS = evStart(ev), eE = evEnd(ev);
                 if (eS < fEnd && eE > fStart) {
                     (ev.personnel || []).forEach(p => {
@@ -5353,7 +5522,7 @@
 
         // ─── EVENT CARD ───
 
-        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu }) => {
+        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu, onToggleSoft }) => {
             const [dragOver, setDragOver] = useState(false);
             const [pendingFill, setPendingFill] = React.useState(null);
             const [addMenuOpen, setAddMenuOpen] = React.useState(false);
@@ -5501,6 +5670,15 @@
                             <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
                         )}
                         {event.cancelled && <span style={{ background: '#a81a1a', color: 'white', fontSize: '0.65rem', fontWeight: 1000, padding: '0 3px', borderRadius: 2 }}>CX</span>}
+                        {!event.readonly && onToggleSoft && (
+                            <span className={`soft-pill${event.soft ? ' on' : ''}`}
+                                onClick={(e) => { e.stopPropagation(); onToggleSoft(event.id); }}
+                                title={event.soft
+                                    ? 'Soft restriction ON — people on this event stay available for other events (conflicts still shown). Click for hard.'
+                                    : 'Mark as soft restriction — routine/missable; people on it stay available elsewhere.'}>
+                                SOFT
+                            </span>
+                        )}
                         {event.isCustom && <span className="custom-badge">+NEW</span>}
                         {event.isCustom && onDeleteCustom && (
                             <span className="custom-delete-btn" title="Delete custom event" onClick={(e) => { e.stopPropagation(); onDeleteCustom(event.id); }}>✕</span>
@@ -5631,7 +5809,7 @@
 
         // ─── DAY COLUMN ───
 
-        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu }) => {
+        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu, onToggleSoft }) => {
             const hdr = fmtDate(date);
             const today = new Date().toISOString().slice(0, 10);
             const isToday = date === today;
@@ -5797,6 +5975,7 @@
                                                     onFillPlaceholder={onFillPlaceholder}
                                                     onRemovePlaceholder={onRemovePlaceholder}
                                                     onOpenAddMenu={onOpenAddMenu}
+                                                    onToggleSoft={onToggleSoft}
                                                 />
                                             );
                                         })}
@@ -5903,7 +6082,8 @@
 
             const busySet = useMemo(() => {
                 const s = new Set();
-                allEvents.forEach(ev => ev.personnel.forEach(p => s.add(p)));
+                // Soft events don't mark people busy — routine meetings that can be missed
+                allEvents.forEach(ev => { if (!ev.soft) ev.personnel.forEach(p => s.add(p)); });
                 return s;
             }, [allEvents]);
 
@@ -6022,6 +6202,33 @@
         // ─── CHANGE SUMMARY (v3 — net changes with grouping) ───
 
         const NetChangeEntry = ({ inst, formatEvent, onUndo }) => {
+            if (inst.type === 'event-create') {
+                const f = inst.final || {};
+                const title = `${f.model ? f.model + ' | ' : ''}${f.eventName || 'New event'}`;
+                const timeStr = `${f.startTime || '??'}–${f.endTime || '??'}`;
+                return (
+                    <div className="change-entry" style={{ flexDirection: 'column', gap: 2 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, width: '100%' }}>
+                            <span style={{ color: '#34d399', fontWeight: 700, fontSize: '0.7rem', flexShrink: 0 }}>＋</span>
+                            <div className="change-detail">
+                                <span style={{ color: 'rgba(255,255,255,0.5)' }}>Created: </span>
+                                {title} ({timeStr})
+                            </div>
+                            <span className="change-undo" onClick={onUndo} title="Undo (removes the event and everything added to it)">↩</span>
+                        </div>
+                        {(inst.personsAdded && inst.personsAdded.length > 0) && (
+                            <div style={{ paddingLeft: 20, fontSize: '0.62rem', color: 'rgba(255,255,255,0.65)', width: '100%' }}>
+                                ＋ {inst.personsAdded.join(', ')}
+                            </div>
+                        )}
+                        {f.notes && (
+                            <div style={{ paddingLeft: 20, fontSize: '0.6rem', color: 'rgba(250,204,21,0.8)', width: '100%' }}>
+                                notes: "{f.notes}"
+                            </div>
+                        )}
+                    </div>
+                );
+            }
             if (inst.type === 'event-cancel') {
                 const wasCancelled = inst.cancelledAfter;
                 return (
@@ -7807,7 +8014,7 @@
         // Renders all crew members + placeholders in a single <td> with flex-wrap,
         // plus a + button to add placeholder slots.
         const WhiteboardCrewGroup = ({ crew, placeholders, eventId, roster, onAdd, onRemove,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu, onToggleSoft,
             onFocusEvent, colSpan, highlights, highlightMode, onHighlight,
             conflicts, onShowTooltip, onHideTooltip }) => {
 
@@ -8514,10 +8721,20 @@
         // ─────────────────────────── WhiteboardFlying ─────────────────────────
         const WhiteboardFlying = ({ events, roster, conflicts, onEditSave, onStatusChange,
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
-            focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
+            focusedEventId, groupByAircraft,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu, onToggleSoft,
             highlights, highlightMode, onHighlight, activeDay,
             onShowTooltip, onHideTooltip }) => {
+
+            // Collapsible aircraft groups (Aircraft sort mode only)
+            const [collapsedGroups, setCollapsedGroups] = useState(() => new Set());
+            const toggleGroup = useCallback((g) => {
+                setCollapsedGroups(prev => {
+                    const next = new Set(prev);
+                    if (next.has(g)) next.delete(g); else next.add(g);
+                    return next;
+                });
+            }, []);
 
             const handleCellSave = useCallback((eventId, field, value) => {
                 onEditSave(eventId, { [field]: value || null });
@@ -8541,6 +8758,7 @@
                             <col style={{ width: 28 }} />
                             <col style={{ width: 28 }} />
                             <col style={{ width: 28 }} />
+                            <col style={{ width: 36 }} />{/* Soft restriction pill */}
                         </colgroup>
                         <thead>
                             <tr>
@@ -8556,10 +8774,12 @@
                                 <th style={{ textAlign: 'center' }}>Eff</th>
                                 <th style={{ textAlign: 'center' }}>CX</th>
                                 <th style={{ textAlign: 'center' }}>PE</th>
+                                <th style={{ textAlign: 'center' }} title="Soft restriction — event doesn't make its people unavailable elsewhere">Soft</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {events.map(ev => {
+                            {(() => {
+                            const renderFlyingRow = (ev) => {
                                 if (!cellRefsMap.current.has(ev.id)) cellRefsMap.current.set(ev.id, []);
                                 const refs = cellRefsMap.current.get(ev.id);
                                 const makeTab = (idx) => ({
@@ -8641,9 +8861,59 @@
                                                 checked={!!ev.partiallyEffective}
                                                 onChange={() => onStatusChange(ev.id, 'partiallyEffective')} />
                                         </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <span className={`wb-soft-pill${ev.soft ? ' on' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); if (onToggleSoft) onToggleSoft(ev.id); }}
+                                                title={ev.soft
+                                                    ? 'Soft restriction ON — people on this event stay available for other events (conflicts still shown). Click for hard.'
+                                                    : 'Mark as soft restriction — routine/missable; people on it stay available elsewhere.'}>
+                                                soft
+                                            </span>
+                                        </td>
                                     </tr>
                                 );
-                            })}
+                            };
+
+                            // Aircraft grouping: parents define the group; attached SIM/CR
+                            // rows inherit their parent's group so they collapse together.
+                            const groupOf = new Map();
+                            if (groupByAircraft) {
+                                let cur = null;
+                                events.forEach(e => {
+                                    if (!e.attachedTo) cur = e.model || 'No Aircraft';
+                                    groupOf.set(e.id, cur ?? (e.model || 'No Aircraft'));
+                                });
+                            }
+                            const groupCounts = new Map();
+                            if (groupByAircraft) events.forEach(e => {
+                                const g = groupOf.get(e.id);
+                                groupCounts.set(g, (groupCounts.get(g) || 0) + 1);
+                            });
+                            const out = [];
+                            let lastGroup = null;
+                            events.forEach(ev => {
+                                if (groupByAircraft) {
+                                    const g = groupOf.get(ev.id);
+                                    if (g !== lastGroup) {
+                                        lastGroup = g;
+                                        const isCollapsed = collapsedGroups.has(g);
+                                        out.push(
+                                            <tr key={`grp-${g}`} className="wb-group-header" onClick={() => toggleGroup(g)}>
+                                                <td colSpan={13}>
+                                                    <span className="wb-group-chevron">{isCollapsed ? '▸' : '▾'}</span>
+                                                    <span className="wb-group-name">{g}</span>
+                                                    <span className="wb-group-count">({groupCounts.get(g)} event{groupCounts.get(g) > 1 ? 's' : ''})</span>
+                                                    {isCollapsed && <span className="wb-group-hint">click to expand</span>}
+                                                </td>
+                                            </tr>
+                                        );
+                                    }
+                                    if (collapsedGroups.has(g)) return;
+                                }
+                                out.push(renderFlyingRow(ev));
+                            });
+                            return out;
+                            })()}
                         </tbody>
                     </table>
                     <button className="wb-add-row" onClick={() => onCreateEvent('Flying', activeDay)}>
@@ -8657,7 +8927,7 @@
         const WhiteboardGround = ({ events, roster, conflicts, onEditSave, onStatusChange,
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu, onToggleSoft,
             highlights, highlightMode, onHighlight, activeDay,
             onShowTooltip, onHideTooltip }) => {
 
@@ -8680,6 +8950,7 @@
                             <col style={{ width: 28 }} />
                             <col style={{ width: 28 }} />
                             <col style={{ width: 28 }} />
+                            <col style={{ width: 36 }} />{/* Soft restriction pill */}
                         </colgroup>
                         <thead>
                             <tr>
@@ -8692,6 +8963,7 @@
                                 <th style={{ textAlign: 'center' }}>Eff</th>
                                 <th style={{ textAlign: 'center' }}>CX</th>
                                 <th style={{ textAlign: 'center' }}>PE</th>
+                                <th style={{ textAlign: 'center' }} title="Soft restriction — event doesn't make its people unavailable elsewhere">Soft</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -8887,7 +9159,7 @@
         const WhiteboardNA = ({ events, roster, onEditSave, onAdd, onRemove,
             onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu, onToggleSoft,
             highlights, highlightMode, onHighlight, activeDay,
             conflicts, onShowTooltip, onHideTooltip }) => {
 
@@ -8907,6 +9179,7 @@
                             <col style={{ width: '6%' }} />
                             <col />{/* Person(s) — takes remaining */}
                             <col style={{ width: '14%' }} />
+                            <col style={{ width: 36 }} />{/* Soft restriction pill */}
                         </colgroup>
                         <thead>
                             <tr>
@@ -8916,6 +9189,7 @@
                                 <th>End</th>
                                 <th>Person(s)</th>
                                 <th>Notes</th>
+                                <th style={{ textAlign: 'center' }} title="Soft restriction — event doesn't make its people unavailable elsewhere">Soft</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -8975,6 +9249,15 @@
                                         <WhiteboardCell {...makeTab(3)} value={ev.notes} field="notes" eventId={ev.id} type="text"
                                             onSave={handleCellSave} highlight={highlights[`${ev.id}:notes`]}
                                             highlightMode={highlightMode} onHighlight={onHighlight} />
+                                        <td style={{ textAlign: 'center' }}>
+                                            <span className={`wb-soft-pill${ev.soft ? ' on' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); if (onToggleSoft) onToggleSoft(ev.id); }}
+                                                title={ev.soft
+                                                    ? 'Soft restriction ON — people on this event stay available for other events (conflicts still shown). Click for hard.'
+                                                    : 'Mark as soft restriction — routine/missable; people on it stay available elsewhere.'}>
+                                                soft
+                                            </span>
+                                        </td>
                                     </tr>
                                 );
                             })}
@@ -8992,7 +9275,7 @@
             activeDay, onDayChange,
             onAdd, onRemove, onEditSave, onStatusChange, onDeleteEvent, onDeleteCustom,
             onCreateEvent, focusedEventId, onFocusEvent, onShowTooltip, onHideTooltip,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu }) => {
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu, onToggleSoft }) => {
 
             const [highlights, setHighlights] = useState(loadHighlights);
             const [highlightMode, setHighlightMode] = useState(false);
@@ -9409,6 +9692,7 @@
                                     </div>
                                 ) : sec === 'Flying' ? (
                                     <WhiteboardFlying events={evts} roster={roster} conflicts={conflicts}
+                                        groupByAircraft={wbSortMode === 'aircraft'}
                                         onEditSave={onEditSave} onStatusChange={onStatusChange}
                                         onAdd={onAdd} onRemove={onRemove}
                                         onDeleteEvent={onDeleteEvent} onDeleteCustom={onDeleteCustom}
@@ -9418,6 +9702,7 @@
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
                                         onOpenAddMenu={onOpenAddMenu}
+                                        onToggleSoft={onToggleSoft}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -9434,6 +9719,7 @@
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
                                         onOpenAddMenu={onOpenAddMenu}
+                                        onToggleSoft={onToggleSoft}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -9449,6 +9735,7 @@
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
                                         onOpenAddMenu={onOpenAddMenu}
+                                        onToggleSoft={onToggleSoft}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -10047,23 +10334,38 @@
                 setConfirmDelete(null);
             }, [confirmDelete]);
 
+            // Soft-restriction toggle: view-level planning metadata — not recorded as a
+            // whiteboard change (it isn't communicated to the squadron), but persisted
+            // by natural key so it survives refreshes.
+            const handleToggleSoft = useCallback((eventId) => {
+                setWorkingEvents(prev => prev.map(ev => {
+                    if (ev.id !== eventId) return ev;
+                    const soft = !ev.soft;
+                    const keys = loadSoftKeys();
+                    const nk = eventNaturalKey(ev);
+                    if (soft) keys.add(nk); else keys.delete(nk);
+                    saveSoftKeys(keys);
+                    return { ...ev, soft };
+                }));
+            }, []);
+
             // Initialize working events — from cache if available, otherwise from allEvents
             useEffect(() => {
                 initialized.current = false;
                 if (cachedWorkingState && !restoredFromCache.current) {
                     restoredFromCache.current = true;
-                    setWorkingEvents(cachedWorkingState.workingEvents.map(ev => ({
+                    setWorkingEvents(applySoftFlags(cachedWorkingState.workingEvents.map(ev => ({
                         ...ev,
                         personnel: [...ev.personnel],
                         placeholders: [...(ev.placeholders || [])],
-                    })));
+                    }))));
                     setChanges(cachedWorkingState.changes || []);
                 } else {
-                    setWorkingEvents(allEvents.map(ev => ({
+                    setWorkingEvents(applySoftFlags(allEvents.map(ev => ({
                         ...ev,
                         personnel: [...ev.personnel],
                         placeholders: [...(ev.placeholders || [])],
-                    })));
+                    }))));
                     setChanges([]);
                 }
                 // Save selections immediately so they persist across refresh
@@ -10161,6 +10463,7 @@
                     if (ev.id === focusedEventId) return;
                     if (ev.date !== fDate) return;
                     if (ev.cancelled) return; // T1: cancelled events do not block availability
+                    if (ev.soft) return;      // soft restriction: doesn't isolate its people
                     const eS = evStart(ev); const eE = evEnd(ev);
                     if (eS == null || fStart == null) return;
                     if (eS < fEnd && eE > fStart) {
@@ -10360,6 +10663,14 @@
                             }
                             return;
                         }
+                        if (ch.type === 'event-create') {
+                            // Undo creation = remove the event (descending index order means
+                            // any personnel-add undos already ran while it still existed)
+                            const ci = next.findIndex(e => e.id === ch.eventId);
+                            if (ci >= 0) next.splice(ci, 1);
+                            try { saveCustomEvents(loadCustomEvents().filter(e => e.id !== ch.eventId)); } catch (e) {}
+                            return;
+                        }
 
                         // Existing person-centric undo
                         const event = next.find(e => e.id === ch.eventId);
@@ -10406,7 +10717,12 @@
                             }
                             return `${mdl}${meta.eventName} (${meta.eventTime})`;
                         };
-                        if (inst.type === 'event-cancel') {
+                        if (inst.type === 'event-create') {
+                            const f = inst.final || {};
+                            lines.push(`  NEW EVENT: ${f.model ? f.model + ' | ' : ''}${f.eventName || 'New event'} (${f.startTime || '??'}-${f.endTime || '??'})`);
+                            if (inst.personsAdded && inst.personsAdded.length > 0) lines.push(`        ${inst.personsAdded.join(', ')}`);
+                            if (f.notes) lines.push(`        notes: ${f.notes}`);
+                        } else if (inst.type === 'event-cancel') {
                             lines.push(`  ${inst.cancelledAfter ? 'CANCELLED' : 'UN-CANCELLED'}: ${fmtEvt(inst.source)}`);
                         } else if (inst.type === 'event-edit') {
                             const diffs = [];
@@ -10441,6 +10757,20 @@
                 const customs = loadCustomEvents();
                 customs.push(newEvent);
                 saveCustomEvents(customs);
+                // Record the creation — computeNetChanges folds later edits and
+                // personnel adds on this event under one "Created" summary entry.
+                if (initialized.current) {
+                    setChanges(c => [...c, {
+                        type: 'event-create',
+                        eventId: newEvent.id,
+                        eventName: newEvent.eventName,
+                        eventModel: newEvent.model,
+                        eventTime: newEvent.startTime,
+                        eventSection: newEvent.section,
+                        date: newEvent.date,
+                        snapshot: { eventName: newEvent.eventName, model: newEvent.model, startTime: newEvent.startTime, endTime: newEvent.endTime, notes: newEvent.notes },
+                    }]);
+                }
                 // Add to working events + allEvents (so it persists through filter)
                 setWorkingEvents(prev => [...prev, { ...newEvent, personnel: [...newEvent.personnel] }]);
             }, []);
@@ -10576,6 +10906,7 @@
                                     onFillPlaceholder={handleFillPlaceholder}
                                     onRemovePlaceholder={handleRemovePlaceholder}
                                     onOpenAddMenu={handleOpenAddMenu}
+                                    onToggleSoft={handleToggleSoft}
                                 />
                             ))}
                         </div>
@@ -10615,6 +10946,7 @@
                             onRemovePlaceholder={handleRemovePlaceholder}
                             onFillPlaceholder={handleFillPlaceholder}
                             onOpenAddMenu={handleOpenAddMenu}
+                            onToggleSoft={handleToggleSoft}
                         />
                     </div>
 
