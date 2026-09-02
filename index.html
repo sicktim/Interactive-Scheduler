@@ -114,6 +114,57 @@
             flex-direction: column;
         }
 
+        /* Collapsed change summary: column shrinks to a slim clickable bar */
+        .app-layout.summary-collapsed {
+            grid-template-columns: 1fr 28px;
+        }
+        .change-summary-panel.change-summary-collapsed {
+            overflow: hidden;
+            align-items: center;
+            padding-top: 10px;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .change-summary-panel.change-summary-collapsed:hover {
+            background: rgba(30, 30, 55, 0.95);
+        }
+        .cs-collapse-chevron {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.45);
+        }
+        .cs-collapsed-badge {
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            background: rgba(245, 158, 11, 0.25);
+            border: 1px solid rgba(245, 158, 11, 0.6);
+            color: #fbbf24;
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+        }
+        .cs-collapsed-label {
+            writing-mode: vertical-rl;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: rgba(255,255,255,0.35);
+        }
+        .cs-collapse-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.6rem;
+            cursor: pointer;
+            margin-left: 8px;
+            padding: 2px 4px;
+        }
+        .cs-collapse-btn:hover { color: rgba(255,255,255,0.8); }
+
         .picker-panel {
             grid-column: 1;
             grid-row: 3;
@@ -2229,6 +2280,11 @@
             background: rgba(255, 255, 255, 0.95);
             border-left-color: rgba(0,0,0,0.1);
         }
+        .light-mode .change-summary-panel.change-summary-collapsed:hover { background: rgba(241,245,249,0.95); }
+        .light-mode .cs-collapse-chevron { color: rgba(0,0,0,0.4); }
+        .light-mode .cs-collapsed-label { color: rgba(0,0,0,0.35); }
+        .light-mode .cs-collapse-btn { color: rgba(0,0,0,0.4); }
+        .light-mode .cs-collapse-btn:hover { color: rgba(0,0,0,0.8); }
         .light-mode .picker-panel {
             background: rgba(255, 255, 255, 0.98);
             border-top-color: rgba(0,0,0,0.1);
@@ -5459,7 +5515,7 @@
             );
         };
 
-        const ChangeSummary = ({ changes, onUndoGroup, onClearAll, onCopy }) => {
+        const ChangeSummary = ({ changes, onUndoGroup, onClearAll, onCopy, collapsed, onToggleCollapse }) => {
             const netInstructions = useMemo(() => computeNetChanges(changes), [changes]);
 
             const byDate = useMemo(() => {
@@ -5485,6 +5541,17 @@
                 return `${model}${meta.eventName} (${meta.eventTime})`;
             };
 
+            if (collapsed) {
+                return (
+                    <div className="change-summary-panel change-summary-collapsed" onClick={onToggleCollapse}
+                        title="Expand change summary">
+                        <span className="cs-collapse-chevron">{'◀'}</span>
+                        {netCount > 0 && <span className="cs-collapsed-badge">{netCount}</span>}
+                        <span className="cs-collapsed-label">CHANGES</span>
+                    </div>
+                );
+            }
+
             return (
                 <div className="change-summary-panel">
                     <div className="change-summary-header">
@@ -5494,6 +5561,8 @@
                             {netCount > 0 && netCount !== changes.length && (
                                 <span style={{ color: 'rgba(255,255,255,0.2)', marginLeft: 4 }}>({changes.length} raw)</span>
                             )}
+                            <button className="cs-collapse-btn" onClick={onToggleCollapse}
+                                title="Collapse change summary">{'▶'}</button>
                         </span>
                     </div>
                     <div className="change-list">
@@ -6375,7 +6444,7 @@
         // ─── MILITARY TIME INPUT ───
 
         // ─── MilitaryTimeInput ────────────────────────────────────────────────────
-        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur }) => {
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur, inputRef, onEnter }) => {
             const handleChange = (e) => {
                 let raw = e.target.value;
                 raw = raw.replace(/[^\d:]/g, '');
@@ -6386,19 +6455,10 @@
                 onChange(raw);
             };
 
-            const handleKeyDown = (e) => {
-                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
-                if (allowed.includes(e.key)) return;
-                if (e.ctrlKey || e.metaKey) return;
-                if (/^\d$/.test(e.key)) return;
-                if (e.key === ':' && !value.includes(':')) return;
-                e.preventDefault();
-            };
-
-            const handleBlur = () => {
+            // Shared by blur and Enter: "9" → 09:00, "930" → 09:30, clamps h≤23 m≤59.
+            const normalizeDraft = () => {
                 let v = value.trim();
-                if (!v) { if (externalOnBlur) externalOnBlur(''); return; }
+                if (!v) return '';
                 let hours, minutes;
                 if (v.includes(':')) {
                     [hours, minutes] = v.split(':');
@@ -6412,13 +6472,35 @@
                 if (isNaN(m)) m = 0;
                 h = Math.min(Math.max(h, 0), 23);
                 m = Math.min(Math.max(m, 0), 59);
-                const normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter' && onEnter) {
+                    const normalized = normalizeDraft();
+                    if (normalized) onChange(normalized);
+                    onEnter(normalized);
+                    return;
+                }
+                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+                if (allowed.includes(e.key)) return;
+                if (e.ctrlKey || e.metaKey) return;
+                if (/^\d$/.test(e.key)) return;
+                if (e.key === ':' && !value.includes(':')) return;
+                e.preventDefault();
+            };
+
+            const handleBlur = () => {
+                const normalized = normalizeDraft();
+                if (!normalized) { if (externalOnBlur) externalOnBlur(''); return; }
                 onChange(normalized);
                 if (externalOnBlur) externalOnBlur(normalized);
             };
 
-            return <input type="text" maxLength={5} placeholder={placeholder}
+            return <input ref={inputRef} type="text" maxLength={5} placeholder={placeholder}
                 style={style} value={value} onChange={handleChange}
+                onFocus={e => e.target.select()}
                 onKeyDown={handleKeyDown} onBlur={handleBlur} inputMode="numeric" />;
         };
 
@@ -6686,7 +6768,13 @@
 
             React.useEffect(() => { if (!editing) setDraft(value || ''); }, [value, editing]);
             React.useEffect(() => {
-                if (editing && inputRef.current) inputRef.current.focus();
+                // Focus + select existing text on entering edit — applies to BOTH text and
+                // time inputs (time inputs previously never got focused: the ref wasn't
+                // attached to MilitaryTimeInput). Selecting lets the user type immediately.
+                if (editing && inputRef.current) {
+                    inputRef.current.focus();
+                    inputRef.current.select();
+                }
             }, [editing]);
 
             const commit = () => {
@@ -6762,6 +6850,7 @@
                     return (
                         <td ref={tdRef} className={cellClass} onClick={handleClick} onKeyDown={handleTimeKeyDown}>
                             <MilitaryTimeInput value={draft} onChange={setDraft} onBlur={commitTimeDirect}
+                                inputRef={inputRef} onEnter={commitTimeDirect}
                                 style={{ background: 'transparent', border: 'none', color: 'inherit',
                                          fontFamily: 'inherit', fontSize: 'inherit', width: '100%',
                                          outline: 'none', padding: 0 }} />
@@ -6773,6 +6862,7 @@
                         <input ref={inputRef} className="wb-input"
                             type="text"
                             value={draft} onChange={e => setDraft(e.target.value)}
+                            onFocus={e => e.target.select()}
                             onBlur={commit} onKeyDown={handleKeyDown} />
                     </td>
                 );
@@ -7377,6 +7467,7 @@
                     placeholder={placeholder || 'HH:MM'}
                     maxLength={5}
                     onChange={(e) => setDraft(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     onBlur={commit}
                     onKeyDown={handleKeyDown}
                     onClick={(e) => e.stopPropagation()}
@@ -8059,7 +8150,16 @@
         };
 
         // ─────────────────────────── WhiteboardAcademics ───────────────────────
-        const WhiteboardAcademics = ({ events, roster }) => {
+        const WhiteboardAcademics = ({ events, roster, onEditSave }) => {
+            // Academics events are readonly (crew/timeline stay locked), but the block
+            // TIMES are adjustable from here — saves flow through the normal edit path
+            // and show up in the Change Summary as event-edit entries.
+            const handleCellSave = useCallback((eventId, field, value) => {
+                if (onEditSave) onEditSave(eventId, { [field]: value || null });
+            }, [onEditSave]);
+
+            const cellRefsMap = React.useRef(new Map());
+
             const matched = useMemo(() => {
                 return ACAD_FIXED_CATS.map(cat => {
                     const ev = events.find(e => {
@@ -8098,8 +8198,28 @@
                             return (
                                 <tr key={label}>
                                     <td style={nameStyle}>{displayName}</td>
-                                    <td style={rowStyle}>{ev ? (ev.startTime || '\u2014') : '\u2014'}</td>
-                                    <td style={rowStyle}>{ev ? (ev.endTime || '\u2014') : '\u2014'}</td>
+                                    {ev && onEditSave ? (() => {
+                                        if (!cellRefsMap.current.has(label)) cellRefsMap.current.set(label, []);
+                                        const refs = cellRefsMap.current.get(label);
+                                        const makeTab = (idx) => ({
+                                            onTab: () => refs[idx + 1]?.focus(),
+                                            onShiftTab: () => refs[idx - 1]?.focus(),
+                                            ref: (el) => { refs[idx] = el; },
+                                        });
+                                        return (
+                                        <React.Fragment>
+                                            <WhiteboardCell {...makeTab(0)} value={ev.startTime || ''} field="startTime" eventId={ev.id}
+                                                type="time" onSave={handleCellSave} className="wb-acad-time" />
+                                            <WhiteboardCell {...makeTab(1)} value={ev.endTime || ''} field="endTime" eventId={ev.id}
+                                                type="time" onSave={handleCellSave} className="wb-acad-time" />
+                                        </React.Fragment>
+                                        );
+                                    })() : (
+                                        <React.Fragment>
+                                            <td style={rowStyle}>{ev ? (ev.startTime || '\u2014') : '\u2014'}</td>
+                                            <td style={rowStyle}>{ev ? (ev.endTime || '\u2014') : '\u2014'}</td>
+                                        </React.Fragment>
+                                    )}
                                 </tr>
                             );
                         })}
@@ -8573,7 +8693,7 @@
                                                 onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
-                                            <WhiteboardAcademics events={acadEvts} roster={roster} />
+                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave} />
                                         </div>
                                     </div>
                                 ) : sec === 'Flying' ? (
@@ -8638,6 +8758,15 @@
             const [tooltip, setTooltip] = useState(null);
             const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow' | 'whiteboard'
             const [wbActiveDay, setWbActiveDay] = useState(null); // whiteboard selected day
+            const [summaryCollapsed, setSummaryCollapsed] = useState(() => {
+                try { return localStorage.getItem('tps-scheduler-summary-collapsed') === '1'; } catch (e) { return false; }
+            });
+            const toggleSummaryCollapsed = useCallback(() => {
+                setSummaryCollapsed(prev => {
+                    try { localStorage.setItem('tps-scheduler-summary-collapsed', prev ? '0' : '1'); } catch (e) {}
+                    return !prev;
+                });
+            }, []);
             const [showRefreshModal, setShowRefreshModal] = useState(false);
             const [showCreateEvent, setShowCreateEvent] = useState(false);
             const [showConflictSummary, setShowConflictSummary] = useState(false);
@@ -9192,7 +9321,7 @@
             const today = new Date().toISOString().slice(0, 10);
 
             return (
-                <div className="app-layout">
+                <div className={`app-layout${summaryCollapsed ? ' summary-collapsed' : ''}`}>
                     <div className="app-header">
                         <div className="flex items-center gap-4">
                             <div>
@@ -9331,6 +9460,8 @@
                         onUndoGroup={handleUndoGroup}
                         onClearAll={handleClearAll}
                         onCopy={handleCopy}
+                        collapsed={summaryCollapsed}
+                        onToggleCollapse={toggleSummaryCollapsed}
                     />
 
                     {showRefreshModal && (
