@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.1 — Fix: Soft pill missing on Ground events -->
+<!-- Interactive Scheduler v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
+<!-- v4.6.1 — Fix: Soft pill missing on Ground events -->
 <!-- v4.6.0 — Collapsible Aircraft Groups, Organized Change Summary, Soft Restrictions, Light-Mode Contrast Polish -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
@@ -3917,12 +3918,15 @@
                                 const dup = arr.some(c => c.eventName === entry.eventName && c.startTime === entry.startTime && c.endTime === entry.endTime);
                                 if (!dup) arr.push(entry);
                             };
-                            // Record on event i
+                            // Record on event i. `soft` marks entries whose COUNTERPART is a
+                            // soft-restriction event: the soft event itself keeps its full
+                            // conflict flag, but the other event only reveals it on hover.
                             addConflict(evList[i].id, {
                                 eventName: evList[j].eventName, model: evList[j].model,
                                 section: evList[j].section,
                                 startTime: evList[j].startTime, endTime: evList[j].endTime,
                                 date: evList[j].date,
+                                soft: !!evList[j].soft,
                             });
                             // Record on event j
                             addConflict(evList[j].id, {
@@ -3930,6 +3934,7 @@
                                 section: evList[i].section,
                                 startTime: evList[i].startTime, endTime: evList[i].endTime,
                                 date: evList[i].date,
+                                soft: !!evList[i].soft,
                             });
                         });
                     }
@@ -3950,7 +3955,7 @@
                 const d = c.date || '?';
                 if (!byDate.has(d)) byDate.set(d, []);
                 const m = c.model ? `${c.model} ` : '';
-                byDate.get(d).push(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+                byDate.get(d).push(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})${c.soft ? ' [soft]' : ''}`);
             });
             const lines = [];
             [...byDate.keys()].sort().forEach(date => {
@@ -3963,14 +3968,20 @@
             return lines.join('\n');
         };
 
+        // HARD conflicts only — soft-counterpart entries don't raise the visual flag
+        // (they surface on hover via getConflictText's "[soft]" lines instead).
         const hasConflict = (eventId, person, conflicts) => {
             const ec = conflicts.get(eventId);
-            return ec && ec.has(person);
+            const pc = ec && ec.get(person);
+            return !!(pc && pc.some(c => !c.soft));
         };
 
         const eventConflictCount = (eventId, conflicts) => {
             const ec = conflicts.get(eventId);
-            return ec ? ec.size : 0;
+            if (!ec) return 0;
+            let n = 0;
+            ec.forEach(arr => { if (arr.some(c => !c.soft)) n++; });
+            return n;
         };
 
         // ==========================================
@@ -5362,7 +5373,7 @@
                     personMap.forEach((confList, person) => {
                         const alsoOn = confList.map(c => {
                             const m = c.model ? `${c.model} ` : '';
-                            return `${m}${c.eventName}`;
+                            return `${m}${c.eventName}${c.soft ? ' [soft]' : ''}`;
                         }).join(', ');
                         personConflicts.push({ person, alsoOn });
                     });
@@ -5479,7 +5490,7 @@
 
         // ─── PERSONNEL CHIP ───
 
-        const PersonnelChip = ({ name, roster, conflictText, onRemove, eventId, inPicker, isBusy, isUnavailable, colorOverride, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
+        const PersonnelChip = ({ name, roster, conflictText, conflictIsSoftOnly, onRemove, eventId, inPicker, isBusy, isUnavailable, colorOverride, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
             const colors = colorOverride || chipColor(name, roster);
 
             const handleDragStart = (e) => {
@@ -5495,6 +5506,9 @@
             };
 
             const hasCon = !!conflictText;
+            // Soft-only conflicts (counterpart is a soft event) don't raise the amber
+            // flag/! — the hover tooltip still reveals them with [soft] labels.
+            const showFlag = hasCon && !conflictIsSoftOnly;
 
             const handleMouseEnter = (e) => {
                 if ((hasCon || isUnavailable) && onShowTooltip) {
@@ -5505,7 +5519,7 @@
 
             return (
                 <span
-                    className={`chip ${hasCon && !isUnavailable ? 'chip-conflict' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
+                    className={`chip ${showFlag && !isUnavailable ? 'chip-conflict' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
                     style={{ background: colors.bg, color: colors.text }}
                     draggable
                     onDragStart={handleDragStart}
@@ -5515,7 +5529,7 @@
                     title={hasCon ? undefined : name}
                 >
                     {name}
-                    {hasCon && <span className="conflict-icon">!</span>}
+                    {showFlag && <span className="conflict-icon">!</span>}
                     {onRemove && <span className="chip-remove" onClick={(e) => { e.stopPropagation(); e.preventDefault(); if (onHideTooltip) onHideTooltip(); onRemove(name); }}>✕</span>}
                 </span>
             );
@@ -5715,6 +5729,7 @@
                                                     roster={roster}
                                                     colorOverride={colorOverride}
                                                     conflictText={getConflictText(event.id, person, conflicts)}
+                                                    conflictIsSoftOnly={!hasConflict(event.id, person, conflicts)}
                                                     onRemove={event.readonly ? null : (n) => onRemove(event.id, n)}
                                                     eventId={event.id}
                                                     onDS={onDS}
@@ -6100,7 +6115,7 @@
                             const d = c.date || '?';
                             if (!dateMap.has(d)) dateMap.set(d, new Set());
                             const m = c.model ? `${c.model} ` : '';
-                            dateMap.get(d).add(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})`);
+                            dateMap.get(d).add(`  ${m}${c.eventName} (${c.startTime}-${c.endTime || '??'})${c.soft ? ' [soft]' : ''}`);
                         });
                     });
                 });
@@ -7753,8 +7768,8 @@
 
             const style = person && color ? { background: color.bg, color: color.text } : {};
 
-            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
-            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
+            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
+            const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
 
             return (
                 <td className={cellClass} style={style} onClick={handleClick}
@@ -7778,7 +7793,7 @@
                                 e.currentTarget.style.opacity = '1';
                             }}
                             onMouseEnter={(e) => {
-                                if (hasCon && onShowTooltip) {
+                                if (conflictText && onShowTooltip) {
                                     onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
                                 }
                             }}
@@ -8130,8 +8145,8 @@
                             const color = person ? chipColor(person, roster) : null;
                             const style = color ? { background: color.bg, color: color.text } : {};
                             const isPending = pendingFill && pendingFill.person === person;
-                            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false;
-                            const conflictText = hasCon ? getConflictText(eventId, person, conflicts) : null;
+                            const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
+                            const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
                             return (
                                 <span key={i} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
                                     <span className={`wb-crew-chip${hasCon ? ' chip-conflict' : ''}`} style={style}
@@ -8150,7 +8165,7 @@
                                             e.currentTarget.style.opacity = '1';
                                         }}
                                         onMouseEnter={(e) => {
-                                            if (hasCon && onShowTooltip) {
+                                            if (conflictText && onShowTooltip) {
                                                 onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
                                             }
                                         }}
