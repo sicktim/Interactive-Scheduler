@@ -3,6 +3,25 @@
 **Source file:** `Interactive-scheduler/interactive-scheduler.html` (v4.2.0, ~9450 lines)
 **Document date:** 2026-03-04
 
+> **v4.4.0 update (2026-07-29)** — line refs below are stale; concepts valid. New since:
+> - **Time entry**: `WhiteboardCell` time cells now focus + select-all their
+>   `MilitaryTimeInput` (via new `inputRef`/`onEnter` props); Enter commits in place;
+>   Tab chains unchanged. Text cells + `PendingTimeInput` select-all on focus.
+> - **Academics table**: Start/End are `WhiteboardCell type="time"` (with tab chain)
+>   when `onEditSave` is provided; events remain `readonly` otherwise.
+> - **Sorting**: `dayEvents` has two modes via the header **Sort** toggle —
+>   'aircraft' (legacy model→time) and 'whiteboard' (`rowIdx` source order, stamped by
+>   `transformBatchData`). SIM/CR rows carry `attachedTo` (nearest preceding real
+>   flying row, set at parse) and nest under their parent in BOTH modes
+>   (`wb-row-attached` + `└` tie). Zebra striping added — its selectors deliberately
+>   exclude `.wb-row-effective/partial/cancelled` and the hover rule mirrors zebra
+>   specificity; keep that invariant when touching row CSS.
+> - **[+] menu**: both placeholder popovers now route to the SchedulerView-rendered
+>   `AddPersonPopup` (tabs: Big Board / Everyone / Placeholders) via `onOpenAddMenu`
+>   threaded alongside `onAddPlaceholder`; the old inline popovers remain as fallback
+>   when the prop is absent. Big Board service + matching rules: see `AI-CONTEXT.md` §6b.
+> - **Contrast pass**: wb-table 0.72rem, th 0.6rem@0.75α, day tabs 0.7rem@0.65α.
+
 ---
 
 ## Purpose

@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.3.0 — Crew Rainbow v6.3 Parity Merge (workload counters, today/now line, cancelled styling, person modal, pan-to-scroll) -->
+<!-- Interactive Scheduler v4.4.0 — Big Board Integration, Tabbed [+] Menu, Whiteboard UX Batch (time entry, contrast, grouped events, collapsible summary, academics times) -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
   Comprehensive machine-readable context for replicating this application's features,
@@ -9,6 +9,25 @@
   conflict detection, change tracking, and the hard-won gotchas behind each feature.
 -->
 <!--
+  v4.4.0 Big Board Integration + Whiteboard UX Batch
+  - Big Board (curriculum completion) service: pulls per-student event status from the
+    Big-Board-Summary GAS for 26A/26B FTC/STC; cached locally with "as of" stamps;
+    header "Big Board" button opens the class load/refresh/reset modal
+  - [+] on events is now a 3-tab popup: Big Board (students grouped by
+    needs/available, needs/unavailable, scheduled-with-date, completed — with
+    two-click "Add anyway?" guard against double-booking), Everyone (type-ahead over
+    all students+staff), Placeholders (the original role chips)
+  - Event↔Big Board matching via "Name (CODE)" titles only; student matching by last
+    name (+initial tiebreak) scoped to the class's roster category
+  - Whiteboard time entry: click/Tab now focuses AND select-alls time cells (was
+    dead), Enter commits in place, Tab commits and moves right (end of row = Enter)
+  - Change Summary collapsible to a slim bar with net-change badge (persisted)
+  - Academics block times editable on the whiteboard (events stay readonly otherwise)
+  - Whiteboard contrast pass: larger/brighter day tabs, table text, headers; zebra rows
+  - Grouped events: Sort toggle (Aircraft vs Whiteboard row order); SIM/CR rows tied
+    to their parent event nest under it in both modes (blue └ tie)
+  - Theme toggle moved into the header button cluster (was free-floating)
+
   v4.3.0 Crew Rainbow v6.3 Parity Merge
   - Merged the refined standalone TPS Crew Rainbow (sicktim.github.io/Schedule-Gantt, v6.3)
     into the Rainbow view, driven by this app's canonical event pipeline (no second data source)

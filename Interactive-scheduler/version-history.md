@@ -2,6 +2,60 @@
 
 ---
 
+## v4.4.0 — Big Board Integration, Tabbed [+] Menu, Whiteboard UX Batch
+
+Plan: `docs/plans/2026-07-29-v4.4-feature-batch.md`. Verified via Babel compile gate +
+18/18 headless jsdom render checks (see plan Phase 5).
+
+### Biggest Feature — Big Board completion data
+- **Big Board service** — fetches per-student curriculum event status from the
+  Big-Board-Summary GAS (`?call=sheets_avail` / `?call=fetch_sheet`); classes 26A/26B
+  FTC/STC resolved by sheet-name pattern (names are inconsistent on the spreadsheet);
+  compact derived cache in `tps-bigboard-cache-v1` (~120KB/class) with **"as of"**
+  fetchedAt stamps; header **Big Board** button → modal with per-class Load/Refresh
+  (30–60s), unmatched-student diagnostics, and **Reset Big Board Data**
+- **Cell-status rules ported from MCG-Tracker** `status.js` (keep in sync): darkGrey→
+  not-required · lightGrey→complete · paired+strikethrough→complete · paired→pending
+  (pair-opted) · white+date→scheduled (past-date flagged "verify") · white→pending
+- **Matching scope**: events by `Name (CODE)` title convention only; students by last
+  name (+first-initial tiebreak, `*` stripped, track letter stripped) scoped per class
+  → roster category (26A FTC→FTC-A, 26A STC→STC-A, 26B FTC→FTC-B, 26B STC→STC-B)
+- **Standing rule honored** (from MCG-Tracker): Big Board is authoritative for
+  scheduled/completed status only, NOT applicability — N/A students sit behind a toggle
+
+### Bigger Features
+- **Tabbed [+] popup** (replaces both placeholder popovers; whiteboard + timeline):
+  1. *Big Board* — students grouped: **Needs · Available** (full color, click adds),
+     **Needs · Unavailable** (dimmed, red dashed outline, `!` + busy tooltip),
+     **Scheduled (not complete)** (blue dashed + date badge; click arms
+     "Add anyway?" to prevent accidental double-booking), **Completed** (faded ✓);
+     per-class load buttons + as-of stamp inline when data missing
+  2. *Everyone* — type-ahead over all students and staff (chips appear once typing starts)
+  3. *Placeholders* — the original role list, unchanged
+- **Grouped events** — parser stamps `rowIdx` and ties SIM/CR rows to the nearest
+  preceding real flying row (`attachedTo` — same rule as the Timeline's
+  buildFlyingLayout; verified against batch data where time-equality fails);
+  whiteboard **Sort: Aircraft / Whiteboard** toggle (persisted); tied rows nest under
+  their parent in both modes with a blue `└` tie marker
+- **Whiteboard contrast pass** — day tabs 0.7rem @ 0.65α with active underline;
+  table text 0.72rem @ 0.95α; headers 0.6rem @ 0.75α; zebra striping (status-row
+  tints preserved); brighter section titles and [+] buttons; light-mode matched
+- **Theme toggle relocated** — sun/moon now a normal header-cluster button
+  (non-scheduler screens: fixed top-right)
+
+### Small Features
+- **Whiteboard time entry** — root-cause fix: time cells never focused their input;
+  now click/Tab focuses AND select-alls (type immediately), **Enter commits in
+  place**, **Tab commits + moves right** (end of row behaves like Enter); text cells
+  and supervision pending slots also select-all on focus
+- **Collapsible Change Summary** — chevron collapses the right panel to a 28px bar
+  (vertical CHANGES label + amber net-change badge); persisted per browser
+- **Adjustable academics times** — Start/End editable via time cells on the
+  whiteboard academics table (Tab chain included); events remain readonly for
+  crew/timeline; edits appear in the Change Summary
+
+---
+
 ## v4.3.0 — Crew Rainbow v6.3 Parity Merge
 
 Merged the refined standalone TPS Crew Rainbow (sicktim.github.io/Schedule-Gantt, v6.3 on

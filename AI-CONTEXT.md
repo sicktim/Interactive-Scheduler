@@ -259,6 +259,56 @@ These are the failure modes that actually happened. Replicate the behavior, not 
 14. **Roster order is presentation order.** Never alphabetize; the squadron's roster order is
     intentional.
 
+## 6b. Big Board integration (v4.4.0) — curriculum completion data
+
+A second GAS feed (repo: https://github.com/sicktim/Big-Board-Summary, local sibling
+project `MCG-Tracker/`) supplies per-student completion status for curriculum events,
+consumed by the whiteboard/timeline **[+] add-person popup**.
+
+### Data contract
+- Endpoints: `?call=sheets_avail` (tab list) and `?call=fetch_sheet&sheet=<tabName>`.
+- `fetch_sheet` returns `{ ok, sheetName, fetchedAt, classMeta: {startDate, endDate},
+  students: [{col, name, type, dataGroup}], events: [{row, series, courseNo, eventNo,
+  title, pilotGate, cells: [{col, value, bgHex, rgbFamily, strikethrough}]}] }`.
+- `rgbFamily` classification (server-side): equal RGB ≥240 → `white`, ≥150 →
+  `lightGrey`, else `darkGrey`; any non-grey color → `paired`.
+- **Cell-status semantics** (port of MCG-Tracker `status.js` — the authority):
+  `darkGrey` → not required · `lightGrey` → complete · `paired`+strikethrough →
+  complete · `paired` → pending (pair-opted) · `white`+parseable date → scheduled
+  (past date ⇒ flag `past-date-unchecked`, "verify" — still scheduled, not pending) ·
+  `white` blank → pending. Ambiguous m/d dates that fit neither class-window year
+  parse to null (never guess).
+- Sheet tabs for a class are named inconsistently (`"26A FTC Big Board"`,
+  `"***26A STC BigBoard***"`) — resolve by pattern (`/26A.*FTC/i` etc., excluding
+  `Backup_*`), never hardcode.
+
+### Matching rules (learned, load-bearing)
+- **Events**: only whiteboard titles following the `Name (CODE)` convention (e.g.
+  `SYS PRACT EXAM (SY 7511F)`) are matched — code normalized (uppercase, single
+  space) against Big Board `eventNo`. Uncoded events are deliberately out of scope.
+- **Students**: Big Board names are `<track letter> LASTNAME[, INITIAL][ *]`
+  (track letters C/R/E/A/F/B/M; `*` = SRO — appears on BOTH systems sometimes).
+  Whiteboard roster is `Last, F[ *]`. Match by last name scoped to the class's
+  roster category (26A FTC→`FTC-A`, 26A STC→`STC-A`, 26B FTC→`FTC-B`,
+  26B STC→`STC-B`), first-initial tiebreak on duplicate surnames; anything still
+  ambiguous is reported as unmatched rather than guessed.
+- **Authority boundary** (standing rule inherited from MCG-Tracker): the Big Board
+  is authoritative for *scheduled/completed status only* — NOT for event
+  applicability (the MCG is). `notreq` (darkGrey) students are hidden behind a
+  "show N/A" toggle, never asserted as truly exempt.
+
+### UX (the [+] popup, "grouped + badges" scheme)
+Three tabs: **Big Board** / **Everyone** (type-ahead; roster too large to list) /
+**Placeholders** (role chips). The Big Board tab groups candidates:
+`NEEDS · AVAILABLE` (full color, one click adds) → `NEEDS · UNAVAILABLE` (dimmed,
+red dashed outline, `!` with busy tooltip) → `SCHEDULED (not complete)` (blue dashed
+outline + date badge; clicking arms a two-step "Add anyway?" so nobody double-books
+by accident) → `COMPLETED` (greyscale + ✓). Availability = same-date, non-cancelled,
+time-overlapping events (cancelled events never block — matches focus mode).
+Data loads are explicit (30–60 s per class), cached locally, and always labeled
+**"as of <fetch time>"** — schedulers must know how stale the board is. A header
+"Big Board" button manages load/refresh/reset per class.
+
 ## 7. Replicating in another system (LMS guidance)
 
 - **Minimal data contract** to drive a rainbow UI without this app's parsers:
@@ -294,4 +344,9 @@ These are the failure modes that actually happened. Replicate the behavior, not 
 | `Squadron Schedule API/` | GAS source for the data endpoint |
 | `AI-CONTEXT.md` | This file |
 
-*Last updated: 2026-07-28 (v4.3.0 rainbow parity merge).*
+*Last updated: 2026-07-29 (v4.4.0 Big Board integration + whiteboard UX batch — see
+`Interactive-scheduler/version-history.md` for the full change list; other v4.4.0
+whiteboard behaviors worth replicating: select-all-on-focus time entry with
+Enter-commits/Tab-advances, SIM/CR rows tied to the preceding real flying row via
+`attachedTo`/`rowIdx` with an Aircraft-vs-Whiteboard sort toggle, collapsible change
+summary, editable academics block times).*

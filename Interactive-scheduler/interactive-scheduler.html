@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.3.0 — Crew Rainbow v6.3 Parity Merge (workload counters, today/now line, cancelled styling, person modal, pan-to-scroll) -->
+<!-- Interactive Scheduler v4.4.0 — Big Board Integration, Tabbed [+] Menu, Whiteboard UX Batch (time entry, contrast, grouped events, collapsible summary, academics times) -->
 <!--
   AI / LLM DEVELOPERS — READ THIS FIRST
   Comprehensive machine-readable context for replicating this application's features,
@@ -9,6 +9,25 @@
   conflict detection, change tracking, and the hard-won gotchas behind each feature.
 -->
 <!--
+  v4.4.0 Big Board Integration + Whiteboard UX Batch
+  - Big Board (curriculum completion) service: pulls per-student event status from the
+    Big-Board-Summary GAS for 26A/26B FTC/STC; cached locally with "as of" stamps;
+    header "Big Board" button opens the class load/refresh/reset modal
+  - [+] on events is now a 3-tab popup: Big Board (students grouped by
+    needs/available, needs/unavailable, scheduled-with-date, completed — with
+    two-click "Add anyway?" guard against double-booking), Everyone (type-ahead over
+    all students+staff), Placeholders (the original role chips)
+  - Event↔Big Board matching via "Name (CODE)" titles only; student matching by last
+    name (+initial tiebreak) scoped to the class's roster category
+  - Whiteboard time entry: click/Tab now focuses AND select-alls time cells (was
+    dead), Enter commits in place, Tab commits and moves right (end of row = Enter)
+  - Change Summary collapsible to a slim bar with net-change badge (persisted)
+  - Academics block times editable on the whiteboard (events stay readonly otherwise)
+  - Whiteboard contrast pass: larger/brighter day tabs, table text, headers; zebra rows
+  - Grouped events: Sort toggle (Aircraft vs Whiteboard row order); SIM/CR rows tied
+    to their parent event nest under it in both modes (blue └ tie)
+  - Theme toggle moved into the header button cluster (was free-floating)
+
   v4.3.0 Crew Rainbow v6.3 Parity Merge
   - Merged the refined standalone TPS Crew Rainbow (sicktim.github.io/Schedule-Gantt, v6.3)
     into the Rainbow view, driven by this app's canonical event pipeline (no second data source)
@@ -113,6 +132,57 @@
             display: flex;
             flex-direction: column;
         }
+
+        /* Collapsed change summary: column shrinks to a slim clickable bar */
+        .app-layout.summary-collapsed {
+            grid-template-columns: 1fr 28px;
+        }
+        .change-summary-panel.change-summary-collapsed {
+            overflow: hidden;
+            align-items: center;
+            padding-top: 10px;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .change-summary-panel.change-summary-collapsed:hover {
+            background: rgba(30, 30, 55, 0.95);
+        }
+        .cs-collapse-chevron {
+            font-size: 0.6rem;
+            color: rgba(255,255,255,0.45);
+        }
+        .cs-collapsed-badge {
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            background: rgba(245, 158, 11, 0.25);
+            border: 1px solid rgba(245, 158, 11, 0.6);
+            color: #fbbf24;
+            font-size: 0.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 3px;
+        }
+        .cs-collapsed-label {
+            writing-mode: vertical-rl;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: rgba(255,255,255,0.35);
+        }
+        .cs-collapse-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.6rem;
+            cursor: pointer;
+            margin-left: 8px;
+            padding: 2px 4px;
+        }
+        .cs-collapse-btn:hover { color: rgba(255,255,255,0.8); }
 
         .picker-panel {
             grid-column: 1;
@@ -877,17 +947,18 @@
         }
 
         .day-tab {
-            padding: 3px 8px;
-            font-size: 0.55rem;
+            padding: 4px 10px;
+            font-size: 0.7rem;
             font-weight: 600;
             border-radius: 3px 3px 0 0;
             cursor: pointer;
-            color: rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.65);
             white-space: nowrap;
             transition: all 0.15s;
+            border-bottom: 2px solid transparent;
         }
-        .day-tab:hover { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
-        .day-tab.today { color: #3b82f6; background: rgba(59,130,246,0.08); }
+        .day-tab:hover { color: rgba(255,255,255,0.9); background: rgba(255,255,255,0.06); }
+        .day-tab.today { color: #60a5fa; background: rgba(59,130,246,0.15); border-bottom-color: #3b82f6; font-weight: 700; }
 
         .empty-day {
             display: flex;
@@ -1374,10 +1445,31 @@
 
         /* ===== THEME TOGGLE ===== */
         .theme-toggle-container {
+            /* Non-scheduler screens only (loading/selection/error) — top-right corner,
+               out of the way. In the scheduler it's a normal header button instead. */
             position: fixed;
             top: 7px;
-            left: 240px;
+            right: 12px;
             z-index: 9999;
+        }
+        .theme-toggle-header-btn {
+            width: 28px;
+            height: 26px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: #fbbf24;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            transition: all 0.15s;
+        }
+        .theme-toggle-header-btn:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: rgba(255,255,255,0.3);
         }
         .theme-toggle-btn {
             width: 40px; height: 40px;
@@ -1496,7 +1588,7 @@
         }
         .wb-section { margin-bottom: 10px; }
         .wb-section-title {
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -1522,43 +1614,47 @@
         .wb-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             table-layout: fixed;
         }
         .wb-table th { overflow: hidden; }
         .wb-table td { overflow: visible; }
         .wb-table th {
-            font-size: 0.5rem;
+            font-size: 0.6rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.03em;
-            padding: 2px 4px;
+            padding: 3px 4px;
             text-align: left;
-            color: rgba(255,255,255,0.5);
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.75);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
             white-space: nowrap;
             user-select: none;
         }
         .wb-table td {
-            padding: 1px 4px;
-            border: 1px solid rgba(255,255,255,0.06);
-            color: rgba(255,255,255,0.85);
-            height: 24px;
+            padding: 2px 4px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.95);
+            height: 26px;
             vertical-align: middle;
             position: relative;
         }
-        .wb-table tr:hover td { background: rgba(255,255,255,0.02); }
+        /* Zebra striping for row tracking across wide tables.
+           Status rows (effective/partial/cancelled) keep their tints — excluded here,
+           and the hover rule mirrors the zebra's specificity so it still wins on hover. */
+        .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.025); }
+        .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(255,255,255,0.06); }
 
         /* Compact table variant for Supervision/Academics (smaller cells) */
         .wb-table-compact th {
-            font-size: 0.45rem;
+            font-size: 0.55rem;
             padding: 2px 3px;
         }
         .wb-table-compact td {
-            font-size: 0.55rem;
+            font-size: 0.65rem;
             padding: 2px 4px;
-            height: 20px;
+            height: 22px;
         }
         /* Left border + padding gap on the first column of each POC/Start/End triplet group */
         /* NOTE: class is applied directly on <th>/<td>, so selectors must be th.class / td.class */
@@ -1787,6 +1883,151 @@
             border-radius: 50%;
             flex-shrink: 0;
         }
+
+        /* ===== ADD-PERSON POPUP ([+] tabbed menu: Big Board / Everyone / Placeholders) ===== */
+        .add-person-popup {
+            position: fixed;
+            z-index: 500;
+            background: #171c30;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 8px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            font-size: 0.7rem;
+        }
+        .ap-header {
+            padding: 6px 10px 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .ap-title {
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .ap-sub { font-size: 0.55rem; color: rgba(255,255,255,0.4); }
+        .ap-tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+        .ap-tab {
+            flex: 1;
+            text-align: center;
+            padding: 5px 4px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.45);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            user-select: none;
+        }
+        .ap-tab:hover { color: rgba(255,255,255,0.75); }
+        .ap-tab.active { color: #60a5fa; border-bottom-color: #3b82f6; background: rgba(59,130,246,0.06); }
+        .ap-body { overflow-y: auto; padding: 8px 10px 10px; flex: 1; min-height: 0; }
+        .ap-section-label {
+            font-size: 0.5rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.45);
+            margin: 8px 0 4px;
+        }
+        .ap-body .ap-section-label:first-child { margin-top: 0; }
+        .ap-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+        .ap-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            background: var(--chip-bg);
+            color: var(--chip-text);
+            font-family: inherit;
+        }
+        .ap-chip:hover { filter: brightness(1.15); }
+        /* State encoding (grouped + badges scheme):
+           color = needs · faded = completed · red dashed outline = unavailable ·
+           blue dashed + date = scheduled elsewhere per Big Board */
+        .ap-chip.ap-unavail { opacity: 0.45; border: 1px dashed rgba(239,68,68,0.85); }
+        .ap-chip.ap-scheduled { border: 1px dashed rgba(59,130,246,0.9); }
+        .ap-chip.ap-complete { filter: grayscale(0.85); opacity: 0.5; }
+        .ap-chip.ap-complete.ap-unavail { border: 1px dashed rgba(239,68,68,0.85); }
+        .ap-chip.ap-na { filter: grayscale(1); opacity: 0.35; }
+        .ap-chip.ap-armed {
+            background: rgba(239,68,68,0.25) !important;
+            color: #fca5a5 !important;
+            border: 1px solid rgba(239,68,68,0.7) !important;
+            opacity: 1 !important;
+            filter: none !important;
+        }
+        .ap-chip-name { white-space: nowrap; }
+        .ap-chip-date {
+            font-size: 0.52rem;
+            background: rgba(59,130,246,0.3);
+            color: #bfdbfe;
+            border-radius: 4px;
+            padding: 0 3px;
+        }
+        .ap-chip-check { color: #86efac; font-size: 0.6rem; }
+        .ap-chip-bang { color: #fbbf24; font-weight: 800; }
+        .ap-chip-flagdot { width: 5px; height: 5px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
+        .ap-chip-pair { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.8); flex-shrink: 0; }
+        .ap-search {
+            width: 100%;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 5px;
+            color: #fff;
+            padding: 4px 8px;
+            font-size: 0.65rem;
+            font-family: inherit;
+            outline: none;
+            margin-bottom: 6px;
+        }
+        .ap-search:focus { border-color: #3b82f6; }
+        .ap-note { font-size: 0.55rem; color: rgba(255,255,255,0.45); margin-top: 6px; line-height: 1.5; }
+        .ap-load-btn {
+            display: block;
+            width: 100%;
+            margin: 4px 0;
+            padding: 5px 8px;
+            background: rgba(59,130,246,0.12);
+            border: 1px solid rgba(59,130,246,0.4);
+            color: #93c5fd;
+            border-radius: 5px;
+            font-size: 0.62rem;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: left;
+        }
+        .ap-load-btn:hover { background: rgba(59,130,246,0.2); }
+        .ap-load-btn:disabled { opacity: 0.5; cursor: wait; }
+        .ap-toggle-na {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.35);
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+            text-decoration: underline dotted;
+        }
+        .ap-toggle-na:hover { color: rgba(255,255,255,0.6); }
+        .bb-class-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
         /* The + button that opens the popover */
         .wb-crew-add-btn {
             display: inline-flex;
@@ -1794,9 +2035,9 @@
             justify-content: center;
             padding: 1px 6px;
             border-radius: 3px;
-            border: 1px dashed rgba(255,255,255,0.2);
-            color: rgba(255,255,255,0.3);
-            font-size: 0.65rem;
+            border: 1px dashed rgba(255,255,255,0.35);
+            color: rgba(255,255,255,0.55);
+            font-size: 0.7rem;
             min-width: 20px;
             cursor: pointer;
             position: relative;
@@ -1966,6 +2207,28 @@
             color: #facc15;
             border-color: rgba(250,204,21,0.5);
             background: rgba(250,204,21,0.08);
+        }
+        .wb-sort-btn {
+            font-size: 0.6rem;
+            padding: 2px 8px;
+            margin-left: 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: rgba(255,255,255,0.55);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .wb-sort-btn:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
+        /* SIM/CR rows tied to the event above them (attachedTo) */
+        .wb-row-attached td:first-child { border-left: 3px solid rgba(59,130,246,0.55); }
+        .wb-attach-tie {
+            color: rgba(59,130,246,0.8);
+            font-size: 0.7rem;
+            margin-right: 2px;
+            user-select: none;
         }
 
         /* Add-row button */
@@ -2203,6 +2466,15 @@
             color: #1e293b;
         }
 
+        .light-mode .theme-toggle-header-btn {
+            border-color: rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.05);
+            color: #b45309;
+        }
+        .light-mode .theme-toggle-header-btn:hover {
+            background: rgba(0,0,0,0.1);
+            border-color: rgba(0,0,0,0.3);
+        }
         .light-mode .theme-toggle-btn {
             border-color: rgba(0,0,0,0.15);
             background: rgba(0,0,0,0.04);
@@ -2229,6 +2501,11 @@
             background: rgba(255, 255, 255, 0.95);
             border-left-color: rgba(0,0,0,0.1);
         }
+        .light-mode .change-summary-panel.change-summary-collapsed:hover { background: rgba(241,245,249,0.95); }
+        .light-mode .cs-collapse-chevron { color: rgba(0,0,0,0.4); }
+        .light-mode .cs-collapsed-label { color: rgba(0,0,0,0.35); }
+        .light-mode .cs-collapse-btn { color: rgba(0,0,0,0.4); }
+        .light-mode .cs-collapse-btn:hover { color: rgba(0,0,0,0.8); }
         .light-mode .picker-panel {
             background: rgba(255, 255, 255, 0.98);
             border-top-color: rgba(0,0,0,0.1);
@@ -2439,7 +2716,7 @@
             color: #0f172a;
         }
         .light-mode .day-tab {
-            color: rgba(0,0,0,0.35);
+            color: rgba(0,0,0,0.55);
         }
         .light-mode .day-tab:hover { color: rgba(0,0,0,0.6); background: rgba(0,0,0,0.03); }
         .light-mode .day-tab.today { color: #2563eb; background: rgba(59,130,246,0.06); }
@@ -2636,15 +2913,16 @@
         .light-mode .wb-section-supervision .wb-section-title { color: #4c1d95; background: #ede9fe; border-bottom-color: rgba(76,29,149,0.12); }
         .light-mode .wb-section-academics .wb-section-title  { color: #1e3a8a; background: #dbeafe; border-bottom-color: rgba(30,58,138,0.12); }
         .light-mode .wb-table th {
-            color: rgba(0,0,0,0.55);
-            background: rgba(0,0,0,0.03);
-            border-color: rgba(0,0,0,0.08);
+            color: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.04);
+            border-color: rgba(0,0,0,0.12);
         }
         .light-mode .wb-table td {
-            border-color: rgba(0,0,0,0.08);
-            color: rgba(0,0,0,0.85);
+            border-color: rgba(0,0,0,0.12);
+            color: rgba(0,0,0,0.92);
         }
-        .light-mode .wb-table tr:hover td { background: rgba(0,0,0,0.02); }
+        .light-mode .wb-table tbody tr:nth-child(even):not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.02); }
+        .light-mode .wb-table tbody tr:hover:not(.wb-row-effective):not(.wb-row-partial):not(.wb-row-cancelled) td { background: rgba(0,0,0,0.045); }
         /* Preserve status row colors on hover in light mode */
         .light-mode .wb-row-effective:hover td { background: rgba(34,197,94,0.16) !important; }
         .light-mode .wb-row-partial:hover td   { background: rgba(234,179,8,0.16)  !important; }
@@ -2680,6 +2958,24 @@
         .light-mode .wb-add-ph-option { color: #1e293b; }
         .light-mode .wb-add-ph-option:hover { background: rgba(0,0,0,0.05); }
         .light-mode .wb-add-ph-dot { opacity: 0.85; }
+        /* Add-person popup */
+        .light-mode .add-person-popup { background: #ffffff; border-color: rgba(0,0,0,0.15); box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+        .light-mode .ap-header { border-bottom-color: rgba(0,0,0,0.08); }
+        .light-mode .ap-title { color: #0f172a; }
+        .light-mode .ap-sub { color: rgba(0,0,0,0.45); }
+        .light-mode .ap-tabs { border-bottom-color: rgba(0,0,0,0.1); }
+        .light-mode .ap-tab { color: rgba(0,0,0,0.45); }
+        .light-mode .ap-tab:hover { color: rgba(0,0,0,0.75); }
+        .light-mode .ap-tab.active { color: #1d4ed8; border-bottom-color: #2563eb; background: rgba(37,99,235,0.06); }
+        .light-mode .ap-section-label { color: rgba(0,0,0,0.5); }
+        .light-mode .ap-search { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.15); color: #0f172a; }
+        .light-mode .ap-note { color: rgba(0,0,0,0.5); }
+        .light-mode .ap-load-btn { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.35); color: #1d4ed8; }
+        .light-mode .ap-load-btn:hover { background: rgba(37,99,235,0.15); }
+        .light-mode .ap-toggle-na { color: rgba(0,0,0,0.4); }
+        .light-mode .ap-toggle-na:hover { color: rgba(0,0,0,0.65); }
+        .light-mode .ap-chip-pair { border-color: rgba(0,0,0,0.6); }
+        .light-mode .bb-class-row { border-bottom-color: rgba(0,0,0,0.06); }
         .light-mode .wb-crew-add-btn { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.3); }
         .light-mode .wb-crew-add-btn:hover { border-color: rgba(0,0,0,0.3); color: rgba(0,0,0,0.5); }
         .light-mode .wb-row-effective td { background: rgba(34,197,94,0.1); }
@@ -2692,6 +2988,10 @@
         .light-mode .wb-highlight-btn { color: rgba(0,0,0,0.4); border-color: rgba(0,0,0,0.15); }
         .light-mode .wb-highlight-btn:hover { color: rgba(0,0,0,0.7); }
         .light-mode .wb-highlight-btn.active { color: #b45309; border-color: rgba(180,83,9,0.4); background: rgba(180,83,9,0.06); }
+        .light-mode .wb-sort-btn { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.18); }
+        .light-mode .wb-sort-btn:hover { color: rgba(0,0,0,0.85); border-color: rgba(0,0,0,0.35); }
+        .light-mode .wb-row-attached td:first-child { border-left-color: rgba(37,99,235,0.5); }
+        .light-mode .wb-attach-tie { color: rgba(37,99,235,0.7); }
         .light-mode .duty-slot-label { color: #475569; }
         .light-mode .duty-drop-zone { border-color: rgba(0,0,0,0.2); color: #334155; }
         .light-mode .duty-drop-zone.drag-over { border-color: #2563eb; background: rgba(37,99,235,0.08); color: #2563eb; }
@@ -3007,7 +3307,8 @@
                 const raw = dayData.data;
 
                 if (raw.flying) {
-                    raw.flying.forEach(row => {
+                    const dayFlying = [];
+                    raw.flying.forEach((row, rowIdx) => {
                         const briefTime = row[1];
                         const eventName = row[5];
                         const model = (row[0] || '').trim();
@@ -3021,7 +3322,7 @@
                         const cancelled = (cxField === 'TRUE' || cxField === true || cxField === 'CX');
                         const effective = (effField === 'TRUE' || effField === true);
                         const partiallyEffective = (peField === 'TRUE' || peField === true);
-                        all.push({
+                        dayFlying.push({
                             id: mkId(), section: 'Flying', date,
                             model,
                             eventName: eventName || model || 'Unnamed Event',
@@ -3035,12 +3336,27 @@
                             cancelled,
                             effective,
                             partiallyEffective,
+                            rowIdx, // source sheet row order — drives "Whiteboard" sort mode
                         });
                     });
+                    // Tie SIM/CR rows to their parent: on the source whiteboard a CR/SIM
+                    // row sits immediately under the event it supports (verified in batch
+                    // data: identical times usually, but row precedence is the reliable
+                    // key — times can be offset, and unrelated events share exact times).
+                    // Same rule the Timeline's buildFlyingLayout already uses.
+                    let lastRealFlyingId = null;
+                    dayFlying.forEach(ev => {
+                        if (SIM_CR_MODELS.has(ev.model || '')) {
+                            if (lastRealFlyingId) ev.attachedTo = lastRealFlyingId;
+                        } else {
+                            lastRealFlyingId = ev.id;
+                        }
+                    });
+                    all.push(...dayFlying);
                 }
 
                 if (raw.ground) {
-                    raw.ground.forEach(row => {
+                    raw.ground.forEach((row, rowIdx) => {
                         const evName = row[0];
                         const start = row[1];
                         if (evName === 'Events') return; // skip header row
@@ -3065,12 +3381,13 @@
                             cancelled,
                             effective,
                             partiallyEffective,
+                            rowIdx,
                         });
                     });
                 }
 
                 if (raw.na) {
-                    raw.na.forEach(row => {
+                    raw.na.forEach((row, rowIdx) => {
                         const reason = row[0];
                         const start = row[1];
                         if (!reason || !start || reason === 'Reason') return;
@@ -3086,6 +3403,7 @@
                             cancelled: false,
                             effective: false,
                             partiallyEffective: false,
+                            rowIdx,
                         });
                     });
                 }
@@ -4108,6 +4426,189 @@
             } catch (e) { return []; }
         };
 
+        // ═══════════════════════════════════════════════════════════════════════
+        //  BIG BOARD (curriculum completion) SERVICE
+        //  Data source: Big-Board-Summary GAS (github.com/sicktim/Big-Board-Summary).
+        //  Endpoints: ?call=sheets_avail and ?call=fetch_sheet&sheet=<tabName>.
+        //  IMPORTANT (per MCG-Tracker standing rule): the Big Board is authoritative
+        //  for SCHEDULED/COMPLETED status only, NOT for event applicability (the MCG
+        //  is). darkGrey "notreq" cells are therefore hidden behind a toggle, never
+        //  asserted as truth.
+        // ═══════════════════════════════════════════════════════════════════════
+        const BB_GAS_URL = 'https://script.google.com/macros/s/AKfycbyU4XfKl5ct6SMzl1nh7e4yZOR6U_wqD9_4HbUNBUOm7fgUaJIPTUIH95CVEGsIfVmiUw/exec';
+        const BB_CACHE_KEY = 'tps-bigboard-cache-v1';
+        // Sheet names on the Big Board spreadsheet are inconsistent ("26A FTC Big
+        // Board", "***26A STC BigBoard***") — resolve by pattern, never hardcode.
+        const BB_CLASSES = [
+            { key: '26A FTC', rosterCat: 'FTC-A', pattern: /26A.*FTC/i },
+            { key: '26A STC', rosterCat: 'STC-A', pattern: /26A.*STC/i },
+            { key: '26B FTC', rosterCat: 'FTC-B', pattern: /26B.*FTC/i },
+            { key: '26B STC', rosterCat: 'STC-B', pattern: /26B.*STC/i },
+        ];
+
+        const bbNormalizeCode = (s) => String(s || '').toUpperCase().replace(/\s+/g, ' ').trim();
+
+        // Whiteboard curriculum-event convention: "Name (Event Code)", e.g.
+        // "LOW L/D DEMO (PF 6121F)". Only events carrying a code are matchable.
+        const bbCodeFromTitle = (title) => {
+            const m = String(title || '').match(/\(([A-Za-z]{1,3}\s*\d{3,5}[A-Za-z]?)\)/);
+            return m ? bbNormalizeCode(m[1]) : null;
+        };
+
+        // Big Board student "E MARTINEZ", "E PETERSON, R", "F GHESQUIERE *":
+        // leading letter is the TRACK (C/R/E/A/F/B/M), optional ", X" first-initial
+        // disambiguator, optional trailing "*" (SRO). Match on last name (+initial).
+        const bbNameKey = (bbName) => {
+            let s = String(bbName || '').toUpperCase().replace(/\*/g, '').trim();
+            s = s.replace(/^[A-Z]\s+/, ''); // strip track letter token
+            let initial = null;
+            const cm = s.match(/^(.+?),\s*([A-Z])\.?\s*$/);
+            if (cm) { s = cm[1]; initial = cm[2]; }
+            return { last: s.trim(), initial };
+        };
+        // Whiteboard roster "Martinez, P", "Harms, J *", "Kalampoukis"
+        const wsNameKey = (wsName) => {
+            let s = String(wsName || '').toUpperCase().replace(/\*/g, '').trim();
+            const cm = s.match(/^(.+?),\s*([A-Z])/);
+            if (cm) return { last: cm[1].trim(), initial: cm[2] };
+            return { last: s, initial: null };
+        };
+
+        // ── Cell-status rules ported from MCG-Tracker tracker/index.html status.js
+        //    (v0.5.2f) — keep in sync with that project; the edge-case handling here
+        //    (day-precision compare, past-date-still-scheduled, ambiguous-year null)
+        //    is battle-tested there. ──
+        const bbParseCellDate = (value, classStart, classEnd) => {
+            if (!value) return null;
+            let m = String(value).match(/^(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?$/);
+            if (m) {
+                let year;
+                if (m[3]) year = m[3].length === 2 ? (2000 + parseInt(m[3], 10)) : parseInt(m[3], 10);
+                else {
+                    const monthI = parseInt(m[1], 10) - 1;
+                    const dayI = parseInt(m[2], 10);
+                    const cs = classStart ? new Date(classStart) : null;
+                    const ce = classEnd ? new Date(classEnd) : null;
+                    if (cs && ce && cs.getFullYear() !== ce.getFullYear()) {
+                        const d1 = new Date(cs.getFullYear(), monthI, dayI);
+                        const d2 = new Date(ce.getFullYear(), monthI, dayI);
+                        const d1In = d1 >= cs && d1 <= ce;
+                        const d2In = d2 >= cs && d2 <= ce;
+                        if (!d1In && !d2In) return null; // ambiguous — don't guess
+                        year = d1In ? cs.getFullYear() : ce.getFullYear();
+                    } else {
+                        year = (cs || ce || new Date()).getFullYear();
+                    }
+                }
+                return new Date(year, parseInt(m[1], 10) - 1, parseInt(m[2], 10));
+            }
+            m = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+            return null;
+        };
+
+        // → { completion: 'complete'|'scheduled'|'pending'|'paired-opted'|'notreq',
+        //     dateText, flag ('past-date-unchecked'|null) }
+        const bbClassifyCell = (cell, classMeta, now) => {
+            const result = { completion: 'pending', flag: null, dateText: null };
+            if (!cell) return result;
+            if (cell.rgbFamily === 'darkGrey') { result.completion = 'notreq'; return result; }
+            if (cell.rgbFamily === 'lightGrey') {
+                result.completion = 'complete';
+                if (cell.value) result.dateText = String(cell.value);
+                return result;
+            }
+            if (cell.rgbFamily === 'paired') {
+                result.completion = cell.strikethrough ? 'complete' : 'paired-opted';
+                if (cell.value) result.dateText = String(cell.value);
+                return result;
+            }
+            // white
+            const d = bbParseCellDate(cell.value, classMeta.startDate, classMeta.endDate);
+            if (d) {
+                result.dateText = String(cell.value);
+                result.completion = 'scheduled';
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                if (d < today) result.flag = 'past-date-unchecked';
+            }
+            return result;
+        };
+
+        const bbLoadCache = () => {
+            try { return JSON.parse(localStorage.getItem(BB_CACHE_KEY)) || {}; } catch (e) { return {}; }
+        };
+        const bbSaveCache = (cache) => {
+            try { localStorage.setItem(BB_CACHE_KEY, JSON.stringify(cache)); } catch (e) {}
+        };
+
+        // Fetch one class sheet and derive a compact per-student status map.
+        // Raw sheets are ~500KB; the derived form is ~120KB/class in localStorage.
+        const bbFetchClass = async (classKey) => {
+            const def = BB_CLASSES.find(c => c.key === classKey);
+            if (!def) throw new Error(`Unknown class: ${classKey}`);
+            const listRes = await fetch(`${BB_GAS_URL}?call=sheets_avail`);
+            const listJson = await listRes.json();
+            if (!listJson.ok) throw new Error(listJson.error || 'sheets_avail failed');
+            const sheetName = listJson.sheets.map(s => s.name)
+                .filter(n => !/^Backup_/i.test(n))
+                .find(n => def.pattern.test(n));
+            if (!sheetName) throw new Error(`No Big Board sheet matches ${classKey}`);
+            const res = await fetch(`${BB_GAS_URL}?call=fetch_sheet&sheet=${encodeURIComponent(sheetName)}`);
+            const json = await res.json();
+            if (!json.ok) throw new Error(json.error || 'fetch_sheet failed');
+            const now = new Date();
+            const students = json.students.map(s => {
+                const k = bbNameKey(s.name);
+                return { bb: s.name, last: k.last, initial: k.initial, type: s.type };
+            });
+            const colToIdx = new Map(json.students.map((s, i) => [s.col, i]));
+            const byCode = {};
+            const informativeCount = (status) =>
+                Object.values(status).filter(v => v.c !== 'notreq').length;
+            json.events.forEach(evt => {
+                const code = bbNormalizeCode(evt.eventNo);
+                if (!code) return;
+                const status = {};
+                (evt.cells || []).forEach(cell => {
+                    const idx = colToIdx.get(cell.col);
+                    if (idx === undefined) return;
+                    const r = bbClassifyCell(cell, json.classMeta || {}, now);
+                    status[idx] = { c: r.completion };
+                    if (r.dateText) status[idx].d = r.dateText;
+                    if (r.flag) status[idx].f = r.flag;
+                });
+                // Duplicate eventNo rows exist on some boards — keep the row with the
+                // most applicable (non-notreq) students.
+                if (!byCode[code] || informativeCount(status) > informativeCount(byCode[code].status)) {
+                    byCode[code] = { title: evt.title, status };
+                }
+            });
+            return { fetchedAt: json.fetchedAt, sheetName, classMeta: json.classMeta || {}, students, byCode };
+        };
+
+        // Availability for a target event: Map<person, [{eventName, model, startTime, endTime}]>
+        // of OTHER same-date, non-cancelled, time-overlapping events. People already on
+        // the target event are excluded (they're visible in its crew already).
+        const computeUnavailability = (targetEvent, workingEvents) => {
+            const busy = new Map();
+            if (!targetEvent) return busy;
+            const fStart = evStart(targetEvent);
+            const fEnd = evEnd(targetEvent);
+            const assigned = new Set(targetEvent.personnel || []);
+            workingEvents.forEach(ev => {
+                if (ev.id === targetEvent.id || ev.date !== targetEvent.date || ev.cancelled) return;
+                const eS = evStart(ev), eE = evEnd(ev);
+                if (eS < fEnd && eE > fStart) {
+                    (ev.personnel || []).forEach(p => {
+                        if (assigned.has(p)) return;
+                        if (!busy.has(p)) busy.set(p, []);
+                        busy.get(p).push({ eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime });
+                    });
+                }
+            });
+            return busy;
+        };
+
         const HIGHLIGHT_STORAGE_KEY = 'tps-scheduler-highlights';
         const loadHighlights = () => {
             try { const raw = localStorage.getItem(HIGHLIGHT_STORAGE_KEY); return raw ? JSON.parse(raw) : {}; } catch (e) { return {}; }
@@ -4698,7 +5199,7 @@
 
         // ─── EVENT CARD ───
 
-        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
+        const EventCard = ({ event, top, height, roster, conflicts, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, isFocused, isDimmed, onFocusEvent, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu }) => {
             const [dragOver, setDragOver] = useState(false);
             const [pendingFill, setPendingFill] = React.useState(null);
             const [addMenuOpen, setAddMenuOpen] = React.useState(false);
@@ -4939,7 +5440,11 @@
                                     })}
                                     {!event.readonly && onAddPlaceholder && (
                                         <span className="wb-crew-add-btn" ref={addBtnRef}
-                                            onClick={(e) => { e.stopPropagation(); setAddMenuOpen(o => !o); }}>
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (onOpenAddMenu) { onOpenAddMenu(event.id, e.currentTarget.getBoundingClientRect()); return; }
+                                                setAddMenuOpen(o => !o);
+                                            }}>
                                             +
                                             {addMenuOpen && (
                                                 <div className="wb-add-ph-popover" onClick={e => e.stopPropagation()}>
@@ -4972,7 +5477,7 @@
 
         // ─── DAY COLUMN ───
 
-        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder }) => {
+        const DayColumn = ({ date, events, roster, conflicts, foaAuth, onRemove, onAdd, onDS, onDE, onShowTooltip, onHideTooltip, focusedEventId, onFocusEvent, focusEnabled, onDeleteCustom, onEventAction, onAddPlaceholder, onFillPlaceholder, onRemovePlaceholder, onOpenAddMenu }) => {
             const hdr = fmtDate(date);
             const today = new Date().toISOString().slice(0, 10);
             const isToday = date === today;
@@ -5137,6 +5642,7 @@
                                                     onAddPlaceholder={onAddPlaceholder}
                                                     onFillPlaceholder={onFillPlaceholder}
                                                     onRemovePlaceholder={onRemovePlaceholder}
+                                                    onOpenAddMenu={onOpenAddMenu}
                                                 />
                                             );
                                         })}
@@ -5459,7 +5965,7 @@
             );
         };
 
-        const ChangeSummary = ({ changes, onUndoGroup, onClearAll, onCopy }) => {
+        const ChangeSummary = ({ changes, onUndoGroup, onClearAll, onCopy, collapsed, onToggleCollapse }) => {
             const netInstructions = useMemo(() => computeNetChanges(changes), [changes]);
 
             const byDate = useMemo(() => {
@@ -5485,6 +5991,17 @@
                 return `${model}${meta.eventName} (${meta.eventTime})`;
             };
 
+            if (collapsed) {
+                return (
+                    <div className="change-summary-panel change-summary-collapsed" onClick={onToggleCollapse}
+                        title="Expand change summary">
+                        <span className="cs-collapse-chevron">{'◀'}</span>
+                        {netCount > 0 && <span className="cs-collapsed-badge">{netCount}</span>}
+                        <span className="cs-collapsed-label">CHANGES</span>
+                    </div>
+                );
+            }
+
             return (
                 <div className="change-summary-panel">
                     <div className="change-summary-header">
@@ -5494,6 +6011,8 @@
                             {netCount > 0 && netCount !== changes.length && (
                                 <span style={{ color: 'rgba(255,255,255,0.2)', marginLeft: 4 }}>({changes.length} raw)</span>
                             )}
+                            <button className="cs-collapse-btn" onClick={onToggleCollapse}
+                                title="Collapse change summary">{'▶'}</button>
                         </span>
                     </div>
                     <div className="change-list">
@@ -6375,7 +6894,7 @@
         // ─── MILITARY TIME INPUT ───
 
         // ─── MilitaryTimeInput ────────────────────────────────────────────────────
-        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur }) => {
+        const MilitaryTimeInput = ({ value, onChange, style, placeholder = 'HH:MM', onBlur: externalOnBlur, inputRef, onEnter }) => {
             const handleChange = (e) => {
                 let raw = e.target.value;
                 raw = raw.replace(/[^\d:]/g, '');
@@ -6386,19 +6905,10 @@
                 onChange(raw);
             };
 
-            const handleKeyDown = (e) => {
-                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
-                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
-                if (allowed.includes(e.key)) return;
-                if (e.ctrlKey || e.metaKey) return;
-                if (/^\d$/.test(e.key)) return;
-                if (e.key === ':' && !value.includes(':')) return;
-                e.preventDefault();
-            };
-
-            const handleBlur = () => {
+            // Shared by blur and Enter: "9" → 09:00, "930" → 09:30, clamps h≤23 m≤59.
+            const normalizeDraft = () => {
                 let v = value.trim();
-                if (!v) { if (externalOnBlur) externalOnBlur(''); return; }
+                if (!v) return '';
                 let hours, minutes;
                 if (v.includes(':')) {
                     [hours, minutes] = v.split(':');
@@ -6412,13 +6922,35 @@
                 if (isNaN(m)) m = 0;
                 h = Math.min(Math.max(h, 0), 23);
                 m = Math.min(Math.max(m, 0), 59);
-                const normalized = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter' && onEnter) {
+                    const normalized = normalizeDraft();
+                    if (normalized) onChange(normalized);
+                    onEnter(normalized);
+                    return;
+                }
+                const allowed = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                                 'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End'];
+                if (allowed.includes(e.key)) return;
+                if (e.ctrlKey || e.metaKey) return;
+                if (/^\d$/.test(e.key)) return;
+                if (e.key === ':' && !value.includes(':')) return;
+                e.preventDefault();
+            };
+
+            const handleBlur = () => {
+                const normalized = normalizeDraft();
+                if (!normalized) { if (externalOnBlur) externalOnBlur(''); return; }
                 onChange(normalized);
                 if (externalOnBlur) externalOnBlur(normalized);
             };
 
-            return <input type="text" maxLength={5} placeholder={placeholder}
+            return <input ref={inputRef} type="text" maxLength={5} placeholder={placeholder}
                 style={style} value={value} onChange={handleChange}
+                onFocus={e => e.target.select()}
                 onKeyDown={handleKeyDown} onBlur={handleBlur} inputMode="numeric" />;
         };
 
@@ -6686,7 +7218,13 @@
 
             React.useEffect(() => { if (!editing) setDraft(value || ''); }, [value, editing]);
             React.useEffect(() => {
-                if (editing && inputRef.current) inputRef.current.focus();
+                // Focus + select existing text on entering edit — applies to BOTH text and
+                // time inputs (time inputs previously never got focused: the ref wasn't
+                // attached to MilitaryTimeInput). Selecting lets the user type immediately.
+                if (editing && inputRef.current) {
+                    inputRef.current.focus();
+                    inputRef.current.select();
+                }
             }, [editing]);
 
             const commit = () => {
@@ -6762,6 +7300,7 @@
                     return (
                         <td ref={tdRef} className={cellClass} onClick={handleClick} onKeyDown={handleTimeKeyDown}>
                             <MilitaryTimeInput value={draft} onChange={setDraft} onBlur={commitTimeDirect}
+                                inputRef={inputRef} onEnter={commitTimeDirect}
                                 style={{ background: 'transparent', border: 'none', color: 'inherit',
                                          fontFamily: 'inherit', fontSize: 'inherit', width: '100%',
                                          outline: 'none', padding: 0 }} />
@@ -6773,6 +7312,7 @@
                         <input ref={inputRef} className="wb-input"
                             type="text"
                             value={draft} onChange={e => setDraft(e.target.value)}
+                            onFocus={e => e.target.select()}
                             onBlur={commit} onKeyDown={handleKeyDown} />
                     </td>
                 );
@@ -7101,7 +7641,7 @@
         // Renders all crew members + placeholders in a single <td> with flex-wrap,
         // plus a + button to add placeholder slots.
         const WhiteboardCrewGroup = ({ crew, placeholders, eventId, roster, onAdd, onRemove,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
             onFocusEvent, colSpan, highlights, highlightMode, onHighlight,
             conflicts, onShowTooltip, onHideTooltip }) => {
 
@@ -7308,7 +7848,11 @@
 
                         {/* + button to add a placeholder slot */}
                         <span className="wb-crew-add-btn" ref={addBtnRef}
-                            onClick={(e) => { e.stopPropagation(); setAddMenuOpen(o => !o); }}>
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (onOpenAddMenu) { onOpenAddMenu(eventId, e.currentTarget.getBoundingClientRect()); return; }
+                                setAddMenuOpen(o => !o);
+                            }}>
                             +
                             {addMenuOpen && (
                                 <div className="wb-add-ph-popover" onClick={e => e.stopPropagation()}>
@@ -7377,6 +7921,7 @@
                     placeholder={placeholder || 'HH:MM'}
                     maxLength={5}
                     onChange={(e) => setDraft(e.target.value)}
+                    onFocus={(e) => e.target.select()}
                     onBlur={commit}
                     onKeyDown={handleKeyDown}
                     onClick={(e) => e.stopPropagation()}
@@ -7804,7 +8349,7 @@
         const WhiteboardFlying = ({ events, roster, conflicts, onEditSave, onStatusChange,
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
             highlights, highlightMode, onHighlight, activeDay,
             onShowTooltip, onHideTooltip }) => {
 
@@ -7860,9 +8405,10 @@
                                 const rowFocusClass = focusedEventId
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
+                                const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -7873,6 +8419,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -7903,6 +8450,7 @@
                                             onAddPlaceholder={onAddPlaceholder}
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
+                                            onOpenAddMenu={onOpenAddMenu}
                                             highlights={highlights} highlightMode={highlightMode}
                                             onHighlight={onHighlight}
                                             conflicts={conflicts}
@@ -7942,7 +8490,7 @@
         const WhiteboardGround = ({ events, roster, conflicts, onEditSave, onStatusChange,
             onAdd, onRemove, onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
             highlights, highlightMode, onHighlight, activeDay,
             onShowTooltip, onHideTooltip }) => {
 
@@ -7992,9 +8540,10 @@
                                 const rowFocusClass = focusedEventId
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
+                                const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8005,6 +8554,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -8026,6 +8576,7 @@
                                             onAddPlaceholder={onAddPlaceholder}
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
+                                            onOpenAddMenu={onOpenAddMenu}
                                             highlights={highlights} highlightMode={highlightMode}
                                             onHighlight={onHighlight}
                                             conflicts={conflicts}
@@ -8059,7 +8610,16 @@
         };
 
         // ─────────────────────────── WhiteboardAcademics ───────────────────────
-        const WhiteboardAcademics = ({ events, roster }) => {
+        const WhiteboardAcademics = ({ events, roster, onEditSave }) => {
+            // Academics events are readonly (crew/timeline stay locked), but the block
+            // TIMES are adjustable from here — saves flow through the normal edit path
+            // and show up in the Change Summary as event-edit entries.
+            const handleCellSave = useCallback((eventId, field, value) => {
+                if (onEditSave) onEditSave(eventId, { [field]: value || null });
+            }, [onEditSave]);
+
+            const cellRefsMap = React.useRef(new Map());
+
             const matched = useMemo(() => {
                 return ACAD_FIXED_CATS.map(cat => {
                     const ev = events.find(e => {
@@ -8098,8 +8658,28 @@
                             return (
                                 <tr key={label}>
                                     <td style={nameStyle}>{displayName}</td>
-                                    <td style={rowStyle}>{ev ? (ev.startTime || '\u2014') : '\u2014'}</td>
-                                    <td style={rowStyle}>{ev ? (ev.endTime || '\u2014') : '\u2014'}</td>
+                                    {ev && onEditSave ? (() => {
+                                        if (!cellRefsMap.current.has(label)) cellRefsMap.current.set(label, []);
+                                        const refs = cellRefsMap.current.get(label);
+                                        const makeTab = (idx) => ({
+                                            onTab: () => refs[idx + 1]?.focus(),
+                                            onShiftTab: () => refs[idx - 1]?.focus(),
+                                            ref: (el) => { refs[idx] = el; },
+                                        });
+                                        return (
+                                        <React.Fragment>
+                                            <WhiteboardCell {...makeTab(0)} value={ev.startTime || ''} field="startTime" eventId={ev.id}
+                                                type="time" onSave={handleCellSave} className="wb-acad-time" />
+                                            <WhiteboardCell {...makeTab(1)} value={ev.endTime || ''} field="endTime" eventId={ev.id}
+                                                type="time" onSave={handleCellSave} className="wb-acad-time" />
+                                        </React.Fragment>
+                                        );
+                                    })() : (
+                                        <React.Fragment>
+                                            <td style={rowStyle}>{ev ? (ev.startTime || '\u2014') : '\u2014'}</td>
+                                            <td style={rowStyle}>{ev ? (ev.endTime || '\u2014') : '\u2014'}</td>
+                                        </React.Fragment>
+                                    )}
                                 </tr>
                             );
                         })}
@@ -8112,7 +8692,7 @@
         const WhiteboardNA = ({ events, roster, onEditSave, onAdd, onRemove,
             onDeleteEvent, onDeleteCustom, onCreateEvent, onFocusEvent,
             focusedEventId,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder,
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu,
             highlights, highlightMode, onHighlight, activeDay,
             conflicts, onShowTooltip, onHideTooltip }) => {
 
@@ -8169,6 +8749,7 @@
                                             if (onFocusEvent) onFocusEvent(ev.id === focusedEventId ? null : ev.id);
                                         }}>
                                         <td>
+                                            {ev.attachedTo && <span className="wb-attach-tie" title="Tied to the event above">{'\u2514'}</span>}
                                             {!ev.readonly && (
                                                 <span className="wb-delete-btn"
                                                     onClick={() => ev.isCustom ? onDeleteCustom(ev.id) : onDeleteEvent(ev)}
@@ -8190,6 +8771,7 @@
                                             onAddPlaceholder={onAddPlaceholder}
                                             onRemovePlaceholder={onRemovePlaceholder}
                                             onFillPlaceholder={onFillPlaceholder}
+                                            onOpenAddMenu={onOpenAddMenu}
                                             highlights={highlights} highlightMode={highlightMode}
                                             onHighlight={onHighlight}
                                             conflicts={conflicts}
@@ -8215,7 +8797,7 @@
             activeDay, onDayChange,
             onAdd, onRemove, onEditSave, onStatusChange, onDeleteEvent, onDeleteCustom,
             onCreateEvent, focusedEventId, onFocusEvent, onShowTooltip, onHideTooltip,
-            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder }) => {
+            onAddPlaceholder, onRemovePlaceholder, onFillPlaceholder, onOpenAddMenu }) => {
 
             const [highlights, setHighlights] = useState(loadHighlights);
             const [highlightMode, setHighlightMode] = useState(false);
@@ -8371,6 +8953,20 @@
                 prevActiveDay.current = activeDay;
             }, [activeDay]);
 
+            // Sort mode: 'aircraft' (model → time, the long-standing default) or
+            // 'whiteboard' (source sheet row order). In BOTH modes, SIM/CR rows tied to a
+            // parent event (ev.attachedTo, set at parse time) stay nested under it.
+            const [wbSortMode, setWbSortMode] = useState(() => {
+                try { return localStorage.getItem('tps-wb-sort-mode') === 'whiteboard' ? 'whiteboard' : 'aircraft'; } catch (e) { return 'aircraft'; }
+            });
+            const toggleWbSortMode = useCallback(() => {
+                setWbSortMode(prev => {
+                    const next = prev === 'aircraft' ? 'whiteboard' : 'aircraft';
+                    try { localStorage.setItem('tps-wb-sort-mode', next); } catch (e) {}
+                    return next;
+                });
+            }, []);
+
             const dayEvents = useMemo(() => {
                 if (!activeDay) return {};
                 const bySection = {};
@@ -8391,11 +8987,41 @@
                     if (aEmpty !== bEmpty) return aEmpty ? 1 : -1;
                     return 0;
                 };
-                bySection.Flying.sort((a, b) => sortEnd(a, b, e => e.model || e.eventName) || (a.model || '').localeCompare(b.model || '') || (a.startTime || '').localeCompare(b.startTime || ''));
-                bySection.Ground.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.eventName || '').localeCompare(b.eventName || '') || (a.startTime || '').localeCompare(b.startTime || ''));
-                bySection.NA.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.startTime || '').localeCompare(b.startTime || ''));
+                // Events without a rowIdx (custom-created) sort after sheet rows in whiteboard mode.
+                const byRowIdx = (a, b) => (a.rowIdx ?? 1e9) - (b.rowIdx ?? 1e9);
+                // Splice attached SIM/CR rows out, sort the parents, then re-nest each
+                // attached row directly under its parent (in row order).
+                const nestAttached = (list, parentSort) => {
+                    const attachedByParent = new Map();
+                    const parents = [];
+                    list.forEach(ev => {
+                        if (ev.attachedTo && list.some(p => p.id === ev.attachedTo)) {
+                            if (!attachedByParent.has(ev.attachedTo)) attachedByParent.set(ev.attachedTo, []);
+                            attachedByParent.get(ev.attachedTo).push(ev);
+                        } else {
+                            parents.push(ev);
+                        }
+                    });
+                    parents.sort(parentSort);
+                    const out = [];
+                    parents.forEach(p => {
+                        out.push(p);
+                        (attachedByParent.get(p.id) || []).sort(byRowIdx).forEach(c => out.push(c));
+                    });
+                    return out;
+                };
+                const flyingAircraftSort = (a, b) => sortEnd(a, b, e => e.model || e.eventName) || (a.model || '').localeCompare(b.model || '') || (a.startTime || '').localeCompare(b.startTime || '');
+                if (wbSortMode === 'whiteboard') {
+                    bySection.Flying = nestAttached(bySection.Flying, byRowIdx);
+                    bySection.Ground.sort(byRowIdx);
+                    bySection.NA.sort(byRowIdx);
+                } else {
+                    bySection.Flying = nestAttached(bySection.Flying, flyingAircraftSort);
+                    bySection.Ground.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.eventName || '').localeCompare(b.eventName || '') || (a.startTime || '').localeCompare(b.startTime || ''));
+                    bySection.NA.sort((a, b) => sortEnd(a, b, e => e.eventName) || (a.startTime || '').localeCompare(b.startTime || ''));
+                }
                 return bySection;
-            }, [workingEvents, activeDay]);
+            }, [workingEvents, activeDay, wbSortMode]);
 
             // Called when a cell is clicked in highlight mode — opens the picker popup
             const handleHighlightCellClick = useCallback((key, rect) => {
@@ -8508,6 +9134,15 @@
                             >
                                 {highlightMode ? '\uD83C\uDFA8 Highlight ON' : '\uD83C\uDFA8 Highlight'}
                             </button>
+                            <button
+                                className="wb-sort-btn"
+                                onClick={toggleWbSortMode}
+                                title={wbSortMode === 'aircraft'
+                                    ? 'Sorted by aircraft, then time. Click to sort in source whiteboard row order (keeps tied CR/SIM rows under their event).'
+                                    : 'Sorted in source whiteboard row order. Click to sort by aircraft, then time.'}
+                            >
+                                {'\u21C5'} Sort: {wbSortMode === 'aircraft' ? 'Aircraft' : 'Whiteboard'}
+                            </button>
                             <div className="wb-date-header-label">
                                 {dateLabel.weekday}, {dateLabel.day} {dateLabel.month}
                             </div>
@@ -8573,7 +9208,7 @@
                                                 onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
-                                            <WhiteboardAcademics events={acadEvts} roster={roster} />
+                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave} />
                                         </div>
                                     </div>
                                 ) : sec === 'Flying' ? (
@@ -8586,6 +9221,7 @@
                                         onAddPlaceholder={onAddPlaceholder}
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
+                                        onOpenAddMenu={onOpenAddMenu}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -8601,6 +9237,7 @@
                                         onAddPlaceholder={onAddPlaceholder}
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
+                                        onOpenAddMenu={onOpenAddMenu}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -8615,6 +9252,7 @@
                                         onAddPlaceholder={onAddPlaceholder}
                                         onRemovePlaceholder={onRemovePlaceholder}
                                         onFillPlaceholder={onFillPlaceholder}
+                                        onOpenAddMenu={onOpenAddMenu}
                                         highlights={highlights} highlightMode={highlightMode}
                                         onHighlight={handleHighlightCellClick}
                                         activeDay={activeDay}
@@ -8629,15 +9267,367 @@
             );
         };
 
+        // ─── ADD-PERSON POPUP (tabbed [+] menu: Big Board / Everyone / Placeholders) ───
+
+        const AddPersonPopup = ({ anchor, event, roster, workingEvents, bbCache, bbRosterMatch, bbLoading, bbError, onLoadBbClass, onAdd, onAddPlaceholder, onClose }) => {
+            const popRef = React.useRef(null);
+            const code = bbCodeFromTitle(event.eventName);
+
+            // Loaded classes that carry this event code
+            const bbHits = useMemo(() => {
+                if (!code) return [];
+                return BB_CLASSES
+                    .filter(def => bbCache[def.key] && bbCache[def.key].byCode[code])
+                    .map(def => ({
+                        def,
+                        data: bbCache[def.key],
+                        entry: bbCache[def.key].byCode[code],
+                        match: (bbRosterMatch[def.key] || { map: new Map(), unmatched: [] }),
+                    }));
+            }, [code, bbCache, bbRosterMatch]);
+
+            const [tab, setTab] = useState(() => (code && bbHits.length > 0) ? 'bigboard' : 'placeholders');
+            const [search, setSearch] = useState('');
+            const [showNA, setShowNA] = useState(false);
+            const [armed, setArmed] = useState(null); // chip awaiting "Add anyway?" confirm
+
+            const unavail = useMemo(() => computeUnavailability(event, workingEvents), [event, workingEvents]);
+            const assigned = useMemo(() => new Set(event.personnel || []), [event]);
+
+            useEffect(() => {
+                const onDown = (e) => {
+                    // Let [+] buttons' own click handlers decide (toggle / switch event)
+                    if (e.target.closest && e.target.closest('.wb-crew-add-btn')) return;
+                    if (popRef.current && !popRef.current.contains(e.target)) onClose();
+                };
+                const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+                window.addEventListener('pointerdown', onDown);
+                window.addEventListener('keydown', onKey);
+                return () => {
+                    window.removeEventListener('pointerdown', onDown);
+                    window.removeEventListener('keydown', onKey);
+                };
+            }, [onClose]);
+
+            const popStyle = useMemo(() => {
+                const W = 360, H = 440;
+                const x = Math.max(8, Math.min(anchor.x, window.innerWidth - W - 8));
+                let y = anchor.y + 4;
+                if (y + H > window.innerHeight - 8) y = Math.max(8, window.innerHeight - H - 8);
+                return { left: x, top: y, width: W, maxHeight: H };
+            }, [anchor]);
+
+            // Tab 1 grouping: completion (Big Board) × availability (working schedule)
+            const groups = useMemo(() => {
+                const g = { needAvail: [], needBusy: [], scheduled: [], complete: [], na: [], unmatched: [] };
+                bbHits.forEach(({ def, entry, match }) => {
+                    (roster[def.rosterCat] || []).forEach(ws => {
+                        if (assigned.has(ws)) return;
+                        const idx = match.map.get(ws);
+                        if (idx === undefined) { g.unmatched.push(ws); return; }
+                        const st = entry.status[idx] || { c: 'pending' };
+                        const busy = unavail.has(ws);
+                        const item = { name: ws, date: st.d, flag: st.f, busy, paired: st.c === 'paired-opted' };
+                        if (st.c === 'notreq') g.na.push(item);
+                        else if (st.c === 'complete') g.complete.push(item);
+                        else if (st.c === 'scheduled') g.scheduled.push(item);
+                        else (busy ? g.needBusy : g.needAvail).push(item);
+                    });
+                });
+                return g;
+            }, [bbHits, roster, assigned, unavail]);
+
+            const busyTooltip = (name) => (unavail.get(name) || [])
+                .map(b => `${b.model ? b.model + ' ' : ''}${b.eventName} (${b.startTime || '?'}–${b.endTime || '?'})`)
+                .join('\n');
+
+            const addPerson = (name) => { onAdd(event.id, name, null); onClose(); };
+            const clickChip = (name, needsConfirm) => {
+                if (!needsConfirm) return addPerson(name);
+                if (armed === name) { setArmed(null); addPerson(name); }
+                else setArmed(name);
+            };
+
+            const renderChip = (item, state) => {
+                const color = chipColor(item.name, roster);
+                const needsConfirm = state !== 'needs' || item.busy;
+                const cls = [
+                    'ap-chip', `ap-${state}`,
+                    item.busy ? 'ap-unavail' : '',
+                    armed === item.name ? 'ap-armed' : '',
+                ].filter(Boolean).join(' ');
+                const tips = [];
+                if (item.busy) tips.push('Busy:\n' + busyTooltip(item.name));
+                if (state === 'scheduled') tips.push(`Big Board shows this scheduled ${item.date || ''} — adding may double-book.`);
+                if (state === 'complete') tips.push('Big Board shows this event COMPLETE for this student.');
+                if (item.flag === 'past-date-unchecked') tips.push('Past-dated but not marked complete — verify on Big Board.');
+                if (item.paired) tips.push('Paired event — student is in a pairing group.');
+                return (
+                    <button key={item.name} className={cls}
+                        style={{ '--chip-bg': color.bg, '--chip-text': color.text }}
+                        title={tips.join('\n\n') || undefined}
+                        onClick={(e) => { e.stopPropagation(); clickChip(item.name, needsConfirm); }}>
+                        {armed === item.name ? 'Add anyway?' : (
+                            <>
+                                <span className="ap-chip-name">{item.name}</span>
+                                {item.paired && <span className="ap-chip-pair" />}
+                                {item.date && <span className="ap-chip-date">{item.date}</span>}
+                                {state === 'complete' && <span className="ap-chip-check">✓</span>}
+                                {item.flag === 'past-date-unchecked' && <span className="ap-chip-flagdot" />}
+                                {item.busy && <span className="ap-chip-bang">!</span>}
+                            </>
+                        )}
+                    </button>
+                );
+            };
+
+            const renderSection = (label, items, state) => items.length > 0 && (
+                <React.Fragment>
+                    <div className="ap-section-label">{label} ({items.length})</div>
+                    <div className="ap-chips">{items.map(it => renderChip(it, state))}</div>
+                </React.Fragment>
+            );
+
+            // Tab 2: everyone, type-ahead only (roster too large to list outright)
+            const everyoneMatches = useMemo(() => {
+                const q = search.trim().toLowerCase();
+                if (!q) return [];
+                const out = [];
+                Object.values(roster).forEach(names => names.forEach(n => {
+                    if (out.length >= 60 || assigned.has(n)) return;
+                    if (n.toLowerCase().includes(q)) out.push({ name: n, busy: unavail.has(n) });
+                }));
+                return out;
+            }, [search, roster, assigned, unavail]);
+
+            const loadedAsOf = bbHits.map(h => `${h.def.key} as of ${new Date(h.data.fetchedAt).toLocaleString()}`).join(' · ');
+
+            return (
+                <div className="add-person-popup" ref={popRef} style={popStyle} onClick={e => e.stopPropagation()}>
+                    <div className="ap-header">
+                        <div className="ap-title">{event.model ? `${event.model} ` : ''}{event.eventName}</div>
+                        <div className="ap-sub">{event.startTime || ''}{event.endTime ? `–${event.endTime}` : ''} · {event.date}{code ? ` · ${code}` : ''}</div>
+                    </div>
+                    <div className="ap-tabs">
+                        <div className={`ap-tab ${tab === 'bigboard' ? 'active' : ''}`} onClick={() => setTab('bigboard')}>Big Board</div>
+                        <div className={`ap-tab ${tab === 'everyone' ? 'active' : ''}`} onClick={() => setTab('everyone')}>Everyone</div>
+                        <div className={`ap-tab ${tab === 'placeholders' ? 'active' : ''}`} onClick={() => setTab('placeholders')}>Placeholders</div>
+                    </div>
+                    <div className="ap-body">
+                        {tab === 'bigboard' && (
+                            !code ? (
+                                <div className="ap-note">
+                                    No event code found in this event's title, so it can't be matched to the Big Board.<br/><br/>
+                                    Curriculum events use the convention <b>Name (Code)</b>, e.g. <b>SYS PRACT EXAM (SY 7511F)</b>.
+                                </div>
+                            ) : bbHits.length === 0 ? (
+                                <div>
+                                    <div className="ap-note">Code <b>{code}</b> — no loaded Big Board class carries it yet. Load a class:</div>
+                                    {BB_CLASSES.map(def => {
+                                        const cached = bbCache[def.key];
+                                        return (
+                                            <button key={def.key} className="ap-load-btn" disabled={bbLoading === def.key}
+                                                onClick={() => onLoadBbClass(def.key)}>
+                                                {bbLoading === def.key ? `Loading ${def.key}… (30–60s)` :
+                                                    cached ? `↻ Reload ${def.key} (as of ${new Date(cached.fetchedAt).toLocaleDateString()})`
+                                                           : `Load ${def.key}`}
+                                            </button>
+                                        );
+                                    })}
+                                    {bbError && <div className="ap-note" style={{ color: '#fca5a5' }}>{bbError}</div>}
+                                </div>
+                            ) : (
+                                <div>
+                                    {renderSection('Needs · Available', groups.needAvail, 'needs')}
+                                    {renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
+                                    {renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
+                                    {renderSection('Completed', groups.complete, 'complete')}
+                                    {groups.needAvail.length + groups.needBusy.length + groups.scheduled.length + groups.complete.length === 0 && (
+                                        <div className="ap-note">No matched students for {code} outside this event's crew.</div>
+                                    )}
+                                    {groups.na.length > 0 && (
+                                        <span className="ap-toggle-na" onClick={() => setShowNA(v => !v)}>
+                                            {showNA ? 'hide' : 'show'} N/A ({groups.na.length})
+                                        </span>
+                                    )}
+                                    {showNA && renderSection('N/A on Big Board', groups.na, 'na')}
+                                    {groups.unmatched.length > 0 && (
+                                        <div className="ap-note">No Big Board match: {groups.unmatched.join(', ')}</div>
+                                    )}
+                                    <div className="ap-note">{loadedAsOf}</div>
+                                </div>
+                            )
+                        )}
+                        {tab === 'everyone' && (
+                            <div>
+                                <input className="ap-search" autoFocus placeholder="Type a name to filter…"
+                                    value={search} onChange={e => setSearch(e.target.value)} />
+                                {search.trim() === '' ? (
+                                    <div className="ap-note">Start typing — students and staff appear as you narrow the list.</div>
+                                ) : everyoneMatches.length === 0 ? (
+                                    <div className="ap-note">No names match "{search}".</div>
+                                ) : (
+                                    <div className="ap-chips">
+                                        {everyoneMatches.map(it => renderChip(it, 'needs'))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {tab === 'placeholders' && (
+                            <div>
+                                {PLACEHOLDER_ROLE_OPTIONS.map(opt => {
+                                    const color = opt.colorCat
+                                        ? (CATEGORY_COLORS[opt.colorCat] || DEFAULT_CHIP)
+                                        : GENERIC_PUCK_COLOR;
+                                    return (
+                                        <div key={opt.role} className="wb-add-ph-option"
+                                            onClick={() => { onAddPlaceholder(event.id, opt.role); onClose(); }}>
+                                            <span className="wb-add-ph-dot" style={{ background: color.bg }} />
+                                            {opt.role}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // ─── BIG BOARD DATA MODAL (class picker / load / reset) ───
+
+        const BigBoardModal = ({ bbCache, bbRosterMatch, bbLoading, bbError, onLoadClass, onReset, onClose }) => (
+            <div className="modal-overlay" onClick={onClose}>
+                <div className="modal-content" onClick={e => e.stopPropagation()}>
+                    <div className="flex justify-between items-center mb-3">
+                        <h2 className="text-lg font-bold text-white">Big Board Data</h2>
+                        <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
+                    </div>
+                    <div className="text-xs text-gray-400 mb-3" style={{ lineHeight: 1.5 }}>
+                        Curriculum completion status from the Digital Big Board (via Big-Board-Summary).
+                        Loads take 30–60s per class and are cached locally — the "as of" stamp is the
+                        retrieval time, not live data. Used by the whiteboard [+] menu to show which
+                        students still need an event and who's available.
+                    </div>
+                    {BB_CLASSES.map(def => {
+                        const cached = bbCache[def.key];
+                        const match = bbRosterMatch[def.key];
+                        return (
+                            <div key={def.key} className="bb-class-row">
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                    <div className="text-sm font-bold text-white">{def.key}</div>
+                                    {cached ? (
+                                        <div className="text-xs text-gray-400">
+                                            as of {new Date(cached.fetchedAt).toLocaleString()} · {Object.keys(cached.byCode).length} coded events · sheet "{cached.sheetName}"
+                                            {match && match.unmatched.length > 0 && (
+                                                <div style={{ color: '#fbbf24' }}>No Big Board match: {match.unmatched.join(', ')}</div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className="text-xs text-gray-500">Not loaded</div>
+                                    )}
+                                </div>
+                                <button className="ap-load-btn" style={{ width: 'auto', margin: 0, flexShrink: 0 }}
+                                    disabled={bbLoading === def.key}
+                                    onClick={() => onLoadClass(def.key)}>
+                                    {bbLoading === def.key ? 'Loading… (30–60s)' : cached ? '↻ Refresh' : 'Load'}
+                                </button>
+                            </div>
+                        );
+                    })}
+                    {bbError && <div className="text-xs mt-2" style={{ color: '#fca5a5' }}>{bbError}</div>}
+                    <div className="flex justify-between mt-4">
+                        <button onClick={onReset}
+                            className="px-3 py-2 text-red-400 hover:bg-red-900/30 rounded text-xs"
+                            style={{ border: '1px solid rgba(239,68,68,0.3)' }}>
+                            Reset Big Board Data
+                        </button>
+                        <button onClick={onClose} className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold text-sm">Close</button>
+                    </div>
+                </div>
+            </div>
+        );
+
         // ─── SCHEDULER VIEW ───
 
-        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive }) => {
+        const SchedulerView = ({ allEvents, roster, dates, initialSelectedIds, initialNaCats, onChangeSelection, cachedWorkingState, onRefreshFromWhiteboard, selectAllActive, darkMode, onToggleTheme }) => {
             const [workingEvents, setWorkingEvents] = useState([]);
             const [changes, setChanges] = useState([]);
             const [savedShow, setSavedShow] = useState(false);
             const [tooltip, setTooltip] = useState(null);
             const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow' | 'whiteboard'
             const [wbActiveDay, setWbActiveDay] = useState(null); // whiteboard selected day
+            const [summaryCollapsed, setSummaryCollapsed] = useState(() => {
+                try { return localStorage.getItem('tps-scheduler-summary-collapsed') === '1'; } catch (e) { return false; }
+            });
+            const toggleSummaryCollapsed = useCallback(() => {
+                setSummaryCollapsed(prev => {
+                    try { localStorage.setItem('tps-scheduler-summary-collapsed', prev ? '0' : '1'); } catch (e) {}
+                    return !prev;
+                });
+            }, []);
+
+            // ── Big Board completion data ──
+            const [bbCache, setBbCache] = useState(() => bbLoadCache());
+            const [bbLoading, setBbLoading] = useState(null);   // classKey while fetching
+            const [bbError, setBbError] = useState(null);
+            const [showBigBoard, setShowBigBoard] = useState(false);
+            const [addMenu, setAddMenu] = useState(null);       // { eventId, x, y } for AddPersonPopup
+
+            const handleLoadBbClass = useCallback(async (classKey) => {
+                setBbLoading(classKey);
+                setBbError(null);
+                try {
+                    const data = await bbFetchClass(classKey);
+                    setBbCache(prev => {
+                        const next = { ...prev, [classKey]: data };
+                        bbSaveCache(next);
+                        return next;
+                    });
+                } catch (e) {
+                    setBbError(`${classKey}: ${e.message}`);
+                }
+                setBbLoading(null);
+            }, []);
+
+            const handleResetBb = useCallback(() => {
+                setBbCache({});
+                bbSaveCache({});
+                setBbError(null);
+            }, []);
+
+            // Whiteboard-roster ↔ Big-Board-student matching, per class. Last-name match
+            // scoped to the mapped roster category; first-initial tiebreak on duplicates.
+            const bbRosterMatch = useMemo(() => {
+                const out = {};
+                BB_CLASSES.forEach(def => {
+                    const data = bbCache[def.key];
+                    if (!data) return;
+                    const map = new Map();
+                    const unmatched = [];
+                    (roster[def.rosterCat] || []).forEach(ws => {
+                        const wk = wsNameKey(ws);
+                        const cands = data.students
+                            .map((s, i) => ({ s, i }))
+                            .filter(x => x.s.last === wk.last);
+                        let pick = null;
+                        if (cands.length === 1) pick = cands[0];
+                        else if (cands.length > 1 && wk.initial) {
+                            pick = cands.find(x => x.s.initial === wk.initial) || null;
+                        }
+                        if (pick) map.set(ws, pick.i);
+                        else unmatched.push(ws);
+                    });
+                    out[def.key] = { map, unmatched };
+                });
+                return out;
+            }, [bbCache, roster]);
+
+            const handleOpenAddMenu = useCallback((eventId, rect) => {
+                setAddMenu(prev => (prev && prev.eventId === eventId)
+                    ? null // same [+] clicked again = toggle closed
+                    : { eventId, x: rect.left, y: rect.bottom });
+            }, []);
             const [showRefreshModal, setShowRefreshModal] = useState(false);
             const [showCreateEvent, setShowCreateEvent] = useState(false);
             const [showConflictSummary, setShowConflictSummary] = useState(false);
@@ -9192,7 +10182,7 @@
             const today = new Date().toISOString().slice(0, 10);
 
             return (
-                <div className="app-layout">
+                <div className={`app-layout${summaryCollapsed ? ' summary-collapsed' : ''}`}>
                     <div className="app-header">
                         <div className="flex items-center gap-4">
                             <div>
@@ -9254,10 +10244,23 @@
                                 <div className={`view-tab ${viewMode === 'whiteboard' ? 'active' : ''}`} onClick={() => setViewMode('whiteboard')}>Whiteboard</div>
                             </div>
                             <button onClick={onChangeSelection} className="filter-btn">Edit Selection</button>
+                            <button onClick={() => setShowBigBoard(true)} className="filter-btn" style={{ borderColor: 'rgba(245,158,11,0.35)', color: '#fbbf24', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}
+                                title="Curriculum completion data for the [+] add menu">
+                                <span>Big Board</span>
+                                <span style={{ fontSize: '0.45rem', color: 'rgba(251,191,36,0.5)', fontWeight: 400 }}>
+                                    {Object.keys(bbCache).length > 0 ? `${Object.keys(bbCache).length} class${Object.keys(bbCache).length > 1 ? 'es' : ''} cached` : 'Completion data'}
+                                </span>
+                            </button>
                             <button onClick={() => setShowRefreshModal(true)} className="filter-btn" style={{ borderColor: 'rgba(59,130,246,0.3)', color: '#60a5fa', display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: 1.2 }}>
                                 <span>Refresh from Whiteboard</span>
                                 <span style={{ fontSize: '0.45rem', color: 'rgba(96,165,250,0.5)', fontWeight: 400 }}>Clears local work</span>
                             </button>
+                            {onToggleTheme && (
+                                <button className="theme-toggle-header-btn" onClick={onToggleTheme}
+                                    title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+                                    {darkMode ? '☀' : '☽'}
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -9285,6 +10288,7 @@
                                     onAddPlaceholder={handleAddPlaceholder}
                                     onFillPlaceholder={handleFillPlaceholder}
                                     onRemovePlaceholder={handleRemovePlaceholder}
+                                    onOpenAddMenu={handleOpenAddMenu}
                                 />
                             ))}
                         </div>
@@ -9323,6 +10327,7 @@
                             onAddPlaceholder={handleAddPlaceholder}
                             onRemovePlaceholder={handleRemovePlaceholder}
                             onFillPlaceholder={handleFillPlaceholder}
+                            onOpenAddMenu={handleOpenAddMenu}
                         />
                     </div>
 
@@ -9331,6 +10336,8 @@
                         onUndoGroup={handleUndoGroup}
                         onClearAll={handleClearAll}
                         onCopy={handleCopy}
+                        collapsed={summaryCollapsed}
+                        onToggleCollapse={toggleSummaryCollapsed}
                     />
 
                     {showRefreshModal && (
@@ -9392,6 +10399,40 @@
                         }}>
                             {tooltip.text}
                         </div>
+                    )}
+
+                    {/* Add-person popup ([+] tabbed menu) */}
+                    {addMenu && (() => {
+                        const apEvent = workingEvents.find(e => e.id === addMenu.eventId);
+                        if (!apEvent) return null;
+                        return (
+                            <AddPersonPopup
+                                anchor={addMenu}
+                                event={apEvent}
+                                roster={roster}
+                                workingEvents={workingEvents}
+                                bbCache={bbCache}
+                                bbRosterMatch={bbRosterMatch}
+                                bbLoading={bbLoading}
+                                bbError={bbError}
+                                onLoadBbClass={handleLoadBbClass}
+                                onAdd={handleAdd}
+                                onAddPlaceholder={handleAddPlaceholder}
+                                onClose={() => setAddMenu(null)}
+                            />
+                        );
+                    })()}
+
+                    {showBigBoard && (
+                        <BigBoardModal
+                            bbCache={bbCache}
+                            bbRosterMatch={bbRosterMatch}
+                            bbLoading={bbLoading}
+                            bbError={bbError}
+                            onLoadClass={handleLoadBbClass}
+                            onReset={handleResetBb}
+                            onClose={() => setShowBigBoard(false)}
+                        />
                     )}
 
                     {/* Action menu portal */}
@@ -9658,8 +10699,6 @@
             }
 
             return (
-                <>
-                {themeToggle}
                 <SchedulerView
                     allEvents={allEvents}
                     roster={roster}
@@ -9670,8 +10709,9 @@
                     cachedWorkingState={cachedWorkingState}
                     onRefreshFromWhiteboard={refreshFromWhiteboard}
                     selectAllActive={selectAllActive}
+                    darkMode={darkMode}
+                    onToggleTheme={() => setDarkMode(d => !d)}
                 />
-                </>
             );
         }
 
