@@ -2028,6 +2028,42 @@
             padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+        .ap-class-pills {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+        }
+        .ap-class-pill {
+            padding: 1px 8px;
+            border-radius: 9px;
+            font-size: 0.55rem;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: rgba(255,255,255,0.35);
+        }
+        .ap-class-pill.active {
+            border-color: rgba(96,165,250,0.7);
+            background: rgba(59,130,246,0.15);
+            color: #93c5fd;
+        }
+        .ap-pair-boxes { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ap-pair-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 5px 6px;
+            border: 1.5px solid;
+            border-radius: 8px;
+        }
+        .ap-chip.ap-onevent {
+            outline: 2px solid rgba(134, 239, 172, 0.7);
+            cursor: default;
+        }
         /* The + button that opens the popover */
         .wb-crew-add-btn {
             display: inline-flex;
@@ -2222,11 +2258,16 @@
             white-space: nowrap;
         }
         .wb-sort-btn:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.3); }
-        /* SIM/CR rows tied to the event above them (attachedTo) */
-        .wb-row-attached td:first-child { border-left: 3px solid rgba(59,130,246,0.55); }
+        /* SIM/CR rows tied to the event above them (attachedTo).
+           Parent + children share a continuous blue border down the first column so
+           the eye reads them as one block; children indent + carry a bold └ tie. */
+        .wb-row-parent td:first-child { border-left: 3px solid rgba(96,165,250,0.75); }
+        .wb-row-attached td:first-child { border-left: 3px solid rgba(96,165,250,0.75); }
+        .wb-row-attached td:nth-child(2) { padding-left: 14px; }
         .wb-attach-tie {
-            color: rgba(59,130,246,0.8);
-            font-size: 0.7rem;
+            color: rgba(96,165,250,0.95);
+            font-size: 0.85rem;
+            font-weight: 700;
             margin-right: 2px;
             user-select: none;
         }
@@ -2990,8 +3031,12 @@
         .light-mode .wb-highlight-btn.active { color: #b45309; border-color: rgba(180,83,9,0.4); background: rgba(180,83,9,0.06); }
         .light-mode .wb-sort-btn { color: rgba(0,0,0,0.55); border-color: rgba(0,0,0,0.18); }
         .light-mode .wb-sort-btn:hover { color: rgba(0,0,0,0.85); border-color: rgba(0,0,0,0.35); }
-        .light-mode .wb-row-attached td:first-child { border-left-color: rgba(37,99,235,0.5); }
-        .light-mode .wb-attach-tie { color: rgba(37,99,235,0.7); }
+        .light-mode .wb-row-parent td:first-child { border-left-color: rgba(37,99,235,0.7); }
+        .light-mode .wb-row-attached td:first-child { border-left-color: rgba(37,99,235,0.7); }
+        .light-mode .wb-attach-tie { color: rgba(37,99,235,0.9); }
+        .light-mode .ap-class-pill { border-color: rgba(0,0,0,0.2); color: rgba(0,0,0,0.4); }
+        .light-mode .ap-class-pill.active { border-color: rgba(37,99,235,0.6); background: rgba(37,99,235,0.1); color: #1d4ed8; }
+        .light-mode .ap-chip.ap-onevent { outline-color: rgba(22,163,74,0.6); }
         .light-mode .duty-slot-label { color: #475569; }
         .light-mode .duty-drop-zone { border-color: rgba(0,0,0,0.2); color: #334155; }
         .light-mode .duty-drop-zone.drag-over { border-color: #2563eb; background: rgba(37,99,235,0.08); color: #2563eb; }
@@ -4436,7 +4481,7 @@
         //  asserted as truth.
         // ═══════════════════════════════════════════════════════════════════════
         const BB_GAS_URL = 'https://script.google.com/macros/s/AKfycbyU4XfKl5ct6SMzl1nh7e4yZOR6U_wqD9_4HbUNBUOm7fgUaJIPTUIH95CVEGsIfVmiUw/exec';
-        const BB_CACHE_KEY = 'tps-bigboard-cache-v1';
+        const BB_CACHE_KEY = 'tps-bigboard-cache-v2'; // v2: paired cells carry p (pair-group color)
         // Sheet names on the Big Board spreadsheet are inconsistent ("26A FTC Big
         // Board", "***26A STC BigBoard***") — resolve by pattern, never hardcode.
         const BB_CLASSES = [
@@ -4576,6 +4621,9 @@
                     status[idx] = { c: r.completion };
                     if (r.dateText) status[idx].d = r.dateText;
                     if (r.flag) status[idx].f = r.flag;
+                    // Pair-group color: students sharing a paired cell color are an
+                    // allowable pairing group for this event.
+                    if (cell.rgbFamily === 'paired') status[idx].p = cell.bgHex;
                 });
                 // Duplicate eventNo rows exist on some boards — keep the row with the
                 // most applicable (non-notreq) students.
@@ -5886,11 +5934,23 @@
             if (inst.type === 'event-edit') {
                 const diffs = [];
                 if (inst.before && inst.after) {
-                    if (inst.before.eventName !== inst.after.eventName) diffs.push(`name \u2192 "${inst.after.eventName}"`);
-                    if (inst.before.startTime !== inst.after.startTime || inst.before.endTime !== inst.after.endTime)
-                        diffs.push(`${inst.after.startTime}\u2013${inst.after.endTime || '??'}`);
-                    if ((inst.before.model || '') !== (inst.after.model || '')) diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
-                    if (inst.before.hasOwnProperty('notes') && inst.before.notes !== inst.after.notes)
+                    // Only diff fields the `after` snapshot actually carries \u2014 entries recorded
+                    // by single-field whiteboard saves (pre-v4.5) are sparse, and diffing a
+                    // missing key against the full `before` produced "undefined" noise.
+                    const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k) && o[k] !== undefined;
+                    if (has(inst.after, 'eventName') && inst.before.eventName !== inst.after.eventName)
+                        diffs.push(`name \u2192 "${inst.after.eventName}"`);
+                    const timeChanged =
+                        (has(inst.after, 'startTime') && inst.before.startTime !== inst.after.startTime) ||
+                        (has(inst.after, 'endTime') && inst.before.endTime !== inst.after.endTime);
+                    if (timeChanged) {
+                        const s = has(inst.after, 'startTime') ? inst.after.startTime : inst.before.startTime;
+                        const e = has(inst.after, 'endTime') ? inst.after.endTime : inst.before.endTime;
+                        diffs.push(`${s || '??'}\u2013${e || '??'}`);
+                    }
+                    if (has(inst.after, 'model') && (inst.before.model || '') !== (inst.after.model || ''))
+                        diffs.push(`model \u2192 ${inst.after.model || '\u2014'}`);
+                    if (inst.before.hasOwnProperty('notes') && has(inst.after, 'notes') && inst.before.notes !== inst.after.notes)
                         diffs.push(`notes \u2192 "${inst.after.notes || ''}"`);
                 }
                 return (
@@ -8406,9 +8466,10 @@
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
                                 const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
+                                const parentClass = events.some(e => e.attachedTo === ev.id) ? 'wb-row-parent' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass, parentClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8541,9 +8602,10 @@
                                     ? (ev.id === focusedEventId ? 'wb-row-focused' : 'wb-row-dimmed')
                                     : '';
                                 const attachedClass = ev.attachedTo ? 'wb-row-attached' : '';
+                                const parentClass = events.some(e => e.attachedTo === ev.id) ? 'wb-row-parent' : '';
                                 return (
                                     <tr key={ev.id}
-                                        className={[wbRowClass(ev), rowFocusClass, attachedClass].filter(Boolean).join(' ') || undefined}
+                                        className={[wbRowClass(ev), rowFocusClass, attachedClass, parentClass].filter(Boolean).join(' ') || undefined}
                                         style={{ cursor: 'pointer' }}
                                         onClick={(e) => {
                                             const tag = e.target.tagName;
@@ -8610,13 +8672,30 @@
         };
 
         // ─────────────────────────── WhiteboardAcademics ───────────────────────
-        const WhiteboardAcademics = ({ events, roster, onEditSave }) => {
+        const WhiteboardAcademics = ({ events, roster, onEditSave, onCreateEvent, activeDay }) => {
             // Academics events are readonly (crew/timeline stay locked), but the block
             // TIMES are adjustable from here — saves flow through the normal edit path
             // and show up in the Change Summary as event-edit entries.
             const handleCellSave = useCallback((eventId, field, value) => {
                 if (onEditSave) onEditSave(eventId, { [field]: value || null });
             }, [onEditSave]);
+
+            // A block with NO backing event (day had no academics row for it) becomes
+            // one on first time entry: typing a time creates a custom Academics event
+            // for that category — from then on it's a normal editable row.
+            const handleCreateSave = useCallback((cat) => (eventId, field, value) => {
+                if (!value || !onCreateEvent || !activeDay) return;
+                const members = [...(roster[cat.catColor] || [])];
+                onCreateEvent('Academics', activeDay, {
+                    eventName: `${cat.label} Academics`,
+                    startTime: null,
+                    endTime: null,
+                    personnel: members,
+                    originalPersonnel: [...members],
+                    readonly: true, // crew/timeline stay locked, matching parsed academics
+                    [field]: value,
+                });
+            }, [onCreateEvent, activeDay, roster]);
 
             const cellRefsMap = React.useRef(new Map());
 
@@ -8673,6 +8752,16 @@
                                             <WhiteboardCell {...makeTab(1)} value={ev.endTime || ''} field="endTime" eventId={ev.id}
                                                 type="time" onSave={handleCellSave} className="wb-acad-time" />
                                         </React.Fragment>
+                                        );
+                                    })() : (!ev && onCreateEvent && activeDay) ? (() => {
+                                        const creator = handleCreateSave({ label, catColor });
+                                        return (
+                                            <React.Fragment>
+                                                <WhiteboardCell value="" field="startTime" eventId={`acad-new-${label}`}
+                                                    type="time" onSave={creator} className="wb-acad-time" />
+                                                <WhiteboardCell value="" field="endTime" eventId={`acad-new-${label}`}
+                                                    type="time" onSave={creator} className="wb-acad-time" />
+                                            </React.Fragment>
                                         );
                                     })() : (
                                         <React.Fragment>
@@ -9208,7 +9297,8 @@
                                                 onHideTooltip={onHideTooltip} />
                                         </div>
                                         <div className="wb-supv-acad-right">
-                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave} />
+                                            <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave}
+                                                onCreateEvent={handleCreateWbEvent} activeDay={activeDay} />
                                         </div>
                                     </div>
                                 ) : sec === 'Flying' ? (
@@ -9291,6 +9381,26 @@
             const [showNA, setShowNA] = useState(false);
             const [armed, setArmed] = useState(null); // chip awaiting "Add anyway?" confirm
 
+            // Class filter (e.g. hide 26B while scheduling 26A); persisted across popups.
+            const [classFilter, setClassFilter] = useState(() => {
+                try {
+                    const raw = JSON.parse(localStorage.getItem('tps-bb-class-filter'));
+                    if (Array.isArray(raw) && raw.length > 0) return new Set(raw);
+                } catch (e) {}
+                return null; // null = all classes
+            });
+            const toggleClassFilter = (key) => {
+                setClassFilter(prev => {
+                    const cur = new Set(prev || bbHits.map(h => h.def.key));
+                    if (cur.has(key)) cur.delete(key); else cur.add(key);
+                    try { localStorage.setItem('tps-bb-class-filter', JSON.stringify([...cur])); } catch (e) {}
+                    return cur;
+                });
+            };
+            const activeHits = useMemo(
+                () => bbHits.filter(h => !classFilter || classFilter.has(h.def.key)),
+                [bbHits, classFilter]);
+
             const unavail = useMemo(() => computeUnavailability(event, workingEvents), [event, workingEvents]);
             const assigned = useMemo(() => new Set(event.personnel || []), [event]);
 
@@ -9298,7 +9408,14 @@
                 const onDown = (e) => {
                     // Let [+] buttons' own click handlers decide (toggle / switch event)
                     if (e.target.closest && e.target.closest('.wb-crew-add-btn')) return;
-                    if (popRef.current && !popRef.current.contains(e.target)) onClose();
+                    if (popRef.current && !popRef.current.contains(e.target)) {
+                        // Swallow the click that follows this pointerdown — closing the
+                        // popup must not also focus/select whatever was under the cursor.
+                        const swallow = (ce) => { ce.stopPropagation(); ce.preventDefault(); };
+                        window.addEventListener('click', swallow, { capture: true, once: true });
+                        setTimeout(() => window.removeEventListener('click', swallow, { capture: true }), 400);
+                        onClose();
+                    }
                 };
                 const onKey = (e) => { if (e.key === 'Escape') onClose(); };
                 window.addEventListener('pointerdown', onDown);
@@ -9320,7 +9437,7 @@
             // Tab 1 grouping: completion (Big Board) × availability (working schedule)
             const groups = useMemo(() => {
                 const g = { needAvail: [], needBusy: [], scheduled: [], complete: [], na: [], unmatched: [] };
-                bbHits.forEach(({ def, entry, match }) => {
+                activeHits.forEach(({ def, entry, match }) => {
                     (roster[def.rosterCat] || []).forEach(ws => {
                         if (assigned.has(ws)) return;
                         const idx = match.map.get(ws);
@@ -9335,7 +9452,29 @@
                     });
                 });
                 return g;
-            }, [bbHits, roster, assigned, unavail]);
+            }, [activeHits, roster, assigned, unavail]);
+
+            // Pair groups: students sharing a paired-cell color = allowable pairing.
+            // Includes already-assigned members (shown checked) so the whole group reads.
+            const pairGroups = useMemo(() => {
+                const map = new Map();
+                activeHits.forEach(({ def, entry, match }) => {
+                    (roster[def.rosterCat] || []).forEach(ws => {
+                        const idx = match.map.get(ws);
+                        if (idx === undefined) return;
+                        const st = entry.status[idx];
+                        if (!st || !st.p) return;
+                        if (!map.has(st.p)) map.set(st.p, []);
+                        map.get(st.p).push({
+                            name: ws, date: st.d, flag: st.f,
+                            busy: unavail.has(ws),
+                            complete: st.c === 'complete',
+                            onEvent: assigned.has(ws),
+                        });
+                    });
+                });
+                return [...map.entries()];
+            }, [activeHits, roster, assigned, unavail]);
 
             const busyTooltip = (name) => (unavail.get(name) || [])
                 .map(b => `${b.model ? b.model + ' ' : ''}${b.eventName} (${b.startTime || '?'}–${b.endTime || '?'})`)
@@ -9438,11 +9577,48 @@
                                 </div>
                             ) : (
                                 <div>
+                                    {bbHits.length > 1 && (
+                                        <div className="ap-class-pills">
+                                            <span className="ap-section-label" style={{ margin: 0 }}>Classes:</span>
+                                            {bbHits.map(h => {
+                                                const on = !classFilter || classFilter.has(h.def.key);
+                                                return (
+                                                    <button key={h.def.key} className={`ap-class-pill ${on ? 'active' : ''}`}
+                                                        onClick={() => toggleClassFilter(h.def.key)}>
+                                                        {h.def.key}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                    {activeHits.length === 0 && (
+                                        <div className="ap-note">All classes are filtered out — toggle one back on above.</div>
+                                    )}
                                     {renderSection('Needs · Available', groups.needAvail, 'needs')}
                                     {renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
                                     {renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
                                     {renderSection('Completed', groups.complete, 'complete')}
-                                    {groups.needAvail.length + groups.needBusy.length + groups.scheduled.length + groups.complete.length === 0 && (
+                                    {pairGroups.length > 0 && (
+                                        <React.Fragment>
+                                            <div className="ap-section-label">Pair groups (may fly together)</div>
+                                            <div className="ap-pair-boxes">
+                                                {pairGroups.map(([hex, members]) => (
+                                                    <div key={hex} className="ap-pair-box"
+                                                        style={{ borderColor: `#${hex}`, background: `#${hex}22` }}>
+                                                        {members.map(m => m.onEvent ? (
+                                                            <span key={m.name} className="ap-chip ap-onevent"
+                                                                style={{ '--chip-bg': chipColor(m.name, roster).bg, '--chip-text': chipColor(m.name, roster).text }}
+                                                                title="Already on this event">
+                                                                <span className="ap-chip-name">{m.name}</span>
+                                                                <span className="ap-chip-check">✔</span>
+                                                            </span>
+                                                        ) : renderChip(m, m.complete ? 'complete' : 'needs'))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </React.Fragment>
+                                    )}
+                                    {activeHits.length > 0 && groups.needAvail.length + groups.needBusy.length + groups.scheduled.length + groups.complete.length === 0 && (
                                         <div className="ap-note">No matched students for {code} outside this event's crew.</div>
                                     )}
                                     {groups.na.length > 0 && (
@@ -9692,7 +9868,12 @@
                             eventSection: ev.section,
                             date: ev.date,
                             before: { eventName: ev.eventName, model: ev.model, startTime: ev.startTime, endTime: ev.endTime, notes: ev.notes },
-                            after: updates,
+                            // Full merged snapshot, not just the edited field — single-field
+                            // saves from whiteboard cells otherwise diff as "undefined"
+                            after: (() => {
+                                const merged = { ...ev, ...updates };
+                                return { eventName: merged.eventName, model: merged.model, startTime: merged.startTime, endTime: merged.endTime, notes: merged.notes };
+                            })(),
                         }]);
                     }
                     return prev.map(e => e.id === eventId ? { ...e, ...updates } : e);
