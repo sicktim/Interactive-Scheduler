@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
+<!-- Interactive Scheduler v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
+<!-- v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
 <!-- v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
 <!-- v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
 <!-- v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
@@ -10190,21 +10191,58 @@
             const unavail = useMemo(() => computeUnavailability(event, workingEvents), [event, workingEvents]);
             const assigned = useMemo(() => new Set(event.personnel || []), [event]);
 
-            // Local overlay: someone already scheduled on ANOTHER working event with the
-            // same event code has this requirement covered locally — show them as
-            // "Scheduled (not complete)", not "Needs", even though the Big Board cache
-            // (a snapshot) doesn't know yet. E.g. Dobbs on Departure Demo #1 must not
-            // appear as needing Departure Demo #2 the same week.
-            const localScheduled = useMemo(() => {
-                if (!code) return new Map();
-                const m = new Map(); // person -> the working event that covers them
+            // Pair index per loaded class: scopes (color namespaces), simultaneous
+            // packages (F/S + consecutive C), interchangeable pools.
+            const pairIdx = useMemo(() => {
+                const m = new Map();
+                activeHits.forEach(({ def, data }) => m.set(def.key, bbBuildPairIndex(data, pairConfig)));
+                return m;
+            }, [activeHits, pairConfig]);
+
+            // Pool: this code is one of several interchangeable same-suffix rides
+            const poolInfo = useMemo(() => {
+                if (!code) return null;
+                const pc = bbParseEventCode(code);
+                if (!pc) return null;
+                for (const [, pi] of pairIdx) {
+                    if (!pi.poolStems.has(pc.stem)) continue;
+                    const scope = pi.scopes.get(pi.scopeOf.get(code));
+                    if (!scope) continue;
+                    const ride = (c) => { const p = bbParseEventCode(c); return p && p.stem === pc.stem && p.suffix === pc.suffix; };
+                    return { codes: scope.codes.filter(ride) };
+                }
+                return null;
+            }, [code, pairIdx]);
+
+            // The codes this popup schedules against: the whole interchangeable ride
+            // set for pools (a sortie coded 6310F can log a student's 6311F), else
+            // just the event's own code.
+            const poolCodes = useMemo(
+                () => (poolInfo && poolInfo.codes.length > 1) ? poolInfo.codes : (code ? [code] : []),
+                [poolInfo, code]);
+
+            // Local overlay: bookings on OTHER working events whose code is in this
+            // popup's ride set count as covering one remaining ride — show those
+            // people as "Scheduled (not complete)", not "Needs", even though the Big
+            // Board cache (a snapshot) doesn't know yet. E.g. Dobbs on Departure
+            // Demo #1 must not appear as needing Departure Demo #2 the same week.
+            const localBookings = useMemo(() => {
+                const m = new Map(); // person -> { count, date }
+                if (poolCodes.length === 0) return m;
+                const codesSet = new Set(poolCodes);
                 workingEvents.forEach(ev => {
                     if (ev.id === event.id || ev.cancelled) return;
-                    if (bbCodeFromTitle(ev.eventName) !== code) return;
-                    (ev.personnel || []).forEach(p => { if (!m.has(p)) m.set(p, ev); });
+                    const c = bbCodeFromTitle(ev.eventName);
+                    if (!c || !codesSet.has(c)) return;
+                    (ev.personnel || []).forEach(p => {
+                        const cur = m.get(p) || { count: 0, date: null };
+                        cur.count++;
+                        if (!cur.date) cur.date = ev.date;
+                        m.set(p, cur);
+                    });
                 });
                 return m;
-            }, [code, workingEvents, event.id]);
+            }, [poolCodes, workingEvents, event.id]);
 
             useEffect(() => {
                 const onDown = (e) => {
@@ -10236,41 +10274,52 @@
                 return { left: x, top: y, width: W, maxHeight: H };
             }, [anchor]);
 
-            // Tab 1 grouping: completion (Big Board) × availability (working schedule)
+            // Tab 1 grouping: completion (Big Board) × availability (working schedule).
+            // Pool-aware: for interchangeable ride sets (FQ 6310F/6311F) a student
+            // aggregates across ALL rides — still needing ANY ride keeps them in
+            // Needs (a sortie coded 6310F can log their 6311F), with an "N left"
+            // badge; Completed only when every ride is done.
             const groups = useMemo(() => {
                 const g = { needAvail: [], needBusy: [], scheduled: [], complete: [], na: [], unmatched: [] };
-                activeHits.forEach(({ def, entry, match }) => {
+                const isPool = poolCodes.length > 1;
+                activeHits.forEach(({ def, data, entry, match }) => {
                     (roster[def.rosterCat] || []).forEach(ws => {
                         if (assigned.has(ws)) return;
                         const idx = match.map.get(ws);
                         if (idx === undefined) { g.unmatched.push(ws); return; }
-                        const st = entry.status[idx] || { c: 'pending' };
+                        let pending = 0, scheduled = 0, complete = 0, considered = 0;
+                        let date = null, flag = null, paired = false;
+                        (isPool ? poolCodes : [null]).forEach(pc => {
+                            const ent = pc === null ? entry : data.byCode[pc];
+                            if (!ent) return;
+                            const st = ent.status[idx] || { c: 'pending' };
+                            if (st.f) flag = st.f;
+                            if (st.c === 'notreq') return;
+                            considered++;
+                            if (st.c === 'complete') complete++;
+                            else if (st.c === 'scheduled') { scheduled++; if (!date) date = st.d; }
+                            else { pending++; if (st.c === 'paired-opted') paired = true; }
+                        });
                         const busy = unavail.has(ws);
-                        const item = { name: ws, date: st.d, flag: st.f, busy, paired: st.c === 'paired-opted' };
-                        const localEv = localScheduled.get(ws);
-                        if (st.c === 'notreq') g.na.push(item);
-                        else if (st.c === 'complete') g.complete.push(item);
-                        else if (st.c === 'scheduled') g.scheduled.push(item);
-                        else if (localEv) {
-                            // Covered by a local working event with this code
-                            const [, lm, ld] = (localEv.date || '').split('-');
-                            item.date = lm ? `${Number(lm)}/${Number(ld)}` : item.date;
-                            item.local = true;
+                        const local = localBookings.get(ws);
+                        const effPending = Math.max(0, pending - (local ? local.count : 0));
+                        const item = { name: ws, date, flag, busy, paired };
+                        if (considered === 0) { g.na.push(item); return; }
+                        if (effPending > 0) {
+                            if (isPool && (scheduled + complete + (local ? local.count : 0)) > 0) item.date = `${effPending} left`;
+                            (busy ? g.needBusy : g.needAvail).push(item);
+                        } else if (scheduled > 0 || local) {
+                            if (!item.date && local && local.date) {
+                                const [, lm, ld] = local.date.split('-');
+                                item.date = lm ? `${Number(lm)}/${Number(ld)}` : item.date;
+                            }
+                            item.local = scheduled === 0;
                             g.scheduled.push(item);
-                        }
-                        else (busy ? g.needBusy : g.needAvail).push(item);
+                        } else g.complete.push(item);
                     });
                 });
                 return g;
-            }, [activeHits, roster, assigned, unavail, localScheduled]);
-
-            // Pair index per loaded class: scopes (color namespaces), simultaneous
-            // packages (F/S + consecutive C), interchangeable pools.
-            const pairIdx = useMemo(() => {
-                const m = new Map();
-                activeHits.forEach(({ def, data }) => m.set(def.key, bbBuildPairIndex(data, pairConfig)));
-                return m;
-            }, [activeHits, pairConfig]);
+            }, [activeHits, roster, assigned, unavail, localBookings, poolCodes]);
 
             // Simultaneous-package partner event for this code (e.g. 7511F ↔ 7512C):
             // both halves must be scheduled together, so surface the partner and
@@ -10294,21 +10343,6 @@
                 }
                 return null;
             }, [code, pairIdx, activeHits, workingEvents, event.date]);
-
-            // Pool: this code is one of several interchangeable same-suffix rides
-            const poolInfo = useMemo(() => {
-                if (!code) return null;
-                const pc = bbParseEventCode(code);
-                if (!pc) return null;
-                for (const [classKey, pi] of pairIdx) {
-                    if (!pi.poolStems.has(pc.stem)) continue;
-                    const scope = pi.scopes.get(pi.scopeOf.get(code));
-                    if (!scope) continue;
-                    const ride = (c) => { const p = bbParseEventCode(c); return p && p.suffix === pc.suffix; };
-                    return { codes: scope.codes.filter(c => bbParseEventCode(c) && bbParseEventCode(c).stem === pc.stem && ride(c)) };
-                }
-                return null;
-            }, [code, pairIdx]);
 
             // Pair groups: teams sharing a paired-cell color, unioned across the
             // code's whole scope — so 7511F's box shows the 7512C control-room
