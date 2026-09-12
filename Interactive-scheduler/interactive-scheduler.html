@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
+<!-- Interactive Scheduler v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
+<!-- v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
 <!-- v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
 <!-- v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
 <!-- v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
@@ -2153,6 +2154,15 @@
            e.g. the 7512C control-room partner shown in 7511F's popup) */
         .ap-chip.ap-crossvenue { cursor: default; opacity: 0.85; border-style: dashed; }
         .ap-chip-venue { font-size: 0.5rem; opacity: 0.75; font-weight: 700; }
+        /* Pool ride-count badge (n/N rides done across the interchangeable set) */
+        .ap-chip-pooln {
+            font-size: 0.5rem; font-weight: 700; padding: 0 4px; border-radius: 6px;
+            background: rgba(0,0,0,0.35); color: #fde68a;
+        }
+        .ap-pair-boxlabel {
+            font-size: 0.5rem; font-weight: 700; color: #94a3b8;
+            text-transform: uppercase; letter-spacing: 0.05em; width: 100%;
+        }
         /* Simultaneous-package banner (F/S event + its consecutive-C control room) */
         .ap-package-banner {
             font-size: 0.6rem; line-height: 1.5; color: #cbd5e1;
@@ -3231,6 +3241,8 @@
         .light-mode .ap-toggle-na:hover { color: #334155; }
         .light-mode .ap-chip-pair { border-color: #334155; }
         .light-mode .ap-chip-date { background: #dbeafe; color: #1e40af; }
+        .light-mode .ap-chip-pooln { background: rgba(255,255,255,0.75); color: #92400e; }
+        .light-mode .ap-pair-boxlabel { color: #64748b; }
         .light-mode .ap-package-banner { color: #334155; background: #eff6ff; border-color: #2563eb; }
         .light-mode .ap-package-ok { color: #15803d; }
         .light-mode .ap-package-warn { color: #b45309; }
@@ -10345,12 +10357,19 @@
             }, [code, pairIdx, activeHits, workingEvents, event.date]);
 
             // Pair groups: teams sharing a paired-cell color, unioned across the
-            // code's whole scope — so 7511F's box shows the 7512C control-room
-            // partner too, annotated with their venue. Cross-venue members are
-            // informational (add them via their own event's [+]).
+            // code's whole scope.
+            // Non-pool: 7511F's box shows the 7512C control-room partner too,
+            // annotated with their venue; cross-venue members are informational.
+            // Pool (interchangeable rides): the boxes ARE the interface — each
+            // member carries the aggregate story across the whole ride set
+            // (done/total, remaining, first date, availability), never a single
+            // ride's status. Students with no pair color land in an "Ungrouped"
+            // box so nobody disappears.
+            const isPoolUI = poolCodes.length > 1;
             const pairGroups = useMemo(() => {
                 if (!code) return [];
                 const map = new Map();
+                const ungrouped = [];
                 activeHits.forEach(({ def, data, match }) => {
                     const pi = pairIdx.get(def.key);
                     if (!pi) return;
@@ -10358,6 +10377,49 @@
                     const scope = scopeKey && pi.scopes.get(scopeKey);
                     if (!scope) return;
                     const wsOfIdx = new Map([...match.map.entries()].map(([ws, idx]) => [idx, ws]));
+                    // Aggregate one student across every ride in the pool
+                    const poolItem = (ws, idx) => {
+                        let done = 0, total = 0, pending = 0, date = null, flag = null, paired = false;
+                        poolCodes.forEach(c => {
+                            const ent = data.byCode[c];
+                            if (!ent) return;
+                            const st = ent.status[idx] || { c: 'pending' };
+                            if (st.f) flag = flag || st.f;
+                            if (st.c === 'notreq') return;
+                            total++;
+                            if (st.c === 'complete') { done++; if (!date && st.d) date = st.d; }
+                            else if (st.c === 'scheduled') { if (!date && st.d) date = st.d; }
+                            else { pending++; if (st.c === 'paired-opted') paired = true; }
+                        });
+                        const local = localBookings.get(ws);
+                        const remaining = Math.max(0, pending - (local ? local.count : 0));
+                        return {
+                            name: ws, date, flag, paired,
+                            busy: unavail.has(ws),
+                            onEvent: assigned.has(ws),
+                            pool: { done, total, remaining },
+                        };
+                    };
+                    if (isPoolUI) {
+                        const grouped = new Set();
+                        scope.teams.forEach((idxSet, hex) => {
+                            idxSet.forEach(idx => {
+                                const ws = wsOfIdx.get(idx);
+                                if (ws === undefined) return;
+                                grouped.add(ws);
+                                if (!map.has(hex)) map.set(hex, []);
+                                map.get(hex).push(poolItem(ws, idx));
+                            });
+                        });
+                        (roster[def.rosterCat] || []).forEach(ws => {
+                            if (grouped.has(ws)) return;
+                            const idx = match.map.get(ws);
+                            if (idx === undefined) return;
+                            const item = poolItem(ws, idx);
+                            if (item.pool.total > 0) ungrouped.push(item);
+                        });
+                        return;
+                    }
                     scope.teams.forEach((idxSet, hex) => {
                         idxSet.forEach(idx => {
                             const ws = wsOfIdx.get(idx);
@@ -10377,8 +10439,10 @@
                 });
                 // Same-venue (addable) members first inside each box
                 map.forEach(members => members.sort((a, b) => (a.venue ? 1 : 0) - (b.venue ? 1 : 0)));
-                return [...map.entries()];
-            }, [code, activeHits, pairIdx, assigned, unavail]);
+                const out = [...map.entries()];
+                if (ungrouped.length > 0) out.push(['__ungrouped', ungrouped]);
+                return out;
+            }, [code, activeHits, pairIdx, assigned, unavail, isPoolUI, poolCodes, localBookings, roster]);
 
             const busyTooltip = (name) => (unavail.get(name) || [])
                 .map(b => `${b.model ? b.model + ' ' : ''}${b.eventName} (${b.startTime || '?'}–${b.endTime || '?'})`)
@@ -10400,6 +10464,7 @@
                     armed === item.name ? 'ap-armed' : '',
                 ].filter(Boolean).join(' ');
                 const tips = [];
+                if (item.pool) tips.push(`${item.pool.done} of ${item.pool.total} rides complete${item.pool.remaining > 0 ? ` — ${item.pool.remaining} still needed (any ride in the set counts)` : item.pool.done === item.pool.total ? ' — set complete' : ' — remainder already booked'}`);
                 if (item.busy) tips.push('Busy:\n' + busyTooltip(item.name));
                 if (state === 'scheduled' && item.local) tips.push(`Already scheduled for this event code on YOUR working schedule (${item.date || ''}) — adding here would duplicate the ride.`);
                 else if (state === 'scheduled') tips.push(`Big Board shows this scheduled ${item.date || ''} — adding may double-book.`);
@@ -10415,6 +10480,7 @@
                             <>
                                 <span className="ap-chip-name">{item.name}</span>
                                 {item.paired && <span className="ap-chip-pair" />}
+                                {item.pool && <span className="ap-chip-pooln">{item.pool.done}/{item.pool.total}</span>}
                                 {item.date && <span className="ap-chip-date">{item.date}</span>}
                                 {state === 'complete' && <span className="ap-chip-check">✓</span>}
                                 {item.flag === 'past-date-unchecked' && <span className="ap-chip-flagdot" />}
@@ -10511,28 +10577,37 @@
                                                     : <span className="ap-package-warn"> Not on this day&#39;s schedule yet.</span>}
                                         </div>
                                     )}
-                                    {renderSection('Needs · Available', groups.needAvail, 'needs')}
-                                    {renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
-                                    {renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
-                                    {renderSection('Completed', groups.complete, 'complete')}
+                                    {/* Pool events: the team boxes below tell the whole story —
+                                        flat per-code sections are misleading there */}
+                                    {!isPoolUI && renderSection('Needs · Available', groups.needAvail, 'needs')}
+                                    {!isPoolUI && renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
+                                    {!isPoolUI && renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
+                                    {!isPoolUI && renderSection('Completed', groups.complete, 'complete')}
                                     {pairGroups.length > 0 && (
                                         <React.Fragment>
                                             <div className="ap-section-label">
-                                                {poolInfo && poolInfo.codes.length > 1
-                                                    ? `Pair groups — interchangeable across ${poolInfo.codes.join(' / ')}`
+                                                {isPoolUI
+                                                    ? `Pair teams — interchangeable across ${poolCodes.join(' / ')} (n/N = rides done)`
                                                     : 'Pair groups (may fly together)'}
                                             </div>
                                             <div className="ap-pair-boxes">
                                                 {pairGroups.map(([hex, members]) => (
                                                     <div key={hex} className="ap-pair-box"
-                                                        style={{ borderColor: `#${hex}`, background: `#${hex}22` }}>
+                                                        style={hex === '__ungrouped'
+                                                            ? { borderColor: '#64748b', borderStyle: 'dashed' }
+                                                            : { borderColor: `#${hex}`, background: `#${hex}22` }}>
+                                                        {hex === '__ungrouped' && <span className="ap-pair-boxlabel">no team yet</span>}
                                                         {members.map(m => m.onEvent ? (
                                                             <span key={m.name} className="ap-chip ap-onevent"
                                                                 style={{ '--chip-bg': chipColor(m.name, roster).bg, '--chip-text': chipColor(m.name, roster).text }}
                                                                 title="Already on this event">
                                                                 <span className="ap-chip-name">{m.name}</span>
+                                                                {m.pool && <span className="ap-chip-pooln">{m.pool.done}/{m.pool.total}</span>}
                                                                 <span className="ap-chip-check">✔</span>
                                                             </span>
+                                                        ) : m.pool ? (
+                                                            renderChip(m, m.pool.remaining > 0 ? 'needs'
+                                                                : (m.pool.done === m.pool.total ? 'complete' : 'scheduled'))
                                                         ) : m.venue ? (
                                                             <span key={m.name} className={`ap-chip ap-crossvenue${m.busy ? ' ap-unavail' : ''}`}
                                                                 style={{ '--chip-bg': chipColor(m.name, roster).bg, '--chip-text': chipColor(m.name, roster).text }}
