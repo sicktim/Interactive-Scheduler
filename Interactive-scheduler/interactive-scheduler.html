@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
+<!-- Interactive Scheduler v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
+<!-- v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
 <!-- v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
 <!-- v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
 <!-- v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
@@ -4709,6 +4710,29 @@
             });
         };
 
+        // ── View preferences ──
+        // Last view / whiteboard day / picker tabs, restored on refresh.
+        // Calendar-day scoped: prefs saved on a previous local date are ignored,
+        // so each new day starts at the default (whiteboard, today).
+        const VIEW_PREFS_KEY = 'tps-view-prefs';
+        const loadViewPrefs = () => {
+            try {
+                const p = JSON.parse(localStorage.getItem(VIEW_PREFS_KEY) || 'null');
+                if (!p) return null;
+                if ((p.savedDate || '') !== new Date().toLocaleDateString('en-CA')) return null;
+                return p;
+            } catch (e) { return null; }
+        };
+        const saveViewPrefs = (patch) => {
+            try {
+                let cur = {};
+                try { cur = JSON.parse(localStorage.getItem(VIEW_PREFS_KEY) || '{}') || {}; } catch (e) {}
+                localStorage.setItem(VIEW_PREFS_KEY, JSON.stringify({
+                    ...cur, ...patch, savedDate: new Date().toLocaleDateString('en-CA'),
+                }));
+            } catch (e) {}
+        };
+
         const saveState = (changes, selectedIds, naCats, allEvents, selectAllActive) => {
             try {
                 // Save natural keys of selected events (stable across reloads)
@@ -6252,7 +6276,18 @@
         // ─── PERSONNEL PICKER ───
 
         const PersonnelPicker = ({ roster, allEvents, conflicts, onDS, onDE, onShowTooltip, onHideTooltip, focusedAvailability }) => {
-            const [activeTabs, setActiveTabs] = useState(new Set(['All']));
+            // Tab selection restores from same-day view prefs; stored categories
+            // no longer in the roster are dropped (empty result falls back to All)
+            const [activeTabs, setActiveTabs] = useState(() => {
+                const p = loadViewPrefs();
+                if (p && Array.isArray(p.pickerTabs) && p.pickerTabs.length > 0) {
+                    const valid = new Set(Object.keys(roster || {}));
+                    const tabs = p.pickerTabs.filter(t => t === 'All' || valid.has(t));
+                    if (tabs.length > 0) return new Set(tabs);
+                }
+                return new Set(['All']);
+            });
+            useEffect(() => { saveViewPrefs({ pickerTabs: [...activeTabs] }); }, [activeTabs]);
             const [search, setSearch] = useState('');
 
             const cats = useMemo(() => Object.keys(roster).filter(k => roster[k]?.length > 0), [roster]);
@@ -10366,8 +10401,19 @@
             const [changes, setChanges] = useState([]);
             const [savedShow, setSavedShow] = useState(false);
             const [tooltip, setTooltip] = useState(null);
-            const [viewMode, setViewMode] = useState('timeline'); // 'timeline' | 'rainbow' | 'whiteboard'
-            const [wbActiveDay, setWbActiveDay] = useState(null); // whiteboard selected day
+            // Whiteboard is the default view; same-day prefs restore the last
+            // view + selected day (a stale/no-longer-listed day falls back to
+            // the today/first-date default via the null path).
+            const [viewMode, setViewMode] = useState(() => {
+                const p = loadViewPrefs();
+                return (p && ['timeline', 'rainbow', 'whiteboard'].includes(p.viewMode)) ? p.viewMode : 'whiteboard';
+            });
+            const [wbActiveDay, setWbActiveDay] = useState(() => {
+                const p = loadViewPrefs();
+                return (p && p.wbActiveDay && dates && dates.includes(p.wbActiveDay)) ? p.wbActiveDay : null;
+            });
+            useEffect(() => { saveViewPrefs({ viewMode }); }, [viewMode]);
+            useEffect(() => { saveViewPrefs({ wbActiveDay }); }, [wbActiveDay]);
             const [summaryCollapsed, setSummaryCollapsed] = useState(() => {
                 try { return localStorage.getItem('tps-scheduler-summary-collapsed') === '1'; } catch (e) { return false; }
             });
