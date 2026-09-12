@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
+<!-- Interactive Scheduler v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
+<!-- v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
 <!-- v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
 <!-- v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
 <!-- v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
@@ -4684,10 +4685,28 @@
         const saveSoftKeys = (set) => {
             try { localStorage.setItem(SOFT_EVENTS_KEY, JSON.stringify([...set])); } catch (e) {}
         };
+        // Natural keys collide on deliberate whiteboard twins (two identical
+        // C-12 Formation rows, same times). Soft keys disambiguate with an
+        // occurrence ordinal (#1, #2 …) counted in event-list order, which is
+        // stable across reloads (whiteboard parse order). Ordinal 0 keeps the
+        // bare key so pre-v4.6.7 stored flags still match the first twin.
+        const softKeyForIndex = (events, idx, override) => {
+            const base = eventNaturalKey(override || events[idx]);
+            let n = 0;
+            for (let i = 0; i < idx; i++) if (eventNaturalKey(events[i]) === base) n++;
+            return n === 0 ? base : `${base}#${n}`;
+        };
         const applySoftFlags = (events) => {
             const keys = loadSoftKeys();
             if (keys.size === 0) return events;
-            return events.map(ev => keys.has(eventNaturalKey(ev)) && !ev.soft ? { ...ev, soft: true } : ev);
+            const seen = new Map(); // base key -> occurrences so far
+            return events.map(ev => {
+                const base = eventNaturalKey(ev);
+                const n = seen.get(base) || 0;
+                seen.set(base, n + 1);
+                const key = n === 0 ? base : `${base}#${n}`;
+                return keys.has(key) && !ev.soft ? { ...ev, soft: true } : ev;
+            });
         };
 
         const saveState = (changes, selectedIds, naCats, allEvents, selectAllActive) => {
@@ -5842,7 +5861,9 @@
                             <span className="event-time-text">{event.startTime}-{event.endTime || '??'}</span>
                         )}
                         {event.cancelled && <span style={{ background: '#a81a1a', color: 'white', fontSize: '0.65rem', fontWeight: 1000, padding: '0 3px', borderRadius: 2 }}>CX</span>}
-                        {!event.readonly && onToggleSoft && (
+                        {/* Academics are readonly (crew/times locked on timeline) but still
+                            soft-flaggable — whole-class blocks otherwise mark everyone busy */}
+                        {(!event.readonly || event.section === 'Academics') && onToggleSoft && (
                             <span className={`soft-pill${event.soft ? ' on' : ''}`}
                                 onClick={(e) => { e.stopPropagation(); onToggleSoft(event.id); }}
                                 title={event.soft
@@ -9232,7 +9253,7 @@
         };
 
         // ─────────────────────────── WhiteboardAcademics ───────────────────────
-        const WhiteboardAcademics = ({ events, roster, onEditSave, onCreateEvent, activeDay }) => {
+        const WhiteboardAcademics = ({ events, roster, onEditSave, onCreateEvent, activeDay, onToggleSoft }) => {
             // Academics events are readonly (crew/timeline stay locked), but the block
             // TIMES are adjustable from here — saves flow through the normal edit path
             // and show up in the Change Summary as event-edit entries.
@@ -9273,14 +9294,16 @@
                 <table className="wb-table wb-table-compact">
                     <colgroup>
                         <col />{/* Class label */}
-                        <col style={{ width: '30%' }} />
-                        <col style={{ width: '30%' }} />
+                        <col style={{ width: '28%' }} />
+                        <col style={{ width: '28%' }} />
+                        <col style={{ width: 36 }} />{/* Soft restriction pill */}
                     </colgroup>
                     <thead>
                         <tr>
                             <th>Class</th>
                             <th>Start</th>
                             <th>End</th>
+                            <th style={{ textAlign: 'center' }} title="Soft restriction — event doesn't make its people unavailable elsewhere">Soft</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -9329,6 +9352,17 @@
                                             <td style={rowStyle}>{ev ? (ev.endTime || '\u2014') : '\u2014'}</td>
                                         </React.Fragment>
                                     )}
+                                    <td style={{ textAlign: 'center' }}>
+                                        {ev && onToggleSoft ? (
+                                            <span className={`wb-soft-pill${ev.soft ? ' on' : ''}`}
+                                                onClick={(e) => { e.stopPropagation(); onToggleSoft(ev.id); }}
+                                                title={ev.soft
+                                                    ? 'Soft restriction ON \u2014 people on this event stay available for other events (conflicts still shown). Click for hard.'
+                                                    : 'Mark as soft restriction \u2014 routine/missable; people on it stay available elsewhere.'}>
+                                                soft
+                                            </span>
+                                        ) : null}
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -9869,7 +9903,8 @@
                                         </div>
                                         <div className="wb-supv-acad-right">
                                             <WhiteboardAcademics events={acadEvts} roster={roster} onEditSave={onEditSave}
-                                                onCreateEvent={handleCreateWbEvent} activeDay={activeDay} />
+                                                onCreateEvent={handleCreateWbEvent} activeDay={activeDay}
+                                                onToggleSoft={onToggleSoft} />
                                         </div>
                                     </div>
                                 ) : sec === 'Flying' ? (
@@ -10457,13 +10492,15 @@
 
             const handleEditSave = useCallback((eventId, updates) => {
                 setWorkingEvents(prev => {
-                    const ev = prev.find(e => e.id === eventId);
+                    const evIdx = prev.findIndex(e => e.id === eventId);
+                    const ev = evIdx !== -1 ? prev[evIdx] : null;
                     if (!ev) return prev;
                     // Migrate persisted soft-flag key when a natural-key field changes,
                     // or the flag silently orphans on the next reload/refresh.
+                    // Ordinal-aware (#n suffix) so twin rows keep separate flags.
                     if (ev.soft) {
-                        const oldKey = eventNaturalKey(ev);
-                        const newKey = eventNaturalKey({ ...ev, ...updates });
+                        const oldKey = softKeyForIndex(prev, evIdx);
+                        const newKey = softKeyForIndex(prev, evIdx, { ...ev, ...updates });
                         if (oldKey !== newKey) {
                             const keys = loadSoftKeys();
                             keys.delete(oldKey);
@@ -10558,15 +10595,19 @@
             // whiteboard change (it isn't communicated to the squadron), but persisted
             // by natural key so it survives refreshes.
             const handleToggleSoft = useCallback((eventId) => {
-                setWorkingEvents(prev => prev.map(ev => {
-                    if (ev.id !== eventId) return ev;
+                setWorkingEvents(prev => {
+                    const idx = prev.findIndex(e => e.id === eventId);
+                    if (idx === -1) return prev;
+                    const ev = prev[idx];
                     const soft = !ev.soft;
                     const keys = loadSoftKeys();
-                    const nk = eventNaturalKey(ev);
+                    // Ordinal-aware key so twin rows (identical name/time/model)
+                    // don't share one flag
+                    const nk = softKeyForIndex(prev, idx);
                     if (soft) keys.add(nk); else keys.delete(nk);
                     saveSoftKeys(keys);
-                    return { ...ev, soft };
-                }));
+                    return prev.map(e => e.id === eventId ? { ...e, soft } : e);
+                });
             }, []);
 
             // Initialize working events — from cache if available, otherwise from allEvents
