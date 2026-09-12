@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
+<!-- Interactive Scheduler v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
+<!-- v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
 <!-- v4.6.7 — Soft restrictions for Academics (whiteboard pill + timeline); fix: soft flag duplicated onto identical twin rows (ordinal soft keys) -->
 <!-- v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
 <!-- v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
@@ -2093,6 +2094,24 @@
             padding: 8px 0;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+        /* Pair-group panel in the Big Board modal */
+        .bb-pair-row {
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+            padding: 4px 0; font-size: 0.62rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .bb-pair-key { font-weight: 700; color: #93c5fd; min-width: 92px; }
+        .bb-pair-codes { color: #94a3b8; }
+        .bb-pair-badge {
+            font-size: 0.52rem; font-weight: 700; padding: 1px 5px; border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2); color: #cbd5e1;
+        }
+        .bb-pair-pkg { border-color: rgba(59,130,246,0.5); color: #93c5fd; }
+        .bb-pair-pool { border-color: rgba(168,85,247,0.5); color: #d8b4fe; }
+        .bb-pair-unmerge {
+            font-size: 0.52rem; color: #fca5a5; background: none; cursor: pointer;
+            border: 1px solid rgba(239,68,68,0.35); border-radius: 8px; padding: 1px 6px;
+        }
         .ap-class-pills {
             display: flex;
             align-items: center;
@@ -2129,6 +2148,19 @@
             outline: 2px solid rgba(134, 239, 172, 0.7);
             cursor: default;
         }
+        /* Cross-venue pair member (colored on the package's other event —
+           e.g. the 7512C control-room partner shown in 7511F's popup) */
+        .ap-chip.ap-crossvenue { cursor: default; opacity: 0.85; border-style: dashed; }
+        .ap-chip-venue { font-size: 0.5rem; opacity: 0.75; font-weight: 700; }
+        /* Simultaneous-package banner (F/S event + its consecutive-C control room) */
+        .ap-package-banner {
+            font-size: 0.6rem; line-height: 1.5; color: #cbd5e1;
+            background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.35);
+            border-radius: 6px; padding: 5px 8px; margin: 6px 0;
+        }
+        .ap-package-chain { margin-right: 4px; }
+        .ap-package-ok { color: #86efac; font-weight: 600; }
+        .ap-package-warn { color: #fbbf24; font-weight: 600; }
         /* The + button that opens the popover */
         .wb-crew-add-btn {
             display: inline-flex;
@@ -3198,6 +3230,9 @@
         .light-mode .ap-toggle-na:hover { color: #334155; }
         .light-mode .ap-chip-pair { border-color: #334155; }
         .light-mode .ap-chip-date { background: #dbeafe; color: #1e40af; }
+        .light-mode .ap-package-banner { color: #334155; background: #eff6ff; border-color: #2563eb; }
+        .light-mode .ap-package-ok { color: #15803d; }
+        .light-mode .ap-package-warn { color: #b45309; }
         .light-mode .ap-chip-check { color: #15803d; }
         .light-mode .ap-chip-bang { color: #b45309; }
         .light-mode .ap-chip.ap-armed {
@@ -3206,6 +3241,13 @@
             border-color: #dc2626 !important;
         }
         .light-mode .bb-class-row { border-bottom-color: #e2e8f0; }
+        .light-mode .bb-pair-row { border-bottom-color: #e2e8f0; }
+        .light-mode .bb-pair-key { color: #1d4ed8; }
+        .light-mode .bb-pair-codes { color: #64748b; }
+        .light-mode .bb-pair-badge { border-color: #94a3b8; color: #334155; }
+        .light-mode .bb-pair-pkg { border-color: #2563eb; color: #1d4ed8; }
+        .light-mode .bb-pair-pool { border-color: #9333ea; color: #7e22ce; }
+        .light-mode .bb-pair-unmerge { border-color: #dc2626; color: #b91c1c; }
         .light-mode .wb-crew-add-btn { border-color: #94a3b8; color: #64748b; }
         .light-mode .wb-crew-add-btn:hover { border-color: #475569; color: #334155; }
         .light-mode .wb-row-effective td { background: #dcfce7; }
@@ -5013,6 +5055,105 @@
                 }
             });
             return { fetchedAt: json.fetchedAt, sheetName, classMeta: json.classMeta || {}, students, byCode };
+        };
+
+        // ── Pair scopes / packages / pools (derived from event-code structure) ──
+        // Code anatomy: "SY 7212F" → series SY, num 7212, stem "SY 721" (num minus
+        // last digit), suffix F. Suffix = venue: F flight, C control room, S sim.
+        // Rules validated against the live 26A board (2026-09-11):
+        //   package: nF or nS followed by (n+1)C in the same series = scheduled
+        //            simultaneously (flight/sim + its control room). Works on code
+        //            NUMBERS, not row order — High AOA rows sit out of order.
+        //   scope:   same stem = same pair-color namespace (colors mean the same
+        //            people across those rows, e.g. 7511F flyer + 7512C partner).
+        //   pool:    ≥2 same-suffix codes in one stem (PF 8240F/41F/42F) =
+        //            interchangeable rides; color teams span the whole set.
+        // The one cross-stem tie codes can't express (wpns delivery: 722x selective
+        // route shares pairs with 7211S) ships as a default merge, editable in the
+        // Big Board modal.
+        const bbParseEventCode = (code) => {
+            // Tolerates board typos like "FQ 6311Ff" (doubled suffix) — first letter wins
+            const m = String(code || '').match(/^([A-Z]{2,3})\s+(\d{3,5})([A-Z])?[A-Z]?$/);
+            if (!m) return null;
+            return {
+                series: m[1], num: parseInt(m[2], 10),
+                stem: `${m[1]} ${m[2].slice(0, -1)}`,
+                suffix: m[3] || null,
+            };
+        };
+
+        const PAIR_CONFIG_KEY = 'tps-pair-config';
+        const DEFAULT_SCOPE_MERGES = [['SY 721', 'SY 722']]; // wpns delivery ↔ domain integration
+        const loadPairConfig = () => {
+            try {
+                const c = JSON.parse(localStorage.getItem(PAIR_CONFIG_KEY) || 'null');
+                if (c && Array.isArray(c.merges)) return c;
+            } catch (e) {}
+            return { merges: DEFAULT_SCOPE_MERGES.map(m => [...m]) };
+        };
+        const savePairConfig = (cfg) => {
+            try { localStorage.setItem(PAIR_CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
+        };
+
+        // Build the pair index for one class cache.
+        // Returns {
+        //   scopeOf:  Map<code, scopeKey>,
+        //   scopes:   Map<scopeKey, { codes, teams: Map<hex, Set<idx>>,
+        //             venueOf: Map<hex, Map<idx, code>> }>  (venue = the code a
+        //             member is colored on — who flies vs who mans the CR),
+        //   packages: Map<code, code> both directions (F/S ↔ its consecutive C),
+        //   poolStems: Set<stem> (interchangeable ride sets)
+        // }
+        const bbBuildPairIndex = (classData, pairConfig) => {
+            const merges = (pairConfig && pairConfig.merges) || [];
+            const scopeKeyOfStem = (stem) => {
+                const grp = merges.find(g => g.includes(stem));
+                return grp ? [...grp].sort().join(' + ') : stem;
+            };
+            const parsed = [];
+            Object.keys((classData && classData.byCode) || {}).forEach(code => {
+                const p = bbParseEventCode(code);
+                if (p) parsed.push({ code, ...p });
+            });
+            const scopes = new Map(), scopeOf = new Map();
+            parsed.forEach(pc => {
+                const key = scopeKeyOfStem(pc.stem);
+                scopeOf.set(pc.code, key);
+                if (!scopes.has(key)) scopes.set(key, { codes: [], teams: new Map(), venueOf: new Map() });
+                scopes.get(key).codes.push(pc.code);
+            });
+            scopes.forEach(sc => {
+                sc.codes.sort();
+                sc.codes.forEach(code => {
+                    const st = classData.byCode[code].status || {};
+                    Object.keys(st).forEach(k => {
+                        const hex = st[k].p;
+                        if (!hex) return;
+                        const idx = Number(k);
+                        if (!sc.teams.has(hex)) sc.teams.set(hex, new Set());
+                        sc.teams.get(hex).add(idx);
+                        if (!sc.venueOf.has(hex)) sc.venueOf.set(hex, new Map());
+                        if (!sc.venueOf.get(hex).has(idx)) sc.venueOf.get(hex).set(idx, code);
+                    });
+                });
+            });
+            const byNum = new Map(parsed.map(pc => [`${pc.series} ${pc.num}`, pc]));
+            const packages = new Map();
+            parsed.forEach(pc => {
+                if (pc.suffix !== 'F' && pc.suffix !== 'S') return;
+                const next = byNum.get(`${pc.series} ${pc.num + 1}`);
+                if (next && next.suffix === 'C') { packages.set(pc.code, next.code); packages.set(next.code, pc.code); }
+            });
+            const poolStems = new Set();
+            const byStem = new Map();
+            parsed.forEach(pc => {
+                if (!byStem.has(pc.stem)) byStem.set(pc.stem, {});
+                if (pc.suffix) byStem.get(pc.stem)[pc.suffix] = (byStem.get(pc.stem)[pc.suffix] || 0) + 1;
+            });
+            byStem.forEach((counts, stem) => {
+                if (Object.values(counts).some(n => n >= 2)) poolStems.add(stem);
+            });
+            return { scopeOf, scopes, packages, poolStems };
         };
 
         // Availability for a target event: Map<person, [{eventName, model, startTime, endTime}]>
@@ -10004,7 +10145,7 @@
 
         // ─── ADD-PERSON POPUP (tabbed [+] menu: Big Board / Everyone / Placeholders) ───
 
-        const AddPersonPopup = ({ anchor, event, roster, workingEvents, bbCache, bbRosterMatch, bbLoading, bbError, onLoadBbClass, onAdd, onAddPlaceholder, onClose }) => {
+        const AddPersonPopup = ({ anchor, event, roster, workingEvents, bbCache, bbRosterMatch, bbLoading, bbError, onLoadBbClass, onAdd, onAddPlaceholder, onClose, pairConfig }) => {
             const popRef = React.useRef(null);
             const code = bbCodeFromTitle(event.eventName);
 
@@ -10123,27 +10264,87 @@
                 return g;
             }, [activeHits, roster, assigned, unavail, localScheduled]);
 
-            // Pair groups: students sharing a paired-cell color = allowable pairing.
-            // Includes already-assigned members (shown checked) so the whole group reads.
+            // Pair index per loaded class: scopes (color namespaces), simultaneous
+            // packages (F/S + consecutive C), interchangeable pools.
+            const pairIdx = useMemo(() => {
+                const m = new Map();
+                activeHits.forEach(({ def, data }) => m.set(def.key, bbBuildPairIndex(data, pairConfig)));
+                return m;
+            }, [activeHits, pairConfig]);
+
+            // Simultaneous-package partner event for this code (e.g. 7511F ↔ 7512C):
+            // both halves must be scheduled together, so surface the partner and
+            // whether it's on this day's working schedule.
+            const packageInfo = useMemo(() => {
+                if (!code) return null;
+                for (const [, pi] of pairIdx) {
+                    const partner = pi.packages.get(code);
+                    if (!partner) continue;
+                    const partnerTitle = (() => {
+                        for (const { data } of activeHits) {
+                            if (data.byCode[partner]) return data.byCode[partner].title;
+                        }
+                        return null;
+                    })();
+                    const onSchedule = workingEvents.find(ev =>
+                        !ev.cancelled && ev.date === event.date && bbCodeFromTitle(ev.eventName) === partner);
+                    const otherDay = onSchedule ? null : workingEvents.find(ev =>
+                        !ev.cancelled && bbCodeFromTitle(ev.eventName) === partner);
+                    return { partner, partnerTitle, onSchedule, otherDay };
+                }
+                return null;
+            }, [code, pairIdx, activeHits, workingEvents, event.date]);
+
+            // Pool: this code is one of several interchangeable same-suffix rides
+            const poolInfo = useMemo(() => {
+                if (!code) return null;
+                const pc = bbParseEventCode(code);
+                if (!pc) return null;
+                for (const [classKey, pi] of pairIdx) {
+                    if (!pi.poolStems.has(pc.stem)) continue;
+                    const scope = pi.scopes.get(pi.scopeOf.get(code));
+                    if (!scope) continue;
+                    const ride = (c) => { const p = bbParseEventCode(c); return p && p.suffix === pc.suffix; };
+                    return { codes: scope.codes.filter(c => bbParseEventCode(c) && bbParseEventCode(c).stem === pc.stem && ride(c)) };
+                }
+                return null;
+            }, [code, pairIdx]);
+
+            // Pair groups: teams sharing a paired-cell color, unioned across the
+            // code's whole scope — so 7511F's box shows the 7512C control-room
+            // partner too, annotated with their venue. Cross-venue members are
+            // informational (add them via their own event's [+]).
             const pairGroups = useMemo(() => {
+                if (!code) return [];
                 const map = new Map();
-                activeHits.forEach(({ def, entry, match }) => {
-                    (roster[def.rosterCat] || []).forEach(ws => {
-                        const idx = match.map.get(ws);
-                        if (idx === undefined) return;
-                        const st = entry.status[idx];
-                        if (!st || !st.p) return;
-                        if (!map.has(st.p)) map.set(st.p, []);
-                        map.get(st.p).push({
-                            name: ws, date: st.d, flag: st.f,
-                            busy: unavail.has(ws),
-                            complete: st.c === 'complete',
-                            onEvent: assigned.has(ws),
+                activeHits.forEach(({ def, data, match }) => {
+                    const pi = pairIdx.get(def.key);
+                    if (!pi) return;
+                    const scopeKey = pi.scopeOf.get(code);
+                    const scope = scopeKey && pi.scopes.get(scopeKey);
+                    if (!scope) return;
+                    const wsOfIdx = new Map([...match.map.entries()].map(([ws, idx]) => [idx, ws]));
+                    scope.teams.forEach((idxSet, hex) => {
+                        idxSet.forEach(idx => {
+                            const ws = wsOfIdx.get(idx);
+                            if (ws === undefined) return;
+                            const venue = (scope.venueOf.get(hex) || new Map()).get(idx) || code;
+                            const st = (data.byCode[venue] && data.byCode[venue].status[idx]) || {};
+                            if (!map.has(hex)) map.set(hex, []);
+                            map.get(hex).push({
+                                name: ws, date: st.d, flag: st.f,
+                                venue: venue === code ? null : venue,
+                                busy: unavail.has(ws),
+                                complete: st.c === 'complete',
+                                onEvent: assigned.has(ws),
+                            });
                         });
                     });
                 });
+                // Same-venue (addable) members first inside each box
+                map.forEach(members => members.sort((a, b) => (a.venue ? 1 : 0) - (b.venue ? 1 : 0)));
                 return [...map.entries()];
-            }, [activeHits, roster, assigned, unavail]);
+            }, [code, activeHits, pairIdx, assigned, unavail]);
 
             const busyTooltip = (name) => (unavail.get(name) || [])
                 .map(b => `${b.model ? b.model + ' ' : ''}${b.eventName} (${b.startTime || '?'}–${b.endTime || '?'})`)
@@ -10264,13 +10465,29 @@
                                     {activeHits.length === 0 && (
                                         <div className="ap-note">All classes are filtered out — toggle one back on above.</div>
                                     )}
+                                    {packageInfo && (
+                                        <div className="ap-package-banner">
+                                            <span className="ap-package-chain">&#x26D3;</span>
+                                            Scheduled together with <b>{packageInfo.partner}</b>
+                                            {packageInfo.partnerTitle ? ` — ${packageInfo.partnerTitle}` : ''}.
+                                            {packageInfo.onSchedule
+                                                ? <span className="ap-package-ok"> On this day&#39;s schedule &#x2713;{packageInfo.onSchedule.startTime ? ` (${packageInfo.onSchedule.startTime}–${packageInfo.onSchedule.endTime || '?'})` : ''}</span>
+                                                : packageInfo.otherDay
+                                                    ? <span className="ap-package-warn"> On the schedule {fmtDate(packageInfo.otherDay.date).weekday} {fmtDate(packageInfo.otherDay.date).day} — different day.</span>
+                                                    : <span className="ap-package-warn"> Not on this day&#39;s schedule yet.</span>}
+                                        </div>
+                                    )}
                                     {renderSection('Needs · Available', groups.needAvail, 'needs')}
                                     {renderSection('Needs · Unavailable', groups.needBusy, 'needs')}
                                     {renderSection('Scheduled (not complete)', groups.scheduled, 'scheduled')}
                                     {renderSection('Completed', groups.complete, 'complete')}
                                     {pairGroups.length > 0 && (
                                         <React.Fragment>
-                                            <div className="ap-section-label">Pair groups (may fly together)</div>
+                                            <div className="ap-section-label">
+                                                {poolInfo && poolInfo.codes.length > 1
+                                                    ? `Pair groups — interchangeable across ${poolInfo.codes.join(' / ')}`
+                                                    : 'Pair groups (may fly together)'}
+                                            </div>
                                             <div className="ap-pair-boxes">
                                                 {pairGroups.map(([hex, members]) => (
                                                     <div key={hex} className="ap-pair-box"
@@ -10281,6 +10498,15 @@
                                                                 title="Already on this event">
                                                                 <span className="ap-chip-name">{m.name}</span>
                                                                 <span className="ap-chip-check">✔</span>
+                                                            </span>
+                                                        ) : m.venue ? (
+                                                            <span key={m.name} className={`ap-chip ap-crossvenue${m.busy ? ' ap-unavail' : ''}`}
+                                                                style={{ '--chip-bg': chipColor(m.name, roster).bg, '--chip-text': chipColor(m.name, roster).text }}
+                                                                title={`Paired here via ${m.venue}${m.busy ? ' — BUSY: ' + busyTooltip(m.name) : m.complete ? ' — already complete' : ' — available'}. Add them through that event's [+].`}>
+                                                                <span className="ap-chip-name">{m.name}</span>
+                                                                <span className="ap-chip-venue">&#x2192; {m.venue.split(' ')[1] || m.venue}</span>
+                                                                {m.complete && <span className="ap-chip-check">✓</span>}
+                                                                {m.busy && <span className="ap-chip-bang">!</span>}
                                                             </span>
                                                         ) : renderChip(m, m.complete ? 'complete' : 'needs'))}
                                                     </div>
@@ -10342,7 +10568,51 @@
 
         // ─── BIG BOARD DATA MODAL (class picker / load / reset) ───
 
-        const BigBoardModal = ({ bbCache, bbRosterMatch, bbLoading, bbError, onLoadClass, onReset, onClose }) => (
+        const BigBoardModal = ({ bbCache, bbRosterMatch, bbLoading, bbError, onLoadClass, onReset, onClose, pairConfig, onPairConfig }) => {
+            const [selStems, setSelStems] = React.useState(new Set());
+
+            // Multi-code pair scopes across all loaded classes (single-line events
+            // need no config — only multi-row scopes and merges are shown).
+            const scopeRows = React.useMemo(() => {
+                const rows = new Map();
+                BB_CLASSES.forEach(def => {
+                    const data = bbCache[def.key];
+                    if (!data) return;
+                    const pi = bbBuildPairIndex(data, pairConfig);
+                    pi.scopes.forEach((sc, key) => {
+                        if (sc.codes.length < 2 && !key.includes(' + ')) return;
+                        if (!rows.has(key)) rows.set(key, { codes: new Set(), packages: new Set(), pool: false, teams: 0 });
+                        const r = rows.get(key);
+                        sc.codes.forEach(c => {
+                            r.codes.add(c);
+                            const pc = bbParseEventCode(c);
+                            if (pc && (pc.suffix === 'F' || pc.suffix === 'S')) {
+                                const partner = pi.packages.get(c);
+                                if (partner) r.packages.add(`${c.split(' ')[1]}+${partner.split(' ')[1]}`);
+                            }
+                            if (pc && pi.poolStems.has(pc.stem)) r.pool = true;
+                        });
+                        r.teams = Math.max(r.teams, sc.teams.size);
+                    });
+                });
+                return [...rows.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+            }, [bbCache, pairConfig]);
+
+            const toggleStem = (stem) => setSelStems(prev => {
+                const next = new Set(prev);
+                next.has(stem) ? next.delete(stem) : next.add(stem);
+                return next;
+            });
+            const mergeSelected = () => {
+                if (selStems.size < 2) return;
+                onPairConfig({ ...pairConfig, merges: [...(pairConfig.merges || []), [...selStems].sort()] });
+                setSelStems(new Set());
+            };
+            const unmerge = (key) => {
+                onPairConfig({ ...pairConfig, merges: (pairConfig.merges || []).filter(g => [...g].sort().join(' + ') !== key) });
+            };
+
+            return (
             <div className="modal-overlay" onClick={onClose}>
                 <div className="modal-content" onClick={e => e.stopPropagation()}>
                     <div className="flex justify-between items-center mb-3">
@@ -10382,6 +10652,36 @@
                         );
                     })}
                     {bbError && <div className="text-xs mt-2" style={{ color: '#fca5a5' }}>{bbError}</div>}
+                    {scopeRows.length > 0 && (
+                        <div className="bb-pair-panel">
+                            <div className="ap-section-label" style={{ marginTop: 12 }}>Pair groups (auto-detected from event codes)</div>
+                            <div className="text-xs text-gray-400 mb-2" style={{ lineHeight: 1.5 }}>
+                                Rows sharing a code stem share pair colors. F/S + consecutive C = scheduled
+                                simultaneously. Check two groups and Merge to link pairs across stems
+                                (e.g. wpns delivery sim &#x2194; domain integration).
+                            </div>
+                            {scopeRows.map(([key, r]) => {
+                                const merged = key.includes(' + ');
+                                return (
+                                    <div key={key} className="bb-pair-row">
+                                        {!merged ? (
+                                            <input type="checkbox" checked={selStems.has(key)} onChange={() => toggleStem(key)} />
+                                        ) : <span style={{ width: 13, display: 'inline-block' }} />}
+                                        <span className="bb-pair-key">{key}</span>
+                                        <span className="bb-pair-codes">{[...r.codes].sort().join(', ')}</span>
+                                        {[...r.packages].map(p => <span key={p} className="bb-pair-badge bb-pair-pkg" title="Flight/sim + control room — scheduled simultaneously">&#x26D3; {p}</span>)}
+                                        {r.pool && <span className="bb-pair-badge bb-pair-pool" title="Interchangeable rides — pairs can span the set">pool</span>}
+                                        {r.teams > 0 && <span className="bb-pair-badge">{r.teams} teams</span>}
+                                        {merged && <button className="bb-pair-unmerge" onClick={() => unmerge(key)}>unmerge</button>}
+                                    </div>
+                                );
+                            })}
+                            <button className="ap-load-btn" style={{ width: 'auto', marginTop: 6 }}
+                                disabled={selStems.size < 2} onClick={mergeSelected}>
+                                Merge selected ({selStems.size})
+                            </button>
+                        </div>
+                    )}
                     <div className="flex justify-between mt-4">
                         <button onClick={onReset}
                             className="px-3 py-2 text-red-400 hover:bg-red-900/30 rounded text-xs"
@@ -10392,7 +10692,8 @@
                     </div>
                 </div>
             </div>
-        );
+            );
+        };
 
         // ─── SCHEDULER VIEW ───
 
@@ -10426,6 +10727,9 @@
 
             // ── Big Board completion data ──
             const [bbCache, setBbCache] = useState(() => bbLoadCache());
+            // Pair-scope config (cross-stem merges like wpns 721↔722); persisted
+            const [pairConfig, setPairConfig] = useState(() => loadPairConfig());
+            const handlePairConfig = useCallback((cfg) => { savePairConfig(cfg); setPairConfig(cfg); }, []);
             const [bbLoading, setBbLoading] = useState(null);   // classKey while fetching
             const [bbError, setBbError] = useState(null);
             const [showBigBoard, setShowBigBoard] = useState(false);
@@ -11347,6 +11651,7 @@
                                 onAdd={handleAdd}
                                 onAddPlaceholder={handleAddPlaceholder}
                                 onClose={() => setAddMenu(null)}
+                                pairConfig={pairConfig}
                             />
                         );
                     })()}
@@ -11360,6 +11665,8 @@
                             onLoadClass={handleLoadBbClass}
                             onReset={handleResetBb}
                             onClose={() => setShowBigBoard(false)}
+                            pairConfig={pairConfig}
+                            onPairConfig={handlePairConfig}
                         />
                     )}
 

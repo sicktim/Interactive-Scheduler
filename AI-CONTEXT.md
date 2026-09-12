@@ -309,6 +309,30 @@ Data loads are explicit (30–60 s per class), cached locally, and always labele
 **"as of <fetch time>"** — schedulers must know how stale the board is. A header
 "Big Board" button manages load/refresh/reset per class.
 
+### Paired events (v4.8.0 — derived from event-code structure, validated on the live board)
+Event codes decompose as `SERIES NNNNX`: series (`SY`), stem = series + digits minus
+the last (`SY 751`), suffix = venue (`F` flight, `C` control room, `S` sim). Three
+rules, all computed client-side from the cached `byCode` (no board or GAS changes):
+- **Package**: `nF` or `nS` with `(n+1)C` in the same series = *scheduled
+  simultaneously* (one partner flies/sims, the other mans the control room).
+  Rule runs on code NUMBERS, never row order — High AOA rows sit out of order on
+  the board. Validated pairs: 7212F+7213C, 7222F+7223C, 7511F+7512C, 9244S+9245C,
+  9246F+9247C, 9511F+9512C. `S→F` consecutive (7502S/7503F) is NOT a package.
+- **Scope**: same stem = one pair-color namespace. A color's members union across
+  the scope's rows; the row a member is colored on is their *venue* (7511F cell =
+  they fly, 7512C cell = they man the CR).
+- **Pool**: ≥2 same-suffix codes in one stem (PF 8240F/41F/42F, FQ 6310F/11F) =
+  interchangeable rides; color teams span the set and pairs may cross rides.
+- **Cross-stem exception**: wpns delivery — the 722x selective route shares pairs
+  with the 7211S sim. Codes can't express it, so it ships as a default merge
+  (`SY 721`+`SY 722`) in `tps-pair-config`; the Big Board modal's Pair Groups
+  panel lets schedulers merge/unmerge stems for future oddballs.
+- Parser tolerates board typos like `FQ 6311Ff` (first suffix letter wins).
+- UX: the [+] popup shows a package banner ("Scheduled together with SY 7512C…"
+  + whether the partner event is on that day's working schedule), and pair boxes
+  include cross-venue partners as non-clickable annotated chips (`→ 7512C`,
+  busy `!` / complete ✓) — they're added via their own event's [+].
+
 ## 7. Replicating in another system (LMS guidance)
 
 - **Minimal data contract** to drive a rainbow UI without this app's parsers:
