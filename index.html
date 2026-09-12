@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
+<!-- Interactive Scheduler v4.6.6 — Fix: conflict tooltip clipped at screen edges (self-clamping portal); conflict flash contrast on orange chips (amber↔dark-red pulse + dark ring); Conflict Summary category filter pills -->
+<!-- v4.6.5 — QA sweep fixes: refresh-failure data-loss guard, FOA/AUTH false-busy, soft-flag migration/persistence, timeline today, badge [soft] labels -->
 <!-- v4.6.4 — Fix: conflicts invisible until day click (const-hoist today bug); local schedule overlays Big Board status -->
 <!-- v4.6.3 — Big Board fetch hardening (retry + readable error on Google timeout pages) -->
 <!-- v4.6.2 — Soft conflicts flag only on the soft event (hover reveals elsewhere) -->
@@ -505,16 +506,19 @@
         }
         .chip-remove:hover { opacity: 1; color: #ef4444; }
 
+        /* Pulses between light amber and dark red so at least one phase contrasts
+           with any chip color (amber alone vanished on orange FTC-B/STC-B chips).
+           The 1px dark box-shadow ring separates the outline from the chip fill. */
         .chip-conflict {
-            outline: 2px solid #fbbf24;
+            outline: 2px solid #fde68a;
             outline-offset: -1px;
-            box-shadow: 0 0 6px rgba(251,191,36,0.5);
-            animation: conflict-pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 8px rgba(251,191,36,0.6);
+            animation: conflict-pulse 1.6s ease-in-out infinite;
         }
 
         @keyframes conflict-pulse {
-            0%, 100% { outline-color: rgba(251,191,36,0.9); box-shadow: 0 0 6px rgba(251,191,36,0.5); }
-            50% { outline-color: rgba(251,191,36,0.4); box-shadow: 0 0 3px rgba(251,191,36,0.2); }
+            0%, 100% { outline-color: #fde68a; box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 8px rgba(251,191,36,0.7); }
+            50% { outline-color: #991b1b; box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 4px rgba(153,27,27,0.4); }
         }
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
@@ -5410,7 +5414,7 @@
 
         // ─── CONFLICT SUMMARY MODAL ───
 
-        const ConflictSummaryModal = ({ conflicts, workingEvents, onClose }) => {
+        const ConflictSummaryModal = ({ conflicts, workingEvents, roster, onClose }) => {
             const byDate = React.useMemo(() => {
                 const map = new Map(); // date -> [{event, personConflicts: [{person, alsoOn}]}]
                 conflicts.forEach((personMap, eventId) => {
@@ -5440,6 +5444,48 @@
                 });
                 return new Map([...map.entries()].sort((a, b) => a[0].localeCompare(b[0])));
             }, [conflicts, workingEvents]);
+
+            // Category filter (mirrors the picker's roster categories).
+            // Empty set = show all. Auto-close still keys off the UNfiltered byDate
+            // so filtering everything out doesn't slam the modal shut.
+            const [catFilter, setCatFilter] = React.useState(new Set());
+
+            const personCat = React.useMemo(() => {
+                const m = new Map();
+                Object.keys(roster || {}).forEach(cat => {
+                    (roster[cat] || []).forEach(n => { const k = n.trim(); if (!m.has(k)) m.set(k, cat); });
+                });
+                return m;
+            }, [roster]);
+
+            const catsPresent = React.useMemo(() => {
+                const present = new Set();
+                byDate.forEach(events => events.forEach(({ personConflicts }) =>
+                    personConflicts.forEach(({ person }) => present.add(personCat.get(person.trim()) || 'Other'))));
+                const ordered = Object.keys(CATEGORY_COLORS).filter(c => present.has(c));
+                present.forEach(c => { if (!ordered.includes(c)) ordered.push(c); });
+                return ordered;
+            }, [byDate, personCat]);
+
+            const filteredByDate = React.useMemo(() => {
+                if (catFilter.size === 0) return byDate;
+                const out = new Map();
+                byDate.forEach((events, date) => {
+                    const kept = events.map(({ event, personConflicts }) => ({
+                        event,
+                        personConflicts: personConflicts.filter(({ person }) =>
+                            catFilter.has(personCat.get(person.trim()) || 'Other')),
+                    })).filter(e => e.personConflicts.length > 0);
+                    if (kept.length > 0) out.set(date, kept);
+                });
+                return out;
+            }, [byDate, catFilter, personCat]);
+
+            const toggleCat = (cat) => setCatFilter(prev => {
+                const next = new Set(prev);
+                next.has(cat) ? next.delete(cat) : next.add(cat);
+                return next;
+            });
 
             React.useEffect(() => {
                 if (byDate.size === 0) onClose();
@@ -5472,10 +5518,43 @@
                                     style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)',
                                              cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '2px 4px' }}>&#x2715;</button>
                         </div>
+                        {/* Category filter pills (same categories as the picker below) */}
+                        {catsPresent.length > 1 && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
+                                          padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
+                                <button onClick={() => setCatFilter(new Set())}
+                                        style={{ fontSize: '0.55rem', fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                                                 cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                 border: `1px solid ${catFilter.size === 0 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
+                                                 background: catFilter.size === 0 ? 'rgba(255,255,255,0.12)' : 'transparent',
+                                                 color: catFilter.size === 0 ? '#e2e8f0' : '#64748b' }}>
+                                    All
+                                </button>
+                                {catsPresent.map(cat => {
+                                    const cc = CATEGORY_COLORS[cat] || DEFAULT_CHIP;
+                                    const sel = catFilter.has(cat);
+                                    return (
+                                        <button key={cat} onClick={() => toggleCat(cat)}
+                                                style={{ fontSize: '0.55rem', fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                                                         cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                         border: `1px solid ${sel ? cc.bg : 'rgba(255,255,255,0.15)'}`,
+                                                         background: sel ? cc.bg + '30' : 'transparent',
+                                                         color: sel ? cc.text : '#64748b' }}>
+                                            {cat}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                         {/* Day columns */}
                         <div style={{ display: 'flex', gap: 0, overflowX: 'auto', overflowY: 'auto',
                                       padding: '12px 14px', flex: 1, alignItems: 'flex-start' }}>
-                            {[...byDate.entries()].map(([date, events]) => {
+                            {filteredByDate.size === 0 && (
+                                <div style={{ fontSize: '0.65rem', color: '#64748b', padding: '8px 2px' }}>
+                                    No conflicts in the selected categories.
+                                </div>
+                            )}
+                            {[...filteredByDate.entries()].map(([date, events]) => {
                                 const fd = fmtDate(date);
                                 return (
                                     <div key={date} style={{ minWidth: 230, maxWidth: 270, flexShrink: 0,
@@ -5533,6 +5612,35 @@
                             })}
                         </div>
                     </div>
+                </div>
+            );
+        };
+
+        // ─── CONFLICT TOOLTIP PORTAL ───
+        // Self-clamping: renders hidden, measures its real size in useLayoutEffect
+        // (before paint — no flicker), then positions centered on the anchor,
+        // flipped above when it would clip the bottom edge, and clamped 8px inside
+        // every viewport edge. Fixes tooltips vanishing off the lower-left corner
+        // of the screen when hovering conflicts in the picker.
+        const ConflictTooltipPortal = ({ tooltip }) => {
+            const ref = React.useRef(null);
+            const [pos, setPos] = React.useState(null);
+            React.useLayoutEffect(() => {
+                const el = ref.current;
+                if (!el) return;
+                const M = 8; // min gap from viewport edges
+                const w = el.offsetWidth, h = el.offsetHeight;
+                let left = tooltip.x - w / 2;
+                left = Math.max(M, Math.min(left, window.innerWidth - w - M));
+                let top = tooltip.bottom + 6;                                  // prefer below anchor
+                if (top + h > window.innerHeight - M) top = tooltip.top - 6 - h; // flip above
+                top = Math.max(M, Math.min(top, window.innerHeight - h - M));
+                setPos({ left, top });
+            }, [tooltip]);
+            return (
+                <div ref={ref} className="conflict-tooltip-portal"
+                     style={pos ? { left: pos.left, top: pos.top } : { left: 0, top: 0, visibility: 'hidden' }}>
+                    {tooltip.text}
                 </div>
             );
         };
@@ -10308,10 +10416,11 @@
             const initialized = useRef(false);
             const restoredFromCache = useRef(false);
 
+            // Pass the raw anchor rect; ConflictTooltipPortal measures its own rendered
+            // size and clamps to the viewport (the old fixed 80px "space below" guess
+            // clipped tall tooltips at the bottom/left screen edges in the picker).
             const showTooltip = useCallback((text, rect) => {
-                const spaceBelow = window.innerHeight - rect.bottom;
-                const showAbove = spaceBelow < 80;
-                setTooltip({ text, x: rect.left + rect.width / 2, y: showAbove ? rect.top - 6 : rect.bottom + 6, above: showAbove });
+                setTooltip({ text, x: rect.left + rect.width / 2, top: rect.top, bottom: rect.bottom });
             }, []);
             const hideTooltip = useCallback(() => setTooltip(null), []);
 
@@ -11126,18 +11235,12 @@
                         <ConflictSummaryModal
                             conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts}
                             workingEvents={workingEvents}
+                            roster={roster}
                             onClose={() => setShowConflictSummary(false)}
                         />
                     )}
 
-                    {tooltip && (
-                        <div className="conflict-tooltip-portal" style={{
-                            left: tooltip.x, top: tooltip.y,
-                            transform: tooltip.above ? 'translate(-50%, -100%)' : 'translateX(-50%)',
-                        }}>
-                            {tooltip.text}
-                        </div>
-                    )}
+                    {tooltip && <ConflictTooltipPortal tooltip={tooltip} />}
 
                     {/* Add-person popup ([+] tabbed menu) */}
                     {addMenu && (() => {
