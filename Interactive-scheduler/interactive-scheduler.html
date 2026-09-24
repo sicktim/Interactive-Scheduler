@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
+<!-- Interactive Scheduler v4.9.0 — Double-booked detection: whiteboard bookings for events the Big Board shows complete/booked elsewhere (pool-aware, same-date board entries excluded); letters-blink chip flash distinct from conflict pulse; DOUBLE BOOKED pill + rows in Conflict Summary; header counter -->
+<!-- v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
 <!-- v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
 <!-- v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
 <!-- v4.7.0 — Whiteboard default view; same-day view prefs (last view, whiteboard day, picker tabs) restore on refresh, reset next day; missing dates fall back to default -->
@@ -527,6 +528,17 @@
         }
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
+
+        /* Double-booked: the LETTERS blink (white core + red glow), fast cadence —
+           deliberately distinct from .chip-conflict's slow border pulse. Base
+           keyframe omitted so the off phase returns to the chip's own text color. */
+        .chip-doublebooked { animation: db-font-flash 0.8s ease-in-out infinite; }
+        @keyframes db-font-flash {
+            40%, 60% {
+                color: #ffffff;
+                text-shadow: 0 0 2px #000, 0 0 5px #ef4444, 0 0 9px #ef4444;
+            }
+        }
 
 
         /* Conflict badge on event card */
@@ -5169,6 +5181,93 @@
             return { scopeOf, scopes, packages, poolStems };
         };
 
+        // ── Double-booked detection ──
+        // A student on a whiteboard event whose Big Board requirement is already
+        // satisfied elsewhere: cell complete, or scheduled on a DIFFERENT date
+        // (a BB "scheduled" date equal to the whiteboard event's date is the same
+        // booking written on the board, not a double). Pool-aware: bookings only
+        // overflow once they exceed the student's remaining pending rides.
+        // Returns Map<eventId, Map<person, reason>>.
+        const bbDateMD = (s) => {
+            const m = String(s || '').match(/^(\d{1,2})[\/\-](\d{1,2})/);
+            return m ? `${Number(m[1])}/${Number(m[2])}` : null;
+        };
+        const computeDoubleBooked = (workingEvents, bbCache, bbRosterMatch, pairConfig) => {
+            const out = new Map();
+            if (!bbCache || Object.keys(bbCache).length === 0) return out;
+            const wbByCode = new Map(); // code -> [working events]
+            workingEvents.forEach(ev => {
+                if (ev.cancelled) return;
+                const c = bbCodeFromTitle(ev.eventName);
+                if (!c) return;
+                if (!wbByCode.has(c)) wbByCode.set(c, []);
+                wbByCode.get(c).push(ev);
+            });
+            if (wbByCode.size === 0) return out;
+            BB_CLASSES.forEach(def => {
+                const data = bbCache[def.key];
+                const match = bbRosterMatch && bbRosterMatch[def.key];
+                if (!data || !match) return;
+                const pi = bbBuildPairIndex(data, pairConfig);
+                const seen = new Set(); // pool sets handled once
+                wbByCode.forEach((evs, code) => {
+                    if (!data.byCode[code] || seen.has(code)) return;
+                    const pc = bbParseEventCode(code);
+                    let codes = [code];
+                    if (pc && pi.poolStems.has(pc.stem)) {
+                        const scope = pi.scopes.get(pi.scopeOf.get(code));
+                        if (scope) codes = scope.codes.filter(c2 => {
+                            const p2 = bbParseEventCode(c2);
+                            return p2 && p2.stem === pc.stem && p2.suffix === pc.suffix;
+                        });
+                    }
+                    codes.forEach(c2 => seen.add(c2));
+                    const bookings = [];
+                    codes.forEach(c2 => (wbByCode.get(c2) || []).forEach(ev => bookings.push(ev)));
+                    match.map.forEach((idx, ws) => {
+                        const mine = bookings
+                            .filter(ev => (ev.personnel || []).includes(ws))
+                            .sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+                        if (mine.length === 0) return;
+                        let pendingCap = 0;
+                        const schedMDs = [], doneDates = [];
+                        codes.forEach(c2 => {
+                            const st = (data.byCode[c2].status || {})[idx] || { c: 'pending' };
+                            if (st.c === 'notreq') return;
+                            if (st.c === 'complete') doneDates.push(st.d || '');
+                            else if (st.c === 'scheduled') schedMDs.push({ md: bbDateMD(st.d), raw: st.d || '?' });
+                            else pendingCap++;
+                        });
+                        // A booking whose date matches a BB scheduled cell IS that booking
+                        const unexplained = [];
+                        mine.forEach(ev => {
+                            const [, m, d] = (ev.date || '').split('-');
+                            const md = m ? `${Number(m)}/${Number(d)}` : null;
+                            const i = schedMDs.findIndex(s => s.md && s.md === md);
+                            if (i >= 0) schedMDs.splice(i, 1);
+                            else unexplained.push(ev);
+                        });
+                        const over = unexplained.slice(pendingCap); // earliest bookings fill real need first
+                        if (over.length === 0) return;
+                        const parts = [];
+                        if (doneDates.length > 0) parts.push(`complete${doneDates[0] ? ' ' + doneDates[0] : ''} on Big Board`);
+                        if (schedMDs.length > 0) parts.push(`already booked ${schedMDs.map(s => s.raw).join(', ')} on Big Board`);
+                        if (parts.length === 0) parts.push('more whiteboard bookings than rides needed');
+                        const reason = `DOUBLE BOOKED — ${codes.length > 1 ? codes.join('/') : code}: ${parts.join('; ')}`;
+                        over.forEach(ev => {
+                            if (!out.has(ev.id)) out.set(ev.id, new Map());
+                            out.get(ev.id).set(ws, reason);
+                        });
+                    });
+                });
+            });
+            return out;
+        };
+
+        // Context so deeply nested chips (timeline cards, whiteboard crew cells)
+        // can read double-booked state without threading a prop through 5 layers.
+        const DoubleBookedCtx = React.createContext(null);
+
         // Availability for a target event: Map<person, [{eventName, model, startTime, endTime}]>
         // of OTHER same-date, non-cancelled, time-overlapping events. People already on
         // the target event are excluded (they're visible in its crew already).
@@ -5611,7 +5710,7 @@
 
         // ─── CONFLICT SUMMARY MODAL ───
 
-        const ConflictSummaryModal = ({ conflicts, workingEvents, roster, onClose }) => {
+        const ConflictSummaryModal = ({ conflicts, workingEvents, roster, doubleBooked, onClose }) => {
             const byDate = React.useMemo(() => {
                 const map = new Map(); // date -> [{event, personConflicts: [{person, alsoOn}]}]
                 conflicts.forEach((personMap, eventId) => {
@@ -5630,6 +5729,23 @@
                     personConflicts.sort((a, b) => a.person.localeCompare(b.person));
                     map.get(date).push({ event, personConflicts });
                 });
+                // Merge double-booked flags (Big Board already has the requirement
+                // covered) — as extra person lines on existing event groups, or new
+                // groups for events with no time conflicts at all
+                (doubleBooked || new Map()).forEach((personMap, eventId) => {
+                    const event = workingEvents.find(e => e.id === eventId);
+                    if (!event) return;
+                    if (!map.has(event.date)) map.set(event.date, []);
+                    let grp = map.get(event.date).find(g => g.event.id === eventId);
+                    if (!grp) { grp = { event, personConflicts: [] }; map.get(event.date).push(grp); }
+                    personMap.forEach((reason, person) => {
+                        const short = reason.replace(/^DOUBLE BOOKED — /, '');
+                        const ex = grp.personConflicts.find(p => p.person === person);
+                        if (ex) { ex.db = true; ex.dbText = short; }
+                        else grp.personConflicts.push({ person, alsoOn: short, db: true });
+                    });
+                    grp.personConflicts.sort((a, b) => a.person.localeCompare(b.person));
+                });
                 // Sort events within each day by section priority then start time
                 map.forEach(events => {
                     events.sort((a, b) => {
@@ -5640,7 +5756,7 @@
                     });
                 });
                 return new Map([...map.entries()].sort((a, b) => a[0].localeCompare(b[0])));
-            }, [conflicts, workingEvents]);
+            }, [conflicts, workingEvents, doubleBooked]);
 
             // Category filter (mirrors the picker's roster categories).
             // Empty set = show all. Auto-close still keys off the UNfiltered byDate
@@ -5664,19 +5780,29 @@
                 return ordered;
             }, [byDate, personCat]);
 
+            // DOUBLE BOOKED pill: filter to only Big-Board double-bookings
+            const [dbOnly, setDbOnly] = React.useState(false);
+            const hasDb = React.useMemo(() => {
+                let any = false;
+                byDate.forEach(events => events.forEach(({ personConflicts }) =>
+                    personConflicts.forEach(p => { if (p.db) any = true; })));
+                return any;
+            }, [byDate]);
+
             const filteredByDate = React.useMemo(() => {
-                if (catFilter.size === 0) return byDate;
+                if (catFilter.size === 0 && !dbOnly) return byDate;
                 const out = new Map();
                 byDate.forEach((events, date) => {
                     const kept = events.map(({ event, personConflicts }) => ({
                         event,
-                        personConflicts: personConflicts.filter(({ person }) =>
-                            catFilter.has(personCat.get(person.trim()) || 'Other')),
+                        personConflicts: personConflicts.filter(p =>
+                            (catFilter.size === 0 || catFilter.has(personCat.get(p.person.trim()) || 'Other')) &&
+                            (!dbOnly || p.db)),
                     })).filter(e => e.personConflicts.length > 0);
                     if (kept.length > 0) out.set(date, kept);
                 });
                 return out;
-            }, [byDate, catFilter, personCat]);
+            }, [byDate, catFilter, personCat, dbOnly]);
 
             const toggleCat = (cat) => setCatFilter(prev => {
                 const next = new Set(prev);
@@ -5716,15 +5842,15 @@
                                              cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '2px 4px' }}>&#x2715;</button>
                         </div>
                         {/* Category filter pills (same categories as the picker below) */}
-                        {catsPresent.length > 1 && (
+                        {(catsPresent.length > 1 || hasDb) && (
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
                                           padding: '8px 14px', borderBottom: '1px solid rgba(255,255,255,0.07)', flexShrink: 0 }}>
-                                <button onClick={() => setCatFilter(new Set())}
+                                <button onClick={() => { setCatFilter(new Set()); setDbOnly(false); }}
                                         style={{ fontSize: '0.55rem', fontWeight: 700, padding: '2px 8px', borderRadius: 10,
                                                  cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
-                                                 border: `1px solid ${catFilter.size === 0 ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
-                                                 background: catFilter.size === 0 ? 'rgba(255,255,255,0.12)' : 'transparent',
-                                                 color: catFilter.size === 0 ? '#e2e8f0' : '#64748b' }}>
+                                                 border: `1px solid ${(catFilter.size === 0 && !dbOnly) ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)'}`,
+                                                 background: (catFilter.size === 0 && !dbOnly) ? 'rgba(255,255,255,0.12)' : 'transparent',
+                                                 color: (catFilter.size === 0 && !dbOnly) ? '#e2e8f0' : '#64748b' }}>
                                     All
                                 </button>
                                 {catsPresent.map(cat => {
@@ -5741,6 +5867,17 @@
                                         </button>
                                     );
                                 })}
+                                {hasDb && (
+                                    <button onClick={() => setDbOnly(v => !v)}
+                                            title="Only show students whose Big Board requirement is already complete or booked elsewhere"
+                                            style={{ fontSize: '0.55rem', fontWeight: 700, padding: '2px 8px', borderRadius: 10,
+                                                     cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '0.05em',
+                                                     border: `1px solid ${dbOnly ? '#fb923c' : 'rgba(251,146,60,0.4)'}`,
+                                                     background: dbOnly ? 'rgba(251,146,60,0.25)' : 'transparent',
+                                                     color: dbOnly ? '#fdba74' : '#b45309' }}>
+                                        &#x29C9; Double Booked
+                                    </button>
+                                )}
                             </div>
                         )}
                         {/* Day columns */}
@@ -5791,14 +5928,16 @@
                                                             {timeStr}
                                                         </div>
                                                     )}
-                                                    {personConflicts.map(({ person, alsoOn }) => (
+                                                    {personConflicts.map(({ person, alsoOn, db, dbText }) => (
                                                         <div key={person}
                                                              style={{ fontSize: '0.6rem', paddingLeft: 6,
                                                                       lineHeight: 1.6, color: '#cbd5e1' }}>
-                                                            <span style={{ color: '#f87171', marginRight: 3 }}>&#9888;</span>
-                                                            <span style={{ color: '#fbbf24', fontWeight: 600 }}>{person}</span>
+                                                            <span style={{ color: db ? '#fb923c' : '#f87171', marginRight: 3 }}>{db ? '⧉' : '⚠'}</span>
+                                                            <span style={{ color: db ? '#fdba74' : '#fbbf24', fontWeight: 600 }}>{person}</span>
+                                                            {db && <span style={{ color: '#fb923c', fontWeight: 700, fontSize: '0.5rem', marginLeft: 3,
+                                                                                  border: '1px solid rgba(251,146,60,0.5)', borderRadius: 6, padding: '0 4px' }}>DOUBLE BOOKED</span>}
                                                             <span style={{ color: '#64748b' }}> &#x2192; </span>
-                                                            <span style={{ color: '#94a3b8' }}>{alsoOn}</span>
+                                                            <span style={{ color: '#94a3b8' }}>{alsoOn}{dbText ? ` · ${dbText}` : ''}</span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -5864,23 +6003,30 @@
             // flag/! — the hover tooltip still reveals them with [soft] labels.
             const showFlag = hasCon && !conflictIsSoftOnly;
 
+            // Double-booked (Big Board already has this requirement covered):
+            // letters blink — distinct from the conflict border pulse
+            const dbMap = React.useContext(DoubleBookedCtx);
+            const dbReason = (!inPicker && dbMap && eventId && dbMap.get(eventId)) ? dbMap.get(eventId).get(name) : null;
+
             const handleMouseEnter = (e) => {
-                if ((hasCon || isUnavailable) && onShowTooltip) {
+                if ((hasCon || isUnavailable || dbReason) && onShowTooltip) {
                     const rect = e.currentTarget.getBoundingClientRect();
-                    onShowTooltip(isUnavailable ? conflictText : `Also on:\n${conflictText}`, rect);
+                    const conPart = hasCon ? (isUnavailable ? conflictText : `Also on:\n${conflictText}`) : '';
+                    const text = dbReason ? (conPart ? `${dbReason}\n\n${conPart}` : dbReason) : conPart;
+                    onShowTooltip(text, rect);
                 }
             };
 
             return (
                 <span
-                    className={`chip ${showFlag && !isUnavailable ? 'chip-conflict' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
+                    className={`chip ${showFlag && !isUnavailable ? 'chip-conflict' : ''} ${dbReason ? 'chip-doublebooked' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
                     style={{ background: colors.bg, color: colors.text }}
                     draggable
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={onHideTooltip}
-                    title={hasCon ? undefined : name}
+                    title={(hasCon || dbReason) ? undefined : name}
                 >
                     {name}
                     {showFlag && <span className="conflict-icon">!</span>}
@@ -8137,13 +8283,15 @@
 
             const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
             const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
+            const dbMapCell = React.useContext(DoubleBookedCtx);
+            const dbReasonCell = (person && dbMapCell && dbMapCell.get(eventId)) ? dbMapCell.get(eventId).get(person) : null;
 
             return (
                 <td className={cellClass} style={style} onClick={handleClick}
                     onDragOver={handleDragOver} onDragLeave={handleDragLeave} onDrop={handleDrop}>
                     {person ? (
                         <span
-                            className={hasCon ? 'chip-conflict' : undefined}
+                            className={[hasCon ? 'chip-conflict' : '', dbReasonCell ? 'chip-doublebooked' : ''].filter(Boolean).join(' ') || undefined}
                             draggable
                             style={{ cursor: 'grab', display: 'inline-flex', alignItems: 'center', gap: '2px' }}
                             onDragStart={(e) => {
@@ -8160,8 +8308,9 @@
                                 e.currentTarget.style.opacity = '1';
                             }}
                             onMouseEnter={(e) => {
-                                if (conflictText && onShowTooltip) {
-                                    onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                if ((conflictText || dbReasonCell) && onShowTooltip) {
+                                    const conPart = conflictText ? `Also on:\n${conflictText}` : '';
+                                    onShowTooltip(dbReasonCell ? (conPart ? `${dbReasonCell}\n\n${conPart}` : dbReasonCell) : conPart, e.currentTarget.getBoundingClientRect());
                                 }
                             }}
                             onMouseLeave={onHideTooltip}>
@@ -8403,6 +8552,7 @@
 
             const [dragOver, setDragOver] = useState(false);
             const [addMenuOpen, setAddMenuOpen] = useState(false);
+            const dbMapGrp = React.useContext(DoubleBookedCtx);
             // pendingFill: null | { person: string, matches: Array<{id,role,_idx}> }
             // Shown as inline prompt on a newly-dropped crew chip when unfilled matching placeholders exist.
             const [pendingFill, setPendingFill] = useState(null);
@@ -8514,9 +8664,10 @@
                             const isPending = pendingFill && pendingFill.person === person;
                             const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
                             const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
+                            const dbReasonGrp = (person && dbMapGrp && dbMapGrp.get(eventId)) ? dbMapGrp.get(eventId).get(person) : null;
                             return (
                                 <span key={i} style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-                                    <span className={`wb-crew-chip${hasCon ? ' chip-conflict' : ''}`} style={style}
+                                    <span className={`wb-crew-chip${hasCon ? ' chip-conflict' : ''}${dbReasonGrp ? ' chip-doublebooked' : ''}`} style={style}
                                         draggable
                                         onDragStart={(e) => {
                                             e.dataTransfer.setData('text/plain', JSON.stringify({
@@ -8532,8 +8683,9 @@
                                             e.currentTarget.style.opacity = '1';
                                         }}
                                         onMouseEnter={(e) => {
-                                            if (conflictText && onShowTooltip) {
-                                                onShowTooltip(`Also on:\n${conflictText}`, e.currentTarget.getBoundingClientRect());
+                                            if ((conflictText || dbReasonGrp) && onShowTooltip) {
+                                                const conPart = conflictText ? `Also on:\n${conflictText}` : '';
+                                                onShowTooltip(dbReasonGrp ? (conPart ? `${dbReasonGrp}\n\n${conPart}` : dbReasonGrp) : conPart, e.currentTarget.getBoundingClientRect());
                                             }
                                         }}
                                         onMouseLeave={onHideTooltip}>
@@ -11152,6 +11304,17 @@
             // Conflict detection on ALL events
             const conflicts = useMemo(() => detectConflicts(workingEvents), [workingEvents]);
 
+            // Double-booked: whiteboard bookings for events the Big Board already
+            // shows complete/booked elsewhere (pool-aware). Feeds the chip font
+            // flash (via DoubleBookedCtx) and the Conflict Summary.
+            const doubleBooked = useMemo(
+                () => computeDoubleBooked(workingEvents, bbCache, bbRosterMatch, pairConfig),
+                [workingEvents, bbCache, bbRosterMatch, pairConfig]);
+            const dbCount = useMemo(() => {
+                let n = 0; doubleBooked.forEach(pm => { n += pm.size; });
+                return n;
+            }, [doubleBooked]);
+
             // Day-scoped conflict map for whiteboard view — filters to only conflicts where the
             // conflicting event shares the currently active whiteboard day. Cross-day conflicts
             // are noise in whiteboard mode (which shows one day at a time).
@@ -11527,6 +11690,7 @@
             }, [conflicts, wbDayConflicts, viewMode]);
 
             return (
+                <DoubleBookedCtx.Provider value={doubleBooked}>
                 <div className={`app-layout${summaryCollapsed ? ' summary-collapsed' : ''}`}>
                     <div className="app-header">
                         <div className="flex items-center gap-4">
@@ -11546,6 +11710,17 @@
                                             title="View conflict summary"
                                         >
                                             &#9888; {conflictCount} conflict{conflictCount > 1 ? 's' : ''}{viewMode === 'whiteboard' ? ' (today)' : ''}
+                                        </button>
+                                    )}
+                                    {dbCount > 0 && (
+                                        <button
+                                            onClick={() => setShowConflictSummary(true)}
+                                            style={{ background: 'none', border: 'none', cursor: 'pointer',
+                                                     fontFamily: 'inherit', fontSize: 'inherit', padding: 0, color: '#fb923c' }}
+                                            className="ml-2"
+                                            title="Students booked on the whiteboard for events the Big Board already shows complete or booked — view in conflict summary"
+                                        >
+                                            &#x29C9; {dbCount} double-booked
                                         </button>
                                     )}
                                     <a href="./AI-CONTEXT.md" target="_blank" rel="noopener" className="ml-2"
@@ -11736,6 +11911,7 @@
                             conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts}
                             workingEvents={workingEvents}
                             roster={roster}
+                            doubleBooked={doubleBooked}
                             onClose={() => setShowConflictSummary(false)}
                         />
                     )}
@@ -11806,6 +11982,7 @@
                         />
                     )}
                 </div>
+                </DoubleBookedCtx.Provider>
             );
         };
 

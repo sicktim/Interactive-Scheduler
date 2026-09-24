@@ -333,6 +333,21 @@ rules, all computed client-side from the cached `byCode` (no board or GAS change
   include cross-venue partners as non-clickable annotated chips (`→ 7512C`,
   busy `!` / complete ✓) — they're added via their own event's [+].
 
+### Double-booked detection (v4.9.0)
+`computeDoubleBooked(workingEvents, bbCache, bbRosterMatch, pairConfig)` flags a
+student on a whiteboard event whose Big Board requirement is already satisfied:
+cell complete, or scheduled on a DIFFERENT date (a BB "scheduled" date equal to
+the whiteboard event's own date is that booking written on the board — never
+flagged). Pool-aware: a student's bookings across an interchangeable ride set
+only overflow once they exceed remaining pending rides (earliest bookings fill
+real need; the LATER ones get flagged). Surfaces: chip letters blink white with
+red glow (`.chip-doublebooked`, 0.8 s — deliberately distinct from
+`.chip-conflict`'s border pulse), hover tooltip carries the reason, a `⧉ N
+double-booked` header counter opens the Conflict Summary, and the summary gets a
+DOUBLE BOOKED filter pill plus ⧉-marked rows (merged into existing conflict rows
+when a student has both). Distributed to nested chips via `DoubleBookedCtx`
+(React context), not prop drilling.
+
 ## 7. Replicating in another system (LMS guidance)
 
 - **Minimal data contract** to drive a rainbow UI without this app's parsers:
