@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.9.0 — Double-booked detection: whiteboard bookings for events the Big Board shows complete/booked elsewhere (pool-aware, same-date board entries excluded); letters-blink chip flash distinct from conflict pulse; DOUBLE BOOKED pill + rows in Conflict Summary; header counter -->
+<!-- Interactive Scheduler v4.9.1 — Double-booked flash: hard font blink chip-color↔red (50/50, no fade) via --dbc custom property; picker chips at the bottom flash too (day-scoped in whiteboard mode) -->
+<!-- v4.9.0 — Double-booked detection: whiteboard bookings for events the Big Board shows complete/booked elsewhere (pool-aware, same-date board entries excluded); letters-blink chip flash distinct from conflict pulse; DOUBLE BOOKED pill + rows in Conflict Summary; header counter -->
 <!-- v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
 <!-- v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
 <!-- v4.8.0 — Paired events: code-derived scopes/packages/pools, scope-wide pair boxes with venue chips, package banner in [+] popup, Pair Groups panel (merge/unmerge) in Big Board modal -->
@@ -529,15 +530,15 @@
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
 
-        /* Double-booked: the LETTERS blink (white core + red glow), fast cadence —
-           deliberately distinct from .chip-conflict's slow border pulse. Base
-           keyframe omitted so the off phase returns to the chip's own text color. */
-        .chip-doublebooked { animation: db-font-flash 0.8s ease-in-out infinite; }
+        /* Double-booked: the LETTERS hard-blink between the chip's own text color
+           and pure red (50/50 duty, no fade) — deliberately distinct from
+           .chip-conflict's slow border pulse. --dbc carries the chip's inline
+           text color into the keyframes; the thin white halo keeps the red
+           phase readable on red/orange chips. */
+        .chip-doublebooked { animation: db-font-flash 0.8s linear infinite; }
         @keyframes db-font-flash {
-            40%, 60% {
-                color: #ffffff;
-                text-shadow: 0 0 2px #000, 0 0 5px #ef4444, 0 0 9px #ef4444;
-            }
+            0%, 49.9% { color: var(--dbc, currentColor); text-shadow: none; }
+            50%, 100% { color: #ff1a1a; text-shadow: 0 0 2px rgba(255,255,255,0.85); }
         }
 
 
@@ -5983,7 +5984,7 @@
 
         // ─── PERSONNEL CHIP ───
 
-        const PersonnelChip = ({ name, roster, conflictText, conflictIsSoftOnly, onRemove, eventId, inPicker, isBusy, isUnavailable, colorOverride, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip }) => {
+        const PersonnelChip = ({ name, roster, conflictText, conflictIsSoftOnly, onRemove, eventId, inPicker, isBusy, isUnavailable, colorOverride, onDragStart: onDS, onDragEnd: onDE, onShowTooltip, onHideTooltip, dbPickerReason }) => {
             const colors = colorOverride || chipColor(name, roster);
 
             const handleDragStart = (e) => {
@@ -6006,7 +6007,11 @@
             // Double-booked (Big Board already has this requirement covered):
             // letters blink — distinct from the conflict border pulse
             const dbMap = React.useContext(DoubleBookedCtx);
-            const dbReason = (!inPicker && dbMap && eventId && dbMap.get(eventId)) ? dbMap.get(eventId).get(name) : null;
+            // Event chips key off their event; picker chips get a person-level,
+            // day-scoped reason passed in by PersonnelPicker.
+            const dbReason = inPicker
+                ? (dbPickerReason || null)
+                : ((dbMap && eventId && dbMap.get(eventId)) ? dbMap.get(eventId).get(name) : null);
 
             const handleMouseEnter = (e) => {
                 if ((hasCon || isUnavailable || dbReason) && onShowTooltip) {
@@ -6020,7 +6025,7 @@
             return (
                 <span
                     className={`chip ${showFlag && !isUnavailable ? 'chip-conflict' : ''} ${dbReason ? 'chip-doublebooked' : ''} ${inPicker ? 'picker-chip' : ''} ${isBusy ? 'busy' : ''} ${isUnavailable ? 'unavailable' : ''}`}
-                    style={{ background: colors.bg, color: colors.text }}
+                    style={{ background: colors.bg, color: colors.text, '--dbc': colors.text }}
                     draggable
                     onDragStart={handleDragStart}
                     onDragEnd={handleDragEnd}
@@ -6575,7 +6580,7 @@
 
         // ─── PERSONNEL PICKER ───
 
-        const PersonnelPicker = ({ roster, allEvents, conflicts, onDS, onDE, onShowTooltip, onHideTooltip, focusedAvailability }) => {
+        const PersonnelPicker = ({ roster, allEvents, conflicts, onDS, onDE, onShowTooltip, onHideTooltip, focusedAvailability, dbPersons }) => {
             // Tab selection restores from same-day view prefs; stored categories
             // no longer in the roster are dropped (empty result falls back to All)
             const [activeTabs, setActiveTabs] = useState(() => {
@@ -6712,6 +6717,7 @@
                                     name={p.name}
                                     roster={roster}
                                     conflictText={isUnavailable ? unavailText : (personConflictSummary.get(p.name) || null)}
+                                    dbPickerReason={dbPersons && dbPersons.has(p.name) ? dbPersons.get(p.name).join('\n') : null}
                                     inPicker
                                     isBusy={busySet.has(p.name)}
                                     isUnavailable={isUnavailable}
@@ -8279,7 +8285,7 @@
                 extraClass || '',
             ].filter(Boolean).join(' ');
 
-            const style = person && color ? { background: color.bg, color: color.text } : {};
+            const style = person && color ? { background: color.bg, color: color.text, '--dbc': color.text } : {};
 
             const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
             const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
@@ -8660,7 +8666,7 @@
                         {/* Real crew chips — filter out anyone already shown as a filled placeholder */}
                         {crew.filter(person => !filledBySet.has(person)).map((person, i) => {
                             const color = person ? chipColor(person, roster) : null;
-                            const style = color ? { background: color.bg, color: color.text } : {};
+                            const style = color ? { background: color.bg, color: color.text, '--dbc': color.text } : {};
                             const isPending = pendingFill && pendingFill.person === person;
                             const hasCon = person && conflicts ? hasConflict(eventId, person, conflicts) : false; // hard-conflict flag
                             const conflictText = person && conflicts ? getConflictText(eventId, person, conflicts) : null; // any entries, [soft] labeled
@@ -11315,6 +11321,26 @@
                 return n;
             }, [doubleBooked]);
 
+            // Person-level double-booked reasons for the bottom picker — day-scoped
+            // in whiteboard mode (like the picker's conflict dots), all days in
+            // timeline mode.
+            const dbPickerPersons = useMemo(() => {
+                const m = new Map(); // person -> [reasons]
+                if (doubleBooked.size === 0) return m;
+                const day = viewMode === 'whiteboard'
+                    ? (wbActiveDay || (dates && (dates.includes(today) ? today : dates[0])))
+                    : null;
+                doubleBooked.forEach((pm, evId) => {
+                    const ev = workingEvents.find(e => e.id === evId);
+                    if (!ev || (day && ev.date !== day)) return;
+                    pm.forEach((reason, person) => {
+                        if (!m.has(person)) m.set(person, []);
+                        if (!m.get(person).includes(reason)) m.get(person).push(reason);
+                    });
+                });
+                return m;
+            }, [doubleBooked, workingEvents, viewMode, wbActiveDay, dates, today]);
+
             // Day-scoped conflict map for whiteboard view — filters to only conflicts where the
             // conflicting event shares the currently active whiteboard day. Cross-day conflicts
             // are noise in whiteboard mode (which shows one day at a time).
@@ -11816,7 +11842,7 @@
                     </div>
 
                     <div style={{ gridColumn: 1, gridRow: 3, display: (viewMode !== 'timeline' && viewMode !== 'whiteboard') ? 'none' : undefined }}>
-                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} />
+                        <PersonnelPicker roster={roster} allEvents={workingEvents} conflicts={viewMode === 'whiteboard' ? wbDayConflicts : conflicts} onShowTooltip={showTooltip} onHideTooltip={hideTooltip} focusedAvailability={focusedAvailability} dbPersons={dbPickerPersons} />
                     </div>
 
                     {/* Rainbow: always mounted for state preservation but hidden when not active */}
