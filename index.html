@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.9.2 — Fix: 26B FTC board meta columns sit one left of 26A's; per-row layout detection picks whichever column holds a real event code (restores ALL 26B code matching); bbNormalizeCode canonicalizes FQ6221F/FQ-6221F -->
+<!-- Interactive Scheduler v4.9.3 — Grey semantics: dated dark-grey = complete (26B convention), blank = not required; grey never a pair color (near-grey guard). Pools require matching digit-stripped titles — FQ 6221F/6222F no longer grouped; PF 824x, FQ 631x, CF ride series still pool -->
+<!-- v4.9.2 — Fix: 26B FTC board meta columns sit one left of 26A's; per-row layout detection picks whichever column holds a real event code (restores ALL 26B code matching); bbNormalizeCode canonicalizes FQ6221F/FQ-6221F -->
 <!-- v4.9.1 — Double-booked flash: hard font blink chip-color↔red (50/50, no fade) via --dbc custom property; picker chips at the bottom flash too (day-scoped in whiteboard mode) -->
 <!-- v4.9.0 — Double-booked detection: whiteboard bookings for events the Big Board shows complete/booked elsewhere (pool-aware, same-date board entries excluded); letters-blink chip flash distinct from conflict pulse; DOUBLE BOOKED pill + rows in Conflict Summary; header counter -->
 <!-- v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
@@ -4989,7 +4990,16 @@
         const bbClassifyCell = (cell, classMeta, now) => {
             const result = { completion: 'pending', flag: null, dateText: null };
             if (!cell) return result;
-            if (cell.rgbFamily === 'darkGrey') { result.completion = 'notreq'; return result; }
+            if (cell.rgbFamily === 'darkGrey') {
+                // Shade conventions differ by maintainer (26B marks complete with a
+                // DARKER grey than 26A). Content decides, not shade: any grey cell
+                // carrying a date/text is complete; a blank dark-grey is not required.
+                if (cell.value) {
+                    result.completion = 'complete';
+                    result.dateText = String(cell.value);
+                } else result.completion = 'notreq';
+                return result;
+            }
             if (cell.rgbFamily === 'lightGrey') {
                 result.completion = 'complete';
                 if (cell.value) result.dateText = String(cell.value);
@@ -5075,13 +5085,18 @@
                 (evt.cells || []).forEach(cell => {
                     const idx = colToIdx.get(cell.col);
                     if (idx === undefined) return;
-                    const r = bbClassifyCell(cell, json.classMeta || {}, now);
+                    // Grey is NEVER a pair color: reclassify near-greys the server
+                    // called "paired" (slightly tinted grey fills) into the grey
+                    // family before cell rules run.
+                    const greyFam = bbGreyFamily(cell.bgHex);
+                    const eff = (greyFam && cell.rgbFamily === 'paired') ? { ...cell, rgbFamily: greyFam } : cell;
+                    const r = bbClassifyCell(eff, json.classMeta || {}, now);
                     status[idx] = { c: r.completion };
                     if (r.dateText) status[idx].d = r.dateText;
                     if (r.flag) status[idx].f = r.flag;
                     // Pair-group color: students sharing a paired cell color are an
                     // allowable pairing group for this event.
-                    if (cell.rgbFamily === 'paired') status[idx].p = cell.bgHex;
+                    if (eff.rgbFamily === 'paired') status[idx].p = cell.bgHex;
                 });
                 // Duplicate eventNo rows exist on some boards — keep the row with the
                 // most applicable (non-notreq) students.
@@ -5090,6 +5105,17 @@
                 }
             });
             return { fetchedAt: json.fetchedAt, sheetName, classMeta: json.classMeta || {}, students, byCode };
+        };
+
+        // Near-greyscale detector: returns the grey family for (almost) grey fills,
+        // null for real colors. Keeps tinted greys out of pair-color land.
+        const bbGreyFamily = (hex) => {
+            const h = String(hex || '').replace('#', '');
+            if (h.length !== 6) return null;
+            const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+            if (Math.max(r, g, b) - Math.min(r, g, b) > 16) return null;
+            const v = (r + g + b) / 3;
+            return v >= 240 ? 'white' : v >= 150 ? 'lightGrey' : 'darkGrey';
         };
 
         // Does this cell content read as an event code ("FQ 6221F", "sy7211s",
@@ -5155,7 +5181,8 @@
         //             venueOf: Map<hex, Map<idx, code>> }>  (venue = the code a
         //             member is colored on — who flies vs who mans the CR),
         //   packages: Map<code, code> both directions (F/S ↔ its consecutive C),
-        //   poolStems: Set<stem> (interchangeable ride sets)
+        //   pools:    Map<code, codes[]> (interchangeable ride sets — same stem,
+        //             same suffix, AND digit-stripped titles match)
         // }
         const bbBuildPairIndex = (classData, pairConfig) => {
             const merges = (pairConfig && pairConfig.merges) || [];
@@ -5197,16 +5224,27 @@
                 const next = byNum.get(`${pc.series} ${pc.num + 1}`);
                 if (next && next.suffix === 'C') { packages.set(pc.code, next.code); packages.set(next.code, pc.code); }
             });
-            const poolStems = new Set();
-            const byStem = new Map();
+            // Pools: interchangeable ride sets. Same stem + same suffix is NOT
+            // enough (FQ 6221F Long Stability vs 6222F Lat-Dir Stability are
+            // different events) — the titles must also match once digits are
+            // stripped ("…Data Flight 1" ≡ "…Data Flight 2"; identical titles on
+            // PF 8240/41/42). pools maps each member code to its full ride set.
+            const poolTitleKey = (code) => String(((classData.byCode || {})[code] || {}).title || '')
+                .toLowerCase().replace(/\d+/g, '').replace(/\s+/g, ' ').trim();
+            const pools = new Map(); // code -> [codes]
+            const poolGroups = new Map();
             parsed.forEach(pc => {
-                if (!byStem.has(pc.stem)) byStem.set(pc.stem, {});
-                if (pc.suffix) byStem.get(pc.stem)[pc.suffix] = (byStem.get(pc.stem)[pc.suffix] || 0) + 1;
+                if (!pc.suffix) return;
+                const k = `${pc.stem}|${pc.suffix}|${poolTitleKey(pc.code)}`;
+                if (!poolGroups.has(k)) poolGroups.set(k, []);
+                poolGroups.get(k).push(pc.code);
             });
-            byStem.forEach((counts, stem) => {
-                if (Object.values(counts).some(n => n >= 2)) poolStems.add(stem);
+            poolGroups.forEach(codes => {
+                if (codes.length < 2) return;
+                codes.sort();
+                codes.forEach(c => pools.set(c, codes));
             });
-            return { scopeOf, scopes, packages, poolStems };
+            return { scopeOf, scopes, packages, pools };
         };
 
         // ── Double-booked detection ──
@@ -5240,15 +5278,7 @@
                 const seen = new Set(); // pool sets handled once
                 wbByCode.forEach((evs, code) => {
                     if (!data.byCode[code] || seen.has(code)) return;
-                    const pc = bbParseEventCode(code);
-                    let codes = [code];
-                    if (pc && pi.poolStems.has(pc.stem)) {
-                        const scope = pi.scopes.get(pi.scopeOf.get(code));
-                        if (scope) codes = scope.codes.filter(c2 => {
-                            const p2 = bbParseEventCode(c2);
-                            return p2 && p2.stem === pc.stem && p2.suffix === pc.suffix;
-                        });
-                    }
+                    const codes = pi.pools.get(code) || [code];
                     codes.forEach(c2 => seen.add(c2));
                     const bookings = [];
                     codes.forEach(c2 => (wbByCode.get(c2) || []).forEach(ev => bookings.push(ev)));
@@ -10399,14 +10429,9 @@
             // Pool: this code is one of several interchangeable same-suffix rides
             const poolInfo = useMemo(() => {
                 if (!code) return null;
-                const pc = bbParseEventCode(code);
-                if (!pc) return null;
                 for (const [, pi] of pairIdx) {
-                    if (!pi.poolStems.has(pc.stem)) continue;
-                    const scope = pi.scopes.get(pi.scopeOf.get(code));
-                    if (!scope) continue;
-                    const ride = (c) => { const p = bbParseEventCode(c); return p && p.stem === pc.stem && p.suffix === pc.suffix; };
-                    return { codes: scope.codes.filter(ride) };
+                    const codes = pi.pools.get(code);
+                    if (codes) return { codes };
                 }
                 return null;
             }, [code, pairIdx]);
@@ -10884,7 +10909,7 @@
                                 const partner = pi.packages.get(c);
                                 if (partner) r.packages.add(`${c.split(' ')[1]}+${partner.split(' ')[1]}`);
                             }
-                            if (pc && pi.poolStems.has(pc.stem)) r.pool = true;
+                            if (pi.pools.has(c)) r.pool = true;
                         });
                         r.teams = Math.max(r.teams, sc.teams.size);
                     });
