@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.9.1 — Double-booked flash: hard font blink chip-color↔red (50/50, no fade) via --dbc custom property; picker chips at the bottom flash too (day-scoped in whiteboard mode) -->
+<!-- Interactive Scheduler v4.9.2 — Fix: 26B FTC board meta columns sit one left of 26A's; per-row layout detection picks whichever column holds a real event code (restores ALL 26B code matching); bbNormalizeCode canonicalizes FQ6221F/FQ-6221F -->
+<!-- v4.9.1 — Double-booked flash: hard font blink chip-color↔red (50/50, no fade) via --dbc custom property; picker chips at the bottom flash too (day-scoped in whiteboard mode) -->
 <!-- v4.9.0 — Double-booked detection: whiteboard bookings for events the Big Board shows complete/booked elsewhere (pool-aware, same-date board entries excluded); letters-blink chip flash distinct from conflict pulse; DOUBLE BOOKED pill + rows in Conflict Summary; header counter -->
 <!-- v4.8.2 — Pool popup redesign: team boxes are the whole interface (flat sections hidden); every chip shows n/N rides done + first date, availability, unambiguous state; Ungrouped box for uncolored students -->
 <!-- v4.8.1 — Fix: [+] popup on a pool ride (FQ 6310F/6311F) now aggregates Needs across the whole interchangeable set ("N left" badge); local bookings on any sibling ride count -->
@@ -4919,7 +4920,10 @@
             { key: '26B STC', rosterCat: 'STC-B', pattern: /26B.*STC/i },
         ];
 
-        const bbNormalizeCode = (s) => String(s || '').toUpperCase().replace(/\s+/g, ' ').trim();
+        // Uppercase, collapse whitespace, and canonicalize "FQ6221F"/"FQ-6221F"
+        // → "FQ 6221F" so board cells and whiteboard titles meet at one key.
+        const bbNormalizeCode = (s) => String(s || '').toUpperCase().replace(/\s+/g, ' ').trim()
+            .replace(/^([A-Z]{2,3})[\s\-]*(\d)/, '$1 $2');
 
         // Whiteboard curriculum-event convention: "Name (Event Code)", e.g.
         // "LOW L/D DEMO (PF 6121F)". Only events carrying a code are matchable.
@@ -5060,7 +5064,12 @@
             const informativeCount = (status) =>
                 Object.values(status).filter(v => v.c !== 'notreq').length;
             json.events.forEach(evt => {
-                const code = bbNormalizeCode(evt.eventNo);
+                // Per-row layout detection: the GAS reads fixed columns, but class
+                // sheets differ — 26A keeps the event code in the eventNo column,
+                // 26B's meta sits one column left (code in courseNo, title in the
+                // eventNo column). Trust whichever field actually looks like a code.
+                const picked = bbPickCodeTitle(evt);
+                const code = picked.code;
                 if (!code) return;
                 const status = {};
                 (evt.cells || []).forEach(cell => {
@@ -5077,10 +5086,28 @@
                 // Duplicate eventNo rows exist on some boards — keep the row with the
                 // most applicable (non-notreq) students.
                 if (!byCode[code] || informativeCount(status) > informativeCount(byCode[code].status)) {
-                    byCode[code] = { title: evt.title, status };
+                    byCode[code] = { title: picked.title, status };
                 }
             });
             return { fetchedAt: json.fetchedAt, sheetName, classMeta: json.classMeta || {}, students, byCode };
+        };
+
+        // Does this cell content read as an event code ("FQ 6221F", "sy7211s",
+        // "FQ 6311Ff" typo included)? Used to detect shifted meta columns.
+        const bbLooksLikeCode = (s) =>
+            /^[A-Za-z]{2,3}[\s\-]?\d{3,5}[A-Za-z]{0,2}$/.test(String(s || '').trim());
+        // Pick the event code + title for a fetched board row, tolerating the
+        // one-column-left layout (26B FTC). Preference order: the eventNo column
+        // when it holds a real code (26A layout), else the courseNo column with
+        // the eventNo column's text as the title (26B layout).
+        const bbPickCodeTitle = (evt) => {
+            if (bbLooksLikeCode(evt.eventNoRaw || evt.eventNo)) {
+                return { code: bbNormalizeCode(evt.eventNo), title: evt.title };
+            }
+            if (bbLooksLikeCode(evt.courseNo)) {
+                return { code: bbNormalizeCode(evt.courseNo), title: evt.eventNoRaw || evt.title };
+            }
+            return { code: null, title: evt.title };
         };
 
         // ── Pair scopes / packages / pools (derived from event-code structure) ──
