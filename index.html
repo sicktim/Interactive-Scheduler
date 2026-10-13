@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
+<!-- Interactive Scheduler v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
+<!-- v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
 <!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
 <!-- v4.9.3 — Grey semantics: dated dark-grey = complete (26B convention), blank = not required; grey never a pair color (near-grey guard). Pools require matching digit-stripped titles — FQ 6221F/6222F no longer grouped; PF 824x, FQ 631x, CF ride series still pool -->
 <!-- v4.9.2 — Fix: 26B FTC board meta columns sit one left of 26A's; per-row layout detection picks whichever column holds a real event code (restores ALL 26B code matching); bbNormalizeCode canonicalizes FQ6221F/FQ-6221F -->
@@ -7273,13 +7274,19 @@
 
         // ─── RAINBOW VIEW ───
 
-        const RainbowView = ({ workingEvents, roster, dates, personnelStatuses = [] }) => {
+        const RainbowView = ({ workingEvents, roster, dates, personnelStatuses = [], bbCache = {}, bbRosterMatch = {}, pairConfig }) => {
             const [visibleTypes, setVisibleTypes] = useState(() => new Set([...RAINBOW_FILTERS.map(f => f.key), 'Notes']));
             const [modalEvent, setModalEvent] = useState(null);
             const [rbSelection, setRbSelection] = useState(null);
             const [filterOpen, setFilterOpen] = useState(false);
             const [visiblePersonnel, setVisiblePersonnel] = useState(null); // null = show all
             const [selectedCategory, setSelectedCategory] = useState('All');
+            // Group-by: sort rainbow rows by Big Board pair team for one event
+            // scope (schedule-assistant mode — team members sit adjacent, so a
+            // common free window reads at a glance and the range marker scrubs it)
+            const [rbGroupScope, setRbGroupScope] = useState(null); // scopeKey | null
+            const [rbGroupTeam, setRbGroupTeam] = useState('all');  // 'all' | pair hex
+
             // Conflict highlighter: red strip over the overlapping portion of a
             // person's events (default on, persisted)
             const [rbShowConflicts, setRbShowConflicts] = useState(() => {
@@ -7334,8 +7341,67 @@
                 return map;
             }, [workingEvents]);
 
+            // Group-by context: the Big Board class behind the selected category,
+            // its pair index, and the scopes that actually carry teams
+            const rbGroupCtx = useMemo(() => {
+                const def = BB_CLASSES.find(d => d.rosterCat === selectedCategory);
+                const data = def && bbCache[def.key];
+                const match = def && bbRosterMatch[def.key];
+                if (!data || !match) return null;
+                const pi = bbBuildPairIndex(data, pairConfig);
+                const wsOfIdx = new Map([...match.map.entries()].map(([ws, idx]) => [idx, ws]));
+                const scopeOptions = [];
+                pi.scopes.forEach((sc, key) => {
+                    if (sc.teams.size === 0) return;
+                    const codes = [...sc.codes].sort();
+                    const title = ((data.byCode[codes[0]] || {}).title || '').slice(0, 42);
+                    scopeOptions.push({ key, label: `${codes[0]}${codes.length > 1 ? ` +${codes.length - 1}` : ''} — ${title}` });
+                });
+                scopeOptions.sort((a, b) => a.label.localeCompare(b.label));
+                return { def, data, pi, wsOfIdx, scopeOptions };
+            }, [selectedCategory, bbCache, bbRosterMatch, pairConfig]);
+
+            // Teams of the chosen scope, resolved to roster names (+ done-flag from
+            // the cell each member is colored on)
+            const rbGroupTeams = useMemo(() => {
+                if (!rbGroupCtx || !rbGroupScope) return null;
+                const scope = rbGroupCtx.pi.scopes.get(rbGroupScope);
+                if (!scope) return null;
+                const teams = [];
+                const grouped = new Set();
+                scope.teams.forEach((idxSet, hex) => {
+                    const members = [];
+                    idxSet.forEach(idx => {
+                        const ws = rbGroupCtx.wsOfIdx.get(idx);
+                        if (ws === undefined) return;
+                        grouped.add(ws);
+                        const venue = (scope.venueOf.get(hex) || new Map()).get(idx);
+                        const st = venue && rbGroupCtx.data.byCode[venue] && rbGroupCtx.data.byCode[venue].status[idx];
+                        members.push({ name: ws, done: !!(st && st.c === 'complete') });
+                    });
+                    if (members.length > 0) teams.push({ hex, members });
+                });
+                teams.sort((a, b) => a.members[0].name.localeCompare(b.members[0].name));
+                const ungrouped = (roster[selectedCategory] || []).filter(ws => !grouped.has(ws));
+                return { teams, ungrouped };
+            }, [rbGroupCtx, rbGroupScope, roster, selectedCategory]);
+
             // Build sorted personnel list from roster (filtered by visiblePersonnel if set)
             const personnelList = useMemo(() => {
+                // Group-by mode: rows ordered team-by-team instead of roster order
+                if (rbGroupTeams) {
+                    const list = [];
+                    rbGroupTeams.teams.forEach(team => {
+                        if (rbGroupTeam !== 'all' && rbGroupTeam !== team.hex) return;
+                        list.push({ type: 'separator', category: team.members.map(m => m.name).join('  +  '), teamHex: team.hex });
+                        team.members.forEach(m => list.push({ type: 'person', name: m.name, category: selectedCategory, done: m.done }));
+                    });
+                    if (rbGroupTeam === 'all' && rbGroupTeams.ungrouped.length > 0) {
+                        list.push({ type: 'separator', category: 'NO TEAM YET' });
+                        rbGroupTeams.ungrouped.forEach(name => list.push({ type: 'person', name, category: selectedCategory }));
+                    }
+                    return list;
+                }
                 const list = [];
                 ROSTER_ORDER.forEach(cat => {
                     let names = roster[cat] || [];
@@ -7346,7 +7412,7 @@
                     }
                 });
                 return list;
-            }, [roster, visiblePersonnel]);
+            }, [roster, visiblePersonnel, rbGroupTeams, rbGroupTeam, selectedCategory]);
 
             // v6.3 parity: per-person Fly/Gnd counts for current + next week (Sun–Sat, Pacific).
             // Deliberately counts cancelled events — matches standalone Crew Rainbow v6.3 behavior.
@@ -7546,6 +7612,8 @@
             const handleRbCategoryChange = useCallback((e) => {
                 const cat = e.target.value;
                 setSelectedCategory(cat);
+                setRbGroupScope(null); // group-by is per-class — reset with the category
+                setRbGroupTeam('all');
                 if (cat === 'All') setVisiblePersonnel(null);
                 else if (cat !== 'Custom' && roster[cat]) setVisiblePersonnel(new Set(roster[cat]));
             }, [roster]);
@@ -7593,6 +7661,25 @@
                                 {Object.keys(roster).map(cat => (<option key={cat} value={cat}>{cat}</option>))}
                                 <option value="Custom" disabled style={{ color: 'rgba(255,255,255,0.3)' }}>Custom Selection</option>
                             </select>
+                            {rbGroupCtx && rbGroupCtx.scopeOptions.length > 0 && (
+                                <select value={rbGroupScope || ''} className="rb-group-select"
+                                    onChange={(e) => { setRbGroupScope(e.target.value || null); setRbGroupTeam('all'); }}
+                                    title="Sort rows by Big Board pair team for one event — team members sit adjacent so a common free window reads at a glance"
+                                    style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(139,92,246,0.5)', color: rbGroupScope ? '#c4b5fd' : '#d1d5db', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', outline: 'none', cursor: 'pointer', maxWidth: 230 }}>
+                                    <option value="">Group by event…</option>
+                                    {rbGroupCtx.scopeOptions.map(o => (<option key={o.key} value={o.key}>{o.label}</option>))}
+                                </select>
+                            )}
+                            {rbGroupTeams && rbGroupTeams.teams.length > 1 && (
+                                <select value={rbGroupTeam} className="rb-team-select"
+                                    onChange={(e) => setRbGroupTeam(e.target.value)}
+                                    style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(139,92,246,0.5)', color: '#c4b5fd', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', outline: 'none', cursor: 'pointer', maxWidth: 180 }}>
+                                    <option value="all">All teams ({rbGroupTeams.teams.length})</option>
+                                    {rbGroupTeams.teams.map(t => (
+                                        <option key={t.hex} value={t.hex}>{t.members.map(m => m.name.split(',')[0]).join(' + ')}</option>
+                                    ))}
+                                </select>
+                            )}
                         </div>
                     </div>
 
@@ -7677,7 +7764,9 @@
                         {personnelList.map((item, idx) => {
                             if (item.type === 'separator') {
                                 return (
-                                    <div key={`sep-${item.category}`} className="rainbow-cat-separator">
+                                    <div key={`sep-${item.category}-${item.teamHex || ''}`} className={`rainbow-cat-separator${item.teamHex ? ' rb-team-sep' : ''}`}
+                                        style={item.teamHex ? { boxShadow: `inset 5px 0 0 #${item.teamHex}`, background: `#${item.teamHex}20` } : undefined}>
+                                        {item.teamHex && <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: 2, background: `#${item.teamHex}`, marginRight: 6, verticalAlign: 'middle' }} />}
                                         {item.category}
                                     </div>
                                 );
@@ -7690,7 +7779,10 @@
                                     <div className="rainbow-name-cell" onClick={() => setPersonModal(item.name)} title={`View ${item.name}'s two-week schedule`}>
                                         <div className="rainbow-name-row">
                                             <div style={{ minWidth: 0 }}>
-                                                <div className="rainbow-name-text">{item.name}</div>
+                                                <div className="rainbow-name-text" style={item.done ? { opacity: 0.5 } : undefined}>
+                                                    {item.name}
+                                                    {item.done && <span title="Their part of this event is complete on the Big Board" style={{ color: '#4ade80', marginLeft: 4, fontSize: '0.6rem' }}>✓</span>}
+                                                </div>
                                                 <div className="rainbow-cat-text">{item.category}</div>
                                             </div>
                                             {(showW1 || showW2) && (() => {
@@ -12000,7 +12092,8 @@
 
                     {/* Rainbow: always mounted for state preservation but hidden when not active */}
                     <div className="rainbow-area" style={viewMode !== 'rainbow' ? { display: 'none' } : undefined}>
-                        <RainbowView workingEvents={workingEvents} roster={roster} dates={dates} />
+                        <RainbowView workingEvents={workingEvents} roster={roster} dates={dates}
+                            bbCache={bbCache} bbRosterMatch={bbRosterMatch} pairConfig={pairConfig} />
                     </div>
 
                     {/* Whiteboard: always mounted for state preservation */}
