@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
+<!-- Interactive Scheduler v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
+<!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
 <!-- v4.9.3 — Grey semantics: dated dark-grey = complete (26B convention), blank = not required; grey never a pair color (near-grey guard). Pools require matching digit-stripped titles — FQ 6221F/6222F no longer grouped; PF 824x, FQ 631x, CF ride series still pool -->
 <!-- v4.9.2 — Fix: 26B FTC board meta columns sit one left of 26A's; per-row layout detection picks whichever column holds a real event code (restores ALL 26B code matching); bbNormalizeCode canonicalizes FQ6221F/FQ-6221F -->
 <!-- v4.9.1 — Double-booked flash: hard font blink chip-color↔red (50/50, no fade) via --dbc custom property; picker chips at the bottom flash too (day-scoped in whiteboard mode) -->
@@ -7619,6 +7620,10 @@
                             const isSelected = rbSelection && rbSelection.dateIndex === dIdx;
                             return (
                                 <div key={d} className={`rainbow-date-header${d === rbToday ? ' rb-today' : ''}`}>
+                                    {/* Marker grab zone = the WHOLE header (weekday label included),
+                                        not just the 14px ruler strip. Same % math: header width ==
+                                        ruler width == column width. */}
+                                    <div className="rb-ruler-interactive" onPointerDown={(e) => { e.stopPropagation(); handleRulerPointerDown(e, dIdx); }} />
                                     <div className="rainbow-date-label">
                                         <div className="rb-weekday">{h.weekday}</div>
                                         <div className="rb-daymonth">{h.day} {h.month}</div>
@@ -7627,7 +7632,6 @@
                                         {rulerMarks.map(m => (
                                             <span key={m.label} style={{ left: m.pct + '%' }}>{m.label}</span>
                                         ))}
-                                        <div className="rb-ruler-interactive" onPointerDown={(e) => { e.stopPropagation(); handleRulerPointerDown(e, dIdx); }} />
                                         {isSelected && rbSelection.type === 'marker' && (() => {
                                             const pct = timePct(rbSelection.start);
                                             return (
@@ -7741,7 +7745,10 @@
                                         }
 
                                         return (
-                                            <div key={date} className="rainbow-cell" style={{ height: cellH }}>
+                                            // minHeight (not height): grid stretches every cell in the
+                                            // row to the tallest one, so row-separator borders align
+                                            // across the name column and all date cells
+                                            <div key={date} className="rainbow-cell" style={{ minHeight: cellH }}>
                                                 {hourLines.map(pct => (
                                                     <div key={pct} className="rb-hour-line" style={{ left: pct + '%' }} />
                                                 ))}
