@@ -1,4 +1,5 @@
-<!-- Interactive Scheduler v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
+<!-- Interactive Scheduler v4.11.1 — Group-by extras: Filter modal pins individuals (instructors) under ADDED while grouped. Conflict borders: steady yellow glow by default; "Flash" header toggle pulses all conflict chips in unison -->
+<!-- v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
 <!-- v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
 <!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
 <!-- v4.9.3 — Grey semantics: dated dark-grey = complete (26B convention), blank = not required; grey never a pair color (near-grey guard). Pools require matching digit-stripped titles — FQ 6221F/6222F no longer grouped; PF 824x, FQ 631x, CF ride series still pool -->
@@ -518,19 +519,21 @@
         }
         .chip-remove:hover { opacity: 1; color: #ef4444; }
 
-        /* Pulses between light amber and dark red so at least one phase contrasts
-           with any chip color (amber alone vanished on orange FTC-B/STC-B chips).
-           The 1px dark box-shadow ring separates the outline from the chip fill. */
+        /* Static bright-yellow glowing border by default (constant flashing got
+           distracting); the 1px dark ring separates it from the chip fill so it
+           reads on orange/yellow chips. With the "Flash Conflicts" header toggle
+           on, a JS ticker toggles body.conflict-flash-dim so every conflict chip
+           on the page dims and brightens IN UNISON (CSS animations started at
+           different mount times drift out of phase — a shared body class can't). */
         .chip-conflict {
-            outline: 2px solid #fde68a;
+            outline: 2px solid #facc15;
             outline-offset: -1px;
-            box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 8px rgba(251,191,36,0.6);
-            animation: conflict-pulse 1.6s ease-in-out infinite;
+            box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 8px rgba(250,204,21,0.75);
+            transition: outline-color 0.3s ease, box-shadow 0.3s ease;
         }
-
-        @keyframes conflict-pulse {
-            0%, 100% { outline-color: #fde68a; box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 8px rgba(251,191,36,0.7); }
-            50% { outline-color: #991b1b; box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 4px rgba(153,27,27,0.4); }
+        body.conflict-flash-dim .chip-conflict {
+            outline-color: rgba(250,204,21,0.15);
+            box-shadow: 0 0 0 1px rgba(69,10,10,0.9), 0 0 2px rgba(250,204,21,0.1);
         }
 
         .conflict-icon { color: #fbbf24; font-size: 0.55rem; font-weight: 700; }
@@ -2860,6 +2863,14 @@
             background: #ffffff;
             color: #475569;
             border-color: #cbd5e1;
+        }
+        .light-mode .chip-conflict {
+            outline-color: #ca8a04;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.9), 0 0 6px rgba(202,138,4,0.55);
+        }
+        body.light-mode.conflict-flash-dim .chip-conflict {
+            outline-color: rgba(202,138,4,0.15);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.9), 0 0 2px rgba(202,138,4,0.1);
         }
 
         /* --- Modal overlay & content --- */
@@ -7151,7 +7162,7 @@
 
         // ─── RAINBOW FILTER MODAL ───
 
-        const RainbowFilterModal = ({ isOpen, onClose, roster, currentSelection, onApply }) => {
+        const RainbowFilterModal = ({ isOpen, onClose, roster, currentSelection, onApply, title }) => {
             const [search, setSearch] = useState('');
             const [tempSel, setTempSel] = useState(new Set());
 
@@ -7178,7 +7189,7 @@
                 <div className="modal-overlay" onClick={onClose}>
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-center mb-3">
-                            <h2 className="text-lg font-bold text-white">Filter Personnel</h2>
+                            <h2 className="text-lg font-bold text-white">{title || 'Filter Personnel'}</h2>
                             <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
                         </div>
                         <input type="text" placeholder="Search names..." value={search} onChange={e => setSearch(e.target.value)}
@@ -7286,6 +7297,9 @@
             // common free window reads at a glance and the range marker scrubs it)
             const [rbGroupScope, setRbGroupScope] = useState(null); // scopeKey | null
             const [rbGroupTeam, setRbGroupTeam] = useState('all');  // 'all' | pair hex
+            // Extra individuals pinned below the teams (e.g. the instructor who was
+            // on the event) — picked through the Filter modal while grouped
+            const [rbGroupExtras, setRbGroupExtras] = useState(new Set());
 
             // Conflict highlighter: red strip over the overlapping portion of a
             // person's events (default on, persisted)
@@ -7400,6 +7414,13 @@
                         list.push({ type: 'separator', category: 'NO TEAM YET' });
                         rbGroupTeams.ungrouped.forEach(name => list.push({ type: 'person', name, category: selectedCategory }));
                     }
+                    // Manually added individuals (instructors etc.) pinned below
+                    const listed = new Set(list.filter(i => i.type === 'person').map(i => i.name));
+                    const extras = [...rbGroupExtras].filter(n => !listed.has(n));
+                    if (extras.length > 0) {
+                        list.push({ type: 'separator', category: 'ADDED' });
+                        extras.forEach(name => list.push({ type: 'person', name, category: personCat(name, roster) || '' }));
+                    }
                     return list;
                 }
                 const list = [];
@@ -7412,7 +7433,7 @@
                     }
                 });
                 return list;
-            }, [roster, visiblePersonnel, rbGroupTeams, rbGroupTeam, selectedCategory]);
+            }, [roster, visiblePersonnel, rbGroupTeams, rbGroupTeam, selectedCategory, rbGroupExtras]);
 
             // v6.3 parity: per-person Fly/Gnd counts for current + next week (Sun–Sat, Pacific).
             // Deliberately counts cancelled events — matches standalone Crew Rainbow v6.3 behavior.
@@ -7614,15 +7635,23 @@
                 setSelectedCategory(cat);
                 setRbGroupScope(null); // group-by is per-class — reset with the category
                 setRbGroupTeam('all');
+                setRbGroupExtras(new Set());
                 if (cat === 'All') setVisiblePersonnel(null);
                 else if (cat !== 'Custom' && roster[cat]) setVisiblePersonnel(new Set(roster[cat]));
             }, [roster]);
 
             const handleRbFilterApply = useCallback((newSelection) => {
+                // Grouped view: the Filter modal picks EXTRA individuals shown below
+                // the teams instead of replacing the whole personnel selection
+                if (rbGroupScope) {
+                    setRbGroupExtras(newSelection);
+                    setFilterOpen(false);
+                    return;
+                }
                 setVisiblePersonnel(newSelection);
                 setSelectedCategory('Custom');
                 setFilterOpen(false);
-            }, []);
+            }, [rbGroupScope]);
 
             return (
                 <>
@@ -7663,7 +7692,7 @@
                             </select>
                             {rbGroupCtx && rbGroupCtx.scopeOptions.length > 0 && (
                                 <select value={rbGroupScope || ''} className="rb-group-select"
-                                    onChange={(e) => { setRbGroupScope(e.target.value || null); setRbGroupTeam('all'); }}
+                                    onChange={(e) => { setRbGroupScope(e.target.value || null); setRbGroupTeam('all'); setRbGroupExtras(new Set()); }}
                                     title="Sort rows by Big Board pair team for one event — team members sit adjacent so a common free window reads at a glance"
                                     style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(139,92,246,0.5)', color: rbGroupScope ? '#c4b5fd' : '#d1d5db', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', outline: 'none', cursor: 'pointer', maxWidth: 230 }}>
                                     <option value="">Group by event…</option>
@@ -7923,7 +7952,10 @@
                     </div>{/* close rainbow-scroll */}
                     <RainbowModal event={modalEvent} onClose={() => setModalEvent(null)} />
                     <RainbowPersonModal person={personModal} workingEvents={workingEvents} onClose={() => setPersonModal(null)} />
-                    <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster} currentSelection={visiblePersonnel} onApply={handleRbFilterApply} />
+                    <RainbowFilterModal isOpen={filterOpen} onClose={() => setFilterOpen(false)} roster={roster}
+                        currentSelection={rbGroupScope ? rbGroupExtras : visiblePersonnel}
+                        title={rbGroupScope ? 'Add people below the grouped teams' : undefined}
+                        onApply={handleRbFilterApply} />
                 </>
             );
         };
@@ -11298,6 +11330,23 @@
                     ? null // same [+] clicked again = toggle closed
                     : { eventId, x: rect.left, y: rect.bottom });
             }, []);
+            // Conflict-border flash: off = steady yellow glow; on = a single body-
+            // class ticker dims/brightens every conflict chip on the page in unison
+            const [conflictFlash, setConflictFlash] = useState(() => {
+                try { return localStorage.getItem('tps-conflict-flash') === '1'; } catch (e) { return false; }
+            });
+            const toggleConflictFlash = useCallback(() => {
+                setConflictFlash(prev => {
+                    try { localStorage.setItem('tps-conflict-flash', prev ? '0' : '1'); } catch (e) {}
+                    return !prev;
+                });
+            }, []);
+            useEffect(() => {
+                if (!conflictFlash) { document.body.classList.remove('conflict-flash-dim'); return undefined; }
+                const t = setInterval(() => document.body.classList.toggle('conflict-flash-dim'), 700);
+                return () => { clearInterval(t); document.body.classList.remove('conflict-flash-dim'); };
+            }, [conflictFlash]);
+
             const [showRefreshModal, setShowRefreshModal] = useState(false);
             // Step 2 of the refresh modal: piggyback Big Board class refreshes
             const [refreshBbStep, setRefreshBbStep] = useState(null); // { mode } | null
@@ -12023,6 +12072,11 @@
                                 onClick={() => { setFocusEnabled(prev => { if (prev) setFocusedEventId(null); return !prev; }); }}
                                 title={focusEnabled ? 'Focus mode ON — click events to highlight and see availability' : 'Focus mode OFF'}
                             >Focus {focusEnabled ? 'ON' : 'OFF'}</button>
+                            <button
+                                className={`focus-toggle-btn ${conflictFlash ? 'on' : 'off'}`}
+                                onClick={toggleConflictFlash}
+                                title={conflictFlash ? 'Conflict borders flash in unison — click for a steady yellow glow' : 'Conflict borders are a steady yellow glow — click to flash them in unison'}
+                            >Flash {conflictFlash ? 'ON' : 'OFF'}</button>
                             <button
                                 className="filter-btn"
                                 onClick={() => setShowCreateEvent(true)}
