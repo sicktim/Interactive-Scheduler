@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.12.0 — Rainbow/Gantt sync batch: zoom levels (75–300%), multi-group filter dropdown, contrast pass, day-grouped person modal, conflict strip hover detail + red conflict box in event modal -->
+<!-- Interactive Scheduler v4.13.0 — Rainbow UI zoom (CSS zoom scales text/lines/names/bars; TL control keeps horizontal timeline scale) + filter modal pinned "Selected" chips (collapsed past 12 so a whole selected group doesn't bury the search) -->
 <!-- v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
 <!-- v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
 <!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
@@ -3171,6 +3171,9 @@
             border-color: #cbd5e1 !important;
         }
         .light-mode .rb-cat-menu span { color: #0f172a !important; }
+        .light-mode .rb-sel-pinned { background: #eff6ff !important; border-color: #93c5fd !important; }
+        .light-mode .rb-sel-pinned > div > span { color: #1e40af !important; }
+        .light-mode .rb-sel-chip { color: #1d4ed8 !important; background: #dbeafe !important; border-color: #93c5fd !important; }
 
         /* Selection screen inline style overrides */
         .light-mode .selection-body .text-gray-500,
@@ -7237,10 +7240,15 @@
 
         const RainbowFilterModal = ({ isOpen, onClose, roster, currentSelection, onApply, title }) => {
             const [search, setSearch] = useState('');
-            const [tempSel, setTempSel] = useState(new Set());
+            // Seeded at mount too (not only in the open-effect) so the pinned
+            // Selected section is correct on the very first paint
+            const [tempSel, setTempSel] = useState(() => new Set(currentSelection || Object.values(roster).flat()));
+            // Pinned "Selected" section: collapsed past 12 names so a whole
+            // selected group (e.g. FTC-A) doesn't bury the search results
+            const [showAllSel, setShowAllSel] = useState(false);
 
             useEffect(() => {
-                if (isOpen) { setTempSel(new Set(currentSelection || Object.values(roster).flat())); setSearch(''); }
+                if (isOpen) { setTempSel(new Set(currentSelection || Object.values(roster).flat())); setSearch(''); setShowAllSel(false); }
             }, [isOpen]);
 
             const filteredRoster = useMemo(() => {
@@ -7273,6 +7281,32 @@
                             <button onClick={() => { const all = Object.values(filteredRoster).flat(); setTempSel(prev => { const n = new Set(prev); all.forEach(nm => n.delete(nm)); return n; }); }}
                                 className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">Deselect All Visible</button>
                         </div>
+                        {tempSel.size > 0 && (() => {
+                            const selNames = [...tempSel].sort();
+                            const expanded = selNames.length <= 12 || showAllSel;
+                            return (
+                                <div className="rb-sel-pinned" style={{ border: '1px solid rgba(59,130,246,0.35)', background: 'rgba(59,130,246,0.08)', borderRadius: 6, padding: '4px 6px', marginBottom: 6, flexShrink: 0 }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <span style={{ fontSize: '0.6rem', fontWeight: 700, color: '#93c5fd', textTransform: 'uppercase' }}>Selected ({selNames.length}) — click to remove</span>
+                                        {selNames.length > 12 && (
+                                            <button onClick={() => setShowAllSel(v => !v)} style={{ background: 'transparent', border: 'none', color: '#60a5fa', fontSize: '0.6rem', cursor: 'pointer', fontWeight: 700 }}>
+                                                {showAllSel ? 'Hide' : 'Show all'}
+                                            </button>
+                                        )}
+                                    </div>
+                                    {expanded && (
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, marginTop: 3, maxHeight: 84, overflowY: 'auto' }}>
+                                            {selNames.map(n => (
+                                                <span key={n} className="rb-sel-chip" onClick={() => toggle(n)}
+                                                    style={{ fontSize: '0.6rem', color: '#bfdbfe', background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.4)', borderRadius: 4, padding: '1px 5px', cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                                                    {n} ✕
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })()}
                         <div className="rb-filter-modal-body">
                             {Object.entries(filteredRoster).map(([cat, names]) => (
                                 <div key={cat}>
@@ -7413,6 +7447,19 @@
             const setRbZoomPct = useCallback((pct) => {
                 setRbZoom(pct);
                 try { localStorage.setItem('tps-rb-zoom', String(pct)); } catch (e) {}
+            }, []);
+            // UI zoom: CSS zoom on the grid — scales EVERYTHING in it (text, lines,
+            // names, bars) uniformly. Separate from the TL (timeline width) zoomer.
+            const [rbUiZoom, setRbUiZoom] = useState(() => {
+                try {
+                    const v = parseInt(localStorage.getItem('tps-rb-ui-zoom'), 10);
+                    return RB_ZOOM_LEVELS.includes(v) ? v : 100;
+                } catch (e) { return 100; }
+            });
+            const uiZ = rbUiZoom / 100;
+            const setRbUiZoomPct = useCallback((pct) => {
+                setRbUiZoom(pct);
+                try { localStorage.setItem('tps-rb-ui-zoom', String(pct)); } catch (e) {}
             }, []);
             // Multi-group filter: empty set = All Personnel; several checked = union
             // (e.g. Staff IP + Staff IFTE/ICSO availability side by side)
@@ -7681,10 +7728,12 @@
                     if (!area) return;
                     const areaRect = area.getBoundingClientRect();
                     const scrollLeft = area.scrollLeft;
-                    const colLeft = 191 + dateIndex * (colW + 1); // px from grid left: 190px name col + 1px gap (+1px per column gap)
-                    const colVisualLeft = areaRect.left + colLeft - scrollLeft;
+                    const colLeft = 191 + dateIndex * (colW + 1); // grid-layout px: 190px name col + 1px gap (+1px per column gap)
+                    // Grid is CSS-zoomed: layout px map to visual px ×uiZ; the scroll
+                    // container itself is unzoomed so scrollLeft/clientX are visual
+                    const colVisualLeft = areaRect.left + colLeft * uiZ - scrollLeft;
                     const xInCol = me.clientX - colVisualLeft;
-                    const pct = Math.max(0, Math.min(100, (xInCol / colW) * 100));
+                    const pct = Math.max(0, Math.min(100, (xInCol / (colW * uiZ)) * 100));
                     const currentTime = pctToMinutes(pct);
 
                     if (mode === 'create') {
@@ -7710,7 +7759,7 @@
                 };
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', onUp);
-            }, [pctToMinutes, colW]);
+            }, [pctToMinutes, colW, uiZ]);
 
             const handleRulerPointerDown = useCallback((e, dateIndex) => {
                 if (e.button !== 0) return;
@@ -7818,20 +7867,25 @@
                             Conflicts
                         </button>
                         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
-                            {/* Zoom: 1 out + default + 4 in (percent ≈ column-width scale) */}
-                            <div className="rb-zoom-ctl" style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', borderRadius: 6, padding: '1px 6px' }}>
-                                <button
-                                    onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(rbZoom); if (i > 0) setRbZoomPct(RB_ZOOM_LEVELS[i - 1]); }}
-                                    disabled={RB_ZOOM_LEVELS.indexOf(rbZoom) <= 0}
-                                    title="Zoom out"
-                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(rbZoom) <= 0 ? 0.3 : 1 }}>−</button>
-                                <span style={{ fontSize: '0.55rem', color: '#e5e7eb', fontWeight: 700, minWidth: 28, textAlign: 'center' }}>{rbZoom}%</span>
-                                <button
-                                    onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(rbZoom); if (i < RB_ZOOM_LEVELS.length - 1) setRbZoomPct(RB_ZOOM_LEVELS[i + 1]); }}
-                                    disabled={RB_ZOOM_LEVELS.indexOf(rbZoom) >= RB_ZOOM_LEVELS.length - 1}
-                                    title="Zoom in"
-                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(rbZoom) >= RB_ZOOM_LEVELS.length - 1 ? 0.3 : 1 }}>+</button>
-                            </div>
+                            {/* UI zoom: scales everything (text, lines, names, bars).
+                                TL zoom: timeline/column width only. Same levels. */}
+                            {[
+                                { key: 'UI', val: rbUiZoom, set: setRbUiZoomPct, tip: 'Scale everything — text, lines, names, bars' },
+                                { key: 'TL', val: rbZoom, set: setRbZoomPct, tip: 'Timeline width — horizontal scale only' },
+                            ].map(zc => (
+                                <div key={zc.key} className="rb-zoom-ctl" title={zc.tip} style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', borderRadius: 6, padding: '1px 6px' }}>
+                                    <span style={{ fontSize: '0.5rem', color: 'rgba(255,255,255,0.65)', fontWeight: 700 }}>{zc.key}</span>
+                                    <button
+                                        onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(zc.val); if (i > 0) zc.set(RB_ZOOM_LEVELS[i - 1]); }}
+                                        disabled={RB_ZOOM_LEVELS.indexOf(zc.val) <= 0}
+                                        style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(zc.val) <= 0 ? 0.3 : 1 }}>−</button>
+                                    <span style={{ fontSize: '0.55rem', color: '#e5e7eb', fontWeight: 700, minWidth: 28, textAlign: 'center' }}>{zc.val}%</span>
+                                    <button
+                                        onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(zc.val); if (i < RB_ZOOM_LEVELS.length - 1) zc.set(RB_ZOOM_LEVELS[i + 1]); }}
+                                        disabled={RB_ZOOM_LEVELS.indexOf(zc.val) >= RB_ZOOM_LEVELS.length - 1}
+                                        style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(zc.val) >= RB_ZOOM_LEVELS.length - 1 ? 0.3 : 1 }}>+</button>
+                                </div>
+                            ))}
                             {rbSelection && (
                                 <button onClick={() => setRbSelection(null)} style={{ padding: '2px 8px', fontSize: '0.55rem', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 4, cursor: 'pointer' }}>
                                     Clear Marker
@@ -7890,7 +7944,7 @@
                     <div className="rainbow-scroll" ref={scrollRef} onPointerDown={handlePanPointerDown}>
                     <div
                         className="rainbow-grid"
-                        style={{ gridTemplateColumns: `190px repeat(${dates.length}, ${colW}px)` }}
+                        style={{ gridTemplateColumns: `190px repeat(${dates.length}, ${colW}px)`, zoom: uiZ }}
                     >
                         {/* Header row: corner (PERSONNEL + week workload toggles) + date headers */}
                         <div className="rainbow-corner rb-corner-flex">
