@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.11.1 — Group-by extras: Filter modal pins individuals (instructors) under ADDED while grouped. Conflict borders: steady yellow glow by default; "Flash" header toggle pulses all conflict chips in unison -->
+<!-- Interactive Scheduler v4.12.0 — Rainbow/Gantt sync batch: zoom levels (75–300%), multi-group filter dropdown, contrast pass, day-grouped person modal, conflict strip hover detail + red conflict box in event modal -->
 <!-- v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
 <!-- v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
 <!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
@@ -1110,8 +1110,8 @@
             border-radius: 3px;
             cursor: pointer;
             transition: all 0.15s;
-            border: 1px solid rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.35);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.6);
             background: transparent;
         }
         .rainbow-filter-btn:hover { filter: brightness(1.2); }
@@ -1180,7 +1180,7 @@
         }
         .rainbow-date-label .rb-daymonth {
             font-size: 0.55rem;
-            color: #94a3b8;
+            color: #cbd5e1;
         }
 
         .rainbow-time-ruler {
@@ -1188,7 +1188,7 @@
             width: 100%;
             height: 14px;
             font-size: 0.55rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.65);
             margin-top: auto;
             pointer-events: none;
         }
@@ -1228,7 +1228,7 @@
             white-space: nowrap;
             flex-shrink: 0;
         }
-        .rb-workload-label { color: rgba(255,255,255,0.35); margin-right: 3px; }
+        .rb-workload-label { color: rgba(255,255,255,0.6); margin-right: 3px; }
         .rb-workload-fly { color: #10b981; font-weight: 700; }
         .rb-workload-gnd { color: #f59e0b; font-weight: 700; }
         .rb-workload-dot {
@@ -1251,7 +1251,7 @@
             align-items: center;
             gap: 3px;
             font-size: 0.5rem;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.75);
             cursor: pointer;
             user-select: none;
             white-space: nowrap;
@@ -1298,7 +1298,7 @@
 
         .rainbow-cat-text {
             font-size: 0.45rem;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.55);
         }
 
         .rainbow-cat-separator {
@@ -1306,14 +1306,14 @@
             left: 0;
             z-index: 20;
             grid-column: 1 / -1;
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.05);
             padding: 2px 10px;
             font-size: 0.5rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: rgba(255,255,255,0.3);
-            border-top: 1px solid rgba(255,255,255,0.06);
+            color: rgba(255,255,255,0.6);
+            border-top: 1px solid rgba(255,255,255,0.15);
         }
 
         .rainbow-cell {
@@ -1321,7 +1321,7 @@
             background: rgba(15, 15, 35, 0.6);
             min-height: 28px;
             overflow: hidden;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255,255,255,0.12);
             /* Row separator: one person's lane ends here — makes "whose line is
                this bar on" readable at a glance across wide columns */
             border-bottom: 1px solid rgba(255,255,255,0.32);
@@ -1336,13 +1336,25 @@
             background: #ef4444;
             box-shadow: 0 0 5px rgba(239,68,68,0.9);
             z-index: 6;
+            cursor: help; /* hoverable: shows what conflicts */
+        }
+        /* Conflict hover tooltip (fixed, clamped to viewport) */
+        .conflict-tip {
+            position: fixed;
+            z-index: 200;
+            background: rgba(20,20,40,0.97);
+            border: 1px solid rgba(239,68,68,0.6);
+            border-radius: 6px;
+            padding: 6px 10px;
             pointer-events: none;
+            max-width: 300px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         }
         .rb-hour-line {
             position: absolute;
             top: 0; bottom: 0;
             width: 1px;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.1);
             pointer-events: none;
             z-index: 1;
         }
@@ -3075,6 +3087,7 @@
         }
         .light-mode .rainbow-name-cell { border-bottom-color: #64748b; }
         .light-mode .rb-conflict-strip { background: #dc2626; box-shadow: none; }
+        .light-mode .conflict-tip { background: #ffffff; border-color: #dc2626; box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
         .light-mode .rainbow-cell:hover { background: #f1f5f9; }
         .light-mode .rb-hour-line { background: #e2e8f0; }
         /* Bars: solid identity-color tints, dark text, saturated 1px border */
@@ -3144,6 +3157,20 @@
         .light-mode .rainbow-toolbar button[style] {
             color: inherit !important;
         }
+        /* Zoom control + multi-group dropdown (inline dark backgrounds) */
+        .light-mode .rb-zoom-ctl,
+        .light-mode .rb-cat-dd > button {
+            background: #ffffff !important;
+            border-color: #94a3b8 !important;
+        }
+        .light-mode .rb-zoom-ctl span,
+        .light-mode .rb-zoom-ctl button,
+        .light-mode .rb-cat-dd > button { color: #0f172a !important; }
+        .light-mode .rb-cat-menu {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+        }
+        .light-mode .rb-cat-menu span { color: #0f172a !important; }
 
         /* Selection screen inline style overrides */
         .light-mode .selection-body .text-gray-500,
@@ -7102,6 +7129,42 @@
             Academics: { label: 'Acad', color: '#3b82f6' },
         };
 
+        // Rainbow zoom: 1 out + default + 4 in (percent ≈ column-width scale)
+        const RB_ZOOM_LEVELS = [75, 100, 125, 150, 200, 300];
+
+        // Overlap segments among one person's events this day, carrying the pair
+        // of events behind each segment (hover tooltip shows what conflicts).
+        // Cancelled and soft-scheduled events never conflict.
+        const rbConflictSegs = (evs) => {
+            const timed = (evs || [])
+                .filter(e => !e.cancelled && !e.soft)
+                .map(e => ({ ev: e, s: timeToMinutes(e.start), e2: timeToMinutes(e.end) }))
+                .filter(t => t.s != null && t.e2 != null && t.e2 > t.s);
+            const segs = [];
+            for (let a = 0; a < timed.length; a++) {
+                for (let b = a + 1; b < timed.length; b++) {
+                    const os = Math.max(timed[a].s, timed[b].s);
+                    const oe = Math.min(timed[a].e2, timed[b].e2);
+                    if (oe > os) segs.push({ s: os, e: oe, pair: [timed[a].ev, timed[b].ev] });
+                }
+            }
+            return segs;
+        };
+
+        // Other events of the same person/day that overlap this one (for the red
+        // conflict box in the event modal)
+        const rbConflictsFor = (ev, evs) => {
+            const s = timeToMinutes(ev.start);
+            const e = timeToMinutes(ev.end);
+            if (s == null || e == null || e <= s || ev.cancelled || ev.soft) return [];
+            return (evs || []).filter(o => {
+                if (o === ev || o.id === ev.id || o.cancelled || o.soft) return false;
+                const os = timeToMinutes(o.start);
+                const oe = timeToMinutes(o.end);
+                return os != null && oe != null && oe > os && Math.min(e, oe) > Math.max(s, os);
+            });
+        };
+
         // ─── RAINBOW MODAL (click event popup) ───
 
         const RainbowModal = ({ event, onClose }) => {
@@ -7151,6 +7214,16 @@
                                 <div className="p-3 rounded-lg" style={{ background: 'rgba(250,204,21,0.08)', border: '1px solid rgba(250,204,21,0.25)' }}>
                                     <div className="text-xs uppercase font-bold mb-1" style={{ color: '#facc15' }}>Notes</div>
                                     <div className="text-sm" style={{ color: '#fde68a' }}>{event.notes}</div>
+                                </div>
+                            )}
+                            {event.conflicts && event.conflicts.length > 0 && (
+                                <div className="p-3 rounded-lg" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.35)' }}>
+                                    <div className="text-xs uppercase font-bold mb-1" style={{ color: '#f87171' }}>Conflicts with ({event.conflicts.length})</div>
+                                    {event.conflicts.map((c, i) => (
+                                        <div key={i} className="text-sm" style={{ color: '#fca5a5' }}>
+                                            {c.start || '?'}–{c.end || '?'}&nbsp;&nbsp;{c.title}
+                                        </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
@@ -7254,28 +7327,45 @@
                             <button onClick={onClose} className="text-gray-500 hover:text-white text-2xl">&times;</button>
                         </div>
                         <div className="flex gap-4">
-                            {weeks.map(week => (
-                                <div key={week.label} className="flex-1 min-w-0">
-                                    <div className="text-xs text-gray-500 uppercase font-bold mb-2">Week of {week.label}</div>
-                                    <div className="space-y-1">
+                            {weeks.map(week => {
+                                // Day blocks: "Mon, 19 Oct" headers inside each week column
+                                const days = [];
+                                let cur = null;
+                                week.evs.forEach(ev => {
+                                    if (!cur || cur.date !== ev.date) { cur = { date: ev.date, evs: [] }; days.push(cur); }
+                                    cur.evs.push(ev);
+                                });
+                                return (
+                                    <div key={week.label} className="flex-1 min-w-0">
+                                        <div className="text-xs text-gray-400 uppercase font-bold mb-2">Week of {week.label}</div>
                                         {week.evs.length === 0 && <div className="text-gray-500 text-sm py-2">No events this week</div>}
-                                        {week.evs.map((ev, i) => {
-                                            const badge = RB_BADGE[ev.section] || { label: ev.section, color: '#6b7280' };
-                                            const cancelled = !!ev.cancelled;
-                                            const title = ev.model ? `${ev.model} ${ev.eventName}` : ev.eventName;
-                                            const [, m, d] = ev.date.split('-');
+                                        {days.map(day => {
+                                            const h = fmtDate(day.date);
                                             return (
-                                                <div key={`${ev.id}-${i}`} className="flex items-center gap-2 text-sm" style={cancelled ? { opacity: 0.5 } : undefined}>
-                                                    <span className="text-gray-500 flex-shrink-0" style={{ fontSize: '0.7rem', width: 38 }}>{ev.startTime || '--:--'}</span>
-                                                    <span className="flex-shrink-0 rounded px-1 font-bold" style={{ fontSize: '0.6rem', color: badge.color, background: badge.color + '33' }}>{badge.label}</span>
-                                                    <span className="text-white truncate" style={cancelled ? { textDecoration: 'line-through' } : undefined}>{title}</span>
-                                                    <span className="text-gray-500 ml-auto flex-shrink-0" style={{ fontSize: '0.65rem' }}>{Number(m)}/{d}</span>
+                                                <div key={day.date}>
+                                                    <div className="font-bold" style={{ color: '#93c5fd', fontSize: '0.65rem', margin: '6px 0 2px', borderBottom: '1px solid rgba(147,197,253,0.2)' }}>
+                                                        {h.weekday}, {h.day} {h.month}
+                                                    </div>
+                                                    <div className="space-y-1">
+                                                        {day.evs.map((ev, i) => {
+                                                            const badge = RB_BADGE[ev.section] || { label: ev.section, color: '#6b7280' };
+                                                            const cancelled = !!ev.cancelled;
+                                                            const title = ev.model ? `${ev.model} ${ev.eventName}` : ev.eventName;
+                                                            return (
+                                                                <div key={`${ev.id}-${i}`} className="flex items-center gap-2 text-sm" style={cancelled ? { opacity: 0.5 } : undefined}>
+                                                                    <span className="text-gray-400 flex-shrink-0" style={{ fontSize: '0.7rem', width: 38 }}>{ev.startTime || '--:--'}</span>
+                                                                    <span className="flex-shrink-0 rounded px-1 font-bold" style={{ fontSize: '0.6rem', color: badge.color, background: badge.color + '33' }}>{badge.label}</span>
+                                                                    <span className="text-white truncate" style={cancelled ? { textDecoration: 'line-through' } : undefined}>{title}</span>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
                                                 </div>
                                             );
                                         })}
                                     </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                         <button onClick={onClose} className="mt-6 w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition-colors font-bold">Close</button>
                     </div>
@@ -7312,6 +7402,24 @@
                     return !prev;
                 });
             }, []);
+            // Zoom: date-column width scale (persisted). Name column stays 190px.
+            const [rbZoom, setRbZoom] = useState(() => {
+                try {
+                    const v = parseInt(localStorage.getItem('tps-rb-zoom'), 10);
+                    return RB_ZOOM_LEVELS.includes(v) ? v : 100;
+                } catch (e) { return 100; }
+            });
+            const colW = Math.round(RAINBOW_COL_WIDTH * rbZoom / 100);
+            const setRbZoomPct = useCallback((pct) => {
+                setRbZoom(pct);
+                try { localStorage.setItem('tps-rb-zoom', String(pct)); } catch (e) {}
+            }, []);
+            // Multi-group filter: empty set = All Personnel; several checked = union
+            // (e.g. Staff IP + Staff IFTE/ICSO availability side by side)
+            const [selectedCats, setSelectedCats] = useState(new Set());
+            const [catMenuOpen, setCatMenuOpen] = useState(false);
+            // Conflict strip hover tooltip {x, y, range, lines}
+            const [conflictTip, setConflictTip] = useState(null);
             const [showW1, setShowW1] = useState(true);  // v6.3 parity: This Wk workload counters
             const [showW2, setShowW2] = useState(true);  // v6.3 parity: Next Wk workload counters
             const [personModal, setPersonModal] = useState(null);
@@ -7573,10 +7681,10 @@
                     if (!area) return;
                     const areaRect = area.getBoundingClientRect();
                     const scrollLeft = area.scrollLeft;
-                    const colLeft = 191 + dateIndex * (RAINBOW_COL_WIDTH + 1); // px from grid left: 190px name col + 1px gap (+1px per column gap)
+                    const colLeft = 191 + dateIndex * (colW + 1); // px from grid left: 190px name col + 1px gap (+1px per column gap)
                     const colVisualLeft = areaRect.left + colLeft - scrollLeft;
                     const xInCol = me.clientX - colVisualLeft;
-                    const pct = Math.max(0, Math.min(100, (xInCol / RAINBOW_COL_WIDTH) * 100));
+                    const pct = Math.max(0, Math.min(100, (xInCol / colW) * 100));
                     const currentTime = pctToMinutes(pct);
 
                     if (mode === 'create') {
@@ -7602,7 +7710,7 @@
                 };
                 window.addEventListener('pointermove', onMove);
                 window.addEventListener('pointerup', onUp);
-            }, [pctToMinutes]);
+            }, [pctToMinutes, colW]);
 
             const handleRulerPointerDown = useCallback((e, dateIndex) => {
                 if (e.button !== 0) return;
@@ -7629,16 +7737,49 @@
                 return () => window.removeEventListener('keydown', onKey);
             }, []);
 
-            // Category dropdown handler (matches Gantt pattern)
-            const handleRbCategoryChange = useCallback((e) => {
-                const cat = e.target.value;
-                setSelectedCategory(cat);
+            // Multi-group dropdown: union of checked groups becomes the visible set.
+            // selectedCategory stays the group-by key when exactly ONE group is
+            // checked (BB group-by is per-class); 'Multi' otherwise.
+            const applyRbCats = useCallback((next) => {
+                setSelectedCats(next);
                 setRbGroupScope(null); // group-by is per-class — reset with the category
                 setRbGroupTeam('all');
                 setRbGroupExtras(new Set());
-                if (cat === 'All') setVisiblePersonnel(null);
-                else if (cat !== 'Custom' && roster[cat]) setVisiblePersonnel(new Set(roster[cat]));
+                if (next.size === 0) { setSelectedCategory('All'); setVisiblePersonnel(null); }
+                else {
+                    setSelectedCategory(next.size === 1 ? [...next][0] : 'Multi');
+                    setVisiblePersonnel(new Set([...next].flatMap(c => roster[c] || [])));
+                }
             }, [roster]);
+            const toggleRbCat = useCallback((cat) => {
+                const base = selectedCategory === 'Custom' ? new Set() : new Set(selectedCats);
+                if (base.has(cat)) base.delete(cat); else base.add(cat);
+                applyRbCats(base);
+            }, [selectedCategory, selectedCats, applyRbCats]);
+            const rbCatLabel = selectedCategory === 'Custom' ? 'Custom Selection'
+                : selectedCats.size === 0 ? 'All Personnel'
+                : selectedCats.size === 1 ? [...selectedCats][0]
+                : `${selectedCats.size} groups`;
+
+            // Close the group dropdown when clicking outside it
+            useEffect(() => {
+                if (!catMenuOpen) return;
+                const close = () => setCatMenuOpen(false);
+                window.addEventListener('pointerdown', close);
+                return () => window.removeEventListener('pointerdown', close);
+            }, [catMenuOpen]);
+
+            // Conflict strip hover → fixed tooltip (clamped to viewport)
+            const handleRbConflictHover = useCallback((e, seg) => {
+                if (!e || !seg) { setConflictTip(null); return; }
+                const fmt = (ev) => `${ev.start || '?'}–${ev.end || '?'}  ${ev.title}`;
+                setConflictTip({
+                    x: Math.min(e.clientX + 12, window.innerWidth - 310),
+                    y: Math.min(e.clientY + 12, window.innerHeight - 90),
+                    range: `${minutesToTime(seg.s)}–${minutesToTime(seg.e)}`,
+                    lines: seg.pair.map(fmt),
+                });
+            }, []);
 
             const handleRbFilterApply = useCallback((newSelection) => {
                 // Grouped view: the Filter modal picks EXTRA individuals shown below
@@ -7650,13 +7791,14 @@
                 }
                 setVisiblePersonnel(newSelection);
                 setSelectedCategory('Custom');
+                setSelectedCats(new Set());
                 setFilterOpen(false);
             }, [rbGroupScope]);
 
             return (
                 <>
                     <div className="rainbow-toolbar">
-                        <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.4)', fontWeight: 600 }}>FILTERS</span>
+                        <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.65)', fontWeight: 600 }}>FILTERS</span>
                         {rbFilters.map(f => (
                             <button
                                 key={f.key}
@@ -7676,6 +7818,20 @@
                             Conflicts
                         </button>
                         <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, alignItems: 'center' }}>
+                            {/* Zoom: 1 out + default + 4 in (percent ≈ column-width scale) */}
+                            <div className="rb-zoom-ctl" style={{ display: 'flex', alignItems: 'center', gap: 3, background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', borderRadius: 6, padding: '1px 6px' }}>
+                                <button
+                                    onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(rbZoom); if (i > 0) setRbZoomPct(RB_ZOOM_LEVELS[i - 1]); }}
+                                    disabled={RB_ZOOM_LEVELS.indexOf(rbZoom) <= 0}
+                                    title="Zoom out"
+                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(rbZoom) <= 0 ? 0.3 : 1 }}>−</button>
+                                <span style={{ fontSize: '0.55rem', color: '#e5e7eb', fontWeight: 700, minWidth: 28, textAlign: 'center' }}>{rbZoom}%</span>
+                                <button
+                                    onClick={() => { const i = RB_ZOOM_LEVELS.indexOf(rbZoom); if (i < RB_ZOOM_LEVELS.length - 1) setRbZoomPct(RB_ZOOM_LEVELS[i + 1]); }}
+                                    disabled={RB_ZOOM_LEVELS.indexOf(rbZoom) >= RB_ZOOM_LEVELS.length - 1}
+                                    title="Zoom in"
+                                    style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '0.7rem', fontWeight: 700, cursor: 'pointer', padding: '0 3px', opacity: RB_ZOOM_LEVELS.indexOf(rbZoom) >= RB_ZOOM_LEVELS.length - 1 ? 0.3 : 1 }}>+</button>
+                            </div>
                             {rbSelection && (
                                 <button onClick={() => setRbSelection(null)} style={{ padding: '2px 8px', fontSize: '0.55rem', background: 'rgba(239,68,68,0.15)', color: '#fca5a5', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 4, cursor: 'pointer' }}>
                                     Clear Marker
@@ -7685,11 +7841,30 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" style={{ width: 12, height: 12 }} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
                                 Filter
                             </button>
-                            <select value={selectedCategory} onChange={handleRbCategoryChange} style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', color: '#d1d5db', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', outline: 'none', cursor: 'pointer' }}>
-                                <option value="All">All Personnel</option>
-                                {Object.keys(roster).map(cat => (<option key={cat} value={cat}>{cat}</option>))}
-                                <option value="Custom" disabled style={{ color: 'rgba(255,255,255,0.3)' }}>Custom Selection</option>
-                            </select>
+                            {/* Multi-group dropdown: check several groups to see their union
+                                (e.g. Staff IP + Staff IFTE/ICSO availability side by side) */}
+                            <div className="rb-cat-dd" style={{ position: 'relative' }} onPointerDown={e => e.stopPropagation()}>
+                                <button onClick={() => setCatMenuOpen(v => !v)}
+                                    style={{ background: 'rgba(31,41,55,0.9)', border: '1px solid rgba(75,85,99,0.6)', color: '#e5e7eb', borderRadius: 6, padding: '2px 6px', fontSize: '0.55rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                    {rbCatLabel} <span style={{ fontSize: '0.5rem' }}>▾</span>
+                                </button>
+                                {catMenuOpen && (
+                                    <div className="rb-cat-menu" style={{ position: 'absolute', right: 0, top: '100%', marginTop: 4, background: '#1e1e3a', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, overflow: 'hidden', zIndex: 80, minWidth: 180, boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+                                        <div onClick={() => applyRbCats(new Set())}
+                                            style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <span style={{ width: 12, height: 12, borderRadius: 3, border: '1px solid #4b5563', background: selectedCategory !== 'Custom' && selectedCats.size === 0 ? '#3b82f6' : 'transparent', flexShrink: 0 }} />
+                                            <span style={{ color: '#e5e7eb', fontSize: '0.6rem', fontWeight: 700 }}>All Personnel</span>
+                                        </div>
+                                        {Object.keys(roster).map(cat => (
+                                            <div key={cat} onClick={() => toggleRbCat(cat)}
+                                                style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', cursor: 'pointer' }}>
+                                                <span style={{ width: 12, height: 12, borderRadius: 3, border: '1px solid #4b5563', background: selectedCategory !== 'Custom' && selectedCats.has(cat) ? '#3b82f6' : 'transparent', flexShrink: 0 }} />
+                                                <span style={{ color: '#e5e7eb', fontSize: '0.6rem' }}>{cat}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                             {rbGroupCtx && rbGroupCtx.scopeOptions.length > 0 && (
                                 <select value={rbGroupScope || ''} className="rb-group-select"
                                     onChange={(e) => { setRbGroupScope(e.target.value || null); setRbGroupTeam('all'); setRbGroupExtras(new Set()); }}
@@ -7715,11 +7890,11 @@
                     <div className="rainbow-scroll" ref={scrollRef} onPointerDown={handlePanPointerDown}>
                     <div
                         className="rainbow-grid"
-                        style={{ gridTemplateColumns: `190px repeat(${dates.length}, ${RAINBOW_COL_WIDTH}px)` }}
+                        style={{ gridTemplateColumns: `190px repeat(${dates.length}, ${colW}px)` }}
                     >
                         {/* Header row: corner (PERSONNEL + week workload toggles) + date headers */}
                         <div className="rainbow-corner rb-corner-flex">
-                            <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.3)', fontWeight: 600 }}>PERSONNEL</span>
+                            <span style={{ fontSize: '0.55rem', color: 'rgba(255,255,255,0.6)', fontWeight: 600 }}>PERSONNEL</span>
                             <div className="rb-week-toggles">
                                 <label className="rb-week-toggle">
                                     <input type="checkbox" checked={showW1} onChange={() => setShowW1(v => !v)} />
@@ -7850,20 +8025,7 @@
                                         // non-cancelled, non-soft events this day (all sections,
                                         // regardless of the type filters — conflicts are real
                                         // even when a filter hides one side)
-                                        const conflictSegs = [];
-                                        if (rbShowConflicts) {
-                                            const timed = allCellEvts
-                                                .filter(e => !e.cancelled && !e.soft)
-                                                .map(e => ({ s: timeToMinutes(e.start), e: timeToMinutes(e.end) }))
-                                                .filter(t => t.s != null && t.e != null && t.e > t.s);
-                                            for (let a = 0; a < timed.length; a++) {
-                                                for (let b = a + 1; b < timed.length; b++) {
-                                                    const os = Math.max(timed[a].s, timed[b].s);
-                                                    const oe = Math.min(timed[a].e, timed[b].e);
-                                                    if (oe > os) conflictSegs.push([os, oe]);
-                                                }
-                                            }
-                                        }
+                                        const conflictSegs = rbShowConflicts ? rbConflictSegs(allCellEvts) : [];
 
                                         return (
                                             // minHeight (not height): grid stretches every cell in the
@@ -7873,11 +8035,12 @@
                                                 {hourLines.map(pct => (
                                                     <div key={pct} className="rb-hour-line" style={{ left: pct + '%' }} />
                                                 ))}
-                                                {conflictSegs.map(([os, oe], ci) => {
-                                                    const l = timePct(os);
+                                                {conflictSegs.map((seg, ci) => {
+                                                    const l = timePct(seg.s);
                                                     return <div key={`c${ci}`} className="rb-conflict-strip"
-                                                        title="Overlapping events"
-                                                        style={{ left: l + '%', width: Math.max(0.5, timePct(oe) - l) + '%' }} />;
+                                                        style={{ left: l + '%', width: Math.max(0.5, timePct(seg.e) - l) + '%' }}
+                                                        onMouseEnter={(e) => handleRbConflictHover(e, seg)}
+                                                        onMouseLeave={() => handleRbConflictHover(null)} />;
                                                 })}
                                                 {personStatus && <div className="rb-personnel-note" title={personStatus}>{personStatus}</div>}
                                                 {laid.map((ev, i) => {
@@ -7908,7 +8071,7 @@
                                                             className={`rb-event-bar ${barClass}${ev.cancelled ? ' rb-bar-cancelled' : ''}`}
                                                             style={{ left: left + '%', width: width + '%', top, cursor: 'pointer' }}
                                                             title={`${ev.title}\n${ev.start || '?'}–${ev.end || '?'}${ev.cancelled ? ' [CANCELLED]' : ''}`}
-                                                            onClick={() => setModalEvent(ev)}
+                                                            onClick={() => setModalEvent({ ...ev, conflicts: rbConflictsFor(ev, allCellEvts) })}
                                                         >
                                                             {innerBar}
                                                             <span className="rb-bar-label">{ev.shortTitle}</span>
@@ -7928,22 +8091,22 @@
                             const now = rbPacificNow();
                             const nowMins = now.getHours() * 60 + now.getMinutes();
                             if (nowMins < TIMELINE_START || nowMins > TIMELINE_END) return null;
-                            const leftPx = 191 + todayIdx * (RAINBOW_COL_WIDTH + 1) + (timePct(nowMins) / 100) * RAINBOW_COL_WIDTH;
+                            const leftPx = 191 + todayIdx * (colW + 1) + (timePct(nowMins) / 100) * colW;
                             return <div className="rb-now-line" style={{ left: `${leftPx}px` }} />;
                         })()}
                         {/* Grid-level marker/range line spanning full height below header */}
                         {rbSelection && (() => {
-                            const colLeft = 191 + rbSelection.dateIndex * (RAINBOW_COL_WIDTH + 1); // 190px name col + 1px gap per column
+                            const colLeft = 191 + rbSelection.dateIndex * (colW + 1); // 190px name col + 1px gap per column
                             if (rbSelection.type === 'marker') {
                                 const pct = timePct(rbSelection.start);
-                                const leftPx = colLeft + (pct / 100) * RAINBOW_COL_WIDTH;
+                                const leftPx = colLeft + (pct / 100) * colW;
                                 return <div className="rb-grid-line" style={{ left: `${leftPx}px` }} />;
                             }
                             if (rbSelection.type === 'range') {
                                 const sPct = timePct(rbSelection.start);
                                 const ePct = timePct(rbSelection.end);
-                                const leftPx = colLeft + (sPct / 100) * RAINBOW_COL_WIDTH;
-                                const widthPx = ((ePct - sPct) / 100) * RAINBOW_COL_WIDTH;
+                                const leftPx = colLeft + (sPct / 100) * colW;
+                                const widthPx = ((ePct - sPct) / 100) * colW;
                                 return <div className="rb-grid-range" style={{ left: `${leftPx}px`, width: `${widthPx}px` }} />;
                             }
                             return null;
@@ -7956,6 +8119,14 @@
                         currentSelection={rbGroupScope ? rbGroupExtras : visiblePersonnel}
                         title={rbGroupScope ? 'Add people below the grouped teams' : undefined}
                         onApply={handleRbFilterApply} />
+                    {conflictTip && (
+                        <div className="conflict-tip" style={{ left: conflictTip.x, top: conflictTip.y }}>
+                            <div style={{ color: '#f87171', fontWeight: 700, fontSize: '0.6rem', textTransform: 'uppercase', marginBottom: 2 }}>Conflict {conflictTip.range}</div>
+                            {conflictTip.lines.map((l, i) => (
+                                <div key={i} style={{ color: '#fca5a5', fontSize: '0.68rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{l}</div>
+                            ))}
+                        </div>
+                    )}
                 </>
             );
         };
