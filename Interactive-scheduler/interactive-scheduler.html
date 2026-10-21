@@ -1,4 +1,4 @@
-<!-- Interactive Scheduler v4.13.0 — Rainbow UI zoom (CSS zoom scales text/lines/names/bars; TL control keeps horizontal timeline scale) + filter modal pinned "Selected" chips (collapsed past 12 so a whole selected group doesn't bury the search) -->
+<!-- Interactive Scheduler v4.13.1 — Rainbow conflict strips adopt the supervision rule: supervision duties overlapping each other never flag (they're scheduled simultaneously by design); supervision vs anything else still flags -->
 <!-- v4.11.0 — Rainbow group-by-event (schedule assistant): pick a class, then an event scope — rows sort by Big Board pair team (color-tinted team headers, done ✓, no-team bucket, single-team filter) -->
 <!-- v4.10.1 — Fix: row-separator lines align (cells stretch to row height via minHeight); marker grab zone = whole date header, not just the 14px ruler strip -->
 <!-- v4.10.0 — Rainbow: person-row separators, conflict strips (toggle), marker/range scrubber revived (pointer-events fix). Refresh modal step 2: piggyback Big Board class refreshes. CR rows inherit package CR code in [+]; Big Board pair panel reorganized (CR-paired / flight-paired) -->
@@ -7137,7 +7137,9 @@
 
         // Overlap segments among one person's events this day, carrying the pair
         // of events behind each segment (hover tooltip shows what conflicts).
-        // Cancelled and soft-scheduled events never conflict.
+        // Cancelled and soft-scheduled events never conflict. Supervision duties
+        // routinely overlap EACH OTHER by design (same rule as detectConflicts),
+        // but still conflict with anything else.
         const rbConflictSegs = (evs) => {
             const timed = (evs || [])
                 .filter(e => !e.cancelled && !e.soft)
@@ -7146,6 +7148,7 @@
             const segs = [];
             for (let a = 0; a < timed.length; a++) {
                 for (let b = a + 1; b < timed.length; b++) {
+                    if (timed[a].ev.section === 'Supervision' && timed[b].ev.section === 'Supervision') continue;
                     const os = Math.max(timed[a].s, timed[b].s);
                     const oe = Math.min(timed[a].e2, timed[b].e2);
                     if (oe > os) segs.push({ s: os, e: oe, pair: [timed[a].ev, timed[b].ev] });
@@ -7162,6 +7165,7 @@
             if (s == null || e == null || e <= s || ev.cancelled || ev.soft) return [];
             return (evs || []).filter(o => {
                 if (o === ev || o.id === ev.id || o.cancelled || o.soft) return false;
+                if (o.section === 'Supervision' && ev.section === 'Supervision') return false;
                 const os = timeToMinutes(o.start);
                 const oe = timeToMinutes(o.end);
                 return os != null && oe != null && oe > os && Math.min(e, oe) > Math.max(s, os);
